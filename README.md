@@ -72,9 +72,13 @@ Should scaffolded files be generated
 
 Fold sections in VSCode with this [extension](https://marketplace.visualstudio.com/items?itemName=maptz.regionfolder)
 
+## Examples
+
 ## Roadmap
 
 - [ ] offline actions
 - [ ] cache query policy
 - [ ] support gql-tag
 - [ ] tests
+- [ ] add WS example + scaffolding
+- [ ] add (more) real world example

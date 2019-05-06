@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "jest test",
-    "build": "microbundle"
+    "build": "microbundle --no-compress"
   },
   "repository": {
     "type": "git",
