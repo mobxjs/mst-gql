@@ -92,7 +92,7 @@ function handleObjectType(outDir, format, type, files) {
     __filename
   )} ${generationDate} */
 import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "./mst-gql"`
+import { MSTGQLObject } from "mst-gql"`
 
   if (imports.length > 0)
     header += `\n\nimport { ${Array.from(new Set(imports)).join(
@@ -124,7 +124,9 @@ function handleFieldType(type, imports, root, self) {
           )})`
     case "OBJECT":
       const isSelf = type.name === self
-      const realType = isSelf ? `types.late(() => ${type.name})` : type.name
+      const realType = isSelf
+        ? `types.late(()${format === "ts" ? ": any" : ""} => ${type.name})`
+        : type.name
       if (!isSelf) imports.push(type.name)
       return root
         ? `types.maybe(types.reference(${realType}))`

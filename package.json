@@ -47,5 +47,8 @@
   "files": [
     "dist",
     "generator"
-  ]
+  ],
+  "dependencies": {
+    "arg": "^4.1.0"
+  }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "scaffold-test",
+  "scripts": {
+    "download": "npx apollo schema:download --endpoint=https://graphql-pokemon.now.sh/ graphql-schema.json",
+    "scaffold": "../../generator/mst-gql-scaffold.js --format ts --outDir src/models graphql-schema.json",
+    "build": "tsc",
+    "start": "yarn scaffold && yarn build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^3.4.5",
+    "mst-gql": "link:../../"
+  }
+}

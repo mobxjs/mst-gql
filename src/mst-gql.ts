@@ -1,4 +1,3 @@
-export { CaseHandlers, QueryOptions, QueryResult } from "./types"
 export { coreFields, primitiveFields } from "./reflection"
 export { MSTGQLStore } from "./MSTGQLStore"
 export { MSTGQLObject } from "./MSTGQLObject"
