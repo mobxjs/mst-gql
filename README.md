@@ -4,6 +4,10 @@ Bindings for mobx-state-tree and GraphQL
 
 ---
 
+Alpha / WIP
+
+Looking for maintainers among active GraphQL / MST users!
+
 Why
 
 Pro:
