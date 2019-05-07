@@ -82,9 +82,7 @@ function handleEnumType(outDir, format, type, files) {
 
   let contents = `\
 /**
- * ${name}
- *
- * ${sanitizeComment(type.description)}
+ * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
  */`
 
   contents += `\nconst ${name} = types.enumeration("${name}", [\n`
@@ -92,9 +90,10 @@ function handleEnumType(outDir, format, type, files) {
   contents += type.enumValues
     .map(
       enumV =>
-        `  "${enumV.name}",${
-          enumV.description ? ` // ${sanitizeComment(enumV.description)}` : ""
-        }`
+        `  "${enumV.name}",${optPrefix(
+          " // ",
+          sanitizeComment(enumV.description)
+        )}`
     )
     .join("\n")
 
@@ -119,9 +118,7 @@ function handleObjectType(outDir, format, type, files) {
 
   let contents = `\
 /**
- * ${name}
- *
- * ${sanitizeComment(type.description)}
+ * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
  */`
 
   contents += `\nconst ${name} = MSTGQLObject\n  .named('${name}')\n  .props({\n`
@@ -282,4 +279,9 @@ main()
 function sanitizeComment(comment) {
   // TODO: probably also need to escape //, /*, */ etc...
   return comment.replace(/\n/g, " ")
+}
+
+function optPrefix(prefix, thing) {
+  if (!thing) return ""
+  return prefix + thing
 }

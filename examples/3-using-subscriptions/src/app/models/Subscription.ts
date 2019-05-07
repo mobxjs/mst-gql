@@ -1,5 +1,5 @@
 /* #region mst-gql-header */
-/* This file is generated using mst-gql-scaffold.js Tue, 07 May 2019 07:29:59 GMT */
+/* This file is generated using mst-gql-scaffold.js Tue, 07 May 2019 07:33:46 GMT */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
@@ -9,8 +9,6 @@ import { Message } from "./index"
 /* #region mst-gql-body */
 /**
  * Subscription
- *
- * 
  */
 const Subscription = MSTGQLObject
   .named('Subscription')
