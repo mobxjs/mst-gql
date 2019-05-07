@@ -7,20 +7,14 @@ import { MSTGQLObject } from "mst-gql"
 /* #endregion */
 
 /* #region fragments */
-export const messageFieldsShallow = `
+export const messagePrimitives = `
 id
 __typename
 from
 message
 `
-
-export const messageFieldsDeep = `
-id
-__typename
-from
-message
-`
-
+export const messageFieldsShallow = messagePrimitives
+export const messageFieldsDeep = messagePrimitives
 /* #endregion */
 
 /* #region type-def */

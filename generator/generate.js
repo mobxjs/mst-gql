@@ -73,8 +73,8 @@ ${type.enumValues
     objectTypes.push(name)
     const imports = []
 
-    let shallowFields = ["id", "__typename"]
-    let deepFields = ["id", "__typename"]
+    let primitives = ["id", "__typename"]
+    let refs = []
 
     const header = `\
 /* This is a mst-sql generated file */
@@ -94,19 +94,13 @@ ${type.fields
   .join("\n")}
 })`
 
-    const typeImports = unique(imports).map(
-      i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`
-    )
+    const typeImports = unique(imports)
+      .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
+      .join("\n")
 
-    const fragments = `\
-export const ${toFirstLower(name)}FieldsShallow = \`
-${shallowFields.join("\n")}
-\`
+    const flowerName = toFirstLower(name)
 
-export const ${toFirstLower(name)}FieldsDeep = \`
-${deepFields.join("\n")}
-\`
-`
+    const fragments = generateFragments()
 
     const footer = `export { ${name} }`
 
@@ -134,8 +128,7 @@ ${deepFields.join("\n")}
     function handleFieldType(fieldName, type, isRoot) {
       switch (type.kind) {
         case "SCALAR":
-          shallowFields.push(fieldName)
-          deepFields.push(fieldName)
+          primitives.push(fieldName)
           const primitiveType = primitiveToMstType(type.name)
           // a scalar as root, means it is optional!
           return !isRoot || primitiveType === "identifier"
@@ -145,13 +138,7 @@ ${deepFields.join("\n")}
               )})`
         case "OBJECT":
           const isSelf = type.name === currentType
-          const shallowFragment = `${fieldName} {\n  id\n  __typename\n}`
-          shallowFields.push(shallowFragment)
-          deepFields.push(
-            isSelf
-              ? shallowFragment
-              : `${fieldName} {\n  \${${toFirstLower(type.name)}FieldsDeep}\n}`
-          )
+          refs.push([fieldName, type.name])
 
           const realType = `types.late(()${
             // always using late prevents potential circular dep issues
@@ -174,6 +161,36 @@ ${deepFields.join("\n")}
             `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
           )
       }
+    }
+
+    function generateFragments() {
+      let fragments = `\
+export const ${flowerName}Primitives = \`
+${primitives.join("\n")}
+\`
+`
+
+      if (refs.length === 0) {
+        fragments += `\
+export const ${flowerName}FieldsShallow = ${flowerName}Primitives
+export const ${flowerName}FieldsDeep = ${flowerName}Primitives`
+      } else {
+        fragments += `\
+export const ${flowerName}FieldsShallow = ${flowerName}Primitives + \`
+${refs.map(([fname]) => `${fname} { id __typename }`).join("\n")}
+\`
+
+export const ${flowerName}FieldsDeep = ${flowerName}Primitives + \`
+${refs
+  .map(
+    ([fname, type]) =>
+      `${fname} { id, __typename` +
+      (type === name ? `}` : ` \${${toFirstLower(type)}FieldsDeep} }`)
+  )
+  .join("\n")}
+\``
+      }
+      return fragments
     }
   }
 

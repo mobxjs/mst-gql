@@ -6,30 +6,41 @@ import { MSTGQLObject } from "mst-gql"
 
 /* #endregion */
 
+/* #region fragments */
+export const pokemonDimensionPrimitives = `
+id
+__typename
+minimum
+maximum
+`
+export const pokemonDimensionFieldsShallow = pokemonDimensionPrimitives
+export const pokemonDimensionFieldsDeep = pokemonDimensionPrimitives
+/* #endregion */
+
 /* #region type-def */
 
 /**
- * PokemonDimension
+* PokemonDimension
  *
  * Represents a Pokémon's dimensions
- */
+*/
 const PokemonDimension = MSTGQLObject
-  .named('PokemonDimension')
-  .props({
+.named('PokemonDimension')
+.props({
     /** The minimum value of this dimension */
     minimum: types.optional(types.string, ''),
     /** The maximum value of this dimension */
     maximum: types.optional(types.string, ''),
-  })
+})
 /* #endregion */
 
   .actions(self => ({
-    // this is just an auto-generated example action. 
-    // Feel free to add your own actions, props, views etc to the model. 
-    // Any code outside the '#region mst-gql-*'  regions will be preserved
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))
+  // this is just an auto-generated example action. 
+  // Feel free to add your own actions, props, views etc to the model. 
+  // Any code outside the '#region mst-gql-*'  regions will be preserved
+  log() {
+    console.log(JSON.stringify(self))
+  }
+}))
 
 export { PokemonDimension }

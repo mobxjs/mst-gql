@@ -7,23 +7,17 @@ import { Message, messageFieldsDeep } from "./Message"
 /* #endregion */
 
 /* #region fragments */
-export const queryFieldsShallow = `
+export const queryPrimitives = `
 id
 __typename
-messages {
-  id
-  __typename
-}
+`
+export const queryFieldsShallow = queryPrimitives + `
+messages { id __typename }
 `
 
-export const queryFieldsDeep = `
-id
-__typename
-messages {
-  ${messageFieldsDeep}
-}
+export const queryFieldsDeep = queryPrimitives + `
+messages { id, __typename ${messageFieldsDeep} }
 `
-
 /* #endregion */
 
 /* #region type-def */

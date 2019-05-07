@@ -3,19 +3,53 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-import { PokemonDimension, PokemonAttack, PokemonEvolutionRequirement } from "./index"
+import { PokemonDimension, pokemonDimensionFieldsDeep } from "./PokemonDimension"
+import { PokemonAttack, pokemonAttackFieldsDeep } from "./PokemonAttack"
+import { PokemonEvolutionRequirement, pokemonEvolutionRequirementFieldsDeep } from "./PokemonEvolutionRequirement"
+/* #endregion */
+
+/* #region fragments */
+export const pokemonPrimitives = `
+id
+__typename
+number
+name
+classification
+types
+resistant
+weaknesses
+fleeRate
+maxCP
+maxHP
+image
+`
+export const pokemonFieldsShallow = pokemonPrimitives + `
+weight { id __typename }
+height { id __typename }
+attacks { id __typename }
+evolutions { id __typename }
+evolutionRequirements { id __typename }
+`
+
+export const pokemonFieldsDeep = pokemonPrimitives + `
+weight { id, __typename ${pokemonDimensionFieldsDeep} }
+height { id, __typename ${pokemonDimensionFieldsDeep} }
+attacks { id, __typename ${pokemonAttackFieldsDeep} }
+evolutions { id, __typename}
+evolutionRequirements { id, __typename ${pokemonEvolutionRequirementFieldsDeep} }
+`
 /* #endregion */
 
 /* #region type-def */
 
 /**
- * Pokemon
+* Pokemon
  *
  * Represents a Pokémon
- */
+*/
 const Pokemon = MSTGQLObject
-  .named('Pokemon')
-  .props({
+.named('Pokemon')
+.props({
     /** The identifier of this Pokémon */
     number: types.optional(types.string, ''),
     /** The name of this Pokémon */
@@ -44,16 +78,16 @@ const Pokemon = MSTGQLObject
     /** The maximum HP of this Pokémon */
     maxHP: types.optional(types.integer, 0),
     image: types.optional(types.string, ''),
-  })
+})
 /* #endregion */
 
   .actions(self => ({
-    // this is just an auto-generated example action. 
-    // Feel free to add your own actions, props, views etc to the model. 
-    // Any code outside the '#region mst-gql-*'  regions will be preserved
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))
+  // this is just an auto-generated example action. 
+  // Feel free to add your own actions, props, views etc to the model. 
+  // Any code outside the '#region mst-gql-*'  regions will be preserved
+  log() {
+    console.log(JSON.stringify(self))
+  }
+}))
 
 export { Pokemon }

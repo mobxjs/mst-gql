@@ -7,23 +7,17 @@ import { Message, messageFieldsDeep } from "./Message"
 /* #endregion */
 
 /* #region fragments */
-export const subscriptionFieldsShallow = `
+export const subscriptionPrimitives = `
 id
 __typename
-newMessages {
-  id
-  __typename
-}
+`
+export const subscriptionFieldsShallow = subscriptionPrimitives + `
+newMessages { id __typename }
 `
 
-export const subscriptionFieldsDeep = `
-id
-__typename
-newMessages {
-  ${messageFieldsDeep}
-}
+export const subscriptionFieldsDeep = subscriptionPrimitives + `
+newMessages { id, __typename ${messageFieldsDeep} }
 `
-
 /* #endregion */
 
 /* #region type-def */
