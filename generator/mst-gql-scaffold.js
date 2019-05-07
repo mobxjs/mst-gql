@@ -100,15 +100,12 @@ function handleEnumType(outDir, format, type, files) {
   contents += "\n])"
 
   let header = `\
-/* This file is generated using ${path.basename(
-    __filename
-  )} ${generationDate} */
-import { types } from "mobx-state-tree"
-`
+/* This is a mst-sql generated file */
+import { types } from "mobx-state-tree"`
 
   footer = `export { ${name} }`
 
-  writeFile(name, header, contents, footer)
+  writeFile(name, [header, createSection("type-def", contents), footer])
 }
 
 function handleObjectType(outDir, format, type, files) {
@@ -116,7 +113,7 @@ function handleObjectType(outDir, format, type, files) {
   files.push(name)
   const imports = []
 
-  let contents = `\
+  let contents = `
 /**
  * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
  */`
@@ -130,21 +127,24 @@ function handleObjectType(outDir, format, type, files) {
 
   contents += "\n  })"
 
-  let header = `\
-/* This file is generated using ${path.basename(
-    __filename
-  )} ${generationDate} */
+  const header = `\
+/* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"`
 
-  if (imports.length > 0)
-    header += `\n\nimport { ${Array.from(new Set(imports)).join(
-      ", "
-    )} } from "./index"`
+  const typeImports = `import { ${Array.from(new Set(imports)).join(
+    ", "
+  )} } from "./index"`
 
-  footer = `export { ${name} }`
+  const footer = `export { ${name} }`
 
-  writeFile(name, header, contents, footer, exampleAction)
+  writeFile(name, [
+    header,
+    createSection("type-imports", typeImports),
+    createSection("type-def", contents),
+    exampleAction,
+    footer
+  ])
 }
 
 function handleField(field, imports, self) {
@@ -215,34 +215,38 @@ function getMstDefaultValue(type) {
 }
 
 function generateBarrelFile(files) {
-  writeFile(
-    "index",
-    `/** mst-gql generated barrel file ${generationDate} */`,
-    files.map(f => `export * from "./${f}"`).join("\n"),
-    ""
-  )
+  writeFile("index", [
+    createSection(
+      "header",
+      `/* mst-gql generated barrel file ${generationDate} */`
+    ),
+    createSection(
+      "exports",
+      files.map(f => `export * from "./${f}"`).join("\n")
+    )
+  ])
 }
 
-function writeFile(name, header, body, footer, sampleCode = "") {
+function writeFile(name, sections) {
   const fnName = path.resolve(outDir, name + "." + format)
   if (!fs.existsSync(fnName)) {
     console.log("Generating " + fnName)
-    const all = [
-      `/* #region mst-gql-header */`,
-      header,
-      `/* #endregion */\n\n/* #region mst-gql-body */`,
-      body,
-      `/* #endregion */\n${sampleCode}\n\n/* #region mst-gql-footer */`,
-      footer,
-      `/* #endregion */`
-    ].join("\n")
+    const all = sections
+      .map(section =>
+        Array.isArray(section)
+          ? `/* #region ${section[0]} */\n${section[1]}\n/* #endregion */`
+          : "" + section
+      )
+      .join("\n\n")
     fs.writeFileSync(fnName, all)
   } else {
     console.log("Updating " + fnName)
     let contents = fs.readFileSync(fnName, "utf8")
-    contents = replaceSection(contents, "header", header, fnName)
-    contents = replaceSection(contents, "body", body, fnName)
-    contents = replaceSection(contents, "footer", footer, fnName)
+    sections
+      .filter(s => Array.isArray(s))
+      .forEach(([name, text]) => {
+        contents = replaceSection(contents, name, text, fnName)
+      })
     fs.writeFileSync(fnName, contents)
   }
 }
@@ -284,4 +288,8 @@ function sanitizeComment(comment) {
 function optPrefix(prefix, thing) {
   if (!thing) return ""
   return prefix + thing
+}
+
+function createSection(name, contents) {
+  return [name, contents]
 }

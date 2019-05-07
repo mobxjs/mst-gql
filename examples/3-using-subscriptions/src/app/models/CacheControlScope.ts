@@ -1,10 +1,8 @@
-/* #region mst-gql-header */
-/* This file is generated using mst-gql-scaffold.js Tue, 07 May 2019 07:33:46 GMT */
+/* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
 
-/* #endregion */
 
-/* #region mst-gql-body */
+/* #region type-def */
 /**
  * CacheControlScope
  */
@@ -14,6 +12,4 @@ const CacheControlScope = types.enumeration("CacheControlScope", [
 ])
 /* #endregion */
 
-/* #region mst-gql-footer */
 export { CacheControlScope }
-/* #endregion */

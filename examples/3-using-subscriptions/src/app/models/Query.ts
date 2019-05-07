@@ -1,12 +1,13 @@
-/* #region mst-gql-header */
-/* This file is generated using mst-gql-scaffold.js Tue, 07 May 2019 07:33:46 GMT */
+/* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
+
+/* #region type-imports */
 import { Message } from "./index"
 /* #endregion */
 
-/* #region mst-gql-body */
+/* #region type-def */
 /**
  * Query
  */
@@ -16,6 +17,7 @@ const Query = MSTGQLObject
     messages: types.array(types.reference(Message)),
   })
 /* #endregion */
+
   .actions(self => ({
     // this is just an auto-generated example action. 
     // Feel free to add your own actions, props, views etc to the model. 
@@ -25,6 +27,4 @@ const Query = MSTGQLObject
     }
   }))
 
-/* #region mst-gql-footer */
 export { Query }
-/* #endregion */
