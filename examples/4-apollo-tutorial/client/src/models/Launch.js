@@ -16,7 +16,7 @@ isBooked
 `
 
 /* #endregion */
-export const LAUNCH_TILE_DATA = gql`
+export const LAUNCH_TILE_DATA = `
   fragment LaunchTile on Launch {
     __typename
     id
@@ -32,7 +32,7 @@ export const LAUNCH_TILE_DATA = gql`
       missionPatch
     }
   }
-`;
+`
 
 /* #region type-def */
 

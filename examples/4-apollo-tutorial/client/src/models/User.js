@@ -18,19 +18,18 @@ email
 /* #region type-def */
 
 /**
-* User
-*/
-const User = MSTGQLObject
-  .named('User')
+ * User
+ */
+const User = MSTGQLObject.named("User")
   .props({
     email: types.string,
-    trips: types.array(types.reference(types.late(() => Launch))),
+    trips: types.array(types.reference(types.late(() => Launch)))
   })
-/* #endregion */
+  /* #endregion */
 
   .actions(self => ({
-    // this is just an auto-generated example action. 
-    // Feel free to add your own actions, props, views etc to the model. 
+    // this is just an auto-generated example action.
+    // Feel free to add your own actions, props, views etc to the model.
     // Any code outside the '#region mst-gql-*'  regions will be preserved
     log() {
       console.log(JSON.stringify(self))

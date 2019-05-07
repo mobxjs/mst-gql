@@ -19,6 +19,20 @@ export const GET_LAUNCHES = `
   ${LAUNCH_TILE_DATA}
 `;
 
+export const BOOK_TRIPS = gql`
+  mutation BookTrips($launchIds: [ID]!) {
+    bookTrips(launchIds: $launchIds) {
+      success
+      message
+      launches {
+        __typename
+        id
+        isBooked
+      }
+    }
+  }
+`;
+
 const loginStatus = types.enumeration("loginStatus", [
   "loggedOut",
   "pending",
@@ -53,7 +67,7 @@ const RootStore = MSTGQLStore.named("RootStore")
     }
   }))
   .actions(self => ({
-    addOrRemoveFromCart({ id }) {
+    addOrRemoveFromCart(id) {
       self.cartItems = cartItems.includes(id)
         ? cartItems.filter(i => i !== id)
         : [...cartItems, id]
@@ -75,6 +89,13 @@ const RootStore = MSTGQLStore.named("RootStore")
     },
     fetchLaunches(after?) {
       return self.query(GET_LAUNCHES, after ? { after } : undefined)
+    },
+    clearCart() {
+      self.cartItems.splice(0)
+    }
+    bookTrips() {
+      return self.mutate(BOOK_TRIPS, { launchIds: getSnapshot(self.cartItems) }, 
+        self.clearCart) // optimistically clear the cart
     }
   }))
 

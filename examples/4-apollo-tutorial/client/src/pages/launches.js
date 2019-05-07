@@ -20,7 +20,7 @@ export default function Launches() {
                 <Button
                   onClick={() => {
                     setQueryState(launchConnection.fetchMore())
-                  } />
+                  }} />
                   Load More
                 </Button>
               )}
