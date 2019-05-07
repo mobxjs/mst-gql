@@ -34,17 +34,17 @@ Pro:
 
 ## Getting started
 
-### Obtaining graphql-schema
-
 ### Scaffolding
 
-### Using the generated store and models
-
-### Initialization transportation
+### Using the generated models in components
 
 ### Connecting to React components with `observer`
 
+### Using the store
+
 ### Using React context
+
+### Using built in utilities
 
 ### Simplifying queries with reflection
 
@@ -66,6 +66,8 @@ Pro:
 
 ### primitiveFields
 
+Initialization transportation and
+
 ## Tips & tricks
 
 Should scaffolded files be generated
@@ -77,7 +79,6 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 ## Roadmap
 
 - [ ] normalize query result set
-- [ ] add --roots flag to CLI
 - [ ] make sure non-roots are not stored as reference (and not normalized)
 - [ ] support interfaces
 - [ ] support unions
@@ -92,3 +93,5 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 - [ ] add WS example + scaffolding
 - [ ] add (more) real world example
 - [ ] add --exclude flag to generator CLI
+- [ ] use apollo client instead of grapqhl-request as back-end?
+- [ ] be able to specify ownership between types
