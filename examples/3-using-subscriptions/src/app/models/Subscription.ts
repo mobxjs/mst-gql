@@ -8,9 +8,11 @@ import { Message } from "./index"
 /* #endregion */
 
 /* #region type-def */
+
 /**
  * Subscription
  */
+
 const Subscription = MSTGQLObject
   .named('Subscription')
   .props({

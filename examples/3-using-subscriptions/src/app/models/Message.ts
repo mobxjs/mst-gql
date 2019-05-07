@@ -4,13 +4,15 @@ import { MSTGQLObject } from "mst-gql"
 
 
 /* #region type-imports */
-import {  } from "./index"
+
 /* #endregion */
 
 /* #region type-def */
+
 /**
  * Message
  */
+
 const Message = MSTGQLObject
   .named('Message')
   .props({
