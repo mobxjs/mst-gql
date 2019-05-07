@@ -14,7 +14,8 @@ function main() {
     args = arg({
       "--format": String,
       "--outDir": String,
-      "--roots": String
+      "--roots": String,
+      "--excludes": String
     })
   } catch (e) {
     console.error(
@@ -28,6 +29,7 @@ function main() {
   const outDir = path.resolve(process.cwd(), args["--outDir"] || "src/models")
   const input = args._[0] || "graphql-schema.json"
   const roots = args["--roots"] ? args["--roots"].split(",") : []
+  const excludes = args["--excludes"] ? args["--excludes"].split(",") : []
 
   console.log(
     path.basename(__filename) +
@@ -72,6 +74,7 @@ function main() {
     json.__schema.types,
     format,
     new Set(roots),
+    new Set(excludes),
     new Date().toUTCString()
   )
   files.forEach(([name, sections]) => {

@@ -11,6 +11,7 @@ function generate(
   types,
   format = "js",
   roots = new Set(),
+  excludes = new Set(),
   generationDate = "a long long time ago..."
 ) {
   const files = [] // [[name, contents]]
@@ -25,6 +26,7 @@ function generate(
   function generateTypes() {
     types
       .filter(type => roots.size === 0 || roots.has(type.name))
+      .filter(type => !excludes.has(type.name))
       .filter(type => !type.name.startsWith("__"))
       .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
       .forEach(type => {

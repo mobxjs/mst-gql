@@ -18,11 +18,12 @@
     "react-scripts": "2.1.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "yarn scaffold && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "run:ios-demo": "npx artillery run apollo-internal-demos/ios-workload.yml"
+    "scaffold": "ENGINE_API_KEY=michel ../../../generator/mst-gql-scaffold.js --excludes 'CacheControlScope,Mutation,PatchSize,Query,TripUpdateResponse' --format js demo_schema.json",
+    "build-mst-gql": "yarn --cwd ../../../ install && yarn --cwd ../../../ build"
   },
   "eslintConfig": {
     "extends": "react-app"
