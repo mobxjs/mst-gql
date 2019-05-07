@@ -1,11 +1,11 @@
 const exampleAction = `  .actions(self => ({
-  // this is just an auto-generated example action. 
-  // Feel free to add your own actions, props, views etc to the model. 
-  // Any code outside the '#region mst-gql-*'  regions will be preserved
-  log() {
-    console.log(JSON.stringify(self))
-  }
-}))`
+    // this is just an auto-generated example action. 
+    // Feel free to add your own actions, props, views etc to the model. 
+    // Any code outside the '#region mst-gql-*'  regions will be preserved
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))`
 
 function generate(
   types,
@@ -75,6 +75,8 @@ ${type.enumValues
   }
 
   function handleObjectType(type) {
+    if (type.interfaces.length > 0)
+      throw new Error("Interfaces are not implemented yet. PR welcome!")
     const name = type.name
     objectTypes.push(name)
     const imports = []
@@ -92,13 +94,13 @@ import { MSTGQLObject } from "mst-gql"`
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
 const ${name} = MSTGQLObject
-.named('${name}')
-.props({
+  .named('${name}')
+  .props({
 ${type.fields
   .filter(field => field.args.length === 0 && field.name !== "id")
   .map(field => handleField(field, imports))
   .join("\n")}
-})`
+  })`
 
     const typeImports = unique(imports)
       // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)

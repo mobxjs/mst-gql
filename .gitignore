@@ -63,3 +63,5 @@ typings/
 .rts2*
 
 dist
+
+tmp_schema.json

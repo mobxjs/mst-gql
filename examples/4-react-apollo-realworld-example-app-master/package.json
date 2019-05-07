@@ -32,19 +32,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint .",
     "build-mst-gql": "yarn --cwd ../../ install && yarn --cwd ../../ build",
-    "scaffold": "../../generator/mst-gql-scaffold.js --outDir src/models/ --format js https://realworld-graphql.herokuapp.com/graphql"
+    "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Article,User,ArticleConnection,ArticleEdge,PageInfo,FollowersConnection,UserEdge,Comment,Viewer' --outDir src/models/ --format js https://realworld-graphql.herokuapp.com/graphql"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
     "cross-env": "^5.2.0",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-plugin-graphql": "^2.1.1",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.10.0",
     "graphql-cli": "^2.16.4"
   }
 }
