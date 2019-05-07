@@ -6,6 +6,12 @@ This example demonstrates a simple mst-gql project (without scaffolding set up)
 
 ## Usage
 
+#### 0. Build mst-sql
+
+```bash
+yarn build-mst-gql
+```
+
 #### 1. Install dependencies
 
 ```bash

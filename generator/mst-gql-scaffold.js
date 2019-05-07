@@ -63,6 +63,7 @@ function main() {
       }
     })
 
+  // TODO: generateRootStore()
   generateBarrelFile(files)
 }
 

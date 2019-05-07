@@ -1,5 +1,5 @@
 {
-  "name": "@urql/example-getting-started",
+  "name": "@urql/example-using-subscriptions",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
@@ -7,7 +7,8 @@
     "start:server": "node ./src/server/index.js",
     "start:client": "webpack-dev-server --hot --inline",
     "build-mst-gql": "yarn --cwd ../../ install && yarn --cwd ../../ build",
-    "start": "run-p start:server start:client"
+    "start": "run-p start:server start:client",
+    "e2e": "npx cypress run"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
@@ -15,26 +16,30 @@
     "npm-run-all": "^4.1.5",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
-    "typescript": "^3.4.3",
+    "typescript": "^3.3.1",
     "webpack": "^4.29.2",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
     "@types/react-dom": "^16.8.4",
-    "@types/react": "^16.8.16",
     "apollo-server-express": "^2.3.3",
-    "arg": "^4.1.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "faker": "^4.1.0",
+    "fakergem": "^1.0.2",
     "graphql": "^14.1.1",
     "graphql-playground-middleware-express": "^1.7.11",
+    "graphql-request": "^1.8.2",
+    "graphql-subscriptions": "^1.0.0",
+    "graphql-tag": "^2.10.1",
     "isomorphic-fetch": "^2.2.1",
     "mobx": "^5.9.4",
     "mobx-react-lite": "^1.3.1",
     "mobx-state-tree": "^3.14.0",
     "mst-gql": "link:../../",
     "react": "^16.8.1",
-    "react-dom": "^16.8.1"
+    "react-dom": "^16.8.1",
+    "subscriptions-transport-ws": "^0.9.15"
   }
 }
