@@ -15,7 +15,6 @@ import { MSTGQLObject } from "mst-gql"
 const Message = MSTGQLObject
   .named('Message')
   .props({
-    id: types.identifier,
     from: types.optional(types.string, ''),
     message: types.optional(types.string, ''),
   })

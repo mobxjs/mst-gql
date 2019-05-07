@@ -1,5 +1,5 @@
 /* #region header */
-/* mst-gql generated barrel file Tue, 07 May 2019 08:34:36 GMT */
+/* mst-gql generated barrel file*/
 /* #endregion */
 
 /* #region exports */

@@ -15,7 +15,7 @@ import { Message } from "./index"
 const Query = MSTGQLObject
   .named('Query')
   .props({
-    messages: types.array(types.reference(Message)),
+    messages: types.array(types.reference(types.late(() => Message))),
   })
 /* #endregion */
 

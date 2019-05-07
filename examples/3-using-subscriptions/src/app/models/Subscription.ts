@@ -15,7 +15,7 @@ import { Message } from "./index"
 const Subscription = MSTGQLObject
   .named('Subscription')
   .props({
-    newMessages: types.maybe(types.reference(Message)),
+    newMessages: types.maybe(types.reference(types.late(() => Message))),
   })
 /* #endregion */
 

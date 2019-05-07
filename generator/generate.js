@@ -86,7 +86,7 @@ const ${name} = MSTGQLObject
   .named('${name}')
   .props({
 ${type.fields
-  .filter(field => field.args.length === 0)
+  .filter(field => field.args.length === 0 && field.name !== "id")
   .map(field => handleField(field, imports))
   .join("\n")}
   })`
@@ -127,9 +127,10 @@ ${type.fields
             )})`
       case "OBJECT":
         const isSelf = type.name === currentType
-        const realType = isSelf
-          ? `types.late(()${format === "ts" ? ": any" : ""} => ${type.name})`
-          : type.name
+        const realType = `types.late(()${
+          // always using late prevents potential circular dep issues
+          isSelf && format === "ts" ? ": any" : ""
+        } => ${type.name})`
         if (!isSelf) imports.push(type.name)
         return isRoot
           ? `types.maybe(types.reference(${realType}))`
@@ -181,10 +182,7 @@ ${objectTypes
 
   function generateBarrelFile() {
     generateFile("index", [
-      createSection(
-        "header",
-        `/* mst-gql generated barrel file ${generationDate} */`
-      ),
+      createSection("header", `/* mst-gql generated barrel file*/`),
       createSection(
         "exports",
         files.map(f => `export * from "./${f[0]}"`).join("\n")
