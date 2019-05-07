@@ -76,6 +76,8 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 
 ## Roadmap
 
+- [ ] normalize query result set
+- [ ] add --exclude flag to CLI
 - [ ] generate query fragments
 - [ ] auto load / auto save
 - [ ] fetch tree

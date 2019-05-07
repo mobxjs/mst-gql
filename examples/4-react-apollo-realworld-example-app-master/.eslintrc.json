@@ -1,0 +1,19 @@
+{
+    "extends": "airbnb",
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true
+    },
+    "plugins": ["graphql"],
+    "rules": {
+        "comma-dangle": ["error", "never"],
+        "import/prefer-default-export": ["off"],
+        "jsx-a11y/click-events-have-key-events": ["off"],
+        "jsx-a11y/anchor-is-valid": ["off"],
+        "graphql/template-strings": ["error", { "env": "apollo" }],
+        "object-curly-newline": ["off"],
+        "react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
+        "react/jsx-one-expression-per-line": ["off"],
+        "semi": ["error", "never"]
+    }
+}
