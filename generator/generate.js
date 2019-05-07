@@ -1,11 +1,11 @@
 const exampleAction = `  .actions(self => ({
-    // this is just an auto-generated example action. 
-    // Feel free to add your own actions, props, views etc to the model. 
-    // Any code outside the '#region mst-gql-*'  regions will be preserved
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))`
+  // this is just an auto-generated example action. 
+  // Feel free to add your own actions, props, views etc to the model. 
+  // Any code outside the '#region mst-gql-*'  regions will be preserved
+  log() {
+    console.log(JSON.stringify(self))
+  }
+}))`
 
 function generate(types, format, generationDate) {
   const files = [] // [[name, contents]]
@@ -49,8 +49,8 @@ import { types } from "mobx-state-tree"`
 
     const contents = `\
 /**
- * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
- */
+* ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
+*/
 const ${name} = types.enumeration("${name}", [
 ${type.enumValues
   .map(
@@ -73,6 +73,9 @@ ${type.enumValues
     objectTypes.push(name)
     const imports = []
 
+    let shallowFields = ["id", "__typename"]
+    let deepFields = ["id", "__typename"]
+
     const header = `\
 /* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
@@ -80,69 +83,97 @@ import { MSTGQLObject } from "mst-gql"`
 
     const contents = `
 /**
- * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
- */
+* ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
+*/
 const ${name} = MSTGQLObject
-  .named('${name}')
-  .props({
+.named('${name}')
+.props({
 ${type.fields
   .filter(field => field.args.length === 0 && field.name !== "id")
   .map(field => handleField(field, imports))
   .join("\n")}
-  })`
+})`
 
-    const typeImports =
-      imports.length === 0
-        ? ``
-        : `import { ${unique(imports).join(", ")} } from "./index"`
+    const typeImports = unique(imports).map(
+      i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`
+    )
+
+    const fragments = `\
+export const ${toFirstLower(name)}FieldsShallow = \`
+${shallowFields.join("\n")}
+\`
+
+export const ${toFirstLower(name)}FieldsDeep = \`
+${deepFields.join("\n")}
+\`
+`
 
     const footer = `export { ${name} }`
 
     generateFile(name, [
       header,
       createSection("type-imports", typeImports),
+      createSection("fragments", fragments),
       createSection("type-def", contents),
       exampleAction,
       footer
     ])
-  }
 
-  function handleField(field, imports) {
-    let r = ""
-    if (field.description)
-      r += `    /** ${sanitizeComment(field.description)} */\n`
-    r += `    ${field.name}: ${handleFieldType(field.type, imports, true)},`
-    return r
-  }
+    function handleField(field) {
+      let r = ""
+      if (field.description)
+        r += `    /** ${sanitizeComment(field.description)} */\n`
+      r += `    ${field.name}: ${handleFieldType(
+        field.name,
+        field.type,
+        true
+      )},`
+      return r
+    }
 
-  function handleFieldType(type, imports, isRoot) {
-    switch (type.kind) {
-      case "SCALAR":
-        const primitiveType = primitiveToMstType(type.name)
-        // a scalar as root, means it is optional!
-        return !isRoot || primitiveType === "identifier"
-          ? `types.${primitiveType}`
-          : `types.optional(types.${primitiveType}, ${getMstDefaultValue(
-              primitiveType
-            )})`
-      case "OBJECT":
-        const isSelf = type.name === currentType
-        const realType = `types.late(()${
-          // always using late prevents potential circular dep issues
-          isSelf && format === "ts" ? ": any" : ""
-        } => ${type.name})`
-        if (!isSelf) imports.push(type.name)
-        return isRoot
-          ? `types.maybe(types.reference(${realType}))`
-          : `types.reference(${realType})`
-      case "NON_NULL":
-        return handleFieldType(type.ofType, imports, false)
-      case "LIST":
-        return `types.array(${handleFieldType(type.ofType, imports, false)})`
-      default:
-        throw new Error(
-          `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
-        )
+    function handleFieldType(fieldName, type, isRoot) {
+      switch (type.kind) {
+        case "SCALAR":
+          shallowFields.push(fieldName)
+          deepFields.push(fieldName)
+          const primitiveType = primitiveToMstType(type.name)
+          // a scalar as root, means it is optional!
+          return !isRoot || primitiveType === "identifier"
+            ? `types.${primitiveType}`
+            : `types.optional(types.${primitiveType}, ${getMstDefaultValue(
+                primitiveType
+              )})`
+        case "OBJECT":
+          const isSelf = type.name === currentType
+          const shallowFragment = `${fieldName} {\n  id\n  __typename\n}`
+          shallowFields.push(shallowFragment)
+          deepFields.push(
+            isSelf
+              ? shallowFragment
+              : `${fieldName} {\n  \${${toFirstLower(type.name)}FieldsDeep}\n}`
+          )
+
+          const realType = `types.late(()${
+            // always using late prevents potential circular dep issues
+            isSelf && format === "ts" ? ": any" : ""
+          } => ${type.name})`
+          if (!isSelf) imports.push(type.name)
+          return isRoot
+            ? `types.maybe(types.reference(${realType}))`
+            : `types.reference(${realType})`
+        case "NON_NULL":
+          return handleFieldType(fieldName, type.ofType, false)
+        case "LIST":
+          return `types.array(${handleFieldType(
+            fieldName,
+            type.ofType,
+            false
+          )})`
+        default:
+          throw new Error(
+            `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
+          )
+      }
     }
   }
 
@@ -159,15 +190,15 @@ import { MSTGQLStore } from "mst-gql"`
 
     const contents = `\
 /**
- * Store, managing, among others, all the objects received through graphQL
- */
+* Store, managing, among others, all the objects received through graphQL
+*/
 const RootStore = MSTGQLStore
-  .named("RootStore")
-  .props({
+.named("RootStore")
+.props({
 ${objectTypes
   .map(t => `    ${t.toLowerCase()}s: types.optional(types.map(${t}), {})`) // TODO: optional should not be needed..
   .join(",\n")}
-  })
+})
 `
     const footer = `export { RootStore }`
 
@@ -240,6 +271,10 @@ function optPrefix(prefix, thing) {
 
 function unique(things) {
   return Array.from(new Set(things))
+}
+
+function toFirstLower(str) {
+  return str[0].toLowerCase() + str.substr(1)
 }
 
 module.exports = { generate }

@@ -5,29 +5,25 @@ import { MSTGQLStore } from "mst-gql"
 /* #region type-imports */
 import { Query, Message, Subscription } from "./index"
 /* #endregion */
+import { messageFieldsDeep } from "./index"
 
 const NewMessageSubQuery = `
   subscription messageSub {
-    newMessages {
-      __typename
-      id
-      from
-      message
-    }
+    newMessages { ${messageFieldsDeep} }
   }
 `
 
 /* #region type-def */
 /**
- * Store, managing, among others, all the objects received through graphQL
- */
+* Store, managing, among others, all the objects received through graphQL
+*/
 const RootStore = MSTGQLStore
-  .named("RootStore")
-  .props({
+.named("RootStore")
+.props({
     querys: types.optional(types.map(Query), {}),
     messages: types.optional(types.map(Message), {}),
     subscriptions: types.optional(types.map(Subscription), {})
-  })
+})
  /* #endregion */
 
   .actions(self => ({

@@ -4,8 +4,8 @@ import { types } from "mobx-state-tree"
 
 /* #region type-def */
 /**
- * CacheControlScope
- */
+* CacheControlScope
+*/
 const CacheControlScope = types.enumeration("CacheControlScope", [
   "PUBLIC",
   "PRIVATE",

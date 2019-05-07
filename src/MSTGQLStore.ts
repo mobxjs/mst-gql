@@ -151,7 +151,10 @@ export const MSTGQLStore = types.model("MSTGQLStore").actions(self => {
       })
       .subscribe({
         next(data) {
-          ;(self as any).merge(getFirstValue(data.data))
+          if (data.errors) throw new Error(JSON.stringify(data.errors))
+          else {
+            ;(self as any).merge(getFirstValue(data.data))
+          }
         }
       })
     return () => sub.unsubscribe()

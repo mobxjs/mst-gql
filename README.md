@@ -76,8 +76,6 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 
 ## Roadmap
 
-- [ ] less sections
-- [ ] json from gql endpoint
 - [ ] generate query fragments
 - [ ] auto load / auto save
 - [ ] fetch tree

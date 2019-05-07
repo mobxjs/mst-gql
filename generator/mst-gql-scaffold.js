@@ -50,7 +50,7 @@ function main() {
       `${__dirname}/../node_modules/.bin/apollo schema:download --endpoint=${input} ${tmpFile}`
     )
     json = JSON.parse(fs.readFileSync(tmpFile, "utf8"))
-    fs.unlinkSync(tmpFile)
+    // fs.unlinkSync(tmpFile)
   } else {
     json = JSON.parse(fs.readFileSync(input, "utf8"))
   }
