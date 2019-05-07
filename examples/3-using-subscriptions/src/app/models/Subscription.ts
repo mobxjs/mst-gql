@@ -12,7 +12,6 @@ import { Message } from "./index"
 /**
  * Subscription
  */
-
 const Subscription = MSTGQLObject
   .named('Subscription')
   .props({

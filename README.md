@@ -88,3 +88,4 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 - [ ] tests
 - [ ] add WS example + scaffolding
 - [ ] add (more) real world example
+- [ ] add --exclude flag to generator CLI

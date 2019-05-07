@@ -9,10 +9,12 @@ const exampleAction = `  .actions(self => ({
 
 function generate(types, format, generationDate) {
   const files = [] // [[name, contents]]
+  const objectTypes = []
+
   let currentType = "<none>"
 
   generateTypes()
-  // TODO: generateRootStore()
+  generateRootStore()
   generateBarrelFile(files)
 
   function generateTypes() {
@@ -68,6 +70,7 @@ ${type.enumValues
 
   function handleObjectType(type) {
     const name = type.name
+    objectTypes.push(name)
     const imports = []
 
     const header = `\
@@ -142,6 +145,40 @@ ${type.fields
     }
   }
 
+  function generateRootStore() {
+    const header = `\
+/* This is a mst-sql generated file */
+import { types } from "mobx-state-tree"
+import { MSTGQLStore } from "mst-gql"`
+
+    const typeImports =
+      objectTypes.length === 0
+        ? ``
+        : `import { ${objectTypes.join(", ")} } from "./index"`
+
+    const contents = `\
+/**
+ * Store, managing, among others, all the objects received through graphQL
+ */
+const RootStore = MSTGQLStore
+  .named("RootStore")
+  .props({
+${objectTypes
+  .map(t => `    ${t.toLowerCase()}s: types.optional(types.map(${t}), {})`) // TODO: optional should not be needed..
+  .join(",\n")}
+  })
+`
+    const footer = `export { RootStore }`
+
+    generateFile("RootStore", [
+      header,
+      createSection("type-imports", typeImports),
+      createSection("type-def", contents),
+      exampleAction,
+      footer
+    ])
+  }
+
   function generateBarrelFile() {
     generateFile("index", [
       createSection(
@@ -155,6 +192,9 @@ ${type.fields
     ])
   }
 
+  /**
+   * When generating a file, only sections created through createSection are re-generated when the target file exists
+   */
   function generateFile(name, sections) {
     files.push([name, sections])
   }

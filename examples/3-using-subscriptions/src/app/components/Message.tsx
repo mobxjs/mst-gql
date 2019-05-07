@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Message as MessageModel } from "../models/RootStore"
+import { Message as MessageModel } from "../models/Message"
 
 export const Message: FC<typeof MessageModel.Type> = props => (
   <div className="notif">

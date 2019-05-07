@@ -12,7 +12,6 @@ import { MSTGQLObject } from "mst-gql"
 /**
  * Message
  */
-
 const Message = MSTGQLObject
   .named('Message')
   .props({

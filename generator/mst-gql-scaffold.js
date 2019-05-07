@@ -16,7 +16,8 @@ function main() {
     })
   } catch (e) {
     console.error(
-      "Usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json"
+      "Usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json\n" +
+        "Usage: mstgql-scaffold --format=js|ts --outDir=src/models http://host/graphql"
     )
     throw e
   }
