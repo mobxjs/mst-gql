@@ -7,7 +7,12 @@ const exampleAction = `  .actions(self => ({
   }
 }))`
 
-function generate(types, format, generationDate) {
+function generate(
+  types,
+  format = "js",
+  roots = new Set(),
+  generationDate = "a long long time ago..."
+) {
   const files = [] // [[name, contents]]
   const objectTypes = []
 
@@ -19,6 +24,7 @@ function generate(types, format, generationDate) {
 
   function generateTypes() {
     types
+      .filter(type => roots.size === 0 || roots.has(type.name))
       .filter(type => !type.name.startsWith("__"))
       .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
       .forEach(type => {

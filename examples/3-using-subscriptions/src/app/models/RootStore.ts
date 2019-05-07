@@ -3,7 +3,7 @@ import { types } from "mobx-state-tree"
 import { MSTGQLStore } from "mst-gql"
 
 /* #region type-imports */
-import { Query, Message, Subscription } from "./index"
+import { Message } from "./index"
 /* #endregion */
 import { messagePrimitives } from "./index"
 
@@ -20,9 +20,7 @@ const NewMessageSubQuery = `
 const RootStore = MSTGQLStore
 .named("RootStore")
 .props({
-    querys: types.optional(types.map(Query), {}),
-    messages: types.optional(types.map(Message), {}),
-    subscriptions: types.optional(types.map(Subscription), {})
+    messages: types.optional(types.map(Message), {})
 })
  /* #endregion */
 

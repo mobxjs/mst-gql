@@ -52,5 +52,8 @@
     "apollo": "^2.9.0",
     "arg": "^4.1.0",
     "graphql": "^14.3.0"
+  },
+  "resolutions": {
+    "graphql": "14.3.0"
   }
 }

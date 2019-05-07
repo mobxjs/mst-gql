@@ -6,7 +6,7 @@
   "scripts": {
     "start:server": "node ./src/server/index.js",
     "start:client": "yarn scaffold && webpack-dev-server --hot --inline",
-    "scaffold": "../../generator/mst-gql-scaffold.js --outDir src/app/models/ --format ts http://localhost:4000/graphql",
+    "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Message' --outDir src/app/models/ --format ts http://localhost:4000/graphql",
     "build-mst-gql": "yarn --cwd ../../ install && yarn --cwd ../../ build",
     "start": "run-p start:server start:client",
     "e2e": "npx cypress run"

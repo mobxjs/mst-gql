@@ -13,7 +13,8 @@ function main() {
   try {
     args = arg({
       "--format": String,
-      "--outDir": String
+      "--outDir": String,
+      "--roots": String
     })
   } catch (e) {
     console.error(
@@ -26,6 +27,7 @@ function main() {
   const format = args["--format"] || "js"
   const outDir = path.resolve(process.cwd(), args["--outDir"] || "src/models")
   const input = args._[0] || "graphql-schema.json"
+  const roots = args["--roots"] ? args["--roots"].split(",") : []
 
   console.log(
     path.basename(__filename) +
@@ -66,7 +68,12 @@ function main() {
     process.exit(1)
   }
 
-  const files = generate(json.__schema.types, format, new Date().toUTCString())
+  const files = generate(
+    json.__schema.types,
+    format,
+    new Set(roots),
+    new Date().toUTCString()
+  )
   files.forEach(([name, sections]) => {
     writeFile(name, sections, format, outDir)
   })
