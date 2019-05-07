@@ -15,13 +15,9 @@ export const GET_LAUNCH = gql`
 `;
 
 export default function CartItem({ launchId }) {
-  return (
-    <Query query={GET_LAUNCH} variables={{ launchId }}>
-      {({ data, loading, error }) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>ERROR: {error.message}</p>;
-        return data && <LaunchTile launch={data.launch} />;
-      }}
-    </Query>
-  );
+  return renderQuery(GET_LAUNCH, { launchId }, { // TODO: enable caching
+    error: error => <p>ERROR: {error.message}</p>,
+    fetching: () => <p>Loading...</p>,
+    data: (lauch) =>  <LaunchTile launch={launch} />
+  })
 }

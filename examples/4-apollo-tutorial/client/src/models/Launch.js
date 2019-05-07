@@ -16,28 +16,40 @@ isBooked
 `
 
 /* #endregion */
+export const LAUNCH_TILE_DATA = gql`
+  fragment LaunchTile on Launch {
+    __typename
+    id
+    isBooked
+    rocket {
+      id
+      __typename
+      name
+    }
+    mission {
+      name
+      __typename
+      missionPatch
+    }
+  }
+`;
 
 /* #region type-def */
 
 /**
-* Launch
-*/
-const Launch = MSTGQLObject
-  .named('Launch')
+ * Launch
+ */
+const Launch = MSTGQLObject.named("Launch")
   .props({
-    site: types.optional(types.string, ''),
+    site: types.optional(types.string, ""),
     mission: types.maybe(types.reference(types.late(() => Mission))),
     rocket: types.maybe(types.reference(types.late(() => Rocket))),
-    isBooked: types.boolean,
+    isBooked: types.boolean
   })
-/* #endregion */
-
-  .actions(self => ({
-    // this is just an auto-generated example action. 
-    // Feel free to add your own actions, props, views etc to the model. 
-    // Any code outside the '#region mst-gql-*'  regions will be preserved
-    log() {
-      console.log(JSON.stringify(self))
+  /* #endregion */
+  .views(self => ({
+    get isInCart() {
+      return self.store.cartItems.contains(self.id)
     }
   }))
 

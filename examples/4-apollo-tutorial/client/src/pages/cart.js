@@ -1,26 +1,12 @@
 import React, { Fragment } from 'react';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import { Header, Loading } from '../components';
 import { CartItem, BookTrips } from '../containers';
 
-export const GET_CART_ITEMS = gql`
-  query GetCartItems {
-    cartItems @client
-  }
-`;
-
 export default function Cart() {
-  return (
-    <Query query={GET_CART_ITEMS}>
-      {({ data, loading, error }) => {
-        if (loading) return <Loading />;
-        if (error) return <p>ERROR: {error.message}</p>;
-        return (
-          <Fragment>
+  return withStore(store => <Fragment>
             <Header>My Cart</Header>
-            {!data.cartItems || !data.cartItems.length ? (
+            {!store.cartItems.length ? (
               <p data-testid="empty-message">No items in your cart</p>
             ) : (
               <Fragment>
@@ -31,8 +17,5 @@ export default function Cart() {
               </Fragment>
             )}
           </Fragment>
-        );
-      }}
-    </Query>
-  );
+        )
 }

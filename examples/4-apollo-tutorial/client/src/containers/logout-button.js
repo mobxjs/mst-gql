@@ -6,20 +6,14 @@ import { menuItemClassName } from '../components/menu-item';
 import { ReactComponent as ExitIcon } from '../assets/icons/exit.svg';
 
 export default function LogoutButton() {
-  return (
-    <ApolloConsumer>
-      {client => (
+  return withStore(store => 
         <StyledButton
-          onClick={() => {
-            client.writeData({ data: { isLoggedIn: false } });
-            localStorage.clear();
-          }}
+          onClick={store.Logout}
         >
           <ExitIcon />
           Logout
         </StyledButton>
       )}
-    </ApolloConsumer>
   );
 }
 
