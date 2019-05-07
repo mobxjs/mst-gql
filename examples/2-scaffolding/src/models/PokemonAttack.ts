@@ -1,12 +1,13 @@
-/* #region mst-gql-header */
-/* This file is generated using mst-gql-scaffold.js Mon, 06 May 2019 19:29:32 GMT */
+/* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
+/* #region type-imports */
 import { Attack } from "./index"
 /* #endregion */
 
-/* #region mst-gql-body */
+/* #region type-def */
+
 /**
  * PokemonAttack
  *
@@ -16,11 +17,12 @@ const PokemonAttack = MSTGQLObject
   .named('PokemonAttack')
   .props({
     /** The fast attacks of this Pokémon */
-    fast: types.array(types.reference(Attack)),
+    fast: types.array(types.reference(types.late(() => Attack))),
     /** The special attacks of this Pokémon */
-    special: types.array(types.reference(Attack)),
+    special: types.array(types.reference(types.late(() => Attack))),
   })
 /* #endregion */
+
   .actions(self => ({
     // this is just an auto-generated example action. 
     // Feel free to add your own actions, props, views etc to the model. 
@@ -30,6 +32,4 @@ const PokemonAttack = MSTGQLObject
     }
   }))
 
-/* #region mst-gql-footer */
 export { PokemonAttack }
-/* #endregion */

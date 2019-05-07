@@ -1,10 +1,13 @@
-/* #region mst-gql-header */
-/* This file is generated using mst-gql-scaffold.js Mon, 06 May 2019 19:29:32 GMT */
+/* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
+
+/* #region type-imports */
+
 /* #endregion */
 
-/* #region mst-gql-body */
+/* #region type-def */
+
 /**
  * Attack
  *
@@ -21,6 +24,7 @@ const Attack = MSTGQLObject
     damage: types.optional(types.integer, 0),
   })
 /* #endregion */
+
   .actions(self => ({
     // this is just an auto-generated example action. 
     // Feel free to add your own actions, props, views etc to the model. 
@@ -30,6 +34,4 @@ const Attack = MSTGQLObject
     }
   }))
 
-/* #region mst-gql-footer */
 export { Attack }
-/* #endregion */
