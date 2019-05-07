@@ -13,8 +13,7 @@ __typename
 minimum
 maximum
 `
-export const pokemonDimensionFieldsShallow = pokemonDimensionPrimitives
-export const pokemonDimensionFieldsDeep = pokemonDimensionPrimitives
+
 /* #endregion */
 
 /* #region type-def */

@@ -14,8 +14,7 @@ name
 type
 damage
 `
-export const attackFieldsShallow = attackPrimitives
-export const attackFieldsDeep = attackPrimitives
+
 /* #endregion */
 
 /* #region type-def */

@@ -3,9 +3,9 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-import { PokemonDimension, pokemonDimensionFieldsDeep } from "./PokemonDimension"
-import { PokemonAttack, pokemonAttackFieldsDeep } from "./PokemonAttack"
-import { PokemonEvolutionRequirement, pokemonEvolutionRequirementFieldsDeep } from "./PokemonEvolutionRequirement"
+import { PokemonDimension } from "./PokemonDimension"
+import { PokemonAttack } from "./PokemonAttack"
+import { PokemonEvolutionRequirement } from "./PokemonEvolutionRequirement"
 /* #endregion */
 
 /* #region fragments */
@@ -23,21 +23,7 @@ maxCP
 maxHP
 image
 `
-export const pokemonFieldsShallow = pokemonPrimitives + `
-weight { id __typename }
-height { id __typename }
-attacks { id __typename }
-evolutions { id __typename }
-evolutionRequirements { id __typename }
-`
 
-export const pokemonFieldsDeep = pokemonPrimitives + `
-weight { id, __typename ${pokemonDimensionFieldsDeep} }
-height { id, __typename ${pokemonDimensionFieldsDeep} }
-attacks { id, __typename ${pokemonAttackFieldsDeep} }
-evolutions { id, __typename}
-evolutionRequirements { id, __typename ${pokemonEvolutionRequirementFieldsDeep} }
-`
 /* #endregion */
 
 /* #region type-def */

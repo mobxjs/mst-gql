@@ -95,7 +95,8 @@ ${type.fields
 })`
 
     const typeImports = unique(imports)
-      .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
+      // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
+      .map(i => `import { ${i} } from "./${i}"`)
       .join("\n")
 
     const flowerName = toFirstLower(name)
@@ -170,26 +171,26 @@ ${primitives.join("\n")}
 \`
 `
 
-      if (refs.length === 0) {
-        fragments += `\
-export const ${flowerName}FieldsShallow = ${flowerName}Primitives
-export const ${flowerName}FieldsDeep = ${flowerName}Primitives`
-      } else {
-        fragments += `\
-export const ${flowerName}FieldsShallow = ${flowerName}Primitives + \`
-${refs.map(([fname]) => `${fname} { id __typename }`).join("\n")}
-\`
+      //       if (refs.length === 0) {
+      //         fragments += `\
+      // export const ${flowerName}FieldsShallow = ${flowerName}Primitives
+      // export const ${flowerName}FieldsDeep = ${flowerName}Primitives`
+      //       } else {
+      //         fragments += `\
+      // export const ${flowerName}FieldsShallow = ${flowerName}Primitives + \`
+      // ${refs.map(([fname]) => `${fname} { id __typename }`).join("\n")}
+      // \`
 
-export const ${flowerName}FieldsDeep = ${flowerName}Primitives + \`
-${refs
-  .map(
-    ([fname, type]) =>
-      `${fname} { id, __typename` +
-      (type === name ? `}` : ` \${${toFirstLower(type)}FieldsDeep} }`)
-  )
-  .join("\n")}
-\``
-      }
+      // export const ${flowerName}FieldsDeep = ${flowerName}Primitives + \`
+      // ${refs
+      //   .map(
+      //     ([fname, type]) =>
+      //       `${fname} { id, __typename` +
+      //       (type === name ? `}` : ` \${${toFirstLower(type)}FieldsDeep} }`)
+      //   )
+      //   .join("\n")}
+      // \``
+      //       }
       return fragments
     }
   }

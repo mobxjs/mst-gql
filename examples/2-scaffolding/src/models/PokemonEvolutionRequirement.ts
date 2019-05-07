@@ -13,8 +13,7 @@ __typename
 amount
 name
 `
-export const pokemonEvolutionRequirementFieldsShallow = pokemonEvolutionRequirementPrimitives
-export const pokemonEvolutionRequirementFieldsDeep = pokemonEvolutionRequirementPrimitives
+
 /* #endregion */
 
 /* #region type-def */

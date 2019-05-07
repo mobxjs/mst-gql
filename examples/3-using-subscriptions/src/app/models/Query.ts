@@ -3,7 +3,7 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-import { Message, messageFieldsDeep } from "./Message"
+import { Message } from "./Message"
 /* #endregion */
 
 /* #region fragments */
@@ -11,13 +11,7 @@ export const queryPrimitives = `
 id
 __typename
 `
-export const queryFieldsShallow = queryPrimitives + `
-messages { id __typename }
-`
 
-export const queryFieldsDeep = queryPrimitives + `
-messages { id, __typename ${messageFieldsDeep} }
-`
 /* #endregion */
 
 /* #region type-def */

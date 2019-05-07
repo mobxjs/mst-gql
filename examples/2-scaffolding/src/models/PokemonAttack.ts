@@ -3,7 +3,7 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-import { Attack, attackFieldsDeep } from "./Attack"
+import { Attack } from "./Attack"
 /* #endregion */
 
 /* #region fragments */
@@ -11,15 +11,7 @@ export const pokemonAttackPrimitives = `
 id
 __typename
 `
-export const pokemonAttackFieldsShallow = pokemonAttackPrimitives + `
-fast { id __typename }
-special { id __typename }
-`
 
-export const pokemonAttackFieldsDeep = pokemonAttackPrimitives + `
-fast { id, __typename ${attackFieldsDeep} }
-special { id, __typename ${attackFieldsDeep} }
-`
 /* #endregion */
 
 /* #region type-def */

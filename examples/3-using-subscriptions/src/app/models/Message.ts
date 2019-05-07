@@ -13,8 +13,7 @@ __typename
 from
 message
 `
-export const messageFieldsShallow = messagePrimitives
-export const messageFieldsDeep = messagePrimitives
+
 /* #endregion */
 
 /* #region type-def */

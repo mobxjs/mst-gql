@@ -5,11 +5,11 @@ import { MSTGQLStore } from "mst-gql"
 /* #region type-imports */
 import { Query, Message, Subscription } from "./index"
 /* #endregion */
-import { messageFieldsDeep } from "./index"
+import { messagePrimitives } from "./index"
 
 const NewMessageSubQuery = `
   subscription messageSub {
-    newMessages { ${messageFieldsDeep} }
+    newMessages { ${messagePrimitives} }
   }
 `
 

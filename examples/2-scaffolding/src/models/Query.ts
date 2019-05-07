@@ -11,13 +11,7 @@ export const queryPrimitives = `
 id
 __typename
 `
-export const queryFieldsShallow = queryPrimitives + `
-query { id __typename }
-`
 
-export const queryFieldsDeep = queryPrimitives + `
-query { id, __typename}
-`
 /* #endregion */
 
 /* #region type-def */
