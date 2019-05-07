@@ -12,7 +12,7 @@ const NewMessageSubQuery = `
   }
 `
 
-const Message = MSTGQLObject.named("message").props({
+export const Message = MSTGQLObject.named("message").props({
   from: types.string,
   message: types.string
 })

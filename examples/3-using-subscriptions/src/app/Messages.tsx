@@ -1,7 +1,6 @@
 import React, { FC, useContext } from "react"
-import gql from "graphql-tag"
 import { storeContext } from "./components/StoreContext"
-import { Error, MessageEntry, Message, MessageResponse } from "./components"
+import { Message } from "./components"
 import { observer } from "mobx-react-lite"
 
 export const Messages: FC = observer(() => {
