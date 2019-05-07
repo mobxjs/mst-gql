@@ -1,3 +1,17 @@
+Based on https://github.com/dostu/react-apollo-realworld-example-app
+
+Getting started:
+
+```bash
+yarn build-mst-gql
+yarn
+yarn start
+```
+
+Run `yarn scaffold` to generate new model definitions from the endpoint.
+
+---
+
 # ![RealWorld Example App](logo.png)
 
 > ### React + Apollo codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and GraphQL API.
@@ -22,5 +36,4 @@ For convenience, we have a live GraphQL API server running at https://realworld-
 
 The source code for the backend server (available for Ruby on Rails) can be found in the [this repo](https://github.com/dostu/rails-graphql-realworld-example-app).
 
-If you want to change the API URL to a local server, simply set `REACT_APP_GRAPHQL_URL` env variable to another URL.
-`REACT_APP_GRAPHQL_URL=http://localhost:3000/graphql yarn start`
+If you want to change the API URL to a local server, simply set `REACT_APP_GRAPHQL_URL` env variable to another URL. `REACT_APP_GRAPHQL_URL=http://localhost:3000/graphql yarn start`

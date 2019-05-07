@@ -3,6 +3,7 @@ const arg = require("arg")
 const path = require("path")
 const fs = require("fs")
 const child_process = require("child_process")
+const graphql = require("graphql")
 
 const { generate } = require("./generate")
 
@@ -51,8 +52,18 @@ function main() {
     )
     json = JSON.parse(fs.readFileSync(tmpFile, "utf8"))
     // fs.unlinkSync(tmpFile)
-  } else {
+  } else if (input.endsWith(".json")) {
     json = JSON.parse(fs.readFileSync(input, "utf8"))
+  } else if (input.endsWith(".graphql")) {
+    // Tnx https://blog.apollographql.com/three-ways-to-represent-your-graphql-schema-a41f4175100d!
+    const text = fs.readFileSync(input, "utf8")
+    const schema = graphql.buildSchema(text)
+    json = graphql.graphqlSync(schema, graphql.introspectionQuery).data
+  } else {
+    console.error(
+      "Expected json, graphql or url as input parameter, got: " + input
+    )
+    process.exit(1)
   }
 
   const files = generate(json.__schema.types, format, new Date().toUTCString())

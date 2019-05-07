@@ -20,7 +20,7 @@ function generate(types, format, generationDate) {
   function generateTypes() {
     types
       .filter(type => !type.name.startsWith("__"))
-      .filter(type => type.kind !== "SCALAR")
+      .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
       .forEach(type => {
         currentType = type.name
         console.log(`Generating type '${type.name}' (${type.kind})`)
@@ -257,16 +257,17 @@ function primitiveToMstType(type) {
     Float: "number",
     Boolean: "boolean"
   }
-  if (!res[type]) throw new Error("Unknown primitive type: " + type)
-  return res[type]
+  // if (!res[type]) throw new Error("Unknown primitive type: " + type)
+  return res[type] || "frozen"
 }
 
 function getMstDefaultValue(type) {
   const res = {
-    integer: 0,
+    integer: "0",
     string: `''`,
-    number: 0,
-    boolean: false
+    number: "0",
+    boolean: "false",
+    frozen: "undefined"
   }
   if (res[type] === undefined)
     throw new Error("Type cannot be optional: " + type)
@@ -279,7 +280,7 @@ function createSection(name, contents) {
 
 function sanitizeComment(comment) {
   // TODO: probably also need to escape //, /*, */ etc...
-  return comment.replace(/\n/g, " ")
+  return comment ? comment.replace(/\n/g, " ") : ""
 }
 
 function optPrefix(prefix, thing) {

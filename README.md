@@ -77,8 +77,11 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 ## Roadmap
 
 - [ ] normalize query result set
-- [ ] add --exclude flag to CLI
-- [ ] generate query fragments
+- [ ] add --roots flag to CLI
+- [ ] make sure non-roots are not stored as reference (and not normalized)
+- [ ] support interfaces
+- [ ] support unions
+- [ ] generate more query fragments?
 - [ ] auto load / auto save
 - [ ] fetch tree
 - [ ] generate operations from mutations?

@@ -24,14 +24,17 @@
     "react-infinite-scroller": "^1.2.0",
     "react-markdown": "^3.3.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "mst-sql": "link:../../"
   },
   "scripts": {
     "start": "cross-env PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build-mst-gql": "yarn --cwd ../../ install && yarn --cwd ../../ build",
+    "scaffold": "../../generator/mst-gql-scaffold.js --outDir src/models/ --format js https://realworld-graphql.herokuapp.com/graphql"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",

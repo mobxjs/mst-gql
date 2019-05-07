@@ -13,7 +13,6 @@ yarn build-mst-gql
 #### 1. Install dependencies
 
 ```bash
-cd examples/3-using-subscriptions
 yarn
 ```
 
