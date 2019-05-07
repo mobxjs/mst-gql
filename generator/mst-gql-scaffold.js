@@ -2,6 +2,7 @@
 const arg = require("arg")
 const path = require("path")
 const fs = require("fs")
+const child_process = require("child_process")
 
 const generationDate = new Date().toUTCString()
 
@@ -22,7 +23,7 @@ try {
 function main() {
   format = args["--format"] || "js"
   outDir = path.resolve(process.cwd(), args["--outDir"] || "src/models")
-  input = path.resolve(process.cwd(), args._[0] || "graphql-schema.json")
+  input = args._[0] || "graphql-schema.json"
 
   console.log(
     path.basename(__filename) +
@@ -33,10 +34,7 @@ function main() {
       " " +
       input
   )
-  if (!fs.existsSync(input)) {
-    console.error("Input file not found: " + input)
-    process.exit(1)
-  } else if (!/^(ts|js)$/.test(format)) {
+  if (!/^(ts|js)$/.test(format)) {
     console.error("Invalid format parameter, expected 'js' or 'ts'")
     process.exit(1)
   }
@@ -45,7 +43,18 @@ function main() {
     process.exit(1)
   }
 
-  const json = JSON.parse(fs.readFileSync(input, "utf8"))
+  let json = ""
+  if (input.startsWith("http:") || input.startsWith("https:")) {
+    const tmpFile = "tmp_schema.json"
+    child_process.execSync(
+      `${__dirname}/../node_modules/.bin/apollo schema:download --endpoint=${input} ${tmpFile}`
+    )
+    json = JSON.parse(fs.readFileSync(tmpFile, "utf8"))
+    // fs.unlinkSync(tmpFile) TODO: restore
+  } else {
+    json = JSON.parse(fs.readFileSync(input, "utf8"))
+  }
+
   const types = json.__schema.types
   const files = []
 
@@ -67,6 +76,42 @@ function main() {
   generateBarrelFile(files)
 }
 
+function handleEnumType(outDir, format, type, files) {
+  const name = type.name
+  files.push(name)
+
+  let contents = `\
+/**
+ * ${name}
+ *
+ * ${sanitizeComment(type.description)}
+ */`
+
+  contents += `\nconst ${name} = types.enumeration("${name}", [\n`
+
+  contents += type.enumValues
+    .map(
+      enumV =>
+        `  "${enumV.name}",${
+          enumV.description ? ` // ${sanitizeComment(enumV.description)}` : ""
+        }`
+    )
+    .join("\n")
+
+  contents += "\n])"
+
+  let header = `\
+/* This file is generated using ${path.basename(
+    __filename
+  )} ${generationDate} */
+import { types } from "mobx-state-tree"
+`
+
+  footer = `export { ${name} }`
+
+  writeFile(name, header, contents, footer)
+}
+
 function handleObjectType(outDir, format, type, files) {
   const name = type.name
   files.push(name)
@@ -76,7 +121,7 @@ function handleObjectType(outDir, format, type, files) {
 /**
  * ${name}
  *
- * ${type.description.replace(/\n/g, "\n * ")}
+ * ${sanitizeComment(type.description)}
  */`
 
   contents += `\nconst ${name} = MSTGQLObject\n  .named('${name}')\n  .props({\n`
@@ -108,7 +153,7 @@ import { MSTGQLObject } from "mst-gql"`
 function handleField(field, imports, self) {
   let r = ""
   if (field.description)
-    r += `    /** ${field.description.replace(/\n/g, " ")} */\n`
+    r += `    /** ${sanitizeComment(field.description)} */\n`
   r += `    ${field.name}: ${handleFieldType(field.type, imports, true, self)},`
   return r
 }
@@ -118,7 +163,7 @@ function handleFieldType(type, imports, root, self) {
     case "SCALAR":
       const primitiveType = primitiveToMstType(type.name)
       // a scalar as root, means it is optional!
-      return !root
+      return !root || primitiveType === "identifier"
         ? `types.${primitiveType}`
         : `types.optional(types.${primitiveType}, ${getMstDefaultValue(
             primitiveType
@@ -233,3 +278,8 @@ const exampleAction = `  .actions(self => ({
   }))`
 
 main()
+
+function sanitizeComment(comment) {
+  // TODO: probably also need to escape //, /*, */ etc...
+  return comment.replace(/\n/g, " ")
+}

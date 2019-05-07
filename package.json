@@ -49,6 +49,7 @@
     "generator"
   ],
   "dependencies": {
+    "apollo": "^2.9.0",
     "arg": "^4.1.0"
   }
 }
