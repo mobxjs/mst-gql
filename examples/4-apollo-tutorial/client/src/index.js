@@ -8,7 +8,9 @@ import Login from "./pages/login"
 import injectStyles from "./styles"
 
 import { createHttpClient } from "mst-gql"
+
 import { RootStore } from "./models/RootStore"
+import { StoreContext } from "./storeContext"
 
 const gqlHttpClient = createHttpClient("http://localhost:4000/graphql", {
   headers: {

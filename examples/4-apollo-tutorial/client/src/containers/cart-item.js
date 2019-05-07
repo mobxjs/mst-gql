@@ -1,7 +1,9 @@
 import React from "react"
 
+import { renderQuery } from "../storeContext"
+
 import LaunchTile from "../components/launch-tile"
-import { LAUNCH_TILE_DATA } from "../pages/launches"
+import { LAUNCH_TILE_DATA } from "../models/Launch"
 
 export const GET_LAUNCH = `
   query GetLaunch($launchId: ID!) {
@@ -20,7 +22,7 @@ export default function CartItem({ launchId }) {
       // TODO: enable caching
       error: error => <p>ERROR: {error.message}</p>,
       fetching: () => <p>Loading...</p>,
-      data: lauch => <LaunchTile launch={launch} />
+      data: launch => <LaunchTile launch={launch} />
     }
   )
 }

@@ -1,5 +1,6 @@
 import React, { Fragment } from "react"
 
+import { withStore } from "../storeContext"
 import { Header } from "../components"
 import { CartItem, BookTrips } from "../containers"
 
@@ -11,10 +12,10 @@ export default function Cart() {
         <p data-testid="empty-message">No items in your cart</p>
       ) : (
         <Fragment>
-          {data.cartItems.map(launchId => (
+          {store.cartItems.map(launchId => (
             <CartItem key={launchId} launchId={launchId} />
           ))}
-          <BookTrips cartItems={data.cartItems} />
+          <BookTrips />
         </Fragment>
       )}
     </Fragment>

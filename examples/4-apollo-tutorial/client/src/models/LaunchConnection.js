@@ -19,17 +19,17 @@ hasMore
 /* #region type-def */
 
 /**
- * LaunchConnection
+* LaunchConnection
  *
  * Simple wrapper around our list of launches that contains a cursor to the last item in the list. Pass this cursor to the launches query to fetch results after these.
- */
-const LaunchConnection = MSTGQLObject.named("LaunchConnection")
+*/
+const LaunchConnection = MSTGQLObject
+  .named('LaunchConnection')
   .props({
     cursor: types.string,
     hasMore: types.boolean,
-    launches: types.array(types.reference(types.late(() => Launch)))
-  })
-  /* #endregion */
+    launches: types.array(types.reference(types.late(() => Launch))),
+  }) /* #endregion */
 
   .actions(self => ({
     fetchMore() {

@@ -37,16 +37,16 @@ export const LAUNCH_TILE_DATA = `
 /* #region type-def */
 
 /**
- * Launch
- */
-const Launch = MSTGQLObject.named("Launch")
+* Launch
+*/
+const Launch = MSTGQLObject
+  .named('Launch')
   .props({
-    site: types.optional(types.string, ""),
+    site: types.optional(types.string, ''),
     mission: types.maybe(types.reference(types.late(() => Mission))),
     rocket: types.maybe(types.reference(types.late(() => Rocket))),
-    isBooked: types.boolean
-  })
-  /* #endregion */
+    isBooked: types.boolean,
+  }) /* #endregion */
   .views(self => ({
     get isInCart() {
       return self.store.cartItems.contains(self.id)

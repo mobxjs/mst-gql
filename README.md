@@ -74,7 +74,17 @@ Should scaffolded files be generated
 
 Fold sections in VSCode with this [extension](https://marketplace.visualstudio.com/items?itemName=maptz.regionfolder)
 
+Withstore like in example 4
+
 ## Examples
+
+Basic http / mst-sql classes / optimistic update
+
+Scaffolding
+
+webservices, scaffolded classes
+
+more in depth example TODO: create diff branch / MR link with the changes
 
 ## Roadmap
 
@@ -95,3 +105,5 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 - [ ] add --exclude flag to generator CLI
 - [ ] use apollo client instead of grapqhl-request as back-end?
 - [ ] be able to specify ownership between types
+- [ ] fix tests in the examples
+- [ ]  rename case({fetching}) -> loading

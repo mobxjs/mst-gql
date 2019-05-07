@@ -19,14 +19,14 @@ type
 /* #region type-def */
 
 /**
- * Rocket
- */
-const Rocket = MSTGQLObject.named("Rocket")
+* Rocket
+*/
+const Rocket = MSTGQLObject
+  .named('Rocket')
   .props({
-    name: types.optional(types.string, ""),
-    type: types.optional(types.string, "")
-  })
-  /* #endregion */
+    name: types.optional(types.string, ''),
+    type: types.optional(types.string, ''),
+  }) /* #endregion */
 
   .actions(self => ({
     // this is just an auto-generated example action.

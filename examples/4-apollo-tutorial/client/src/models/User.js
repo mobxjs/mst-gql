@@ -18,14 +18,14 @@ email
 /* #region type-def */
 
 /**
- * User
- */
-const User = MSTGQLObject.named("User")
+* User
+*/
+const User = MSTGQLObject
+  .named('User')
   .props({
     email: types.string,
-    trips: types.array(types.reference(types.late(() => Launch)))
-  })
-  /* #endregion */
+    trips: types.array(types.reference(types.late(() => Launch))),
+  }) /* #endregion */
 
   .actions(self => ({
     // this is just an auto-generated example action.

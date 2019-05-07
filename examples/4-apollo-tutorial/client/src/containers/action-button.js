@@ -1,6 +1,8 @@
 import React from "react"
 import Button from "../components/button"
 
+import { withStore } from "../storeContext"
+
 export default function ActionButton({ isBooked, id, isInCart }) {
   return withStore(store => (
     <div>

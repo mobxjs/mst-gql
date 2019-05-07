@@ -1,6 +1,7 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
+import { types, flow, getSnapshot } from "mobx-state-tree"
 import { MSTGQLStore } from "mst-gql"
+import { LAUNCH_TILE_DATA } from "./Launch"
 
 /* #region type-imports */
 import { LaunchConnection, Launch, Mission, Rocket, User } from "./index"
@@ -17,9 +18,9 @@ export const GET_LAUNCHES = `
     }
   }
   ${LAUNCH_TILE_DATA}
-`;
+`
 
-export const BOOK_TRIPS = gql`
+export const BOOK_TRIPS = `
   mutation BookTrips($launchIds: [ID]!) {
     bookTrips(launchIds: $launchIds) {
       success
@@ -31,7 +32,7 @@ export const BOOK_TRIPS = gql`
       }
     }
   }
-`;
+`
 
 const loginStatus = types.enumeration("loginStatus", [
   "loggedOut",
@@ -52,7 +53,6 @@ const RootStore = MSTGQLStore.named("RootStore")
     rockets: types.optional(types.map(Rocket), {}),
     users: types.optional(types.map(User), {})
   })
-
   /* #endregion */
   .props({
     loginStatus: loginStatus,
@@ -68,9 +68,9 @@ const RootStore = MSTGQLStore.named("RootStore")
   }))
   .actions(self => ({
     addOrRemoveFromCart(id) {
-      self.cartItems = cartItems.includes(id)
-        ? cartItems.filter(i => i !== id)
-        : [...cartItems, id]
+      self.cartItems = self.cartItems.includes(id)
+        ? self.cartItems.filter(i => i !== id)
+        : [...self.cartItems, id]
     },
     login: flow(function* login(email) {
       try {
@@ -85,17 +85,20 @@ const RootStore = MSTGQLStore.named("RootStore")
     }),
     logout() {
       self.loginStatus = "loggedOut"
-      localStorage.clear();
+      localStorage.clear()
     },
     fetchLaunches(after?) {
       return self.query(GET_LAUNCHES, after ? { after } : undefined)
     },
     clearCart() {
       self.cartItems.splice(0)
-    }
+    },
     bookTrips() {
-      return self.mutate(BOOK_TRIPS, { launchIds: getSnapshot(self.cartItems) }, 
-        self.clearCart) // optimistically clear the cart
+      return self.mutate(
+        BOOK_TRIPS,
+        { launchIds: getSnapshot(self.cartItems) },
+        self.clearCart
+      ) // optimistically clear the cart
     }
   }))
 
