@@ -22,11 +22,11 @@ message
 * Message
 */
 const Message = MSTGQLObject
-.named('Message')
-.props({
+  .named('Message')
+  .props({
     from: types.optional(types.string, ''),
     message: types.optional(types.string, ''),
-})
+  })
 /* #endregion */
 
   .actions(self => ({

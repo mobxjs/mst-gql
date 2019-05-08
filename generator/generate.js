@@ -10,12 +10,13 @@ const exampleAction = `  .actions(self => ({
 function generate(
   types,
   format = "js",
-  roots = new Set(),
-  excludes = new Set(),
+  rootTypes = [],
+  excludes = [],
   generationDate = "a long long time ago..."
 ) {
   const files = [] // [[name, contents]]
-  const objectTypes = []
+  const objectTypes = [] // all known OBJECT types for which MST classes are generated
+  const knownTypes = [] // all known types (including enums and such)  for which MST classes are generated
 
   let currentType = "<none>"
 
@@ -25,10 +26,30 @@ function generate(
 
   function generateTypes() {
     types
-      .filter(type => roots.size === 0 || roots.has(type.name))
-      .filter(type => !excludes.has(type.name))
+      .filter(type => !excludes.includes(type.name))
       .filter(type => !type.name.startsWith("__"))
       .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
+      .forEach(type => {
+        knownTypes.push(type.name)
+        if (type.kind === "OBJECT") objectTypes.push(type.name)
+      })
+
+    if (!rootTypes.size) {
+      console.warn(
+        "Warning: no root types are configured. Probably --roots should be set. Assuming all types are root types for know"
+      )
+      rootTypes = objectTypes.slice()
+    }
+
+    rootTypes.forEach(type => {
+      if (!objectTypes.includes(type))
+        throw new Error(
+          `The root type specified: '${type}' is unknown, excluded or not an OBJECT type!`
+        )
+    })
+
+    types
+      .filter(type => knownTypes.includes(type.name))
       .forEach(type => {
         currentType = type.name
         console.log(`Generating type '${type.name}' (${type.kind})`)
@@ -80,7 +101,6 @@ ${type.enumValues
     if (type.interfaces.length > 0)
       throw new Error("Interfaces are not implemented yet. PR welcome!")
     const name = type.name
-    objectTypes.push(name)
     const imports = []
 
     let primitives = ["id", "__typename"]
@@ -143,22 +163,12 @@ ${type.fields
           const primitiveType = primitiveToMstType(type.name)
           // a scalar as root, means it is optional!
           return !isRoot || primitiveType === "identifier"
-            ? `types.${primitiveType}`
+            ? `types.${primitiveType}` // TODO: everything needs to be optional to allow for partials?
             : `types.optional(types.${primitiveType}, ${getMstDefaultValue(
                 primitiveType
               )})`
         case "OBJECT":
-          const isSelf = type.name === currentType
-          refs.push([fieldName, type.name])
-
-          const realType = `types.late(()${
-            // always using late prevents potential circular dep issues
-            isSelf && format === "ts" ? ": any" : ""
-          } => ${type.name})`
-          if (!isSelf) imports.push(type.name)
-          return isRoot
-            ? `types.maybe(types.reference(${realType}))`
-            : `types.reference(${realType})`
+          return handleObjectFieldType(fieldName, type, isRoot)
         case "NON_NULL":
           return handleFieldType(fieldName, type.ofType, false)
         case "LIST":
@@ -172,6 +182,31 @@ ${type.fields
             `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
           )
       }
+    }
+
+    function handleObjectFieldType(fieldName, type, isRoot) {
+      const isSelf = type.name === currentType
+
+      // this type is not going to be handled by mst-gql, store as frozen
+      if (!knownTypes.includes(type.name)) return `types.frozen()`
+
+      // import the type
+      if (!isSelf) imports.push(type.name)
+
+      // always using late prevents potential circular dependency issues between files
+      const realType = `types.late(()${
+        isSelf && format === "ts" ? ": any" : ""
+      } => ${type.name})`
+
+      // this object is not a root type, so assume composition relationship
+      if (!isSelf && !rootTypes.includes(type.name))
+        return isRoot ? `types.maybe(${realType})` : realType
+
+      // the target is a root type, store a reference
+      refs.push([fieldName, type.name])
+      return isRoot
+        ? `types.maybe(types.reference(${realType}))`
+        : `types.reference(${realType})`
     }
 
     function generateFragments() {
@@ -209,24 +244,27 @@ ${primitives.join("\n")}
     const header = `\
 /* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
-import { MSTGQLStore } from "mst-gql"`
+import { MSTGQLStore, typeInfo } from "mst-gql"`
 
     const typeImports =
-      objectTypes.length === 0
+      rootTypes.length === 0
         ? ``
-        : `import { ${objectTypes.join(", ")} } from "./index"`
+        : `import { ${rootTypes.join(", ")} } from "./index"`
 
     const contents = `\
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
 const RootStore = MSTGQLStore
-.named("RootStore")
-.props({
-${objectTypes
+  .named("RootStore")
+  .extend(typeInfo([${rootTypes
+    .map(s => `['${s}', ${s}]`)
+    .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
+  .props({
+${rootTypes
   .map(t => `    ${t.toLowerCase()}s: types.optional(types.map(${t}), {})`) // TODO: optional should not be needed..
   .join(",\n")}
-})
+  })
 `
     const footer = `export { RootStore }`
 
@@ -268,7 +306,7 @@ function primitiveToMstType(type) {
     Boolean: "boolean"
   }
   // if (!res[type]) throw new Error("Unknown primitive type: " + type)
-  return res[type] || "frozen"
+  return res[type] || "frozen()"
 }
 
 function getMstDefaultValue(type) {
@@ -277,7 +315,7 @@ function getMstDefaultValue(type) {
     string: `''`,
     number: "0",
     boolean: "false",
-    frozen: "undefined"
+    "frozen()": "undefined"
   }
   if (res[type] === undefined)
     throw new Error("Type cannot be optional: " + type)

@@ -24,22 +24,22 @@ name
  * Represents a Pokémon's requirement to evolve
 */
 const PokemonEvolutionRequirement = MSTGQLObject
-.named('PokemonEvolutionRequirement')
-.props({
+  .named('PokemonEvolutionRequirement')
+  .props({
     /** The amount of candy to evolve */
     amount: types.optional(types.integer, 0),
     /** The name of the candy to evolve */
     name: types.optional(types.string, ''),
-})
+  })
 /* #endregion */
 
   .actions(self => ({
-  // this is just an auto-generated example action. 
-  // Feel free to add your own actions, props, views etc to the model. 
-  // Any code outside the '#region mst-gql-*'  regions will be preserved
-  log() {
-    console.log(JSON.stringify(self))
-  }
-}))
+    // this is just an auto-generated example action. 
+    // Feel free to add your own actions, props, views etc to the model. 
+    // Any code outside the '#region mst-gql-*'  regions will be preserved
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
 
 export { PokemonEvolutionRequirement }

@@ -34,8 +34,8 @@ image
  * Represents a Pokémon
 */
 const Pokemon = MSTGQLObject
-.named('Pokemon')
-.props({
+  .named('Pokemon')
+  .props({
     /** The identifier of this Pokémon */
     number: types.optional(types.string, ''),
     /** The name of this Pokémon */
@@ -64,16 +64,16 @@ const Pokemon = MSTGQLObject
     /** The maximum HP of this Pokémon */
     maxHP: types.optional(types.integer, 0),
     image: types.optional(types.string, ''),
-})
+  })
 /* #endregion */
 
   .actions(self => ({
-  // this is just an auto-generated example action. 
-  // Feel free to add your own actions, props, views etc to the model. 
-  // Any code outside the '#region mst-gql-*'  regions will be preserved
-  log() {
-    console.log(JSON.stringify(self))
-  }
-}))
+    // this is just an auto-generated example action. 
+    // Feel free to add your own actions, props, views etc to the model. 
+    // Any code outside the '#region mst-gql-*'  regions will be preserved
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
 
 export { Pokemon }

@@ -1,30 +1,10 @@
 import { SubscriptionClient } from "subscriptions-transport-ws"
-import { types, getEnv, recordPatches } from "mobx-state-tree"
+import { types, getEnv, recordPatches, IAnyModelType } from "mobx-state-tree"
 import { GraphQLClient } from "graphql-request"
-import { action, extendObservable, observable } from "mobx"
 
 import { mergeHelper } from "./mergeHelper"
 import { getFirstValue } from "./utils"
-
-export interface QueryOptions {
-  raw?: boolean
-  // TODO: headers
-  // TODO: cacheStrategy
-}
-
-export type CaseHandlers<T, R> = {
-  fetching(): R
-  error(error: any): R
-  data(data: T): R
-}
-
-export interface QueryResult<T = unknown> extends Promise<T> {
-  fetching: boolean
-  data: T | undefined
-  error: any
-  refetch(): Promise<T>
-  case<R>(handlers: CaseHandlers<T, R>): R
-}
+import { QueryOptions, Query } from "./Query"
 
 export const MSTGQLStore = types.model("MSTGQLStore").actions(self => {
   const {
@@ -39,11 +19,10 @@ export const MSTGQLStore = types.model("MSTGQLStore").actions(self => {
     )
 
   function merge(data: unknown) {
-    if (Array.isArray(data)) return data.map(item => mergeHelper(self, item))
-    else return mergeHelper(self, data)
+    return mergeHelper(self, data)
   }
 
-  function makeSingleRequest(query: string, variables: any): Promise<any> {
+  function rawRequest(query: string, variables: any): Promise<any> {
     if (gqlHttpClient) return gqlHttpClient.request(query, variables)
     else {
       return new Promise((resolve, reject) => {
@@ -66,77 +45,24 @@ export const MSTGQLStore = types.model("MSTGQLStore").actions(self => {
     query: string,
     variables?: any,
     options: QueryOptions = {}
-  ): QueryResult<T> {
-    // TODO: support options.headers
-    // TODO: support options.cacheStrategy
-    const req = makeSingleRequest(query, variables)
-
-    const handleSuccess = action(data => {
-      const value = getFirstValue(data)
-      if (options.raw) {
-        promise.fetching = false
-        return Promise.resolve((promise.data = value))
-      } else {
-        try {
-          promise.fetching = false
-          const normalized = (self as any).merge(value)
-          return Promise.resolve((promise.data = normalized))
-        } catch (e) {
-          return Promise.reject((promise.error = e))
-        }
-      }
-    })
-
-    const handleFailure = action(error => {
-      promise.fetching = false
-      return Promise.reject((promise.error = error))
-    })
-
-    const promise: QueryResult<T> = req.then(
-      handleSuccess,
-      handleFailure
-    ) as any
-    extendObservable(
-      promise,
-      {
-        fetching: true,
-        data: undefined,
-        error: undefined,
-        refetch() {
-          // refech returs the old observable states
-          promise.fetching = false
-          return makeSingleRequest(query, variables).then(
-            handleSuccess,
-            handleFailure
-          )
-        },
-        case<R>(handlers: CaseHandlers<T, R>): R {
-          return promise.fetching && !promise.data
-            ? handlers.fetching()
-            : promise.error
-            ? handlers.error(promise.error)
-            : handlers.data(promise.data!)
-        }
-      } as any,
-      { data: observable.ref }
-    )
-    return promise
+  ): Query<T> {
+    return new Query(self as StoreType, query, variables, options)
   }
 
   function mutate<T>(
     mutation: string,
     params?: any,
     optimisticUpdate?: () => void
-  ): QueryResult<T> {
+  ): Query<T> {
     if (optimisticUpdate) {
       const recorder = recordPatches(self)
       optimisticUpdate()
       recorder.stop()
-      const promise = query<T>(mutation, params)
-      promise.catch(e => {
+      const q = query<T>(mutation, params)
+      q.toPromise().catch(() => {
         recorder.undo()
       })
-      return promise
+      return q
     } else {
       return query(mutation, params)
     }
@@ -160,5 +86,29 @@ export const MSTGQLStore = types.model("MSTGQLStore").actions(self => {
     return () => sub.unsubscribe()
   }
 
-  return { merge, mutate, query, subscribe }
+  // exposed actions
+  return { merge, mutate, query, subscribe, rawRequest }
 })
+
+export function typeInfo(
+  knownTypes: [string, IAnyModelType][],
+  rootTypes: string[]
+) {
+  const kt = new Map(knownTypes)
+  const rt = new Set(rootTypes)
+  return () => ({
+    views: {
+      isKnownType(typename: string): boolean {
+        return kt.has(typename)
+      },
+      isRootType(typename: string): boolean {
+        return rt.has(typename)
+      },
+      getTypeDef(typename: string): IAnyModelType {
+        return kt.get(typename)!
+      }
+    }
+  })
+}
+
+export type StoreType = typeof MSTGQLStore.Type

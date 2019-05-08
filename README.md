@@ -106,4 +106,6 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] use apollo client instead of grapqhl-request as back-end?
 - [ ] be able to specify ownership between types
 - [ ] fix tests in the examples
-- [ ]  rename case({fetching}) -> loading
+- [ ] rename case({fetching}) -> loading
+- [ ] standardize query pattern?
+- [ ] separate into two separte files, or generate // prettier, eslint ignore block

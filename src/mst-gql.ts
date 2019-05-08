@@ -1,9 +1,5 @@
 export { coreFields, primitiveFields } from "./reflection"
-export {
-  MSTGQLStore,
-  QueryResult,
-  CaseHandlers,
-  QueryOptions
-} from "./MSTGQLStore"
+export { MSTGQLStore, typeInfo } from "./MSTGQLStore"
+export { Query, CaseHandlers, QueryOptions } from "./Query"
 export { MSTGQLObject } from "./MSTGQLObject"
 export { createHttpClient, HttpClientOptions } from "./createHttpClient"
