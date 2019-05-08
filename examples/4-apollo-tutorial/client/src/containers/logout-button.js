@@ -7,7 +7,7 @@ import { ReactComponent as ExitIcon } from "../assets/icons/exit.svg"
 
 export default function LogoutButton() {
   return withStore(store => (
-    <StyledButton onClick={store.Logout}>
+    <StyledButton onClick={store.logout}>
       <ExitIcon />
       Logout
     </StyledButton>

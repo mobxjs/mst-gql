@@ -50,7 +50,7 @@ const Launch = MSTGQLObject
   }) /* #endregion */
   .views(self => ({
     get isInCart() {
-      return self.store.cartItems.contains(self.id)
+      return self.store.cartItems.includes(self.id)
     }
   }))
 

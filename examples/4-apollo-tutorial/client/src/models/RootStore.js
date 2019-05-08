@@ -4,12 +4,13 @@ import { MSTGQLStore, typeInfo } from "mst-gql"
 import { LAUNCH_TILE_DATA } from "./Launch"
 
 /* #region type-imports */
-import { Launch, Rocket, User } from "./index"
+import { LaunchConnection, Launch, Mission, Rocket, User } from "./index"
 /* #endregion */
 
 export const GET_LAUNCHES = `
   query GetLaunchList($after: String) {
     launches(after: $after) {
+      __typename
       cursor
       hasMore
       launches {
@@ -43,21 +44,17 @@ const loginStatus = types.enumeration("loginStatus", [
 
 /* #region type-def */
 /**
- * Store, managing, among others, all the objects received through graphQL
- */
-const RootStore = MSTGQLStore.named("RootStore")
-  .extend(
-    typeInfo(
-      [["Launch", Launch], ["Rocket", Rocket], ["User", User]],
-      ["Launch", "Rocket", "User"]
-    )
-  )
+* Store, managing, among others, all the objects received through graphQL
+*/
+const RootStore = MSTGQLStore
+  .named("RootStore")
+  .extend(typeInfo([['LaunchConnection', LaunchConnection], ['Launch', Launch], ['Mission', Mission], ['Rocket', Rocket], ['User', User]], ['Launch', 'Rocket', 'User']))
   .props({
     launchs: types.optional(types.map(Launch), {}),
     rockets: types.optional(types.map(Rocket), {}),
     users: types.optional(types.map(User), {})
   })
-  /* #endregion */
+ /* #endregion */
   .props({
     loginStatus: loginStatus,
     cartItems: types.array(types.string)
@@ -75,6 +72,23 @@ const RootStore = MSTGQLStore.named("RootStore")
       self.cartItems = self.cartItems.includes(id)
         ? self.cartItems.filter(i => i !== id)
         : [...self.cartItems, id]
+    },
+    cancelTrip(launchId) {
+      return self.mutate(
+        `
+      mutation cancel($launchId: ID!) {
+        cancelTrip(launchId: $launchId) {
+          success
+          message
+          launches {
+            __typename
+            id
+            isBooked
+          }
+        }
+      }`,
+        { launchId }
+      )
     },
     login: flow(function* login(email) {
       try {
@@ -108,8 +122,8 @@ const RootStore = MSTGQLStore.named("RootStore")
       return self.mutate(
         BOOK_TRIPS,
         { launchIds: getSnapshot(self.cartItems) },
-        self.clearCart
-      ) // optimistically clear the cart
+        self.clearCart // optimistically clear the cart
+      )
     }
   }))
 

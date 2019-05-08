@@ -20,7 +20,7 @@ export const GET_MY_TRIPS = `
 
 export default function Profile() {
   const store = useContext(StoreContext)
-  renderQuery(
+  return renderQuery(
     GET_MY_TRIPS,
     {},
     {
