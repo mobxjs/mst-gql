@@ -76,6 +76,8 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 
 Withstore like in example 4
 
+Using getters / setters in views for foreign keys
+
 ## Examples
 
 Basic http / mst-sql classes / optimistic update

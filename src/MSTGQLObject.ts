@@ -5,8 +5,7 @@ import { StoreType } from "./MSTGQLStore"
 
 export const MSTGQLObject = types
   .model("MSTGQLObject", {
-    __typename: types.string,
-    id: types.identifier
+    __typename: types.string
   })
   .extend(self => {
     const loadedFields = observable.set<string>([])
@@ -19,7 +18,7 @@ export const MSTGQLObject = types
     }
 
     function getStore(): StoreType {
-      return getParent(self, 2)
+      return getParent(self, 2) // TODO: fix for composed objects! getParentByType?
     }
 
     return {
@@ -29,11 +28,14 @@ export const MSTGQLObject = types
         },
         getMutationParams,
         delete(mutationName: string) {
+          const { id } = self as any
+          if (id === undefined)
+            throw new Error("cannot 'delete' objects without identifier field")
           return getStore().mutate(
             `mutation ${mutationName}(id: $id){}`,
-            { id: self.id },
+            { id },
             () => {
-              getParent<any>(self).delete(self.id)
+              getParent<any>(self).delete(id)
             }
           )
         },

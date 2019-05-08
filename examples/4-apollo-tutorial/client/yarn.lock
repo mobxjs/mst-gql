@@ -8256,9 +8256,13 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-"mst-gql@link:../../..":
-  version "0.0.0"
-  uid ""
+mst-gql@./mst-gql.tgz:
+  version "0.0.1"
+  resolved "./mst-gql.tgz#790dfc6aa5da98a4b233167721a33b7045616d28"
+  dependencies:
+    apollo "^2.9.0"
+    arg "^4.1.0"
+    graphql "^14.3.0"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"

@@ -16,7 +16,7 @@ export interface QueryOptions {
 
 export class Query<T = unknown> {
   @observable fetching = false
-  @observable.shallow data: T | undefined = undefined
+  @observable.ref data: T | undefined = undefined
   @observable error: any = undefined
 
   private promise!: Promise<T>
@@ -47,14 +47,14 @@ export class Query<T = unknown> {
         this.data = normalized
         this.onResolve(this.data!)
       } catch (e) {
-        this.error = e
-        this.onReject(e)
+        this.onFailure(e)
       }
     }
   }
 
   @action onFailure = (error: any) => {
     this.fetching = false
+    this.error = error
     this.onReject(error)
   }
 

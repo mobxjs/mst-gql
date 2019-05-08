@@ -35,10 +35,11 @@ function generate(
       })
 
     if (!rootTypes.size) {
+      rootTypes = autoDetectRootTypes()
       console.warn(
-        "Warning: no root types are configured. Probably --roots should be set. Assuming all types are root types for know"
+        "Warning: no root types are configured. Probably --roots should be set. Detected the following objects to be possible root types: " +
+          rootTypes.join(", ")
       )
-      rootTypes = objectTypes.slice()
     }
 
     rootTypes.forEach(type => {
@@ -67,6 +68,22 @@ function generate(
           currentType = "<none>"
         }
       })
+  }
+
+  function autoDetectRootTypes() {
+    return types
+      .filter(
+        type =>
+          objectTypes.includes(type.name) &&
+          type.fields.some(
+            field =>
+              field.name === "id" &&
+              field.type.kind === "NON_NULL" &&
+              field.type.ofType.kind === "SCALAR" &&
+              field.type.ofType.name === "ID"
+          )
+      )
+      .map(t => t.name)
   }
 
   function handleEnumType(type) {
@@ -103,7 +120,7 @@ ${type.enumValues
     const name = type.name
     const imports = []
 
-    let primitives = ["id", "__typename"]
+    let primitives = ["__typename"]
     let refs = []
 
     const header = `\
@@ -119,7 +136,7 @@ const ${name} = MSTGQLObject
   .named('${name}')
   .props({
 ${type.fields
-  .filter(field => field.args.length === 0 && field.name !== "id")
+  .filter(field => field.args.length === 0)
   .map(field => handleField(field, imports))
   .join("\n")}
   })`
