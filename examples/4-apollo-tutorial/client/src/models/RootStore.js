@@ -1,10 +1,10 @@
 /* This is a mst-sql generated file */
 import { types, flow, getSnapshot } from "mobx-state-tree"
-import { MSTGQLStore } from "mst-gql"
+import { MSTGQLStore, typeInfo } from "mst-gql"
 import { LAUNCH_TILE_DATA } from "./Launch"
 
 /* #region type-imports */
-import { LaunchConnection, Launch, Mission, Rocket, User } from "./index"
+import { Launch, Rocket, User } from "./index"
 /* #endregion */
 
 export const GET_LAUNCHES = `
@@ -46,10 +46,14 @@ const loginStatus = types.enumeration("loginStatus", [
  * Store, managing, among others, all the objects received through graphQL
  */
 const RootStore = MSTGQLStore.named("RootStore")
+  .extend(
+    typeInfo(
+      [["Launch", Launch], ["Rocket", Rocket], ["User", User]],
+      ["Launch", "Rocket", "User"]
+    )
+  )
   .props({
-    launchconnections: types.optional(types.map(LaunchConnection), {}),
     launchs: types.optional(types.map(Launch), {}),
-    missions: types.optional(types.map(Mission), {}),
     rockets: types.optional(types.map(Rocket), {}),
     users: types.optional(types.map(User), {})
   })
@@ -74,9 +78,16 @@ const RootStore = MSTGQLStore.named("RootStore")
     },
     login: flow(function* login(email) {
       try {
-        const { login } = yield self.mutate(`mutation login($email: String)`, {
-          email
-        })
+        const login = yield self
+          .mutate(
+            `mutation login($email: String){
+            login(email: $email)
+          }`,
+            {
+              email
+            }
+          )
+          .toPromise()
         localStorage.setItem("token", login)
         self.loginStatus = "loggedIn"
       } catch {
@@ -87,7 +98,7 @@ const RootStore = MSTGQLStore.named("RootStore")
       self.loginStatus = "loggedOut"
       localStorage.clear()
     },
-    fetchLaunches(after?) {
+    fetchLaunches(after) {
       return self.query(GET_LAUNCHES, after ? { after } : undefined)
     },
     clearCart() {

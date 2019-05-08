@@ -40,7 +40,11 @@ const rootStore = RootStore.create(
 injectStyles()
 ReactDOM.render(
   <StoreContext.Provider value={rootStore}>
-    <Observer>{() => (rootStore.isLoggedIn ? <Pages /> : <Login />)}</Observer>
+    <Observer>
+      {() => (rootStore.loginStatus === "loggedIn" ? <Pages /> : <Login />)}
+    </Observer>
   </StoreContext.Provider>,
   document.getElementById("root")
 )
+
+window.store = rootStore // for debugging / demo

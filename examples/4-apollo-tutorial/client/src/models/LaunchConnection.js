@@ -8,7 +8,6 @@ import { Launch } from "./Launch"
 
 /* #region fragments */
 export const launchConnectionPrimitives = `
-id
 __typename
 cursor
 hasMore

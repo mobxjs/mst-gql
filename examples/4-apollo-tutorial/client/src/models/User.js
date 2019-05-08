@@ -8,8 +8,8 @@ import { Launch } from "./Launch"
 
 /* #region fragments */
 export const userPrimitives = `
-id
 __typename
+id
 email
 `
 
@@ -23,6 +23,7 @@ email
 const User = MSTGQLObject
   .named('User')
   .props({
+    id: types.identifier,
     email: types.string,
     trips: types.array(types.reference(types.late(() => Launch))),
   }) /* #endregion */

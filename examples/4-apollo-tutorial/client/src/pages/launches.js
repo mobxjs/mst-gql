@@ -17,7 +17,7 @@ export default function Launches() {
           data: launchConnection => (
             <Fragment>
               <Header />
-              {values(store.launches).map(launch => (
+              {values(store.launchs).map(launch => (
                 <LaunchTile key={launch.id} launch={launch} />
               ))}
               {launchConnection.hasMore && (

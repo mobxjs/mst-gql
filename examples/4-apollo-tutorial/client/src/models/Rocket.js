@@ -8,8 +8,8 @@ import { MSTGQLObject } from "mst-gql"
 
 /* #region fragments */
 export const rocketPrimitives = `
-id
 __typename
+id
 name
 type
 `
@@ -24,6 +24,7 @@ type
 const Rocket = MSTGQLObject
   .named('Rocket')
   .props({
+    id: types.identifier,
     name: types.optional(types.string, ''),
     type: types.optional(types.string, ''),
   }) /* #endregion */

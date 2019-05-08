@@ -9,8 +9,8 @@ import { Rocket } from "./Rocket"
 
 /* #region fragments */
 export const launchPrimitives = `
-id
 __typename
+id
 site
 isBooked
 `
@@ -27,8 +27,8 @@ export const LAUNCH_TILE_DATA = `
       name
     }
     mission {
-      name
       __typename
+      name
       missionPatch
     }
   }
@@ -42,8 +42,9 @@ export const LAUNCH_TILE_DATA = `
 const Launch = MSTGQLObject
   .named('Launch')
   .props({
+    id: types.identifier,
     site: types.optional(types.string, ''),
-    mission: types.maybe(types.reference(types.late(() => Mission))),
+    mission: types.maybe(types.late(() => Mission)),
     rocket: types.maybe(types.reference(types.late(() => Rocket))),
     isBooked: types.boolean,
   }) /* #endregion */

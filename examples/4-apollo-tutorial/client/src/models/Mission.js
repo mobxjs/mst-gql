@@ -8,7 +8,6 @@ import { MSTGQLObject } from "mst-gql"
 
 /* #region fragments */
 export const missionPrimitives = `
-id
 __typename
 name
 `
