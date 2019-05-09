@@ -5,7 +5,7 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "emotion": "^10.0.6",
-    "mst-gql": "file:./mst-gql1557329590.tgz",
+    "mst-gql": "file:./mst-gql1557392306.tgz",
     "polished": "^2.3.3",
     "react": "^16.7.0",
     "react-apollo": "^2.5.1",

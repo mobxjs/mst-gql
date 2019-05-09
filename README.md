@@ -112,9 +112,6 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] cache query policy
 - [ ] support gql-tag
 - [ ] tests
-- [ ] add WS example + scaffolding
-- [ ] add (more) real world example
-- [ ] add --exclude flag to generator CLI
 - [ ] use apollo client / urql instead of grapqhl-request as back-end?
 - [ ] be able to specify ownership between types
 - [ ] fix tests in the examples
