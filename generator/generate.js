@@ -126,7 +126,7 @@ ${type.enumValues
     const header = `\
 /* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"`
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"`
 
     const contents = `
 /**
@@ -222,8 +222,8 @@ ${type.fields
       // the target is a root type, store a reference
       refs.push([fieldName, type.name])
       return isRoot
-        ? `types.maybe(types.reference(${realType}))`
-        : `types.reference(${realType})`
+        ? `types.maybe(MSTGQLRef(${realType}))`
+        : `MSTGQLRef(${realType})`
     }
 
     function generateFragments() {

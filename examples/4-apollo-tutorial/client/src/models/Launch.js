@@ -1,6 +1,6 @@
 /* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 /* #region type-imports */
 import { Mission } from "./Mission"
@@ -45,7 +45,7 @@ const Launch = MSTGQLObject
     id: types.identifier,
     site: types.optional(types.string, ''),
     mission: types.maybe(types.late(() => Mission)),
-    rocket: types.maybe(types.reference(types.late(() => Rocket))),
+    rocket: types.maybe(MSTGQLRef(types.late(() => Rocket))),
     isBooked: types.boolean,
   }) /* #endregion */
   .views(self => ({

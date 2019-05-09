@@ -1,6 +1,6 @@
 /* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 /* #region type-imports */
 import { Launch } from "./Launch"
@@ -25,7 +25,7 @@ const User = MSTGQLObject
   .props({
     id: types.identifier,
     email: types.string,
-    trips: types.array(types.reference(types.late(() => Launch))),
+    trips: types.array(MSTGQLRef(types.late(() => Launch))),
   }) /* #endregion */
 
   .actions(self => ({
