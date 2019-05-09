@@ -5,5 +5,5 @@ NR=`date "+%s"`
 rm -rf node_modules/mst-gql
 yarn --cwd ../../../ build
 yarn --cwd ../../../ pack --filename mst-gql$NR.tgz
-yarn add file:./mst-gql$NR.tgz
+yarn add --ignore-scripts file:./mst-gql$NR.tgz
 rm mst-gql$NR.tgz
