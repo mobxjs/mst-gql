@@ -10,17 +10,17 @@ export default function Launches() {
   const [queryState, setQueryState] = useState(() => store.fetchLaunches())
   return (
     <Observer>
-      {() =>
-        queryState.case({
-          error: () => <p>ERROR</p>,
-          fetching: () => <Loading />,
-          data: launchConnection => (
-            <Fragment>
-              <Header />
-              {values(store.launchs).map(launch => (
-                <LaunchTile key={launch.id} launch={launch} />
-              ))}
-              {launchConnection.hasMore && (
+      {() => (
+        <Fragment>
+          <Header />
+          {values(store.launchs).map(launch => (
+            <LaunchTile key={launch.id} launch={launch} />
+          ))}
+          {queryState.case({
+            error: () => <p>ERROR</p>,
+            fetching: () => <Loading />,
+            data: launchConnection =>
+              launchConnection.hasMore && (
                 <Button
                   onClick={() => {
                     setQueryState(launchConnection.fetchMore())
@@ -28,11 +28,10 @@ export default function Launches() {
                 >
                   Load More
                 </Button>
-              )}
-            </Fragment>
-          )
-        })
-      }
+              )
+          })}
+        </Fragment>
+      )}
     </Observer>
   )
 }

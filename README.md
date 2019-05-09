@@ -115,11 +115,13 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] add WS example + scaffolding
 - [ ] add (more) real world example
 - [ ] add --exclude flag to generator CLI
-- [ ] use apollo client instead of grapqhl-request as back-end?
+- [ ] use apollo client / urql instead of grapqhl-request as back-end?
 - [ ] be able to specify ownership between types
 - [ ] fix tests in the examples
 - [ ] rename case({fetching}) -> loading
 - [ ] standardize query pattern?
+- [ ] create PR to show diff on the apollo example
 - [ ] separate into two separte files, or generate // prettier, eslint ignore block
 - [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix
 - [ ] generate generation data + mst-sql version into file headers
+- [ ] useLocalStorage mixin
