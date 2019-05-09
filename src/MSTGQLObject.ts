@@ -9,6 +9,7 @@ export const MSTGQLObject = types
   })
   .extend(self => {
     const loadedFields = observable.set<string>([])
+    let store: StoreType
 
     function getMutationParams(): string {
       const snapshot: any = getSnapshot(self)
@@ -18,12 +19,15 @@ export const MSTGQLObject = types
     }
 
     function getStore(): StoreType {
-      return getParent(self, 2) // TODO: fix for composed objects! getParentByType?
+      return store || (store = getParent(self, 2))
     }
 
     return {
       actions: {
-        markFieldLoaded(key: string) {
+        __setStore(s: StoreType) {
+          store = s
+        },
+        __markFieldLoaded(key: string) {
           loadedFields.add(key)
         },
         getMutationParams,

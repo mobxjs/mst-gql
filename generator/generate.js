@@ -264,9 +264,9 @@ import { types } from "mobx-state-tree"
 import { MSTGQLStore, typeInfo } from "mst-gql"`
 
     const typeImports =
-      rootTypes.length === 0
+      objectTypes.length === 0
         ? ``
-        : `import { ${rootTypes.join(", ")} } from "./index"`
+        : `import { ${objectTypes.join(", ")} } from "./index"`
 
     const contents = `\
 /**
@@ -274,7 +274,7 @@ import { MSTGQLStore, typeInfo } from "mst-gql"`
 */
 const RootStore = MSTGQLStore
   .named("RootStore")
-  .extend(typeInfo([${rootTypes
+  .extend(typeInfo([${objectTypes
     .map(s => `['${s}', ${s}]`)
     .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
   .props({

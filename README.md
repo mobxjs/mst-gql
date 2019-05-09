@@ -17,6 +17,9 @@ Pro:
 - optimistic updates
 - local extensions, state
 - server reuse
+- incremental code generation
+- instance reuse
+- reactive updates, on incoming changes
 
 \* Con:
 
@@ -33,6 +36,8 @@ Pro:
 - subscription support
 
 ## Getting started
+
+, { useState, useContext }
 
 ### Scaffolding
 
@@ -70,6 +75,10 @@ Initialization transportation and
 
 ## Tips & tricks
 
+Data is plain, rather than mst object -> make sure your query includes \_\_typename
+
+Data is MST object, but not merged with the store state -> mase sure your query includes id
+
 Should scaffolded files be generated
 
 Fold sections in VSCode with this [extension](https://marketplace.visualstudio.com/items?itemName=maptz.regionfolder)
@@ -77,6 +86,8 @@ Fold sections in VSCode with this [extension](https://marketplace.visualstudio.c
 Withstore like in example 4
 
 Using getters / setters in views for foreign keys
+
+using mutations, see BookTrips component
 
 ## Examples
 
@@ -90,14 +101,13 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 ## Roadmap
 
-- [ ] normalize query result set
-- [ ] make sure non-roots are not stored as reference (and not normalized)
+- [ ] add prisma demo with standardized api's
+- [ ] clean up readme example
 - [ ] support interfaces
 - [ ] support unions
 - [ ] generate more query fragments?
 - [ ] auto load / auto save
-- [ ] fetch tree
-- [ ] generate operations from mutations?
+- [ ] generate operations from mutations? / standardize .extends plugin?
 - [ ] offline actions
 - [ ] cache query policy
 - [ ] support gql-tag
@@ -111,3 +121,5 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] rename case({fetching}) -> loading
 - [ ] standardize query pattern?
 - [ ] separate into two separte files, or generate // prettier, eslint ignore block
+- [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix
+- [ ] generate generation data + mst-sql version into file headers

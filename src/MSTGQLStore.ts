@@ -90,6 +90,7 @@ export const MSTGQLStore = types.model("MSTGQLStore").actions(self => {
   return { merge, mutate, query, subscribe, rawRequest }
 })
 
+// TODO: rename to configureStoreMixin
 export function typeInfo(
   knownTypes: [string, IAnyModelType][],
   rootTypes: string[]

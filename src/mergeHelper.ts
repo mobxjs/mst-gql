@@ -27,13 +27,14 @@ export function mergeHelper(store: any, data: any) {
       } else {
         // create a new one
         instance = typeDef.create(snapshot)
-        // register in the store if a root
         if (store.isRootType(__typename)) {
+          // register in the store if a root
           store[typenameToCollectionName(__typename)].set(id, instance)
         }
+        instance.__setStore(store)
       }
       // Mark the fields as available
-      Object.keys(snapshot).forEach(instance.markFieldLoaded)
+      Object.keys(snapshot).forEach(instance.__markFieldLoaded)
       return instance
     } else {
       // GQL object with unknown type, return verbatim
