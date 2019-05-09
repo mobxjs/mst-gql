@@ -104,7 +104,6 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] add prisma demo with standardized api's
 - [ ] clean up readme example
 - [ ] generate methods for all mutations / queries
-- [ ] support interfaces (generate plain MST type, props only, and use `types.compose` if multiple interfaces needs to be combined)
 - [ ] support unions (just use `types.union` from MST)
 - [ ] generate more query fragments?
 - [ ] auto load / auto save

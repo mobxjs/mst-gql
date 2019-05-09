@@ -19,9 +19,12 @@
     "react-scripts": "1.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "yarn scaffold && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "scaffold": "../../generator/mst-gql-scaffold.js --format js https://api.graphcms.com/simple/v1/cjfmozsww0sn70146fdqyuhst",
+    "build-mst-gql": "bash ./build-mst-gql.sh",
+    "postinstall": "yarn build-mst-gql"
   }
 }

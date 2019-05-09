@@ -20,6 +20,8 @@ function generate(
 
   let currentType = "<none>"
 
+  inlineInterfaces(types)
+
   generateTypes()
   generateRootStore()
   generateBarrelFile(files)
@@ -28,7 +30,12 @@ function generate(
     types
       .filter(type => !excludes.includes(type.name))
       .filter(type => !type.name.startsWith("__"))
-      .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
+      .filter(
+        type =>
+          type.kind !== "SCALAR" &&
+          type.kind !== "INPUT_OBJECT" &&
+          type.kind !== "INTERFACE"
+      )
       .forEach(type => {
         knownTypes.push(type.name)
         if (type.kind === "OBJECT") objectTypes.push(type.name)
@@ -97,26 +104,28 @@ import { types } from "mobx-state-tree"`
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-const ${name} = types.enumeration("${name}", [
-${type.enumValues
-  .map(
-    enumV =>
-      `  "${enumV.name}",${optPrefix(
-        " // ",
-        sanitizeComment(enumV.description)
-      )}`
-  )
-  .join("\n")}
-])`
+const ${name} = ${handleEnumTypeCore(type)}`
 
     const footer = `export { ${name} }`
 
     generateFile(name, [header, createSection("type-def", contents), footer])
   }
 
+  function handleEnumTypeCore(type) {
+    return `types.enumeration("${type.name}", [
+      ${type.enumValues
+        .map(
+          enumV =>
+            `  "${enumV.name}",${optPrefix(
+              " // ",
+              sanitizeComment(enumV.description)
+            )}`
+        )
+        .join("\n")}
+      ])`
+  }
+
   function handleObjectType(type) {
-    if (type.interfaces.length > 0)
-      throw new Error("Interfaces are not implemented yet. PR welcome!")
     const name = type.name
     const imports = []
 
@@ -194,6 +203,9 @@ ${type.fields
             type.ofType,
             false
           )})`
+        case "ENUM":
+          imports.push(type.name)
+          return type.name
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
@@ -337,6 +349,28 @@ function getMstDefaultValue(type) {
   if (res[type] === undefined)
     throw new Error("Type cannot be optional: " + type)
   return res[type]
+}
+
+function inlineInterfaces(types) {
+  // This function spreads all the fields defined in interfaces into the object definitions themselves
+  const interfaces = new Map()
+  types.forEach(t => {
+    if (t.kind === "INTERFACE") interfaces.set(t.name, t)
+  })
+  types.forEach(t => {
+    if (t.kind === "OBJECT") {
+      t.interfaces.forEach(i =>
+        interfaces.get(i.name).fields.forEach(interfaceField => {
+          if (
+            !t.fields.some(
+              objectField => objectField.name === interfaceField.name
+            )
+          )
+            t.fields.push(interfaceField)
+        })
+      )
+    }
+  })
 }
 
 function createSection(name, contents) {
