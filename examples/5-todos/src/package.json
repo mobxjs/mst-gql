@@ -1,0 +1,18 @@
+{
+  "name": "mobx-workshop-exercise-9b-solution",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "index.js",
+  "dependencies": {
+    "apollo-boost": "0.3.1",
+    "graphql": "14.1.1",
+    "graphql-tag": "2.10.1",
+    "mobx": "5.9.0",
+    "mobx-react": "5.4.3",
+    "mobx-react-devtools": "6.1.1",
+    "mobx-state-tree": "3.11.0",
+    "react": "16.8.4",
+    "react-dom": "16.8.4"
+  }
+}
