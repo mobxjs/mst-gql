@@ -7,6 +7,13 @@ const exampleAction = `  .actions(self => ({
     }
   }))`
 
+const buildInExcludes = [
+  "Mutation",
+  "CacheControlScope",
+  "Query",
+  "Subscription"
+]
+
 function generate(
   types,
   format = "js",
@@ -14,6 +21,8 @@ function generate(
   excludes = [],
   generationDate = "a long long time ago..."
 ) {
+  excludes.push(...buildInExcludes)
+
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such)  for which MST classes are generated
@@ -275,14 +284,18 @@ ${primitives.join("\n")}
 
   function generateRootStore() {
     const header = `\
-/* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLStore, typeInfo } from "mst-gql"`
-
+/* This is a mst-sql generated file */`
     const typeImports =
-      objectTypes.length === 0
+      `\
+import { types } from "mobx-state-tree"
+import { MSTGQLStore, typeInfo${
+        format === "ts" ? ", QueryOptions" : ""
+      } } from "mst-gql"` +
+      (objectTypes.length === 0
         ? ``
-        : `import { ${objectTypes.join(", ")} } from "./index"`
+        : `\nimport { ${objectTypes
+            .map(t => `${t}, ${toFirstLower(t)}Primitives`)
+            .join(", ")} } from "./index"`)
 
     const contents = `\
 /**
@@ -298,6 +311,8 @@ ${rootTypes
   .map(t => `    ${t.toLowerCase()}s: types.optional(types.map(${t}), {})`) // TODO: optional should not be needed..
   .join(",\n")}
   })
+  .actions(self => ({${generateQueries()}    
+  }))
 `
     const footer = `export { RootStore }`
 
@@ -308,6 +323,108 @@ ${rootTypes
       exampleAction,
       footer
     ])
+  }
+
+  function generateQueries() {
+    return (
+      generateQueryHelper(
+        findObjectByName("Query"),
+        "query",
+        "query",
+        format === "ts" ? ", options: QueryOptions = {}" : ", options = {}",
+        ", options"
+      ) +
+      generateQueryHelper(
+        findObjectByName("Mutation"),
+        "mutation",
+        "mutate",
+        format === "ts"
+          ? ", optimisticUpdate?: () => void"
+          : ", optimisticUpdate?",
+        ", optimisticUpdate"
+      ) +
+      generateQueryHelper(
+        findObjectByName("Subscription"),
+        "subscription",
+        "subscribe"
+      )
+    )
+  }
+
+  function generateQueryHelper(
+    query,
+    gqlPrefix,
+    methodPrefix,
+    extraFormalArgs = "",
+    extraActualArgs = ""
+  ) {
+    if (!query) return ""
+    return query.fields
+      .map(field => {
+        const { name, args, type, description } = field
+        const returnsList = type.kind === "LIST"
+        const returnType = returnsList ? type.ofType : type
+        if (returnType.kind !== "OBJECT") {
+          return "" // TODO: for now, we only generate queries for those queries that return objects
+        }
+
+        const tsType =
+          format !== "ts"
+            ? ""
+            : `<typeof ${returnType.name}.Type${returnsList ? "[]" : ""}>`
+
+        const formalArgs =
+          args.length === 0
+            ? ""
+            : "(" +
+              args
+                .map(arg => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
+                .join(", ") +
+              ")"
+        const actualArgs =
+          args.length === 0
+            ? ""
+            : "(" +
+              args.map(arg => `${arg.name}: \$${arg.name}`).join(", ") +
+              ")"
+
+        // TODO: the variables argument should could be strongly typed if TS
+        const tsVariablesType = format === "ts" ? ": any" : ""
+        return `\
+${optPrefix("\n    // ", sanitizeComment(description))}
+    ${methodPrefix}${toFirstUpper(
+          name
+        )}(variables${tsVariablesType} = {}, resultSelector = ${toFirstLower(
+          returnType.name
+        )}Primitives${extraFormalArgs}) {
+      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
+        \${resultSelector}
+      } }\`, variables${extraActualArgs})
+    },`
+      })
+      .join("")
+  }
+
+  function printGraphqlType(type) {
+    switch (type.kind) {
+      case "NON_NULL":
+        return printGraphqlType(type.ofType) + "!"
+      case "LIST":
+        return `[${printGraphqlType(type.ofType)}]`
+      case "ENUM":
+      case "OBJECT":
+      case "SCALAR":
+        return type.name
+      default:
+        throw new Error(
+          "Not implemented printGraphQLType yet, PR welcome for " +
+            JSON.stringify(type, null, 2)
+        )
+    }
+  }
+
+  function findObjectByName(name) {
+    return types.find(type => type.name === name && type.kind === "OBJECT")
   }
 
   function generateReactUtils() {
@@ -417,6 +534,15 @@ function unique(things) {
 
 function toFirstLower(str) {
   return str[0].toLowerCase() + str.substr(1)
+}
+
+function toFirstUpper(str) {
+  return str[0].toUpperCase() + str.substr(1)
+}
+
+function log(thing) {
+  console.log(JSON.stringify(thing, null, 2))
+  return thing
 }
 
 module.exports = { generate }

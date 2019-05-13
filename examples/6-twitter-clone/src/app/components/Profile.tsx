@@ -6,7 +6,7 @@ import { Query } from "../models/reactUtils"
 export const Profile = () => {
   const inputRef = useRef<HTMLInputElement>()
   return (
-    <Query query={`query { me { id __typename avatar name } }`}>
+    <Query query={store => store.queryMe()}>
       {({ loading, error, data, store, setQuery }) => {
         if (error) return <Error>{error.message}</Error>
         if (loading) return <Loading />

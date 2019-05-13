@@ -56,14 +56,14 @@ export const MSTGQLStore = types
 
     function mutate<T>(
       mutation: string,
-      params?: any,
+      variables?: any,
       optimisticUpdate?: () => void
     ): Query<T> {
       if (optimisticUpdate) {
         const recorder = recordPatches(self)
         optimisticUpdate()
         recorder.stop()
-        const q = query<T>(mutation, params, {
+        const q = query<T>(mutation, variables, {
           fetchPolicy: "network-only"
         })
         q.currentPromise().catch(() => {
@@ -71,13 +71,14 @@ export const MSTGQLStore = types
         })
         return q
       } else {
-        return query(mutation, params, {
+        return query(mutation, variables, {
           fetchPolicy: "network-only"
         })
       }
     }
 
-    function subscribe(query: string, variables?: any): () => void {
+    // N.b: the T is ignored, but it does simplify code generation
+    function subscribe<T = any>(query: string, variables?: any): () => void {
       if (!gqlWsClient) throw new Error("No WS client available")
       const sub = gqlWsClient
         .request({

@@ -43,6 +43,7 @@ const store = {
 const typeDefs = `
   type Query {
     messages: [Message]
+    message(id: ID!): Message
     me: User
   }
   type Subscription {
@@ -71,6 +72,8 @@ const resolvers = {
         ...msg,
         user: store.users.find(user => user.id === msg.user)
       })),
+    message: (_, { id }) =>
+      resolvers.Query.messages().filter(msg => msg.id === id)[0],
     me: () => store.users.find(user => user.id === "mweststrate")
   },
   Subscription: {
