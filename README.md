@@ -101,7 +101,7 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 ## Roadmap
 
-- [ ] add prisma demo with standardized api's
+- [ ] implement example 5 / add prisma demo with standardized api's
 - [ ] clean up readme example
 - [ ] generate methods for all mutations / queries
 - [ ] support unions (just use `types.union` from MST)
