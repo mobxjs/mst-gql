@@ -1,13 +1,13 @@
 import React, { useRef } from "react"
 
-import { Error, Loading, Message } from "./"
+import { Error, Loading } from "./"
 import { Query } from "../models/reactUtils"
 
 export const Profile = () => {
   const inputRef = useRef<HTMLInputElement>()
   return (
     <Query query={`query { me { id __typename avatar name } }`}>
-      {({ loading, error, data, store }) => {
+      {({ loading, error, data, store, setQuery }) => {
         if (error) return <Error>{error.message}</Error>
         if (loading) return <Loading />
         if (data)
@@ -16,7 +16,7 @@ export const Profile = () => {
               <input defaultValue={data.name} ref={inputRef} />
               <button
                 onClick={() => {
-                  store.changeName(data.id, inputRef.current!.value)
+                  setQuery(store.changeName(data.id, inputRef.current!.value))
                 }}
               >
                 Save
