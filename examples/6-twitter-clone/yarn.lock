@@ -3032,13 +3032,6 @@ graphql-upload@^8.0.2:
     http-errors "^1.7.1"
     object-path "^0.11.4"
 
-graphql@^14.1.1:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.1.1.tgz#d5d77df4b19ef41538d7215d1e7a28834619fac0"
-  integrity sha512-C5zDzLqvfPAgTtP8AUPIt9keDabrdRAqSWjj2OPRKrKxI9Fb65I36s1uCs1UUBFnSWTdO7hyHi7z1ZbwKMKF6Q==
-  dependencies:
-    iterall "^1.2.2"
-
 graphql@^14.2.1, graphql@^14.3.0:
   version "14.3.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.3.0.tgz#34dd36faa489ff642bcd25df6c3b4f988a1a2f3e"
@@ -4284,9 +4277,15 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-"mst-gql@link:../..":
-  version "0.0.0"
-  uid ""
+"mst-gql@file:./mst-gql1557740125.tgz":
+  version "0.0.1"
+  resolved "file:./mst-gql1557740125.tgz#63830129ff8e438ab63e74345ebac776dc89a464"
+  dependencies:
+    apollo "^2.9.0"
+    arg "^4.1.0"
+    fast-json-stable-stringify "^2.0.0"
+    graphql "^14.3.0"
+    graphql-request "^1.8.2"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"

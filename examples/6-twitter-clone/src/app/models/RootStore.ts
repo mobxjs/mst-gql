@@ -1,22 +1,33 @@
-import { MSTGQLStore, primitiveFields, typeInfo } from "mst-gql"
+/* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
-import { Todo } from "./Todo"
+import { MSTGQLStore, typeInfo } from "mst-gql"
+import { userPrimitives, messagePrimitives } from "./index"
 
-const TodoQuery = `
-  query {
-    todos {
-      ${primitiveFields(Todo)}
-    }
-  }
-`
+/* #region type-imports */
+import { Message, User } from "./index"
+/* #endregion */
 
-const RootStore = MSTGQLStore.props({
-  todos: types.optional(types.map(Todo), {})
-})
-  .extend(typeInfo([["Todo", Todo]], ["Todo"])) // The mapping of __typename to MST types, and the collection of types to be cached in the store
+/* #region type-def */
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+const RootStore = MSTGQLStore
+  .named("RootStore")
+  .extend(typeInfo([['Message', Message], ['User', User]], ['Message', 'User']))
+  .props({
+    messages: types.optional(types.map(Message), {}),
+    users: types.optional(types.map(User), {})
+  })
+ /* #endregion */
+
   .actions(self => ({
-    loadTodos() {
-      return self.query<Array<typeof Todo.Type>>(TodoQuery)
+    loadMessages() {
+      return self.query<(typeof Message.Type)[]>(`query { messages {
+        ${messagePrimitives}
+        user {
+          ${userPrimitives}
+        }
+      } }`)
     }
   }))
 

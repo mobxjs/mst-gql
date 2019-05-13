@@ -84,10 +84,13 @@ function generate(
           objectTypes.includes(type.name) &&
           type.fields.some(
             field =>
-              field.name === "id" &&
-              field.type.kind === "NON_NULL" &&
-              field.type.ofType.kind === "SCALAR" &&
-              field.type.ofType.name === "ID"
+              (field.name === "id" &&
+                field.type.kind === "SCALAR" &&
+                field.type.name === "ID") ||
+              (field.name === "id" &&
+                field.type.kind === "NON_NULL" &&
+                field.type.ofType.kind === "SCALAR" &&
+                field.type.ofType.name === "ID")
           )
       )
       .map(t => t.name)

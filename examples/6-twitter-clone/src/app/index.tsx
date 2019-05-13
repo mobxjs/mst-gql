@@ -9,7 +9,7 @@ import { storeContext } from "./components/StoreContext"
 import { Home } from "./Home"
 import "./index.css"
 
-const gqlHttpClient = createHttpClient("http://localhost:3001/graphql")
+const gqlHttpClient = createHttpClient("http://localhost:4000/graphql")
 
 const rootStore = RootStore.create(undefined, {
   gqlHttpClient
@@ -18,7 +18,7 @@ const rootStore = RootStore.create(undefined, {
 export const App: FC = () => (
   <storeContext.Provider value={rootStore}>
     <main>
-      <h1>Todos</h1>
+      <h1>Twitter</h1>
       <Home />
     </main>
   </storeContext.Provider>
