@@ -6,4 +6,5 @@
 export * from "./Message"
 export * from "./User"
 export * from "./RootStore"
+export * from "./reactUtils"
 /* #endregion */

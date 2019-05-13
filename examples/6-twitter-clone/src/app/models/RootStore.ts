@@ -9,16 +9,15 @@ import { Message, User } from "./index"
 
 /* #region type-def */
 /**
-* Store, managing, among others, all the objects received through graphQL
-*/
-const RootStore = MSTGQLStore
-  .named("RootStore")
-  .extend(typeInfo([['Message', Message], ['User', User]], ['Message', 'User']))
+ * Store, managing, among others, all the objects received through graphQL
+ */
+const RootStore = MSTGQLStore.named("RootStore")
+  .extend(typeInfo([["Message", Message], ["User", User]], ["Message", "User"]))
   .props({
     messages: types.optional(types.map(Message), {}),
     users: types.optional(types.map(User), {})
   })
- /* #endregion */
+  /* #endregion */
 
   .actions(self => ({
     loadMessages() {
@@ -28,6 +27,12 @@ const RootStore = MSTGQLStore
           ${userPrimitives}
         }
       } }`)
+    },
+    changeName(id: string, name: string) {
+      return self.mutate(
+        `mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) { id __typename name }}`,
+        { id, name }
+      )
     }
   }))
 

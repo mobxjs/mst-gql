@@ -24,6 +24,7 @@ function generate(
 
   generateTypes()
   generateRootStore()
+  generateReactUtils()
   generateBarrelFile(files)
 
   function generateTypes() {
@@ -306,6 +307,26 @@ ${rootTypes
       createSection("type-def", contents),
       exampleAction,
       footer
+    ])
+  }
+
+  function generateReactUtils() {
+    const header = `\
+/* This is a mst-sql generated file */
+import { createStoreContext, createQueryComponent } from "mst-gql"
+import { RootStore } from "./RootStore"`
+
+    const body = `
+export const StoreContext = createStoreContext${
+      format === "ts" ? `<typeof RootStore.Type>` : ""
+    }()
+
+export const Query = createQueryComponent(StoreContext)
+`
+
+    generateFile("reactUtils", [
+      createSection("header", header),
+      createSection("body", body)
     ])
   }
 
