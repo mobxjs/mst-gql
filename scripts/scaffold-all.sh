@@ -3,19 +3,19 @@ set -e -x
 yarn build 
 
 cd examples/1-getting-started 
-yarn 
+yarn scaffold 
 
 cd ../2-scaffolding 
-yarn 
+yarn scaffold
 
 cd ../3-using-subscriptions 
-yarn 
+yarn scaffold
 
 cd ../4-apollo-tutorial 
-yarn 
+yarn scaffold
 
-# cd ../5-todos
-# yarn
+cd ../5-todos
+# TODO: yarn scaffold
 
 cd ../6-twitter-clone 
-yarn 
+yarn scaffold

@@ -1,5 +1,6 @@
 // @ts-ignore
 import stringify from "fast-json-stable-stringify"
+import { DocumentNode, print } from "graphql"
 
 import { StoreType } from "./MSTGQLStore"
 import { getFirstValue } from "./utils"
@@ -31,6 +32,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   @observable.ref data: T | undefined = undefined
   @observable error: any = undefined
 
+  public query: string
   private fetchPolicy: FetchPolicy
   private cacheKey: string
   private promise!: Promise<T>
@@ -39,15 +41,19 @@ export class Query<T = unknown> implements PromiseLike<T> {
 
   constructor(
     public store: StoreType,
-    public query: string,
+    query: string | DocumentNode,
     public variables: any,
     public options: QueryOptions = {}
   ) {
+    this.query = typeof query === "string" ? query : print(query)
     // TODO: optimization: merge double in-flight requests
     this.fetchPolicy = options.fetchPolicy || "cache-and-network"
-    this.cacheKey = query + stringify(variables)
+    this.cacheKey = this.query + stringify(variables)
     this.initPromise()
+    this.start()
+  }
 
+  private start() {
     const inCache = this.store.__queryCache.has(this.cacheKey)
     switch (this.fetchPolicy) {
       case "no-cache":
@@ -58,7 +64,9 @@ export class Query<T = unknown> implements PromiseLike<T> {
         if (!inCache)
           this.onFailure(
             new Error(
-              `No results for query ${query} found in cache, and policy is cache-only`
+              `No results for query ${
+                this.query
+              } found in cache, and policy is cache-only`
             )
           )
         else this.onSuccess(this.store.__queryCache.get(this.cacheKey))

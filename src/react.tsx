@@ -1,19 +1,21 @@
 import * as React from "react"
 import { useState, useContext, useRef, useCallback } from "react"
 import { observer } from "mobx-react"
+import { DocumentNode } from "graphql"
 
 import { Query } from "./Query"
 import { MSTGQLStore } from "./MSTGQLStore"
 
-// TODO: move to seperate package
+// TODO: move to separate package
 
 export type QueryLike<STORE, DATA> =
   | ((store: STORE) => Query<DATA>)
   | Query<DATA>
-  | string // TODO: add gql-tag
+  | string
+  | DocumentNode
 
 export type QueryProps<STORE, DATA> = {
-  query?: QueryLike<STORE, DATA> // TODO: or gql-tag
+  query?: QueryLike<STORE, DATA>
   variables?: any
   children: (args: {
     store: STORE
@@ -36,9 +38,8 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
   query: QueryLike<STORE, DATA>
 ): Query<DATA> {
   if (typeof query === "function") return query(store)
-  if (typeof query === "string") return store.query(query, variables)
-  // TODO: support gql-tag
-  return query
+  if (query instanceof Query) return query
+  return store.query(query, variables)
 }
 
 export function createQueryComponent<STORE extends typeof MSTGQLStore.Type>(

@@ -25,6 +25,6 @@
     "eject": "react-scripts eject",
     "scaffold": "../../generator/mst-gql-scaffold.js --format js https://api.graphcms.com/simple/v1/cjfmozsww0sn70146fdqyuhst",
     "postinstall": "yarn install-mst-gql",
-    "build-mst-gql": "bash ../../install-mst-gql.sh"
+    "build-mst-gql": "bash ../../scripts/install-mst-gql.sh"
   }
 }

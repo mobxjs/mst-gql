@@ -146,9 +146,12 @@ const ${name} = ${handleEnumTypeCore(type)}`
     let refs = []
 
     const header = `\
-/* This is a mst-sql generated file */
+/* This is a mst-sql generated file */`
+
+    const baseImports = `\
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"`
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./RootStore"`
 
     const contents = `
 /**
@@ -161,11 +164,18 @@ ${type.fields
   .filter(field => field.args.length === 0)
   .map(field => handleField(field, imports))
   .join("\n")}
-  })`
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore${
+        format === "ts" ? `<typeof RootStore.Type>` : ""
+      }()
+    }
+  }))`
 
     const typeImports = unique(imports)
       // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
-      .map(i => `import { ${i} } from "./${i}"`)
+      .map(i => `\nimport { ${i} } from "./${i}"`)
       .join("\n")
 
     const flowerName = toFirstLower(name)
@@ -176,7 +186,7 @@ ${type.fields
 
     generateFile(name, [
       header,
-      createSection("type-imports", typeImports),
+      createSection("type-imports", baseImports + typeImports),
       createSection("fragments", fragments),
       createSection("type-def", contents),
       exampleAction,
@@ -288,6 +298,7 @@ ${primitives.join("\n")}
     const typeImports =
       `\
 import { types } from "mobx-state-tree"
+import gql from "graphql-tag"
 import { MSTGQLStore, typeInfo${
         format === "ts" ? ", QueryOptions" : ""
       } } from "mst-gql"` +
@@ -404,7 +415,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         }${tsVariablesType}, resultSelector = ${toFirstLower(
           returnType.name
         )}Primitives${extraFormalArgs}) {
-      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
+      return self.${methodPrefix}${tsType}(gql\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
         \${resultSelector}
       } }\`, variables${extraActualArgs})
     },`

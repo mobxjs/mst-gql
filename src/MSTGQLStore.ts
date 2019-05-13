@@ -1,6 +1,7 @@
 import { SubscriptionClient } from "subscriptions-transport-ws"
 import { types, getEnv, recordPatches, IAnyModelType } from "mobx-state-tree"
 import { GraphQLClient } from "graphql-request"
+import { DocumentNode } from "graphql"
 
 import { mergeHelper } from "./mergeHelper"
 import { getFirstValue } from "./utils"
@@ -47,7 +48,7 @@ export const MSTGQLStore = types
     }
 
     function query<T>(
-      query: string,
+      query: string | DocumentNode,
       variables?: any,
       options: QueryOptions = {}
     ): Query<T> {
@@ -55,7 +56,7 @@ export const MSTGQLStore = types
     }
 
     function mutate<T>(
-      mutation: string,
+      mutation: string | DocumentNode,
       variables?: any,
       optimisticUpdate?: () => void
     ): Query<T> {
@@ -78,7 +79,10 @@ export const MSTGQLStore = types
     }
 
     // N.b: the T is ignored, but it does simplify code generation
-    function subscribe<T = any>(query: string, variables?: any): () => void {
+    function subscribe<T = any>(
+      query: string | DocumentNode,
+      variables?: any
+    ): () => void {
       if (!gqlWsClient) throw new Error("No WS client available")
       const sub = gqlWsClient
         .request({

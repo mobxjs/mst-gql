@@ -1,5 +1,5 @@
 import { resolveIdentifier } from "mobx-state-tree"
-import { typenameToCollectionName } from "./reflection"
+import { typenameToCollectionName } from "./utils"
 
 export function mergeHelper(store: any, data: any) {
   function merge(data: any): any {

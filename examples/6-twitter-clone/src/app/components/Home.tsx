@@ -2,7 +2,6 @@ import React from "react"
 
 import { Error, Loading, Message } from "./"
 import { Query } from "../models/reactUtils"
-import { values } from "mobx"
 
 export const Home = () => (
   <Query query={store => store.loadMessages()}>
@@ -12,8 +11,7 @@ export const Home = () => (
       return (
         <>
           <ul>
-            {values(store.messages)
-              // @ts-ignore
+            {Array.from(store.messages.values())
               .reverse()
               .map(message => (
                 <Message key={message.id} message={message} />

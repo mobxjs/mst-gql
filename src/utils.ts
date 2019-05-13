@@ -6,3 +6,7 @@ export function getFirstValue(data: any) {
     )
   return data[keys[0]]
 }
+
+export function typenameToCollectionName(typename: string) {
+  return typename.toLowerCase() + "s"
+}

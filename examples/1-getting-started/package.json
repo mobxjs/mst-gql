@@ -6,7 +6,7 @@
   "scripts": {
     "start:server": "node ./src/server/index.js",
     "start:client": "webpack-dev-server --hot --inline",
-    "install-mst-gql": "bash ../../install-mst-gql.sh",
+    "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
     "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Message' --excludes 'CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:4000/graphql",
     "postinstall": "yarn install-mst-gql",
     "start": "run-p start:server start:client"
@@ -23,6 +23,8 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "@types/graphql": "^14.2.0",
+    "@types/jest": "^24.0.12",
     "@types/react": "^16.8.16",
     "@types/react-dom": "^16.8.4",
     "apollo-server-express": "^2.3.3",
@@ -31,11 +33,13 @@
     "express": "^4.16.4",
     "graphql": "^14.1.1",
     "graphql-playground-middleware-express": "^1.7.11",
+    "graphql-tag": "^2.10.1",
     "isomorphic-fetch": "^2.2.1",
+    "jest": "^24.8.0",
     "mobx": "^5.9.4",
     "mobx-react-lite": "^1.3.1",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "file:./mst-gql1557772391.tgz",
+    "mst-gql": "file:./mst-gql1557774504.tgz",
     "react": "^16.8.1",
     "react-dom": "^16.8.1"
   }

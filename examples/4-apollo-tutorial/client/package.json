@@ -19,7 +19,7 @@
     "eject": "react-scripts eject",
     "scaffold": "../../../generator/mst-gql-scaffold.js --excludes 'CacheControlScope,Mutation,PatchSize,Query,TripUpdateResponse' --format js demo_schema.json",
     "postinstall": "yarn install-mst-gql",
-    "build-mst-gql": "bash ../../install-mst-gql.sh"
+    "build-mst-gql": "bash ../../scripts/install-mst-gql.sh"
   },
   "eslintConfig": {
     "extends": "react-app"

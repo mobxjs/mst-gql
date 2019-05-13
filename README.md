@@ -108,20 +108,21 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 ## Roadmap
 
-- [ ] general build && scaffold script
 - [ ] implement example 5 / add prisma demo with standardized api's
 - [ ] clean up readme example
 - [ ] support unions (just use `types.union` from MST)
-- [ ] auto load / auto save
-- [ ] offline actions?
-- [ ] support gql-tag
 - [ ] tests
-- [ ] use apollo client / urql instead of grapqhl-request as back-end?
-- [ ] be able to specify ownership between types
 - [ ] fix tests in the examples
 - [ ] rename case({fetching}) -> loading
 - [ ] create PR to show diff on the apollo example
-- [ ] separate into two separte files, or generate // prettier, eslint ignore block
-- [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix
+- [ ] add // prettier, eslint ignore comments
 - [ ] generate generation data + mst-sql version into file headers
 - [ ] useLocalStorage mixin
+
+#### Ideas
+
+- [ ] auto load / auto save?
+- [ ] offline actions?
+- [ ] use apollo client / urql instead of grapqhl-request as back-end?
+- [ ] be able to specify ownership between types?
+- [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix ?

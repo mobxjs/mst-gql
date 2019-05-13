@@ -8,7 +8,7 @@
     "start:client": "yarn scaffold && webpack-dev-server --hot --inline",
     "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Message' --excludes 'CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:4000/graphql",
     "postinstall": "yarn install-mst-gql",
-    "install-mst-gql": "bash ../../install-mst-gql.sh",
+    "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
     "start": "run-p start:server start:client",
     "e2e": "npx cypress run"
   },
