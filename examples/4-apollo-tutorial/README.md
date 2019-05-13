@@ -9,6 +9,5 @@ yarn start
 
 cd ../client
 yarn
-yarn build-mst-sql
 yarn start
 ```

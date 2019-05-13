@@ -91,6 +91,13 @@ using mutations, see BookTrips component
 
 ## Examples
 
+Before running the examples, run the following in the root directory:
+
+```
+yarn install
+yarn prepare-examples
+```
+
 Basic http / mst-sql classes / optimistic update
 
 Scaffolding

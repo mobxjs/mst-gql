@@ -4289,9 +4289,9 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-"mst-gql@file:./mst-gql1557748598.tgz":
+"mst-gql@file:./mst-gql1557771097.tgz":
   version "0.0.1"
-  resolved "file:./mst-gql1557748598.tgz#73c6a6675f04df8747e9f1a37164397b87724fd5"
+  resolved "file:./mst-gql1557771097.tgz#f28786b0d6d77ea9fbee12ed910f97505bea4d8e"
   dependencies:
     apollo "^2.9.0"
     arg "^4.1.0"
@@ -4299,9 +4299,9 @@ ms@^2.1.1:
     graphql "^14.3.0"
     graphql-request "^1.8.2"
 
-"mst-gql@file:./mst-gql1557749363.tgz":
+"mst-gql@file:./mst-gql1557772412.tgz":
   version "0.0.1"
-  resolved "file:./mst-gql1557749363.tgz#33af3f30bfd661188722ee71ad84723e5e0b3743"
+  resolved "file:./mst-gql1557772412.tgz#20da6d39fe929d253cacece5d501603a444a3c39"
   dependencies:
     apollo "^2.9.0"
     arg "^4.1.0"
