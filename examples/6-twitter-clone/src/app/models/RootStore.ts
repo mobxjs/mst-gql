@@ -8,43 +8,77 @@ import { Message, messagePrimitives, User, userPrimitives } from "./index"
 
 /* #region type-def */
 /**
-* Store, managing, among others, all the objects received through graphQL
-*/
-const RootStore = MSTGQLStore
-  .named("RootStore")
-  .extend(typeInfo([['Message', Message], ['User', User]], ['Message', 'User']))
+ * Store, managing, among others, all the objects received through graphQL
+ */
+const RootStore = MSTGQLStore.named("RootStore")
+  .extend(typeInfo([["Message", Message], ["User", User]], ["Message", "User"]))
   .props({
     messages: types.optional(types.map(Message), {}),
     users: types.optional(types.map(User), {})
   })
   .actions(self => ({
-    queryMessages(variables: any = {}, resultSelector = messagePrimitives, options: QueryOptions = {}) {
-      return self.query<typeof Message.Type[]>(`query messages { messages {
+    queryMessages(
+      variables?: {},
+      resultSelector = messagePrimitives,
+      options: QueryOptions = {}
+    ) {
+      return self.query<typeof Message.Type[]>(
+        `query messages { messages {
         ${resultSelector}
-      } }`, variables, options)
+      } }`,
+        variables,
+        options
+      )
     },
-    queryMessage(variables: any = {}, resultSelector = messagePrimitives, options: QueryOptions = {}) {
-      return self.query<typeof Message.Type>(`query message($id: ID!) { message(id: $id) {
+    queryMessage(
+      variables: { id: string },
+      resultSelector = messagePrimitives,
+      options: QueryOptions = {}
+    ) {
+      return self.query<typeof Message.Type>(
+        `query message($id: ID!) { message(id: $id) {
         ${resultSelector}
-      } }`, variables, options)
+      } }`,
+        variables,
+        options
+      )
     },
-    queryMe(variables: any = {}, resultSelector = userPrimitives, options: QueryOptions = {}) {
-      return self.query<typeof User.Type>(`query me { me {
+    queryMe(
+      variables?: {},
+      resultSelector = userPrimitives,
+      options: QueryOptions = {}
+    ) {
+      return self.query<typeof User.Type>(
+        `query me { me {
         ${resultSelector}
-      } }`, variables, options)
+      } }`,
+        variables,
+        options
+      )
     },
-    mutateChangeName(variables: any = {}, resultSelector = userPrimitives, optimisticUpdate?: () => void) {
-      return self.mutate<typeof User.Type>(`mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
+    mutateChangeName(
+      variables: { id: string; name: string },
+      resultSelector = userPrimitives,
+      optimisticUpdate?: () => void
+    ) {
+      return self.mutate<typeof User.Type>(
+        `mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
         ${resultSelector}
-      } }`, variables, optimisticUpdate)
+      } }`,
+        variables,
+        optimisticUpdate
+      )
     },
-    subscribeNewMessages(variables: any = {}, resultSelector = messagePrimitives) {
-      return self.subscribe<typeof Message.Type>(`subscription newMessages { newMessages {
+    subscribeNewMessages(variables?: {}, resultSelector = messagePrimitives) {
+      return self.subscribe(
+        `subscription newMessages { newMessages {
         ${resultSelector}
-      } }`, variables)
-    },    
+      } }`,
+        variables
+      )
+    }
   }))
- /* #endregion */
+  /* #endregion */
 
   .actions(self => ({
     loadMessages() {
@@ -56,12 +90,6 @@ const RootStore = MSTGQLStore
           ${userPrimitives}
         }
       `
-      )
-    },
-    changeName(id: string, name: string) {
-      return self.mutate(
-        `mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) { id __typename name }}`,
-        { id, name }
       )
     }
   }))

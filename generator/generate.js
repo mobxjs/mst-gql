@@ -388,13 +388,17 @@ ${rootTypes
               args.map(arg => `${arg.name}: \$${arg.name}`).join(", ") +
               ")"
 
-        // TODO: the variables argument should could be strongly typed if TS
-        const tsVariablesType = format === "ts" ? ": any" : ""
+        const tsVariablesType =
+          format === "ts"
+            ? `: { ${args
+                .map(arg => `${arg.name}: ${printTsType(arg.type)}`)
+                .join(", ")} }`
+            : ""
         return `\
 ${optPrefix("\n    // ", sanitizeComment(description))}
-    ${methodPrefix}${toFirstUpper(
-          name
-        )}(variables${tsVariablesType} = {}, resultSelector = ${toFirstLower(
+    ${methodPrefix}${toFirstUpper(name)}(variables${
+          args.length === 0 ? "?" : ""
+        }${tsVariablesType}, resultSelector = ${toFirstLower(
           returnType.name
         )}Primitives${extraFormalArgs}) {
       return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
@@ -421,6 +425,37 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
             JSON.stringify(type, null, 2)
         )
     }
+  }
+
+  function printTsType(type, isRoot = true) {
+    switch (type.kind) {
+      case "NON_NULL":
+        return printTsType(type.ofType, false)
+      case "LIST":
+        return `${printTsType(type.ofType, true)}[]`
+      case "ENUM":
+      case "OBJECT":
+        return type.name + (isRoot ? " | undefined" : "")
+      case "SCALAR":
+        return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
+      default:
+        throw new Error(
+          "Not implemented printTsType yet, PR welcome for " +
+            JSON.stringify(type, null, 2)
+        )
+    }
+  }
+
+  function printTsPrimitiveType(primitiveType) {
+    const res = {
+      ID: "string",
+      Int: "number",
+      String: "string",
+      Float: "number",
+      Boolean: "boolean"
+    }
+    // if (!res[type]) throw new Error("Unknown primitive type: " + type)
+    return res[primitiveType] || "any"
   }
 
   function findObjectByName(name) {

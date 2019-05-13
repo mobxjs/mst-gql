@@ -16,7 +16,12 @@ export const Profile = () => {
               <input defaultValue={data.name} ref={inputRef} />
               <button
                 onClick={() => {
-                  setQuery(store.changeName(data.id, inputRef.current!.value))
+                  setQuery(
+                    store.mutateChangeName({
+                      id: data.id,
+                      name: inputRef.current!.value
+                    })
+                  )
                 }}
               >
                 Save
