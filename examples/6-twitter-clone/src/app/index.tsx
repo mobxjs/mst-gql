@@ -1,6 +1,7 @@
 import React from "react"
 import * as ReactDOM from "react-dom"
 import { createHttpClient } from "mst-gql"
+import { SubscriptionClient } from "subscriptions-transport-ws"
 
 import "./index.css"
 
@@ -12,8 +13,13 @@ import { Profile } from "./components/Profile"
 
 const gqlHttpClient = createHttpClient("http://localhost:4000/graphql")
 
+const gqlWsClient = new SubscriptionClient("ws://localhost:4001/graphql", {
+  reconnect: true
+})
+
 const rootStore = RootStore.create(undefined, {
-  gqlHttpClient
+  gqlHttpClient,
+  gqlWsClient
 })
 
 export const App = () => (

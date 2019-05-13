@@ -81,6 +81,12 @@ const RootStore = MSTGQLStore.named("RootStore")
   /* #endregion */
 
   .actions(self => ({
+    afterCreate() {
+      self.subscribeNewMessages(
+        undefined,
+        `${messagePrimitives} user { ${userPrimitives} } `
+      )
+    },
     loadMessages() {
       return self.queryMessages(
         {},

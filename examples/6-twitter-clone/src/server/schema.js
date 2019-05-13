@@ -109,11 +109,23 @@ function nextId() {
 setInterval(
   () =>
     pubsub.publish("newMessages", {
-      newMessages: {
-        id: nextId(),
-        text: ChuckNorris.fact(),
-        user: "chucknorris"
-      }
+      newMessages:
+        Math.random() < 0.7
+          ? {
+              id: nextId(),
+              text: ChuckNorris.fact(),
+              user: store.users.find(user => user.id === "chucknorris")
+            }
+          : {
+              id: nextId(),
+              text: "blah blah #mobx blah blah",
+              user: store.users.find(user => user.id === "mweststrate")
+            }
     }),
   5000
 )
+
+function log(thing) {
+  console.dir(thing)
+  return thing
+}
