@@ -21,12 +21,13 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
-    "@types/react-dom": "^16.8.4",
     "@types/react": "^16.8.16",
+    "@types/react-dom": "^16.8.4",
     "apollo-server-express": "^2.3.3",
     "arg": "^4.1.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "fakergem": "^1.0.3",
     "graphql": "^14.1.1",
     "graphql-playground-middleware-express": "^1.7.11",
     "isomorphic-fetch": "^2.2.1",
