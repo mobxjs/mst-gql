@@ -5485,10 +5485,17 @@ mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-mobx-react-lite@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-1.3.1.tgz#32f729b0623ed9f0a17537b5c6239207cd241b64"
-  integrity sha512-SHJWP8BVdMkRqTBXBUeD515vdrCF6J6kd8eB+J1VLjwfh57F58WN9Kqb8FoXQrb2xVehE6u24aCo6cU92fJreQ==
+mobx-react-lite@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-1.1.0.tgz#395930c85defff0f898b91170165617a1c783e0c"
+  integrity sha512-1/HwceljNxckfP+dDKlNWy7UR/1b/N2HbYSJt37dJHLrDiFPY6TZo+Ni+/xSl8bLJ1JE6+12sfZ1hqHbch/45A==
+
+mobx-react@^6.0.0-rc.4:
+  version "6.0.0-rc.4"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-6.0.0-rc.4.tgz#c8540bfe6e1726f8a88920a9e94e1cb2600f5ea8"
+  integrity sha512-i2knKJF2h8TTGoyDAaIL8xWR8mkk0DeiFiVgQsR8fMqb+mtjoU1t5k1ICljWXNp1UPCr8JwsaSVsCiFkHOjfzw==
+  dependencies:
+    mobx-react-lite "1.1.0"
 
 mobx-state-tree@^3.14.0:
   version "3.14.0"
@@ -5527,9 +5534,9 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-"mst-gql@file:./mst-gql1557772643.tgz":
+"mst-gql@file:./mst-gql1557820562.tgz":
   version "0.0.1"
-  resolved "file:./mst-gql1557772643.tgz#6101a84a5099fcead97ecc6d487b44279bd86a10"
+  resolved "file:./mst-gql1557820562.tgz#4128ef2929da2fa09a470df1f8a5d31078ef49a8"
   dependencies:
     apollo "^2.9.0"
     arg "^4.1.0"
@@ -5537,9 +5544,9 @@ ms@^2.1.1:
     graphql "^14.3.0"
     graphql-request "^1.8.2"
 
-"mst-gql@file:./mst-gql1557774504.tgz":
+"mst-gql@file:./mst-gql1557824506.tgz":
   version "0.0.1"
-  resolved "file:./mst-gql1557774504.tgz#ec53e9e28984f63b48fc4df84f0759f4f7569789"
+  resolved "file:./mst-gql1557824506.tgz#a03a6cca8376ea7b3df7683864ac94bc5ae6d799"
   dependencies:
     apollo "^2.9.0"
     arg "^4.1.0"

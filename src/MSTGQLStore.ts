@@ -118,6 +118,12 @@ export function configureStoreMixin(
   knownTypes: [string, IAnyModelType][],
   rootTypes: string[]
 ) {
+  knownTypes.forEach(([key, type]) => {
+    if (!type)
+      throw new Error(
+        `The type provided for '${key}' is empty. Probably this is a module loading issue`
+      )
+  })
   const kt = new Map(knownTypes)
   const rt = new Set(rootTypes)
   return () => ({

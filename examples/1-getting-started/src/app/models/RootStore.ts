@@ -1,23 +1,35 @@
-import { MSTGQLStore, primitiveFields, configureStoreMixin } from "mst-gql"
+/* This is a mst-sql generated file */
+
+/* #region type-imports */
 import { types } from "mobx-state-tree"
-import { Todo } from "./Todo"
+import gql from "graphql-tag"
+import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
+import { Todo, todoPrimitives } from "./index"
+/* #endregion */
 
-const TodoQuery = `
-  query {
-    todos {
-      ${primitiveFields(Todo)}
-    }
-  }
-`
-
-const RootStore = MSTGQLStore.props({
-  todos: types.optional(types.map(Todo), {})
-})
-  .extend(configureStoreMixin([["Todo", Todo]], ["Todo"])) // The mapping of __typename to MST types, and the collection of types to be cached in the store
+/* #region type-def */
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+const RootStore = MSTGQLStore
+  .named("RootStore")
+  .extend(configureStoreMixin([['Todo', Todo]], ['Todo']))
+  .props({
+    todos: types.optional(types.map(Todo), {})
+  })
   .actions(self => ({
-    loadTodos() {
-      return self.query<Array<typeof Todo.Type>>(TodoQuery)
-    }
+    queryTodos(variables?: {  }, resultSelector = todoPrimitives, options: QueryOptions = {}) {
+      return self.query<typeof Todo.Type[]>(gql`query todos { todos {
+        ${resultSelector}
+      } }`, variables, options)
+    },
+    mutateToggleTodo(variables: { id: string }, resultSelector = todoPrimitives, optimisticUpdate?: () => void) {
+      return self.mutate<typeof Todo.Type>(gql`mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {
+        ${resultSelector}
+      } }`, variables, optimisticUpdate)
+    },    
   }))
+
+/* #endregion */
 
 export { RootStore }

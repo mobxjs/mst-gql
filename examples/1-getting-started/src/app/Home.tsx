@@ -1,34 +1,30 @@
-import React, { FC, useContext, useState } from "react"
-import { observer } from "mobx-react-lite"
+import React, { FC } from "react"
 
-import { storeContext } from "./components/StoreContext"
+import { Query } from "./models/reactUtils"
+import { TodoType } from "./models"
 
 import { Error, Loading, Todo } from "./components"
 
-export const Home: FC = observer(() => {
-  const store = useContext(storeContext)
-  const [res] = useState(() => store.loadTodos())
-
-  return (
-    <>
-      {res.case({
-        loading() {
-          return <Loading />
-        },
-        error(error) {
-          return <Error>{error.message}</Error>
-        },
-        data(todos) {
-          return (
+export const Home = () => (
+  <Query<TodoType[]> query={store => store.queryTodos()}>
+    {({ loading, error, data, query }) => {
+      if (error) return <Error>{error.message}</Error>
+      if (data)
+        return (
+          <>
             <ul>
-              {todos.map(todo => (
+              {data.map(todo => (
                 <Todo key={todo.id} todo={todo} />
               ))}
             </ul>
-          )
-        }
-      })}
-      <button onClick={res.refetch}>Refetch</button>
-    </>
-  )
-})
+            {loading ? (
+              <Loading />
+            ) : (
+              <button onClick={query!.refetch}>Refetch</button>
+            )}
+          </>
+        )
+      return <Loading />
+    }}
+  </Query>
+)

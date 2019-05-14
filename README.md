@@ -110,19 +110,20 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 - [ ] implement example 5 / add prisma demo with standardized api's
 - [ ] clean up readme example
-- [ ] support unions (just use `types.union` from MST)
 - [ ] tests
 - [ ] fix tests in the examples
 - [ ] create PR to show diff on the apollo example
-- [ ] add // prettier, eslint ignore comments
-- [ ] generate generation data + mst-sql version into file headers
-- [ ] useLocalStorage mixin
 
 #### Ideas
 
+- [ ] automatically insert \_\_typename in gql tag queries, like apollo client does
+- [ ] package react stuff separately, add `--no-react` flag to CLI
+- [ ] support unions (just use `types.union` from MST)
+- [ ] add // prettier, eslint ignore comments
 - [ ] support a config file instead of CLI args
 - [ ] auto load / auto save?
 - [ ] offline actions?
 - [ ] use apollo client / urql instead of grapqhl-request as back-end?
 - [ ] be able to specify ownership between types?
 - [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix ?
+- [ ] generate generation data + mst-sql version into file headers

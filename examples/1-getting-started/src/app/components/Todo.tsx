@@ -1,12 +1,12 @@
 import * as React from "react"
 import { useState } from "react"
-import { observer } from "mobx-react-lite"
+import { observer } from "mobx-react"
 
 import { Query } from "mst-gql"
 
-import { Todo as TodoModel } from "../models/Todo"
+import { TodoType } from "../models"
 
-export const Todo = observer(({ todo }: { todo: typeof TodoModel.Type }) => {
+export const Todo = observer(({ todo }: { todo: TodoType }) => {
   const [mutation, setMutation] = useState<Query | undefined>(undefined)
 
   const handleToggle = () => {

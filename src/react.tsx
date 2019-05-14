@@ -45,6 +45,7 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
 export function createQueryComponent<STORE extends typeof MSTGQLStore.Type>(
   context: React.Context<STORE>
 ) {
+  // TODO: it would be great to infer DATA from the props.query property, but saddly, we cannot infer the .children prop from the .query prop atm
   return observer(function Query<DATA = any>(props: QueryProps<STORE, DATA>) {
     const store = useContext(context)
     const prevData = useRef<DATA>()

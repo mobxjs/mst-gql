@@ -1,5 +1,5 @@
 const exampleAction = `  .actions(self => ({
-    // this is just an auto-generated example action. 
+    // This is just an auto-generated example action, which can be safely thrown away. 
     // Feel free to add your own actions, props, views etc to the model. 
     // Any code outside the '#region mst-gql-*'  regions will be preserved
     log() {
@@ -153,11 +153,12 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 import { RootStore } from "./RootStore"`
 
-    const contents = `
+    const contents = `\
+${format === "ts" ? `export type ${name}Type = typeof ${name}.Type\n` : ""}
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-const ${name} = MSTGQLObject
+export const ${name} = MSTGQLObject
   .named('${name}')
   .props({
 ${type.fields
@@ -182,15 +183,12 @@ ${type.fields
 
     const fragments = generateFragments()
 
-    const footer = `export { ${name} }`
-
     generateFile(name, [
       header,
       createSection("type-imports", baseImports + typeImports),
       createSection("fragments", fragments),
       createSection("type-def", contents),
-      exampleAction,
-      footer
+      exampleAction
     ])
 
     function handleField(field) {

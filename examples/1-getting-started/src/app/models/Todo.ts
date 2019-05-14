@@ -1,27 +1,41 @@
-import { MSTGQLObject, coreFields } from "mst-gql"
+/* This is a mst-sql generated file */
+
+/* #region type-imports */
 import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./RootStore"
+/* #endregion */
 
-const Todo = MSTGQLObject.named("Todo")
-  .props({
-    text: types.string,
-    complete: types.boolean
-  })
-  .actions(self => ({
-    toggle() {
-      return self.store.mutate(RemoveTodo, { id: self.id }, () => {
-        // optimistic update (will revert on failure!)
-        self.complete = !self.complete
-      })
-    }
-  }))
-
-const RemoveTodo = `
-mutation($id: ID!) {
-  toggleTodo(id: $id) {
-    ${coreFields}
-    complete
-  }
-}
+/* #region fragments */
+export const todoPrimitives = `
+__typename
+id
+text
+complete
 `
 
-export { Todo }
+/* #endregion */
+
+/* #region type-def */
+export type TodoType = typeof Todo.Type
+
+/**
+* Todo
+*/
+export const Todo = MSTGQLObject
+  .named('Todo')
+  .props({
+    id: types.identifier,
+    text: types.optional(types.string, ''),
+    complete: types.optional(types.boolean, false),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<typeof RootStore.Type>()
+    }
+  })) /* #endregion */
+  .actions(self => ({
+    toggle() {
+      return self.store.mutateToggleTodo({ id: self.id })
+    }
+  }))
