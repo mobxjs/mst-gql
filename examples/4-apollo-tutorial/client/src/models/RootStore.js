@@ -1,6 +1,6 @@
 /* This is a mst-sql generated file */
 import { types, flow, getSnapshot } from "mobx-state-tree"
-import { MSTGQLStore, typeInfo } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 import { LAUNCH_TILE_DATA } from "./Launch"
 
 /* #region type-imports */
@@ -44,17 +44,27 @@ const loginStatus = types.enumeration("loginStatus", [
 
 /* #region type-def */
 /**
-* Store, managing, among others, all the objects received through graphQL
-*/
-const RootStore = MSTGQLStore
-  .named("RootStore")
-  .extend(typeInfo([['LaunchConnection', LaunchConnection], ['Launch', Launch], ['Mission', Mission], ['Rocket', Rocket], ['User', User]], ['Launch', 'Rocket', 'User']))
+ * Store, managing, among others, all the objects received through graphQL
+ */
+const RootStore = MSTGQLStore.named("RootStore")
+  .extend(
+    configureStoreMixin(
+      [
+        ["LaunchConnection", LaunchConnection],
+        ["Launch", Launch],
+        ["Mission", Mission],
+        ["Rocket", Rocket],
+        ["User", User]
+      ],
+      ["Launch", "Rocket", "User"]
+    )
+  )
   .props({
     launchs: types.optional(types.map(Launch), {}),
     rockets: types.optional(types.map(Rocket), {}),
     users: types.optional(types.map(User), {})
   })
- /* #endregion */
+  /* #endregion */
   .props({
     loginStatus: loginStatus,
     cartItems: types.array(types.string)

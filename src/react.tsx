@@ -67,7 +67,7 @@ export function createQueryComponent<STORE extends typeof MSTGQLStore.Type>(
 
     return props.children({
       store,
-      loading: query ? query.fetching : false,
+      loading: query ? query.loading : false,
       error: query && query.error,
       data: query && query.data,
       prevData: prevData.current,

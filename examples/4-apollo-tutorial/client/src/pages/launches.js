@@ -15,7 +15,7 @@ export default function Launches() {
           <Header />
           {queryState.case({
             error: () => <p>ERROR</p>,
-            fetching: () => <Loading />,
+            loading: () => <Loading />,
             data: launchConnection => (
               <Fragment>
                 {launchConnection.launches.map(launch => (

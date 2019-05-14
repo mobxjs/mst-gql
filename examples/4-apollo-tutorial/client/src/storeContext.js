@@ -20,7 +20,7 @@ export function useMutation(component) {
   const [queryMutation, startMutation] = useState(null)
   return useObserver(() =>
     component(store, startMutation, {
-      loading: queryMutation ? queryMutation.fetching : false,
+      loading: queryMutation ? queryMutation.loading : false,
       error: queryMutation ? queryMutation.error : undefined,
       data: queryMutation ? queryMutation.data : undefined
     })

@@ -23,7 +23,7 @@ Pro:
 
 \* Con:
 
-- over fetching risk
+- over loading risk
 
 \* Features
 
@@ -113,7 +113,6 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] support unions (just use `types.union` from MST)
 - [ ] tests
 - [ ] fix tests in the examples
-- [ ] rename case({fetching}) -> loading
 - [ ] create PR to show diff on the apollo example
 - [ ] add // prettier, eslint ignore comments
 - [ ] generate generation data + mst-sql version into file headers
@@ -121,6 +120,7 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 #### Ideas
 
+- [ ] support a config file instead of CLI args
 - [ ] auto load / auto save?
 - [ ] offline actions?
 - [ ] use apollo client / urql instead of grapqhl-request as back-end?

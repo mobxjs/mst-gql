@@ -299,7 +299,7 @@ ${primitives.join("\n")}
       `\
 import { types } from "mobx-state-tree"
 import gql from "graphql-tag"
-import { MSTGQLStore, typeInfo${
+import { MSTGQLStore, configureStoreMixin${
         format === "ts" ? ", QueryOptions" : ""
       } } from "mst-gql"` +
       (objectTypes.length === 0
@@ -314,7 +314,7 @@ import { MSTGQLStore, typeInfo${
 */
 const RootStore = MSTGQLStore
   .named("RootStore")
-  .extend(typeInfo([${objectTypes
+  .extend(configureStoreMixin([${objectTypes
     .map(s => `['${s}', ${s}]`)
     .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
   .props({

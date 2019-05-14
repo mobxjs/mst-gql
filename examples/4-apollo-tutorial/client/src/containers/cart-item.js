@@ -21,7 +21,7 @@ export default function CartItem({ launchId }) {
     {
       // TODO: enable caching
       error: error => <p>ERROR: {error.message}</p>,
-      fetching: () => <p>Loading...</p>,
+      loading: () => <p>Loading...</p>,
       data: launch => <LaunchTile launch={launch} />
     }
   )

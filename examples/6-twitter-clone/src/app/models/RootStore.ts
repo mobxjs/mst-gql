@@ -3,49 +3,88 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import gql from "graphql-tag"
-import { MSTGQLStore, typeInfo, QueryOptions } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 import { Message, messagePrimitives, User, userPrimitives } from "./index"
 /* #endregion */
 
 /* #region type-def */
 /**
-* Store, managing, among others, all the objects received through graphQL
-*/
-const RootStore = MSTGQLStore
-  .named("RootStore")
-  .extend(typeInfo([['Message', Message], ['User', User]], ['Message', 'User']))
+ * Store, managing, among others, all the objects received through graphQL
+ */
+const RootStore = MSTGQLStore.named("RootStore")
+  .extend(
+    configureStoreMixin(
+      [["Message", Message], ["User", User]],
+      ["Message", "User"]
+    )
+  )
   .props({
     messages: types.optional(types.map(Message), {}),
     users: types.optional(types.map(User), {})
   })
   .actions(self => ({
-    queryMessages(variables?: {  }, resultSelector = messagePrimitives, options: QueryOptions = {}) {
-      return self.query<typeof Message.Type[]>(gql`query messages { messages {
+    queryMessages(
+      variables?: {},
+      resultSelector = messagePrimitives,
+      options: QueryOptions = {}
+    ) {
+      return self.query<typeof Message.Type[]>(
+        gql`query messages { messages {
         ${resultSelector}
-      } }`, variables, options)
+      } }`,
+        variables,
+        options
+      )
     },
-    queryMessage(variables: { id: string }, resultSelector = messagePrimitives, options: QueryOptions = {}) {
-      return self.query<typeof Message.Type>(gql`query message($id: ID!) { message(id: $id) {
+    queryMessage(
+      variables: { id: string },
+      resultSelector = messagePrimitives,
+      options: QueryOptions = {}
+    ) {
+      return self.query<typeof Message.Type>(
+        gql`query message($id: ID!) { message(id: $id) {
         ${resultSelector}
-      } }`, variables, options)
+      } }`,
+        variables,
+        options
+      )
     },
-    queryMe(variables?: {  }, resultSelector = userPrimitives, options: QueryOptions = {}) {
-      return self.query<typeof User.Type>(gql`query me { me {
+    queryMe(
+      variables?: {},
+      resultSelector = userPrimitives,
+      options: QueryOptions = {}
+    ) {
+      return self.query<typeof User.Type>(
+        gql`query me { me {
         ${resultSelector}
-      } }`, variables, options)
+      } }`,
+        variables,
+        options
+      )
     },
-    mutateChangeName(variables: { id: string, name: string }, resultSelector = userPrimitives, optimisticUpdate?: () => void) {
-      return self.mutate<typeof User.Type>(gql`mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
+    mutateChangeName(
+      variables: { id: string; name: string },
+      resultSelector = userPrimitives,
+      optimisticUpdate?: () => void
+    ) {
+      return self.mutate<typeof User.Type>(
+        gql`mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
         ${resultSelector}
-      } }`, variables, optimisticUpdate)
+      } }`,
+        variables,
+        optimisticUpdate
+      )
     },
-    subscribeNewMessages(variables?: {  }, resultSelector = messagePrimitives) {
-      return self.subscribe<typeof Message.Type>(gql`subscription newMessages { newMessages {
+    subscribeNewMessages(variables?: {}, resultSelector = messagePrimitives) {
+      return self.subscribe<typeof Message.Type>(
+        gql`subscription newMessages { newMessages {
         ${resultSelector}
-      } }`, variables)
-    },    
+      } }`,
+        variables
+      )
+    }
   }))
- /* #endregion */
+  /* #endregion */
 
   .actions(self => ({
     afterCreate() {

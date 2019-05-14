@@ -8,7 +8,7 @@ import { observable, action } from "mobx"
 import { refStructEnhancer } from "mobx/lib/internal"
 
 export type CaseHandlers<T, R> = {
-  fetching(): R
+  loading(): R
   error(error: any): R
   data(data: T): R
 }
@@ -28,7 +28,7 @@ export interface QueryOptions {
 }
 
 export class Query<T = unknown> implements PromiseLike<T> {
-  @observable fetching = false
+  @observable loading = false
   @observable.ref data: T | undefined = undefined
   @observable error: any = undefined
 
@@ -101,12 +101,12 @@ export class Query<T = unknown> implements PromiseLike<T> {
 
     const value = getFirstValue(data)
     if (this.options.raw) {
-      this.fetching = false
+      this.loading = false
       this.data = data
       this.onResolve(this.data!)
     } else {
       try {
-        this.fetching = false
+        this.loading = false
         const normalized = this.store.merge(value)
         this.data = normalized
         this.onResolve(this.data!)
@@ -117,14 +117,14 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   @action onFailure = (error: any) => {
-    this.fetching = false
+    this.loading = false
     this.error = error
     this.onReject(error)
   }
 
   refetch = (): Promise<T> => {
     return Promise.resolve().then(() => {
-      if (this.fetching) return this.currentPromise()
+      if (this.loading) return this.currentPromise()
       this.initPromise()
       this.fetchForCurrentPromise()
       return this.promise
@@ -132,7 +132,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   private fetchForCurrentPromise() {
-    this.fetching = true
+    this.loading = true
 
     this.store
       .rawRequest(this.query, this.variables)
@@ -140,8 +140,8 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   case<R>(handlers: CaseHandlers<T, R>): R {
-    return this.fetching && !this.data
-      ? handlers.fetching()
+    return this.loading && !this.data
+      ? handlers.loading()
       : this.error
       ? handlers.error(this.error)
       : handlers.data(this.data!)

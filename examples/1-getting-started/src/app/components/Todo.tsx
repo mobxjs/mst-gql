@@ -16,7 +16,7 @@ export const Todo = observer(({ todo }: { todo: typeof TodoModel.Type }) => {
   return (
     <li onClick={handleToggle}>
       <p className={`${todo.complete ? "strikethrough" : ""}`}>{todo.text}</p>
-      {mutation && mutation.fetching && <span>(updating)</span>}
+      {mutation && mutation.loading && <span>(updating)</span>}
     </li>
   )
 })

@@ -114,7 +114,7 @@ export const MSTGQLStore = types
   })
 
 // TODO: rename to configureStoreMixin
-export function typeInfo(
+export function configureStoreMixin(
   knownTypes: [string, IAnyModelType][],
   rootTypes: string[]
 ) {

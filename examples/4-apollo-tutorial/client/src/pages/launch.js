@@ -24,7 +24,7 @@ export default function Launch({ launchId }) {
     { launchId },
     {
       error: error => <p>ERROR: {error.message}</p>,
-      fetching: () => <Loading />,
+      loading: () => <Loading />,
       data: launch => (
         <Fragment>
           <Header image={launch.mission.missionPatch}>

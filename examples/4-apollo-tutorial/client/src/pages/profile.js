@@ -26,7 +26,7 @@ export default function Profile() {
     {
       error: error => <p>ERROR: {error.message}</p>,
       // render cached trips if available
-      fetching: () => (store.hasTrips ? renderTrips(store) : <Loading />),
+      loading: () => (store.hasTrips ? renderTrips(store) : <Loading />),
       data: () => renderTrips(store)
     }
   )

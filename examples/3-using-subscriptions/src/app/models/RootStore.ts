@@ -1,6 +1,6 @@
 /* This is a mst-sql generated file */
 import { types } from "mobx-state-tree"
-import { MSTGQLStore, typeInfo } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 
 /* #region type-imports */
 import { Message } from "./index"
@@ -15,15 +15,14 @@ const NewMessageSubQuery = `
 
 /* #region type-def */
 /**
-* Store, managing, among others, all the objects received through graphQL
-*/
-const RootStore = MSTGQLStore
-  .named("RootStore")
-  .extend(typeInfo([['Message', Message]], ['Message']))
+ * Store, managing, among others, all the objects received through graphQL
+ */
+const RootStore = MSTGQLStore.named("RootStore")
+  .extend(configureStoreMixin([["Message", Message]], ["Message"]))
   .props({
     messages: types.optional(types.map(Message), {})
   })
- /* #endregion */
+  /* #endregion */
 
   .actions(self => ({
     startSubscription() {
