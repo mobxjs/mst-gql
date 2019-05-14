@@ -15,30 +15,32 @@ export function localStorageMixin(options: LocalStorageMixinOptions = {}) {
   const throttleInterval = options.throttle || 5000
   const storageKey = options.storageKey || "mst-gql-rootstore"
   return (self: StoreType) => ({
-    afterCreate() {
-      const data = window.localStorage.getItem(storageKey)
-      if (data) {
-        const json = JSON.parse(data)
-        const selfType = getType(self)
-        if (!selfType.is(json)) {
-          console.warn(
-            `Data in local storage does not conform the data shape specified by ${
-              selfType.name
-            }, ignoring the stored data`
-          )
-          return
+    actions: {
+      afterCreate() {
+        const data = window.localStorage.getItem(storageKey)
+        if (data) {
+          const json = JSON.parse(data)
+          const selfType = getType(self)
+          if (!selfType.is(json)) {
+            console.warn(
+              `Data in local storage does not conform the data shape specified by ${
+                selfType.name
+              }, ignoring the stored data`
+            )
+            return
+          }
+          applySnapshot(self, json)
         }
-        applySnapshot(self, json)
-      }
-      addDisposer(
-        self,
-        onSnapshot(
+        addDisposer(
           self,
-          throttle((data: any) => {
-            window.localStorage.setItem(storageKey, JSON.stringify(data))
-          }, throttleInterval)
+          onSnapshot(
+            self,
+            throttle((data: any) => {
+              window.localStorage.setItem(storageKey, JSON.stringify(data))
+            }, throttleInterval)
+          )
         )
-      )
+      }
     }
   })
 }

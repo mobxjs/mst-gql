@@ -1,10 +1,11 @@
 import React, { FC, useContext } from "react"
-import { storeContext } from "./components/StoreContext"
 import { Message } from "./components"
 import { observer } from "mobx-react-lite"
 
+import { StoreContext } from "./models/reactUtils"
+
 export const Messages: FC = observer(() => {
-  const store = useContext(storeContext)
+  const store = useContext(StoreContext)
   return (
     <ul>
       {store.messages.size === 0 && <p>No new messages</p>}

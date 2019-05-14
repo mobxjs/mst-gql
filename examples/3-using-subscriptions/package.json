@@ -36,7 +36,7 @@
     "mobx": "^5.9.4",
     "mobx-react-lite": "^1.3.1",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "file:./mst-gql1557772405.tgz",
+    "mst-gql": "file:./mst-gql1557826060.tgz",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "subscriptions-transport-ws": "^0.9.15"
