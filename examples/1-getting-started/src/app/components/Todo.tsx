@@ -1,22 +1,16 @@
 import * as React from "react"
-import { useState } from "react"
-import { observer } from "mobx-react"
-
-import { Query } from "mst-gql"
 
 import { TodoType } from "../models"
+import { Query } from "../models/reactUtils"
 
-export const Todo = observer(({ todo }: { todo: TodoType }) => {
-  const [mutation, setMutation] = useState<Query | undefined>(undefined)
-
-  const handleToggle = () => {
-    setMutation(todo.toggle())
-  }
-
-  return (
-    <li onClick={handleToggle}>
-      <p className={`${todo.complete ? "strikethrough" : ""}`}>{todo.text}</p>
-      {mutation && mutation.loading && <span>(updating)</span>}
-    </li>
-  )
-})
+export const Todo = ({ todo }: { todo: TodoType }) => (
+  <Query>
+    {({ setQuery, loading, error }) => (
+      <li onClick={() => setQuery(todo.toggle())}>
+        <p className={`${todo.complete ? "strikethrough" : ""}`}>{todo.text}</p>
+        {error && <span>Failed to update</span>}
+        {loading && <span>(updating)</span>}
+      </li>
+    )}
+  </Query>
+)

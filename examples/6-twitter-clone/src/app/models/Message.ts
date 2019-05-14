@@ -34,7 +34,8 @@ export const Message = MSTGQLObject
     get store() {
       return self.__getStore<typeof RootStore.Type>()
     }
-  })) /* #endregion */
+  }))
+ /* #endregion */
 
   .actions(self => ({
     // this is just an auto-generated example action.

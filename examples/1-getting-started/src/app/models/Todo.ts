@@ -37,6 +37,8 @@ export const Todo = MSTGQLObject
   })) /* #endregion */
   .actions(self => ({
     toggle() {
-      return self.store.mutateToggleTodo({ id: self.id })
+      return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
+        self.complete = !self.complete
+      })
     }
   }))

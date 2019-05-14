@@ -41,14 +41,6 @@ const store = {
 }
 
 const typeDefs = `
-  type Query {
-    messages: [Message]
-    message(id: ID!): Message
-    me: User
-  }
-  type Subscription {
-    newMessages: Message
-  }
   type User {
     id: ID,
     name: String!
@@ -58,6 +50,14 @@ const typeDefs = `
     id: ID,
     user: User!,
     text: String!,
+  }
+  type Query {
+    messages: [Message]
+    message(id: ID!): Message
+    me: User
+  }
+  type Subscription {
+    newMessages: Message
   }
   type Mutation {
     changeName(id: ID!, name: String!): User

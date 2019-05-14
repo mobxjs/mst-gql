@@ -171,7 +171,8 @@ ${type.fields
         format === "ts" ? `<typeof RootStore.Type>` : ""
       }()
     }
-  }))`
+  }))
+`
 
     const typeImports = unique(imports)
       // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
