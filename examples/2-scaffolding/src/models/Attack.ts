@@ -1,14 +1,13 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-
+import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./RootStore"
 /* #endregion */
 
 /* #region fragments */
 export const attackPrimitives = `
-id
 __typename
 name
 type
@@ -18,13 +17,14 @@ damage
 /* #endregion */
 
 /* #region type-def */
+export type AttackType = typeof Attack.Type
 
 /**
 * Attack
  *
  * Represents a Pokémon's attack types
 */
-const Attack = MSTGQLObject
+export const Attack = MSTGQLObject
   .named('Attack')
   .props({
     /** The name of this Pokémon attack */
@@ -34,15 +34,18 @@ const Attack = MSTGQLObject
     /** The damage of this Pokémon attack */
     damage: types.optional(types.integer, 0),
   })
+  .views(self => ({
+    get store() {
+      return self.__getStore<typeof RootStore.Type>()
+    }
+  }))
 /* #endregion */
 
   .actions(self => ({
-    // this is just an auto-generated example action. 
+    // This is just an auto-generated example action, which can be safely thrown away. 
     // Feel free to add your own actions, props, views etc to the model. 
     // Any code outside the '#region mst-gql-*'  regions will be preserved
     log() {
       console.log(JSON.stringify(self))
     }
   }))
-
-export { Attack }

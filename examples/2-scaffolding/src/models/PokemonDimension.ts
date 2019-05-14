@@ -1,14 +1,13 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-
+import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./RootStore"
 /* #endregion */
 
 /* #region fragments */
 export const pokemonDimensionPrimitives = `
-id
 __typename
 minimum
 maximum
@@ -17,13 +16,14 @@ maximum
 /* #endregion */
 
 /* #region type-def */
+export type PokemonDimensionType = typeof PokemonDimension.Type
 
 /**
 * PokemonDimension
  *
  * Represents a Pokémon's dimensions
 */
-const PokemonDimension = MSTGQLObject
+export const PokemonDimension = MSTGQLObject
   .named('PokemonDimension')
   .props({
     /** The minimum value of this dimension */
@@ -31,15 +31,18 @@ const PokemonDimension = MSTGQLObject
     /** The maximum value of this dimension */
     maximum: types.optional(types.string, ''),
   })
+  .views(self => ({
+    get store() {
+      return self.__getStore<typeof RootStore.Type>()
+    }
+  }))
 /* #endregion */
 
   .actions(self => ({
-    // this is just an auto-generated example action. 
+    // This is just an auto-generated example action, which can be safely thrown away. 
     // Feel free to add your own actions, props, views etc to the model. 
     // Any code outside the '#region mst-gql-*'  regions will be preserved
     log() {
       console.log(JSON.stringify(self))
     }
   }))
-
-export { PokemonDimension }
