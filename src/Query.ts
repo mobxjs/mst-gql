@@ -84,14 +84,14 @@ export class Query<T = unknown> implements PromiseLike<T> {
     }
   }
 
-  initPromise() {
+  private initPromise() {
     this.promise = new Promise<T>((resolve, reject) => {
       this.onResolve = resolve
       this.onReject = reject
     })
   }
 
-  @action onSuccess = (data: any) => {
+  @action private onSuccess = (data: any) => {
     // cache query and response
     if (this.fetchPolicy !== "no-cache") {
       this.store.__cacheResponse(this.cacheKey, data)
@@ -114,7 +114,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     }
   }
 
-  @action onFailure = (error: any) => {
+  @action private onFailure = (error: any) => {
     this.loading = false
     this.error = error
     this.onReject(error)

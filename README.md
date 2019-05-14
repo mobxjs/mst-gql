@@ -2,19 +2,23 @@
 
 Bindings for mobx-state-tree and GraphQL
 
-## Warning: experimental project
+This project can be sponsored through our [open collective](https://opencollective.com/mobx)!
 
-_This project is an experimental integration between GraphQL and mobx-state-tree. The project will help you to bootstrap mobx-state-tree and graphQL based projects very quickly. However, be aware, there are currently no active maintainers for this project, so we are looking for maintainers that need this project in real life situations. For more info, see: [#1](https://github.com/mobxjs/mst-gql/issues/1)._
+# ⚠ Warning: experimental project ahead ⚠
+
+_This project is an experimental integration between GraphQL and mobx-state-tree. The project will help you to bootstrap mobx-state-tree and graphQL based projects very quickly. However, be aware, there are currently no active maintainers for this project, so we are looking for maintainers that need use project in real life situations and evolve it further!_
+
+To become a maintainer, see: [#1](https://github.com/mobxjs/mst-gql/issues/1) 🙏
 
 That being said, it is pretty safe to adopt this project in the sense that just as scaffolding tool it can be pretty beneficial, even if it doesn't cover all cases of your project.
 
-## Installation
+# 🚀 Installation 🚀
 
 Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql`
 
 If you want to use graphql tags, also install: `yarn add graphql graphql-tag`
 
-## Why
+# 👩‍🎓 Why 👩‍🎓
 
 Both GraphQL and mobx-state-tree are model-first driven approaches, so they have a naturally matching architecture. If you are tired of having your data shapes defined in GraphQL, MobX-state-tree and possible TypeScript as well, this project might be a great help!
 
@@ -32,7 +36,7 @@ Benefits:
 - Idiomatic store organization
 - Incremental scaffolding that preserves changes
 
-## Overview & getting started
+# 👟 Overview & getting started 👟
 
 The `mst-gql` libraries consists of two parts:
 
@@ -43,7 +47,7 @@ The scaffolder is a compile-time utility that generates a MST store and models b
 
 The runtime library is configured by the scaffolder, and provides entry points to use the generated generated or hand-written queries, React components, and andditional utilities you want to _mixin_ to your stores.
 
-#### scaffolding
+### Scaffolding
 
 To get started,after [installing](#installation) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
 
@@ -189,9 +193,11 @@ export const RootStore = MSTGQLStore.named("RootStore")
   }))
 ```
 
+_(Yes, that is a lot of code. A lot of code that you don't have to write 😇)_
+
 Note that the mutations and queries are now strongly typed! The parameters will be type checked, and the return types of the query methods are correct. Nonetheless, you will often write wrapper methods around those generated actions, to, for example, fine the fragments of the result set that should be retrieved
 
-#### Initializing the store
+### Initializing the store
 
 To prepare your app to use the `RootStore`, it needs to be initialized, which is pretty straight forward, so here is quick example of what an entry file might look like:
 
@@ -205,8 +211,7 @@ import { App } from "./components/App"
 
 // 2
 import { createHttpClient } from "mst-gql"
-import { RootStore } from "./models/RootStore"
-import { StoreContext } from "./models/reactUtils"
+import { RootStore, StoreContext } from "./models"
 
 // 3
 const rootStore = RootStore.create(undefined, {
@@ -232,7 +237,7 @@ window.store = rootStore
 4. We initialize rendering. Note that we use `StoreContext.Provider` to make the store available to the rest of the rendering three
 5. We expose the store on `window`. This has no practical use, and should be done only in DEV builds. It is a really convenient way to quickly inspect the store, or even fire actions or queries directly from the console of the browser's developer tools. (See this [talk](https://www.youtube.com/watch?v=3J9EJrvqOiM&index=7&t=0s&list=PLW0vzLDjfaNSFs7OBLK6anfQiE5FJzAPD) for some cool benefits of that)
 
-#### Loading and rendering your first data
+### Loading and rendering your first data
 
 Now, we are ready to write our first React components that use the store!
 Because the store is a normal MST store, like usual, `observer` based components can be used to render the contents of the store.
@@ -271,7 +276,7 @@ The `Query` component takes a children function that receives, among other thing
 The `Query` component is a convenience utility, but the lower primitives can also be used manually. 
 For example, reactivity is provided by using `observer` from `mobx-react`, and you can manually get the `store` in any component by using for example React's `useContext(StoreContext)`.
 
-#### Mutations
+### Mutations
 
 Mutations work very similarly to queries. To render a mutation, the `Query` component can be used again.
 Except, this time we start without a `query` property, only to set it later when a mutation is started.
@@ -294,7 +299,7 @@ export const Todo = ({ todo }) => (
 )
 ```
 
-#### Optimistic updates
+### Optimistic updates
 
 The Todo model used in the above component is defined as follows:
 
@@ -329,7 +334,7 @@ There are few things to notice:
 3. We've set the third argument of the mutation, called `optimisticUpdate`. This function is executed immediately when the mutation is created, without awaiting it's result. So that the change becomes immediately visible in the UI. However, MST will record the [patches](https://github.com/mobxjs/mobx-state-tree#patches). If the mutation fails in the future, any changes made inside this `optimisticUpdate` callback will automatically be rolled back by reverse applying the recorded patches!
 
 
-#### Customizing generated files
+### Customizing generated files
 
 All files generated by `mst-gql` consists of several `/* #region */` comments. All code inside a `#region`s is managed by mst-gql. All code outside will be preserved.
 
@@ -387,7 +392,7 @@ For the many different ways in which the above can applied in practice, check ou
 
 ---
 
-# How the store is structured
+# 🍿 How the store is structured 🍿
 
 #### Root types
 
@@ -399,32 +404,149 @@ TODO:
 
 ---
 
-## API
+# 🦄 API 🦄
 
-### CLI
+## CLI
 
-### MSTGQLStore
+The `mst-gql` command currently accepts the following arguments:
 
-`query`
+- `--format ts|js` The type of files that need to be generated (default: `js`)
+- `--outDir <dir>` The output directory of the generated files (default: `src/models`)
+- `--excludes 'type1,type2,typeN'` The types that should be omitted during generation, as we are not interested in for this app. 
+- `--roots 'type1,type2,typeN'` The types that should be used as (root types)[#root-types]
+- `source` The last argument is the location at which to find the graphQL definitions. This can be
+  - a graphql endpoint, like `http://host/graphql`
+  - a graphql files, like `schema.graphql`
+  - a parsed graphql file, like `schema.json`
 
-`mutate`
+## RootStore
 
-`subscribe`
+The generated RootStore exposes the following members:
 
-### MSTGQLObject
+#### `__queryCache`
 
-### createHttpClient
+#### `merge(data)`
 
+#### `rawRequest(query: string, variables: any): Promise`
 
-### primitiveFields
+#### `query(query, variables, options): Query`
 
-Initialization transportation and
+#### `mutate(query, variables, optmisticUpdate): Query`
+
+#### `subscribe(query, variables): () => void`
+
+## Models
+
+#### `hasLoaded(field)`
+
+#### `store`
+
+#### `xxxxPrimitives`
+
+#### `xxxxType`
+
+#### QueryOptions
+
+```typescript
+
+export type FetchPolicy =
+  | "cache-first" // Use cache if available, avoid network request if possible
+  | "cache-only" // Use cache if available, or error
+  | "cache-and-network" // Use cache, but still send request and update cache in the background
+  | "network-only" // Skip cache, but cache the result
+  | "no-cache" // Skip cache, and don't cache the response either
+
+export interface QueryOptions {
+  raw?: boolean // If set, the response data is returned verbatim, rather than parsing them into the relevant MST models
+  fetchPolicy?: FetchPolicy
+}
+```
+
+## `createHttpClient(url: string, options: HttpClientOptions = {})`
+
+Creates a http client for transportation purposes. 
+For documentation of the options, see: https://github.com/prisma/graphql-request
+
+```typescript
+import { createHttpClient } from "mst-gql"
+import { RootStore } from "./models/RootStore"
+
+const gqlHttpClient = createHttpClient("http://localhost:4000/graphql")
+
+const rootStore = RootStore.create(undefined, {
+  gqlHttpClient
+})
+```
+
+## Creating a websocket client
+
+Creating a websocket client can be done by using the `subscriptions-transport-ws` package, and passing a client to the store as `gqlWsClient` environment variable:
+
+```typescript
+import { SubscriptionClient } from "subscriptions-transport-ws"
+
+import { RootStore } from "./models/RootStore"
+
+const gqlWsClient = new SubscriptionClient("ws://localhost:4001/graphql", {
+  reconnect: true
+})
+
+const rootStore = RootStore.create(undefined, {
+  gqlWsClient
+})
+```
 
 ### Query object
 
-### Query component
+
+export class Query<T = unknown> implements PromiseLike<T> {
+  loading = false
+  data: T | undefined = undefined
+  error: any = undefined
+
+  refetch = (): Promise<T> => {
+
+  case<R>(handlers: CaseHandlers<T, R>): R {
+
+  currentPromise() 
+
+  then
+
+
+
+## Query component
+
+```typescript
+export type QueryLike<STORE, DATA> =
+  | ((store: STORE) => Query<DATA>)
+  | Query<DATA>
+  | string
+  | DocumentNode
+
+export type QueryProps<STORE, DATA> = {
+  store?: STORE
+  query?: QueryLike<STORE, DATA>
+  variables?: any
+  children: (args: {
+    store: STORE
+    loading: boolean
+    error: any
+    data: DATA | undefined
+    prevData: DATA | undefined // set of previously fetched values, in case the query was replaced
+    query: Query<DATA> | undefined
+    setQuery: (query: QueryLike<STORE, DATA>) => void
+  }) => React.ReactElement
+}
+```
+
+
+## `StoreContext`
+
+
 
 # Tips & tricks
+
+TODO:
 
 Data is plain, rather than mst object -> make sure your query includes \_\_typename
 
@@ -440,7 +562,7 @@ Using getters / setters in views for foreign keys
 
 using mutations, see BookTrips component
 
-# Examples
+# 🙈 Examples 🙈
 
 Before running the examples, run the following in the root directory:
 
@@ -452,6 +574,8 @@ yarn prepare-examples
 All examples start on url http://localhost:3000/
 
 Overview of the examples:
+
+TODO:
 
 1.
 2.
@@ -468,7 +592,7 @@ webservices, scaffolded classes
 
 more in depth example TODO: create diff branch / MR link with the changes
 
-# Roadmap
+# 💥 Roadmap 💥
 
 - [ ] implement example 5 / add prisma demo with standardized api's
 - [ ] clean up readme example
