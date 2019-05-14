@@ -115,18 +115,25 @@ export const MSTGQLStore = types
 
 // TODO: rename to configureStoreMixin
 export function configureStoreMixin(
-  knownTypes: [string, IAnyModelType][],
+  knownTypes: [string, () => IAnyModelType][],
   rootTypes: string[]
 ) {
-  knownTypes.forEach(([key, type]) => {
-    if (!type)
-      throw new Error(
-        `The type provided for '${key}' is empty. Probably this is a module loading issue`
-      )
-  })
-  const kt = new Map(knownTypes)
+  const kt = new Map()
   const rt = new Set(rootTypes)
   return () => ({
+    actions: {
+      afterCreate() {
+        // initialized lazily, so that there are no circular dep issues
+        knownTypes.forEach(([key, typeFn]) => {
+          const type = typeFn()
+          if (!type)
+            throw new Error(
+              `The type provided for '${key}' is empty. Probably this is a module loading issue`
+            )
+          kt.set(key, type)
+        })
+      }
+    },
     views: {
       isKnownType(typename: string): boolean {
         return kt.has(typename)

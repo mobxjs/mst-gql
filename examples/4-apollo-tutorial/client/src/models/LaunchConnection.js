@@ -1,8 +1,9 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 /* #region type-imports */
+import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./index"
 import { Launch } from "./Launch"
 /* #endregion */
 
@@ -22,13 +23,18 @@ hasMore
  *
  * Simple wrapper around our list of launches that contains a cursor to the last item in the list. Pass this cursor to the launches query to fetch results after these.
 */
-const LaunchConnection = MSTGQLObject
+export const LaunchConnection = MSTGQLObject
   .named('LaunchConnection')
   .props({
     cursor: types.string,
     hasMore: types.boolean,
     launches: types.array(MSTGQLRef(types.late(() => Launch))),
-  }) /* #endregion */
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore()
+    }
+  })) /* #endregion */
   .volatile(self => ({
     isFetchingMore: false
   }))
@@ -47,5 +53,3 @@ const LaunchConnection = MSTGQLObject
       self.launches.push(...launchConnection.launches)
     }
   }))
-
-export { LaunchConnection }

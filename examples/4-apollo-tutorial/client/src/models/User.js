@@ -1,8 +1,9 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 /* #region type-imports */
+import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./index"
 import { Launch } from "./Launch"
 /* #endregion */
 
@@ -20,21 +21,15 @@ email
 /**
 * User
 */
-const User = MSTGQLObject
+export const User = MSTGQLObject
   .named('User')
   .props({
     id: types.identifier,
     email: types.string,
     trips: types.array(MSTGQLRef(types.late(() => Launch))),
-  }) /* #endregion */
-
-  .actions(self => ({
-    // this is just an auto-generated example action.
-    // Feel free to add your own actions, props, views etc to the model.
-    // Any code outside the '#region mst-gql-*'  regions will be preserved
-    log() {
-      console.log(JSON.stringify(self))
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore()
     }
-  }))
-
-export { User }
+  })) /* #endregion */

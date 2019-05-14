@@ -11,8 +11,9 @@ yarn scaffold
 cd ../3-using-subscriptions 
 yarn scaffold
 
-cd ../4-apollo-tutorial 
+cd ../4-apollo-tutorial/client
 yarn scaffold
+cd ..
 
 cd ../5-todos
 # TODO: yarn scaffold

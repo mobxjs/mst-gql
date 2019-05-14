@@ -5,7 +5,7 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "emotion": "^10.0.6",
-    "mst-gql": "file:./mst-gql1557409701.tgz",
+    "mst-gql": "file:./mst-gql1557827898.tgz",
     "polished": "^2.3.3",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -19,7 +19,7 @@
     "eject": "react-scripts eject",
     "scaffold": "../../../generator/mst-gql-scaffold.js --excludes 'CacheControlScope,Mutation,PatchSize,Query,TripUpdateResponse' --format js demo_schema.json",
     "postinstall": "yarn install-mst-gql",
-    "build-mst-gql": "bash ../../scripts/install-mst-gql.sh"
+    "install-mst-gql": "bash ../../../scripts/install-mst-gql.sh"
   },
   "eslintConfig": {
     "extends": "react-app"

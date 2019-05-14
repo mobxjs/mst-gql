@@ -2,7 +2,7 @@ import React, { Fragment, useContext } from "react"
 
 import { renderQuery, StoreContext } from "../storeContext"
 import { Loading, Header, LaunchTile } from "../components"
-import { LAUNCH_TILE_DATA } from "../models/Launch"
+import { LAUNCH_TILE_DATA } from "../models/"
 
 export const GET_MY_TRIPS = `
   query GetMyTrips {

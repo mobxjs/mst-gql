@@ -1,9 +1,9 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-
+import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -19,10 +19,13 @@ name
 /**
 * Mission
 */
-const Mission = MSTGQLObject
+export const Mission = MSTGQLObject
   .named('Mission')
   .props({
     name: types.optional(types.string, ''),
-  }) /* #endregion */
-
-export { Mission }
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore()
+    }
+  })) /* #endregion */

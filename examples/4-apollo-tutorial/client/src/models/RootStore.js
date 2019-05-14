@@ -1,11 +1,41 @@
 /* This is a mst-sql generated file */
-import { types, flow, getSnapshot } from "mobx-state-tree"
-import { MSTGQLStore, configureStoreMixin } from "mst-gql"
-import { LAUNCH_TILE_DATA } from "./Launch"
+import { flow, getSnapshot } from "mobx-state-tree"
 
 /* #region type-imports */
-import { LaunchConnection, Launch, Mission, Rocket, User } from "./index"
+import { types } from "mobx-state-tree"
+import gql from "graphql-tag"
+import { MSTGQLStore, configureStoreMixin } from "mst-gql"
+import {
+  LaunchConnection,
+  launchConnectionPrimitives,
+  Launch,
+  launchPrimitives,
+  Mission,
+  missionPrimitives,
+  Rocket,
+  rocketPrimitives,
+  User,
+  userPrimitives
+} from "./index"
 /* #endregion */
+
+export const LAUNCH_TILE_DATA = `
+  fragment LaunchTile on Launch {
+    __typename
+    id
+    isBooked
+    rocket {
+      id
+      __typename
+      name
+    }
+    mission {
+      __typename
+      name
+      missionPatch
+    }
+  }
+`
 
 export const GET_LAUNCHES = `
   query GetLaunchList($after: String) {
@@ -46,24 +76,44 @@ const loginStatus = types.enumeration("loginStatus", [
 /**
  * Store, managing, among others, all the objects received through graphQL
  */
-const RootStore = MSTGQLStore.named("RootStore")
+export const RootStore = MSTGQLStore.named("RootStore")
   .extend(
     configureStoreMixin(
       [
-        ["LaunchConnection", LaunchConnection],
-        ["Launch", Launch],
-        ["Mission", Mission],
-        ["Rocket", Rocket],
-        ["User", User]
+        ["LaunchConnection", () => LaunchConnection],
+        ["Launch", () => Launch],
+        ["Mission", () => Mission],
+        ["Rocket", () => Rocket],
+        ["User", () => User]
       ],
       ["Launch", "Rocket", "User"]
     )
   )
   .props({
-    launchs: types.optional(types.map(Launch), {}),
-    rockets: types.optional(types.map(Rocket), {}),
-    users: types.optional(types.map(User), {})
+    launchs: types.optional(types.map(types.late(() => Launch)), {}),
+    rockets: types.optional(types.map(types.late(() => Rocket)), {}),
+    users: types.optional(types.map(types.late(() => User)), {})
   })
+  .actions(self => ({
+    queryLaunch(variables, resultSelector = launchPrimitives, options = {}) {
+      return self.query(
+        gql`query launch($id: ID!) { launch(id: $id) {
+        ${resultSelector}
+      } }`,
+        variables,
+        options
+      )
+    },
+    queryMe(variables, resultSelector = userPrimitives, options = {}) {
+      return self.query(
+        gql`query me { me {
+        ${resultSelector}
+      } }`,
+        variables,
+        options
+      )
+    }
+  }))
   /* #endregion */
   .props({
     loginStatus: loginStatus,
@@ -136,5 +186,3 @@ const RootStore = MSTGQLStore.named("RootStore")
       )
     }
   }))
-
-export { RootStore }

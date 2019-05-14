@@ -1,9 +1,9 @@
 /* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject } from "mst-gql"
 
 /* #region type-imports */
-
+import { types } from "mobx-state-tree"
+import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -21,12 +21,15 @@ type
 /**
 * Rocket
 */
-const Rocket = MSTGQLObject
+export const Rocket = MSTGQLObject
   .named('Rocket')
   .props({
     id: types.identifier,
     name: types.optional(types.string, ''),
     type: types.optional(types.string, ''),
-  }) /* #endregion */
-
-export { Rocket }
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore()
+    }
+  })) /* #endregion */

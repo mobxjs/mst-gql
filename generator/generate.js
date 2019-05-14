@@ -117,11 +117,9 @@ import { types } from "mobx-state-tree"`
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-const ${name} = ${handleEnumTypeCore(type)}`
+export const ${name} = ${handleEnumTypeCore(type)}`
 
-    const footer = `export { ${name} }`
-
-    generateFile(name, [header, createSection("type-def", contents), footer])
+    generateFile(name, [header, createSection("type-def", contents)])
   }
 
   function handleEnumTypeCore(type) {
@@ -151,7 +149,7 @@ const ${name} = ${handleEnumTypeCore(type)}`
     const baseImports = `\
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"`
+import { RootStore } from "./index"`
 
     const contents = `\
 ${format === "ts" ? `export type ${name}Type = typeof ${name}.Type\n` : ""}
@@ -310,27 +308,27 @@ import { MSTGQLStore, configureStoreMixin${
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-const RootStore = MSTGQLStore
+export const RootStore = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([${objectTypes
-    .map(s => `['${s}', ${s}]`)
+    .map(s => `['${s}', () => ${s}]`)
     .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
   .props({
 ${rootTypes
-  .map(t => `    ${t.toLowerCase()}s: types.optional(types.map(${t}), {})`) // TODO: optional should not be needed..
+  .map(
+    t =>
+      `    ${t.toLowerCase()}s: types.optional(types.map(types.late(() => ${t})), {})`
+  ) // TODO: optional should not be needed..
   .join(",\n")}
   })
   .actions(self => ({${generateQueries()}    
   }))
 `
-    const footer = `export { RootStore }`
-
     generateFile("RootStore", [
       header,
       createSection("type-imports", typeImports),
       createSection("type-def", contents),
-      exampleAction,
-      footer
+      exampleAction
     ])
   }
 
@@ -409,7 +407,7 @@ ${rootTypes
         return `\
 ${optPrefix("\n    // ", sanitizeComment(description))}
     ${methodPrefix}${toFirstUpper(name)}(variables${
-          args.length === 0 ? "?" : ""
+          args.length === 0 && format === "ts" ? "?" : ""
         }${tsVariablesType}, resultSelector = ${toFirstLower(
           returnType.name
         )}Primitives${extraFormalArgs}) {

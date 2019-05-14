@@ -9,7 +9,7 @@ import injectStyles from "./styles"
 
 import { createHttpClient } from "mst-gql"
 
-import { RootStore } from "./models/RootStore"
+import { RootStore } from "./models"
 import { StoreContext } from "./storeContext"
 
 const gqlHttpClient = createHttpClient("http://localhost:4000/graphql", {

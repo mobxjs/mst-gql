@@ -3,7 +3,7 @@ import React from "react"
 import { renderQuery } from "../storeContext"
 
 import LaunchTile from "../components/launch-tile"
-import { LAUNCH_TILE_DATA } from "../models/Launch"
+import { LAUNCH_TILE_DATA } from "../models/"
 
 export const GET_LAUNCH = `
   query GetLaunch($launchId: ID!) {

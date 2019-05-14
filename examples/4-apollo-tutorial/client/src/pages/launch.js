@@ -1,7 +1,7 @@
 import React, { Fragment } from "react"
 
 import { renderQuery } from "../storeContext"
-import { LAUNCH_TILE_DATA } from "../models/Launch"
+import { LAUNCH_TILE_DATA } from "../models/"
 import { Loading, Header, LaunchDetail } from "../components"
 import { ActionButton } from "../containers"
 

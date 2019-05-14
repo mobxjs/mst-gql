@@ -11,8 +11,11 @@ yarn
 cd ../3-using-subscriptions 
 yarn 
 
-cd ../4-apollo-tutorial 
+cd ../4-apollo-tutorial/server
 yarn 
+cd ../client
+yarn
+cd ..
 
 cd ../5-todos
 # yarn TODO
