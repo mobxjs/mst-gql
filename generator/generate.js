@@ -159,6 +159,7 @@ ${format === "ts" ? `export type ${name}Type = typeof ${name}.Type\n` : ""}
 export const ${name} = MSTGQLObject
   .named('${name}')
   .props({
+    __typename: types.optional(types.literal("${name}"), "${name}"),
 ${type.fields
   .filter(field => field.args.length === 0)
   .map(field => handleField(field, imports))
@@ -294,7 +295,6 @@ ${primitives.join("\n")}
     const typeImports =
       `\
 import { types } from "mobx-state-tree"
-import gql from "graphql-tag"
 import { MSTGQLStore, configureStoreMixin${
         format === "ts" ? ", QueryOptions" : ""
       } } from "mst-gql"` +
@@ -347,7 +347,7 @@ ${rootTypes
         "mutate",
         format === "ts"
           ? ", optimisticUpdate?: () => void"
-          : ", optimisticUpdate?",
+          : ", optimisticUpdate",
         ", optimisticUpdate"
       ) +
       generateQueryHelper(
@@ -368,13 +368,21 @@ ${rootTypes
     if (!query) return ""
     return query.fields
       .map(field => {
-        const { name, args, type, description } = field
+        let { name, args, type, description } = field
+
+        if (type.kind === "NON_NULL") type = type.ofType
         const returnsList = type.kind === "LIST"
-        const returnType = returnsList ? type.ofType : type
+        let returnType = returnsList ? type.ofType : type
+        if (returnType.kind === "NON_NULL") returnType = returnType.ofType
+
         if (returnType.kind === "OBJECT" && excludes.includes(returnType.name))
           return ""
         // TODO: probably we will need to support input object types soon
         if (returnType.kind !== "OBJECT") {
+          console.warn(
+            `Skipping generation of query '${name}', its return type is not yet understood. PR is welcome`
+          )
+          // log(returnType)
           return "" // TODO: for now, we only generate queries for those queries that return objects
         }
 
@@ -411,7 +419,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         }${tsVariablesType}, resultSelector = ${toFirstLower(
           returnType.name
         )}Primitives${extraFormalArgs}) {
-      return self.${methodPrefix}${tsType}(gql\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
+      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
         \${resultSelector}
       } }\`, variables${extraActualArgs})
     },`
@@ -427,6 +435,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return `[${printGraphqlType(type.ofType)}]`
       case "ENUM":
       case "OBJECT":
+      case "INPUT_OBJECT":
       case "SCALAR":
         return type.name
       default:

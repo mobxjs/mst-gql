@@ -33,34 +33,30 @@ export function MSTGQLRef(targetType: IAnyModelType) {
   })
 }
 
-export const MSTGQLObject = types
-  .model("MSTGQLObject", {
-    __typename: types.string
-  })
-  .extend(self => {
-    const loadedFields = observable.set<string>([])
-    let store: StoreType
+export const MSTGQLObject = types.model("MSTGQLObject").extend(self => {
+  const loadedFields = observable.set<string>([])
+  let store: StoreType
 
-    function getStore(): StoreType {
-      return store || (store = getParent(self, 2))
-    }
+  function getStore(): StoreType {
+    return store || (store = getParent(self, 2))
+  }
 
-    return {
-      actions: {
-        __setStore(s: StoreType) {
-          store = s
-        },
-        __markFieldLoaded(key: string) {
-          loadedFields.add(key)
-        }
+  return {
+    actions: {
+      __setStore(s: StoreType) {
+        store = s
       },
-      views: {
-        __getStore<T>() {
-          return (getStore() as any) as T
-        },
-        hasLoaded(key: string): boolean {
-          return loadedFields.has(key)
-        }
+      __markFieldLoaded(key: string) {
+        loadedFields.add(key)
+      }
+    },
+    views: {
+      __getStore<T>() {
+        return (getStore() as any) as T
+      },
+      hasLoaded(key: string): boolean {
+        return loadedFields.has(key)
       }
     }
-  })
+  }
+})

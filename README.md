@@ -4,7 +4,9 @@ Bindings for mobx-state-tree and GraphQL
 
 ---
 
-Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql graphql-tag`
+Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql`
+
+If you want to use graphql tags, also install: `yarn add graphql graphql-tag`
 
 Alpha / WIP
 
@@ -118,13 +120,13 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] fix tests in the examples
 - [ ] create PR to show diff on the apollo example
 - [ ] CI
+- [ ] clean up / beautify example 5-todos
 
 #### Ideas
 
 - [ ] Don't generate queries / mutations into the root store, but as static utilities, so that unused ones can be tree-shaken away
 - [ ] automatically insert \_\_typename in gql tag queries, like apollo client does
 - [ ] package react stuff separately, add `--no-react` flag to CLI
-- [ ] support unions (just use `types.union` from MST)
 - [ ] add // prettier, eslint ignore comments
 - [ ] support a config file instead of CLI args
 - [ ] auto load / auto save?

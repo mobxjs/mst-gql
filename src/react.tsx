@@ -13,6 +13,7 @@ export type QueryLike<STORE, DATA> =
   | DocumentNode
 
 export type QueryProps<STORE, DATA> = {
+  store?: STORE
   query?: QueryLike<STORE, DATA>
   variables?: any
   children: (args: {
@@ -45,7 +46,7 @@ export function createQueryComponent<STORE extends typeof MSTGQLStore.Type>(
 ) {
   // TODO: it would be great to infer DATA from the props.query property, but saddly, we cannot infer the .children prop from the .query prop atm
   return observer(function Query<DATA = any>(props: QueryProps<STORE, DATA>) {
-    const store = useContext(context)
+    const store = props.store || useContext(context)
     const prevData = useRef<DATA>()
     const [query, setQuery] = useState<Query<DATA> | undefined>(() => {
       if (!props.query) return undefined

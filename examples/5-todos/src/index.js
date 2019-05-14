@@ -1,16 +1,14 @@
-import * as React from 'react';
-import ApolloClient from 'apollo-boost';
+import * as React from "react"
+import { createHttpClient } from "mst-gql"
 
-import { render } from 'react-dom';
+import { render } from "react-dom"
+import { TodoListView } from "./TodoListView"
+import { RootStore } from "./models"
 
-import { TodoStore } from './TodoStore';
-import { TodoListView } from './TodoListView';
+const ENDPOINT = `https://api.graphcms.com/simple/v1/cjfmozsww0sn70146fdqyuhst`
 
-const client = new ApolloClient({
-  uri: 'https://api.graphcms.com/simple/v1/cjfmozsww0sn70146fdqyuhst'
-});
-const environment = { apolloClient: client, projectName: 'todo1' };
+const store = RootStore.create(undefined, {
+  gqlHttpClient: createHttpClient(ENDPOINT)
+})
 
-const store = TodoStore.create({}, environment);
-
-render(<TodoListView store={store} />, document.getElementById('root'));
+render(<TodoListView store={store} />, document.getElementById("root"))
