@@ -134,3 +134,4 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix ?
 - [ ] generate generation data + mst-sql version into file headers
 - [ ] Lerna for simpler repo setup
+- [ ] add support for identifier attributes not called \_id

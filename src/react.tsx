@@ -6,8 +6,6 @@ import { DocumentNode } from "graphql"
 import { Query } from "./Query"
 import { MSTGQLStore } from "./MSTGQLStore"
 
-// TODO: move to separate package
-
 export type QueryLike<STORE, DATA> =
   | ((store: STORE) => Query<DATA>)
   | Query<DATA>

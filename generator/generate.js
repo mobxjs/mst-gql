@@ -318,7 +318,7 @@ ${rootTypes
   .map(
     t =>
       `    ${t.toLowerCase()}s: types.optional(types.map(types.late(() => ${t})), {})`
-  ) // TODO: optional should not be needed..
+  ) // optional should not be needed here..
   .join(",\n")}
   })
   .actions(self => ({${generateQueries()}    

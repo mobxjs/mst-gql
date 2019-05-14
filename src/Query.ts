@@ -23,8 +23,6 @@ export type FetchPolicy =
 export interface QueryOptions {
   raw?: boolean // If set, the response data is returned verbatim, rather than parsing them into the relevant MST models
   fetchPolicy?: FetchPolicy
-  // TODO: headers
-  // TODO: cacheStrategy
 }
 
 export class Query<T = unknown> implements PromiseLike<T> {
@@ -46,7 +44,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     public options: QueryOptions = {}
   ) {
     this.query = typeof query === "string" ? query : print(query)
-    // TODO: optimization: merge double in-flight requests
+    // possible optimization: merge double in-flight requests
     this.fetchPolicy = options.fetchPolicy || "cache-and-network"
     this.cacheKey = this.query + stringify(variables)
     this.initPromise()

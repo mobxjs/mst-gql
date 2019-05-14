@@ -6,7 +6,6 @@ export function mergeHelper(store: any, data: any) {
     if (!data || typeof data !== "object") return data
     if (Array.isArray(data)) return data.map(merge)
 
-    // TODO: add support for identifer attributes not called 'id' (use getIdentifierAttribute utility on the type)
     const { __typename, id } = data
 
     // convert values deeply first to MST objects as much as possible

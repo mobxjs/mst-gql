@@ -1,12 +1,10 @@
 import {
   types,
   getParent,
-  getSnapshot,
-  addDisposer,
   IAnyModelType,
   resolveIdentifier
 } from "mobx-state-tree"
-import { autorun, observable } from "mobx"
+import { observable } from "mobx"
 
 import { StoreType } from "./MSTGQLStore"
 
@@ -15,7 +13,6 @@ import { StoreType } from "./MSTGQLStore"
  we cannot use the default resolution mechanism, since they are not part of the store. So, first fetch the store and resolve from there
 */
 export function MSTGQLRef(targetType: IAnyModelType) {
-  // TODO: move to own file
   return types.reference(targetType, {
     get(id: string, parent: any) {
       const node = resolveIdentifier(
