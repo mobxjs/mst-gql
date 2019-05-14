@@ -8,86 +8,47 @@ import { Todo, todoPrimitives } from "./index"
 
 /* #region type-def */
 /**
- * Store, managing, among others, all the objects received through graphQL
- */
-export const RootStore = MSTGQLStore.named("RootStore")
-  .extend(configureStoreMixin([["Todo", () => Todo]], ["Todo"]))
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStore = MSTGQLStore
+  .named("RootStore")
+  .extend(configureStoreMixin([['Todo', () => Todo]], ['Todo']))
   .props({
     todos: types.optional(types.map(types.late(() => Todo)), {})
   })
   .actions(self => ({
     queryAllTodoes(variables, resultSelector = todoPrimitives, options = {}) {
-      return self.query(
-        `query allTodoes($filter: TodoFilter, $orderBy: TodoOrderBy, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) { allTodoes(filter: $filter, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
+      return self.query(`query allTodoes($filter: TodoFilter, $orderBy: TodoOrderBy, $skip: Int, $after: String, $before: String, $first: Int, $last: Int) { allTodoes(filter: $filter, orderBy: $orderBy, skip: $skip, after: $after, before: $before, first: $first, last: $last) {
         ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
+      } }`, variables, options)
     },
     queryTodo(variables, resultSelector = todoPrimitives, options = {}) {
-      return self.query(
-        `query Todo($id: ID) { Todo(id: $id) {
+      return self.query(`query Todo($id: ID) { Todo(id: $id) {
         ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
+      } }`, variables, options)
     },
-    mutateCreateTodo(
-      variables,
-      resultSelector = todoPrimitives,
-      optimisticUpdate
-    ) {
-      return self.mutate(
-        `mutation createTodo($done: Boolean!, $isPublished: Boolean, $title: String!) { createTodo(done: $done, isPublished: $isPublished, title: $title) {
+    mutateCreateTodo(variables, resultSelector = todoPrimitives, optimisticUpdate) {
+      return self.mutate(`mutation createTodo($done: Boolean!, $isPublished: Boolean, $title: String!) { createTodo(done: $done, isPublished: $isPublished, title: $title) {
         ${resultSelector}
-      } }`,
-        variables,
-        optimisticUpdate
-      )
+      } }`, variables, optimisticUpdate)
     },
-    mutateUpdateTodo(
-      variables,
-      resultSelector = todoPrimitives,
-      optimisticUpdate
-    ) {
-      return self.mutate(
-        `mutation updateTodo($done: Boolean, $id: ID!, $isPublished: Boolean, $title: String) { updateTodo(done: $done, id: $id, isPublished: $isPublished, title: $title) {
+    mutateUpdateTodo(variables, resultSelector = todoPrimitives, optimisticUpdate) {
+      return self.mutate(`mutation updateTodo($done: Boolean, $id: ID!, $isPublished: Boolean, $title: String) { updateTodo(done: $done, id: $id, isPublished: $isPublished, title: $title) {
         ${resultSelector}
-      } }`,
-        variables,
-        optimisticUpdate
-      )
+      } }`, variables, optimisticUpdate)
     },
-    mutateUpdateOrCreateTodo(
-      variables,
-      resultSelector = todoPrimitives,
-      optimisticUpdate
-    ) {
-      return self.mutate(
-        `mutation updateOrCreateTodo($update: UpdateTodo!, $create: CreateTodo!) { updateOrCreateTodo(update: $update, create: $create) {
+    mutateUpdateOrCreateTodo(variables, resultSelector = todoPrimitives, optimisticUpdate) {
+      return self.mutate(`mutation updateOrCreateTodo($update: UpdateTodo!, $create: CreateTodo!) { updateOrCreateTodo(update: $update, create: $create) {
         ${resultSelector}
-      } }`,
-        variables,
-        optimisticUpdate
-      )
+      } }`, variables, optimisticUpdate)
     },
-    mutateDeleteTodo(
-      variables,
-      resultSelector = todoPrimitives,
-      optimisticUpdate
-    ) {
-      return self.mutate(
-        `mutation deleteTodo($id: ID!) { deleteTodo(id: $id) {
+    mutateDeleteTodo(variables, resultSelector = todoPrimitives, optimisticUpdate) {
+      return self.mutate(`mutation deleteTodo($id: ID!) { deleteTodo(id: $id) {
         ${resultSelector}
-      } }`,
-        variables,
-        optimisticUpdate
-      )
-    }
+      } }`, variables, optimisticUpdate)
+    },    
   }))
-  /* #endregion */
+ /* #endregion */
   .views(self => ({
     get unfinishedTodoCount() {
       return Array.from(self.todos.values()).filter(todo => !todo.done).length

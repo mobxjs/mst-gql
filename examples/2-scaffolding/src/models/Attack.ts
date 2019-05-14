@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -27,6 +27,7 @@ export type AttackType = typeof Attack.Type
 export const Attack = MSTGQLObject
   .named('Attack')
   .props({
+    __typename: types.optional(types.literal("Attack"), "Attack"),
     /** The name of this Pokémon attack */
     name: types.optional(types.string, ''),
     /** The type of this Pokémon attack */

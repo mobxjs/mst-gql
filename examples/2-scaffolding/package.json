@@ -13,7 +13,7 @@
     "mobx-state-tree": "^3.14.0"
   },
   "devDependencies": {
-    "mst-gql": "file:./mst-gql1557825369.tgz",
+    "mst-gql": "file:./mst-gql1557842845.tgz",
     "typescript": "^3.4.5"
   }
 }

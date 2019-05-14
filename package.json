@@ -15,8 +15,7 @@
   "scripts": {
     "test": "jest test",
     "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react'",
-    "prepare-examples": "bash scripts/prepare-examples.sh",
-    "scaffold-all": "bash scripts/scaffold-all.sh"
+    "prepare-examples": "bash scripts/prepare-examples.sh"
   },
   "repository": {
     "type": "git",

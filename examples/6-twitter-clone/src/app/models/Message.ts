@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 import { User } from "./User"
 /* #endregion */
 
@@ -17,22 +17,24 @@ text
 /* #endregion */
 
 /* #region type-def */
+export type MessageType = typeof Message.Type
 
 /**
- * Message
- */
-const Message = MSTGQLObject.named("Message")
+* Message
+*/
+export const Message = MSTGQLObject
+  .named('Message')
   .props({
+    __typename: types.optional(types.literal("Message"), "Message"),
     id: types.identifier,
     user: MSTGQLRef(types.late(() => User)),
-    text: types.string
+    text: types.string,
   })
   .views(self => ({
     get store() {
       return self.__getStore<typeof RootStore.Type>()
     }
-  }))
-  /* #endregion */
+  })) /* #endregion */
 
   .actions(self => ({
     // this is just an auto-generated example action.
@@ -42,5 +44,3 @@ const Message = MSTGQLObject.named("Message")
       console.log(JSON.stringify(self))
     }
   }))
-
-export { Message }

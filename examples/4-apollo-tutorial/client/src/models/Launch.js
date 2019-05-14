@@ -27,6 +27,7 @@ isBooked
 export const Launch = MSTGQLObject
   .named('Launch')
   .props({
+    __typename: types.optional(types.literal("Launch"), "Launch"),
     id: types.identifier,
     site: types.optional(types.string, ''),
     mission: types.maybe(types.late(() => Mission)),

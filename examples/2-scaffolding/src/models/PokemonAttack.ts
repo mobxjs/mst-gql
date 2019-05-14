@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 import { Attack } from "./Attack"
 /* #endregion */
 
@@ -25,6 +25,7 @@ export type PokemonAttackType = typeof PokemonAttack.Type
 export const PokemonAttack = MSTGQLObject
   .named('PokemonAttack')
   .props({
+    __typename: types.optional(types.literal("PokemonAttack"), "PokemonAttack"),
     /** The fast attacks of this Pokémon */
     fast: types.array(types.late(() => Attack)),
     /** The special attacks of this Pokémon */

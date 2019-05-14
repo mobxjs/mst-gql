@@ -4,23 +4,12 @@ import { localStorageMixin } from "mst-gql"
 
 /* #region type-imports */
 import { types } from "mobx-state-tree"
-import gql from "graphql-tag"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
-import {
-  LaunchConnection,
-  launchConnectionPrimitives,
-  Launch,
-  launchPrimitives,
-  Mission,
-  missionPrimitives,
-  Rocket,
-  rocketPrimitives,
-  User,
-  userPrimitives
-} from "./index"
+import { LaunchConnection, launchConnectionPrimitives, Launch, launchPrimitives, Mission, missionPrimitives, Rocket, rocketPrimitives, User, userPrimitives } from "./index"
+import gql from "graphql-tag";
 /* #endregion */
 
-export const LAUNCH_TILE_DATA = `
+export const LAUNCH_TILE_DATA = gql`
   fragment LaunchTile on Launch {
     __typename
     id
@@ -38,7 +27,7 @@ export const LAUNCH_TILE_DATA = `
   }
 `
 
-export const GET_LAUNCHES = `
+export const GET_LAUNCHES = gql`
   query GetLaunchList($after: String) {
     launches(after: $after) {
       __typename
@@ -52,7 +41,7 @@ export const GET_LAUNCHES = `
   ${LAUNCH_TILE_DATA}
 `
 
-export const BOOK_TRIPS = `
+export const BOOK_TRIPS = gql`
   mutation BookTrips($launchIds: [ID]!) {
     bookTrips(launchIds: $launchIds) {
       success
@@ -75,47 +64,34 @@ const loginStatus = types.enumeration("loginStatus", [
 
 /* #region type-def */
 /**
- * Store, managing, among others, all the objects received through graphQL
- */
-export const RootStore = MSTGQLStore.named("RootStore")
-  .extend(
-    configureStoreMixin(
-      [
-        ["LaunchConnection", () => LaunchConnection],
-        ["Launch", () => Launch],
-        ["Mission", () => Mission],
-        ["Rocket", () => Rocket],
-        ["User", () => User]
-      ],
-      ["Launch", "Rocket", "User"]
-    )
-  )
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStore = MSTGQLStore
+  .named("RootStore")
+  .extend(configureStoreMixin([['LaunchConnection', () => LaunchConnection], ['Launch', () => Launch], ['Mission', () => Mission], ['Rocket', () => Rocket], ['User', () => User]], ['Launch', 'Rocket', 'User']))
   .props({
     launchs: types.optional(types.map(types.late(() => Launch)), {}),
     rockets: types.optional(types.map(types.late(() => Rocket)), {}),
     users: types.optional(types.map(types.late(() => User)), {})
   })
   .actions(self => ({
-    queryLaunch(variables, resultSelector = launchPrimitives, options = {}) {
-      return self.query(
-        gql`query launch($id: ID!) { launch(id: $id) {
+    queryLaunches(variables, resultSelector = launchConnectionPrimitives, options = {}) {
+      return self.query(`query launches($pageSize: Int, $after: String) { launches(pageSize: $pageSize, after: $after) {
         ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
+      } }`, variables, options)
+    },
+    queryLaunch(variables, resultSelector = launchPrimitives, options = {}) {
+      return self.query(`query launch($id: ID!) { launch(id: $id) {
+        ${resultSelector}
+      } }`, variables, options)
     },
     queryMe(variables, resultSelector = userPrimitives, options = {}) {
-      return self.query(
-        gql`query me { me {
+      return self.query(`query me { me {
         ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
-    }
+      } }`, variables, options)
+    },    
   }))
-  /* #endregion */
+ /* #endregion */
   .props({
     loginStatus: loginStatus,
     cartItems: types.array(types.string)

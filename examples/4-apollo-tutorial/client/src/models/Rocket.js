@@ -24,6 +24,7 @@ type
 export const Rocket = MSTGQLObject
   .named('Rocket')
   .props({
+    __typename: types.optional(types.literal("Rocket"), "Rocket"),
     id: types.identifier,
     name: types.optional(types.string, ''),
     type: types.optional(types.string, ''),

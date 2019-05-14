@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -25,6 +25,7 @@ export type MessageType = typeof Message.Type
 export const Message = MSTGQLObject
   .named('Message')
   .props({
+    __typename: types.optional(types.literal("Message"), "Message"),
     id: types.identifier,
     from: types.optional(types.string, ''),
     message: types.optional(types.string, ''),

@@ -24,6 +24,7 @@ email
 export const User = MSTGQLObject
   .named('User')
   .props({
+    __typename: types.optional(types.literal("User"), "User"),
     id: types.identifier,
     email: types.string,
     trips: types.array(MSTGQLRef(types.late(() => Launch))),

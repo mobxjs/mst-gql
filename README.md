@@ -121,6 +121,7 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] create PR to show diff on the apollo example
 - [ ] CI
 - [ ] clean up / beautify example 5-todos
+- [ ] clean up rootstore in apollo example, many queries are now defined twice
 
 #### Ideas
 

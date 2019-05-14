@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -26,6 +26,7 @@ export type PokemonDimensionType = typeof PokemonDimension.Type
 export const PokemonDimension = MSTGQLObject
   .named('PokemonDimension')
   .props({
+    __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
     /** The minimum value of this dimension */
     minimum: types.optional(types.string, ''),
     /** The maximum value of this dimension */

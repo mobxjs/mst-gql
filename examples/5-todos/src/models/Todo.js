@@ -23,9 +23,10 @@ updatedAt
 /* #region type-def */
 
 /**
- * Todo
- */
-export const Todo = MSTGQLObject.named("Todo")
+* Todo
+*/
+export const Todo = MSTGQLObject
+  .named('Todo')
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),
     createdAt: types.frozen(),
@@ -34,7 +35,7 @@ export const Todo = MSTGQLObject.named("Todo")
     /** Indicates if the record is published */
     isPublished: types.boolean,
     title: types.string,
-    updatedAt: types.frozen()
+    updatedAt: types.frozen(),
   })
   .views(self => ({
     get store() {

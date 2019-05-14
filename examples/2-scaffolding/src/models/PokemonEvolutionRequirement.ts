@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -26,6 +26,7 @@ export type PokemonEvolutionRequirementType = typeof PokemonEvolutionRequirement
 export const PokemonEvolutionRequirement = MSTGQLObject
   .named('PokemonEvolutionRequirement')
   .props({
+    __typename: types.optional(types.literal("PokemonEvolutionRequirement"), "PokemonEvolutionRequirement"),
     /** The amount of candy to evolve */
     amount: types.optional(types.integer, 0),
     /** The name of the candy to evolve */

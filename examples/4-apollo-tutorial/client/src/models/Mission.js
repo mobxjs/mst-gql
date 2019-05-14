@@ -22,6 +22,7 @@ name
 export const Mission = MSTGQLObject
   .named('Mission')
   .props({
+    __typename: types.optional(types.literal("Mission"), "Mission"),
     name: types.optional(types.string, ''),
   })
   .views(self => ({

@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 import { PokemonDimension } from "./PokemonDimension"
 
 import { PokemonAttack } from "./PokemonAttack"
@@ -40,6 +40,7 @@ export type PokemonType = typeof Pokemon.Type
 export const Pokemon = MSTGQLObject
   .named('Pokemon')
   .props({
+    __typename: types.optional(types.literal("Pokemon"), "Pokemon"),
     /** The ID of an object */
     id: types.identifier,
     /** The identifier of this Pokémon */

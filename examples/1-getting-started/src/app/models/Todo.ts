@@ -3,7 +3,7 @@
 /* #region type-imports */
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./index"
 /* #endregion */
 
 /* #region fragments */
@@ -25,6 +25,7 @@ export type TodoType = typeof Todo.Type
 export const Todo = MSTGQLObject
   .named('Todo')
   .props({
+    __typename: types.optional(types.literal("Todo"), "Todo"),
     id: types.identifier,
     text: types.optional(types.string, ''),
     complete: types.optional(types.boolean, false),
