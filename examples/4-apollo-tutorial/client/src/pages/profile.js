@@ -1,10 +1,10 @@
 import React, { Fragment, useContext } from "react"
 
-import { renderQuery, StoreContext } from "../storeContext"
+import { LAUNCH_TILE_DATA, Query } from "../models"
 import { Loading, Header, LaunchTile } from "../components"
-import { LAUNCH_TILE_DATA } from "../models/"
+import gql from "graphql-tag"
 
-export const GET_MY_TRIPS = `
+export const GET_MY_TRIPS = gql`
   query GetMyTrips {
     me {
       id
@@ -19,16 +19,17 @@ export const GET_MY_TRIPS = `
 `
 
 export default function Profile() {
-  const store = useContext(StoreContext)
-  return renderQuery(
-    GET_MY_TRIPS,
-    {},
-    {
-      error: error => <p>ERROR: {error.message}</p>,
-      // render cached trips if available
-      loading: () => (store.hasTrips ? renderTrips(store) : <Loading />),
-      data: () => renderTrips(store)
-    }
+  return (
+    <Query query={GET_MY_TRIPS}>
+      {({ query, store }) =>
+        query.case({
+          error: error => <p>ERROR: {error.message}</p>,
+          // render cached trips if available
+          loading: () => (store.hasTrips ? renderTrips(store) : <Loading />),
+          data: () => renderTrips(store)
+        })
+      }
+    </Query>
   )
 }
 

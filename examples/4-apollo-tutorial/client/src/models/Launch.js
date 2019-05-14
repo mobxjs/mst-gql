@@ -22,15 +22,16 @@ isBooked
 /* #region type-def */
 
 /**
- * Launch
- */
-export const Launch = MSTGQLObject.named("Launch")
+* Launch
+*/
+export const Launch = MSTGQLObject
+  .named('Launch')
   .props({
     id: types.identifier,
-    site: types.optional(types.string, ""),
+    site: types.optional(types.string, ''),
     mission: types.maybe(types.late(() => Mission)),
     rocket: types.maybe(MSTGQLRef(types.late(() => Rocket))),
-    isBooked: types.boolean
+    isBooked: types.boolean,
   })
   .views(self => ({
     get store() {

@@ -1,11 +1,12 @@
 import React from "react"
+import gql from "graphql-tag"
 
-import { renderQuery } from "../storeContext"
-
-import LaunchTile from "../components/launch-tile"
+import { Query } from "../models/reactUtils"
 import { LAUNCH_TILE_DATA } from "../models/"
 
-export const GET_LAUNCH = `
+import LaunchTile from "../components/launch-tile"
+
+export const GET_LAUNCH = gql`
   query GetLaunch($launchId: ID!) {
     launch(id: $launchId) {
       ...LaunchTile
@@ -15,14 +16,15 @@ export const GET_LAUNCH = `
 `
 
 export default function CartItem({ launchId }) {
-  return renderQuery(
-    GET_LAUNCH,
-    { launchId },
-    {
-      // TODO: enable caching
-      error: error => <p>ERROR: {error.message}</p>,
-      loading: () => <p>Loading...</p>,
-      data: launch => <LaunchTile launch={launch} />
-    }
+  return (
+    <Query query={GET_LAUNCH} variables={{ launchId }}>
+      {({ query }) =>
+        query.case({
+          error: error => <p>ERROR: {error.message}</p>,
+          loading: () => <p>Loading...</p>,
+          data: launch => <LaunchTile launch={launch} />
+        })
+      }
+    </Query>
   )
 }

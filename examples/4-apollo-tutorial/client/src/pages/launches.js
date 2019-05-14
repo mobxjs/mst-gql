@@ -1,19 +1,16 @@
 import React, { Fragment, useState, useContext } from "react"
 import { Observer } from "mobx-react-lite"
 
-import { StoreContext } from "../storeContext"
 import { LaunchTile, Header, Button, Loading } from "../components"
+import { Query } from "../models/reactUtils"
 
 export default function Launches() {
-  const store = useContext(StoreContext)
-  // TOOD: rewrite to renderQuery!
-  const [queryState, setQueryState] = useState(() => store.fetchLaunches())
   return (
-    <Observer>
-      {() => (
+    <Query query={store => store.fetchLaunches()}>
+      {({ query }) => (
         <Fragment>
           <Header />
-          {queryState.case({
+          {query.case({
             error: () => <p>ERROR</p>,
             loading: () => <Loading />,
             data: launchConnection => (
@@ -37,6 +34,6 @@ export default function Launches() {
           })}
         </Fragment>
       )}
-    </Observer>
+    </Query>
   )
 }

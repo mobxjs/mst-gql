@@ -10,7 +10,7 @@ import injectStyles from "./styles"
 import { createHttpClient } from "mst-gql"
 
 import { RootStore } from "./models"
-import { StoreContext } from "./storeContext"
+import { StoreContext } from "./models/reactUtils"
 
 const gqlHttpClient = createHttpClient("http://localhost:4000/graphql", {
   headers: {

@@ -1,5 +1,6 @@
 /* This is a mst-sql generated file */
 import { flow, getSnapshot } from "mobx-state-tree"
+import { localStorageMixin } from "mst-gql"
 
 /* #region type-imports */
 import { types } from "mobx-state-tree"
@@ -135,33 +136,34 @@ export const RootStore = MSTGQLStore.named("RootStore")
     },
     cancelTrip(launchId) {
       return self.mutate(
-        `
-      mutation cancel($launchId: ID!) {
-        cancelTrip(launchId: $launchId) {
-          success
-          message
-          launches {
-            __typename
-            id
-            isBooked
+        gql`
+          mutation cancel($launchId: ID!) {
+            cancelTrip(launchId: $launchId) {
+              success
+              message
+              launches {
+                __typename
+                id
+                isBooked
+              }
+            }
           }
-        }
-      }`,
+        `,
         { launchId }
       )
     },
     login: flow(function* login(email) {
       try {
-        const login = yield self
-          .mutate(
-            `mutation login($email: String){
-            login(email: $email)
-          }`,
-            {
-              email
+        const login = yield self.mutate(
+          gql`
+            mutation login($email: String) {
+              login(email: $email)
             }
-          )
-          .toPromise()
+          `,
+          {
+            email
+          }
+        )
         localStorage.setItem("token", login)
         self.loginStatus = "loggedIn"
       } catch {
@@ -186,3 +188,4 @@ export const RootStore = MSTGQLStore.named("RootStore")
       )
     }
   }))
+  .extend(localStorageMixin())

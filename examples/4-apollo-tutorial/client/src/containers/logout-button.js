@@ -1,17 +1,18 @@
-import React from "react"
+import React, { useContext } from "react"
 import styled from "react-emotion"
 
-import { withStore } from "../storeContext"
 import { menuItemClassName } from "../components/menu-item"
 import { ReactComponent as ExitIcon } from "../assets/icons/exit.svg"
+import { StoreContext } from "../models"
 
 export default function LogoutButton() {
-  return withStore(store => (
+  const store = useContext(StoreContext)
+  return (
     <StyledButton onClick={store.logout}>
       <ExitIcon />
       Logout
     </StyledButton>
-  ))
+  )
 }
 
 /**

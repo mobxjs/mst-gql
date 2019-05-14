@@ -3,8 +3,8 @@
 /* #endregion */
 
 /* #region exports */
-export * from "./Launch"
 export * from "./LaunchConnection"
+export * from "./Launch"
 export * from "./Mission"
 export * from "./Rocket"
 export * from "./User"

@@ -4,6 +4,8 @@ Bindings for mobx-state-tree and GraphQL
 
 ---
 
+Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql graphql-tag`
+
 Alpha / WIP
 
 Looking for maintainers among active GraphQL / MST users!
@@ -119,6 +121,7 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 #### Ideas
 
+- [ ] Don't generate queries / mutations into the root store, but as static utilities, so that unused ones can be tree-shaken away
 - [ ] automatically insert \_\_typename in gql tag queries, like apollo client does
 - [ ] package react stuff separately, add `--no-react` flag to CLI
 - [ ] support unions (just use `types.union` from MST)

@@ -1,11 +1,13 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useContext } from "react"
+import { useObserver } from "mobx-react"
 
-import { withStore } from "../storeContext"
+import { StoreContext } from "../models/reactUtils"
 import { Header } from "../components"
 import { CartItem, BookTrips } from "../containers"
 
 export default function Cart() {
-  return withStore(store => (
+  const store = useContext(StoreContext)
+  return useObserver(() => (
     <Fragment>
       <Header>My Cart</Header>
       {!store.cartItems.length ? (
