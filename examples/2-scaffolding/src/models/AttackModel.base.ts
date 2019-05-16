@@ -4,15 +4,17 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+
+
 import { RootStore } from "./index"
 
-
 /**
-* Attack
+ * AttackBase
+ * auto generated base class for the model AttackModel.
  *
  * Represents a Pokémon's attack types
-*/
-export const AttackModel = MSTGQLObject
+ */
+export const AttackModelBase = MSTGQLObject
   .named('Attack')
   .props({
     __typename: types.optional(types.literal("Attack"), "Attack"),
@@ -29,7 +31,7 @@ export const AttackModel = MSTGQLObject
     }
   }))
 
-export const attackPrimitives = `
+export const attackModelPrimitives = `
 __typename
 name
 type

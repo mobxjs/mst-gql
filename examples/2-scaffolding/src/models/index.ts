@@ -2,10 +2,10 @@
 /* eslint-disable */
 /* tslint:disable */
 
-export * from "./Pokemon"
-export * from "./PokemonDimension"
-export * from "./PokemonAttack"
-export * from "./Attack"
-export * from "./PokemonEvolutionRequirement"
+export * from "./PokemonModel"
+export * from "./PokemonDimensionModel"
+export * from "./PokemonAttackModel"
+export * from "./AttackModel"
+export * from "./PokemonEvolutionRequirementModel"
 export * from "./RootStore"
 export * from "./reactUtils"

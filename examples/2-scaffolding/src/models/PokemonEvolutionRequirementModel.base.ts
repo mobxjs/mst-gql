@@ -4,15 +4,17 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+
+
 import { RootStore } from "./index"
 
-
 /**
-* PokemonEvolutionRequirement
+ * PokemonEvolutionRequirementBase
+ * auto generated base class for the model PokemonEvolutionRequirementModel.
  *
  * Represents a Pokémon's requirement to evolve
-*/
-export const PokemonEvolutionRequirementModel = MSTGQLObject
+ */
+export const PokemonEvolutionRequirementModelBase = MSTGQLObject
   .named('PokemonEvolutionRequirement')
   .props({
     __typename: types.optional(types.literal("PokemonEvolutionRequirement"), "PokemonEvolutionRequirement"),
@@ -27,7 +29,7 @@ export const PokemonEvolutionRequirementModel = MSTGQLObject
     }
   }))
 
-export const pokemonEvolutionRequirementPrimitives = `
+export const pokemonEvolutionRequirementModelPrimitives = `
 __typename
 amount
 name

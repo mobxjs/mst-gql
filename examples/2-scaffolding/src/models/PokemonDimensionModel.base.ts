@@ -4,15 +4,17 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+
+
 import { RootStore } from "./index"
 
-
 /**
-* PokemonDimension
+ * PokemonDimensionBase
+ * auto generated base class for the model PokemonDimensionModel.
  *
  * Represents a Pokémon's dimensions
-*/
-export const PokemonDimensionModel = MSTGQLObject
+ */
+export const PokemonDimensionModelBase = MSTGQLObject
   .named('PokemonDimension')
   .props({
     __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
@@ -27,7 +29,7 @@ export const PokemonDimensionModel = MSTGQLObject
     }
   }))
 
-export const pokemonDimensionPrimitives = `
+export const pokemonDimensionModelPrimitives = `
 __typename
 minimum
 maximum

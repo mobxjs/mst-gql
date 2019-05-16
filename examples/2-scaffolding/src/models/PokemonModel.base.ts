@@ -4,18 +4,20 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+
+import { PokemonDimensionModel } from "./PokemonDimensionModel"
+import { PokemonAttackModel } from "./PokemonAttackModel"
+import { PokemonModel } from "./PokemonModel"
+import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
 import { RootStore } from "./index"
-import { PokemonDimension } from "./PokemonDimension"
-import { PokemonAttack } from "./PokemonAttack"
-import { Pokemon } from "./Pokemon"
-import { PokemonEvolutionRequirement } from "./PokemonEvolutionRequirement"
 
 /**
-* Pokemon
+ * PokemonBase
+ * auto generated base class for the model PokemonModel.
  *
  * Represents a Pokémon
-*/
-export const PokemonModel = MSTGQLObject
+ */
+export const PokemonModelBase = MSTGQLObject
   .named('Pokemon')
   .props({
     __typename: types.optional(types.literal("Pokemon"), "Pokemon"),
@@ -26,9 +28,9 @@ export const PokemonModel = MSTGQLObject
     /** The name of this Pokémon */
     name: types.optional(types.string, ''),
     /** The minimum and maximum weight of this Pokémon */
-    weight: types.maybe(types.late(() => PokemonDimension)),
+    weight: types.maybe(types.late(() => PokemonDimensionModel)),
     /** The minimum and maximum weight of this Pokémon */
-    height: types.maybe(types.late(() => PokemonDimension)),
+    height: types.maybe(types.late(() => PokemonDimensionModel)),
     /** The classification of this Pokémon */
     classification: types.optional(types.string, ''),
     /** The type(s) of this Pokémon */
@@ -36,16 +38,16 @@ export const PokemonModel = MSTGQLObject
     /** The type(s) of Pokémons that this Pokémon is resistant to */
     resistant: types.array(types.string),
     /** The attacks of this Pokémon */
-    attacks: types.maybe(types.late(() => PokemonAttack)),
+    attacks: types.maybe(types.late(() => PokemonAttackModel)),
     /** The type(s) of Pokémons that this Pokémon weak to */
     weaknesses: types.array(types.string),
     fleeRate: types.optional(types.number, 0),
     /** The maximum CP of this Pokémon */
     maxCP: types.optional(types.integer, 0),
     /** The evolutions of this Pokémon */
-    evolutions: types.array(MSTGQLRef(types.late((): any => Pokemon))),
+    evolutions: types.array(MSTGQLRef(types.late((): any => PokemonModel))),
     /** The evolution requirements of this Pokémon */
-    evolutionRequirements: types.maybe(types.late(() => PokemonEvolutionRequirement)),
+    evolutionRequirements: types.maybe(types.late(() => PokemonEvolutionRequirementModel)),
     /** The maximum HP of this Pokémon */
     maxHP: types.optional(types.integer, 0),
     image: types.optional(types.string, ''),
@@ -56,7 +58,7 @@ export const PokemonModel = MSTGQLObject
     }
   }))
 
-export const pokemonPrimitives = `
+export const pokemonModelPrimitives = `
 __typename
 id
 number

@@ -111,7 +111,7 @@ function generate(
 
   function handleEnumType(type) {
     const name = type.name
-    toExport.push(name)
+    toExport.push(name + "Enum")
 
     const contents = `\
 ${header}
@@ -120,10 +120,10 @@ import { types } from "mobx-state-tree"
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-export const ${name} = ${handleEnumTypeCore(type)}
+export const ${name}Enum = ${handleEnumTypeCore(type)}
 `
 
-    generateFile(name, contents, true)
+    generateFile(name + "Enum", contents, true)
   }
 
   function handleEnumTypeCore(type) {
@@ -142,7 +142,7 @@ export const ${name} = ${handleEnumTypeCore(type)}
 
   function handleObjectType(type) {
     const name = type.name
-    toExport.push(name)
+    toExport.push(name + "Model")
 
     const imports = []
     let primitives = ["__typename"]
@@ -150,17 +150,20 @@ export const ${name} = ${handleEnumTypeCore(type)}
     const flowerName = toFirstLower(name)
 
     const entryFile = `\
-import { ${name}Model } from "./${name}.model"
+import { ${name}ModelBase } from "./${name}Model.base"
 
 ${
   format === "ts"
-    ? `/* The TypeScript type of an instance of ${name} */\nexport type ${name}Type = typeof ${name}.Type\n`
+    ? `/* The TypeScript type of an instance of ${name}Model */\nexport type ${name}ModelType = typeof ${name}Model.Type\n`
     : ""
 }
-/* A graphql query fragment containing all the primitive fields of ${name} */
-export { ${flowerName}Primitives } from "./${name}.model"
+/* A graphql query fragment containing all the primitive fields of ${name}Model */
+export { ${flowerName}ModelPrimitives } from "./${name}Model.base"
 
-export const ${name} = ${name}Model
+/**
+ * ${name}Model${optPrefix("\n *\n * ", sanitizeComment(type.description))}
+ */
+export const ${name}Model = ${name}ModelBase
 ${exampleAction}
 `
 
@@ -186,9 +189,13 @@ ${typeImports}
 import { RootStore } from "./index"
 
 /**
-* ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
-*/
-export const ${name}Model = MSTGQLObject
+ * ${name}Base
+ * auto generated base class for the model ${name}Model.${optPrefix(
+      "\n *\n * ",
+      sanitizeComment(type.description)
+    )}
+ */
+export const ${name}ModelBase = MSTGQLObject
   .named('${name}')
   .props({
     __typename: types.optional(types.literal("${name}"), "${name}"),
@@ -205,8 +212,8 @@ ${fields}
 ${fragments}
 `
 
-    generateFile(name + ".model", modelFile, true)
-    generateFile(name, entryFile)
+    generateFile(name + "Model.base", modelFile, true)
+    generateFile(name + "Model", entryFile)
 
     function handleField(field) {
       let r = ""
@@ -242,8 +249,8 @@ ${fragments}
             false
           )})`
         case "ENUM":
-          imports.push(type.name)
-          return type.name
+          imports.push(type.name + "Enum")
+          return type.name + "Enum"
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
@@ -258,12 +265,12 @@ ${fragments}
       if (!knownTypes.includes(type.name)) return `types.frozen()`
 
       // import the type
-      imports.push(type.name)
+      imports.push(type.name + "Model")
 
       // always using late prevents potential circular dependency issues between files
       const realType = `types.late(()${
         isSelf && format === "ts" ? ": any" : ""
-      } => ${type.name})`
+      } => ${type.name}Model)`
 
       // this object is not a root type, so assume composition relationship
       if (!isSelf && !rootTypes.includes(type.name))
@@ -278,7 +285,7 @@ ${fragments}
 
     function generateFragments() {
       let fragments = `\
-export const ${flowerName}Primitives = \`
+export const ${flowerName}ModelPrimitives = \`
 ${primitives.join("\n")}
 \`
 `
@@ -311,10 +318,10 @@ ${primitives.join("\n")}
     toExport.push("RootStore")
 
     const entryFile = `\
-import { RootStoreModel } from "./RootStore.model"
+import { RootStoreBase } from "./RootStore.base"
 ${format == "ts" ? "export type RootStoreType = typeof RootStore.Type\n" : ""}\
 
-export const RootStore = RootStoreModel
+export const RootStore = RootStoreBase
 ${exampleAction}
 `
 
@@ -328,23 +335,23 @@ ${
   objectTypes.length === 0
     ? ``
     : `\nimport { ${objectTypes
-        .map(t => `${t}, ${toFirstLower(t)}Primitives`)
+        .map(t => `${t}Model, ${toFirstLower(t)}ModelPrimitives`)
         .join(", ")} } from "./index"`
 }
 
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreModel = MSTGQLStore
+export const RootStoreBase = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([${objectTypes
-    .map(s => `['${s}', () => ${s}]`)
+    .map(s => `['${s}', () => ${s}Model]`)
     .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
   .props({
 ${rootTypes
   .map(
     t =>
-      `    ${t.toLowerCase()}s: types.optional(types.map(types.late(() => ${t})), {})`
+      `    ${t.toLowerCase()}s: types.optional(types.map(types.late(() => ${t}Model)), {})`
   ) // optional should not be needed here..
   .join(",\n")}
   })
@@ -352,7 +359,7 @@ ${rootTypes
   }))
 `
     generateFile("RootStore", entryFile)
-    generateFile("RootStore.model", modelFile)
+    generateFile("RootStore.base", modelFile)
   }
 
   function generateQueries() {
@@ -412,7 +419,7 @@ ${rootTypes
         const tsType =
           format !== "ts"
             ? ""
-            : `<typeof ${returnType.name}.Type${returnsList ? "[]" : ""}>`
+            : `<typeof ${returnType.name}Model.Type${returnsList ? "[]" : ""}>`
 
         const formalArgs =
           args.length === 0
@@ -441,7 +448,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
           args.length === 0 && format === "ts" ? "?" : ""
         }${tsVariablesType}, resultSelector = ${toFirstLower(
           returnType.name
-        )}Primitives${extraFormalArgs}) {
+        )}ModelPrimitives${extraFormalArgs}) {
       return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
         \${resultSelector}
       } }\`, variables${extraActualArgs})

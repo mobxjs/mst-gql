@@ -10,7 +10,7 @@
   "react-native": "dist/mst-gql.module.js",
   "types": "./dist/mst-gql.d.ts",
   "bin": {
-    "mst-gql-scaffold": "./generator/mst-gql-scaffold.js"
+    "mst-gql": "./generator/mst-gql-scaffold.js"
   },
   "scripts": {
     "test": "jest test",
