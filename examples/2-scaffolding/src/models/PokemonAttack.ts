@@ -1,43 +1,12 @@
-/* This is a mst-sql generated file */
+import { PokemonAttackModel } from "./PokemonAttack.model"
 
-/* #region type-imports */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./index"
-import { Attack } from "./Attack"
-/* #endregion */
-
-/* #region fragments */
-export const pokemonAttackPrimitives = `
-__typename
-`
-
-/* #endregion */
-
-/* #region type-def */
+/* The TypeScript type of an instance of PokemonAttack */
 export type PokemonAttackType = typeof PokemonAttack.Type
 
-/**
-* PokemonAttack
- *
- * Represents a Pokémon's attack types
-*/
-export const PokemonAttack = MSTGQLObject
-  .named('PokemonAttack')
-  .props({
-    __typename: types.optional(types.literal("PokemonAttack"), "PokemonAttack"),
-    /** The fast attacks of this Pokémon */
-    fast: types.array(types.late(() => Attack)),
-    /** The special attacks of this Pokémon */
-    special: types.array(types.late(() => Attack)),
-  })
-  .views(self => ({
-    get store() {
-      return self.__getStore<typeof RootStore.Type>()
-    }
-  }))
-/* #endregion */
+/* A graphql query fragment containing all the primitive fields of PokemonAttack */
+export { pokemonAttackPrimitives } from "./PokemonAttack.model"
 
+export const PokemonAttack = PokemonAttackModel
   .actions(self => ({
     // This is just an auto-generated example action, which can be safely thrown away. 
     // Feel free to add your own actions, props, views etc to the model. 

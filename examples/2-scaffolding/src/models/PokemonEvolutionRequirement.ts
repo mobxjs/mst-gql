@@ -1,44 +1,12 @@
-/* This is a mst-sql generated file */
+import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirement.model"
 
-/* #region type-imports */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./index"
-/* #endregion */
-
-/* #region fragments */
-export const pokemonEvolutionRequirementPrimitives = `
-__typename
-amount
-name
-`
-
-/* #endregion */
-
-/* #region type-def */
+/* The TypeScript type of an instance of PokemonEvolutionRequirement */
 export type PokemonEvolutionRequirementType = typeof PokemonEvolutionRequirement.Type
 
-/**
-* PokemonEvolutionRequirement
- *
- * Represents a Pokémon's requirement to evolve
-*/
-export const PokemonEvolutionRequirement = MSTGQLObject
-  .named('PokemonEvolutionRequirement')
-  .props({
-    __typename: types.optional(types.literal("PokemonEvolutionRequirement"), "PokemonEvolutionRequirement"),
-    /** The amount of candy to evolve */
-    amount: types.optional(types.integer, 0),
-    /** The name of the candy to evolve */
-    name: types.optional(types.string, ''),
-  })
-  .views(self => ({
-    get store() {
-      return self.__getStore<typeof RootStore.Type>()
-    }
-  }))
-/* #endregion */
+/* A graphql query fragment containing all the primitive fields of PokemonEvolutionRequirement */
+export { pokemonEvolutionRequirementPrimitives } from "./PokemonEvolutionRequirement.model"
 
+export const PokemonEvolutionRequirement = PokemonEvolutionRequirementModel
   .actions(self => ({
     // This is just an auto-generated example action, which can be safely thrown away. 
     // Feel free to add your own actions, props, views etc to the model. 

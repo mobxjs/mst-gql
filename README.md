@@ -222,7 +222,8 @@ const rootStore = RootStore.create(undefined, {
 ReactDOM.render(
   <StoreContext.Provider value={rootStore}>
     <Home />
-  </StoreContext.Provider>, document.getElementById("root")
+  </StoreContext.Provider>,
+  document.getElementById("root")
 )
 
 // 5
@@ -239,8 +240,7 @@ window.store = rootStore
 
 ### Loading and rendering your first data
 
-Now, we are ready to write our first React components that use the store!
-Because the store is a normal MST store, like usual, `observer` based components can be used to render the contents of the store.
+Now, we are ready to write our first React components that use the store! Because the store is a normal MST store, like usual, `observer` based components can be used to render the contents of the store.
 
 However, mst-sql also provides the [Query component](#query-component) that can be used to track the state of an ongoing query or mutation. It can be used in many different ways (see the details below), but here is a quick example:
 
@@ -258,8 +258,8 @@ export const Home = () => (
       return (
         <ul>
           {data.map(message => (
-              <Message key={message.id} message={message} />
-            ))}
+            <Message key={message.id} message={message} />
+          ))}
         </ul>
       )
     }}
@@ -267,20 +267,15 @@ export const Home = () => (
 )
 ```
 
-The `Query` component is imported from the generated `reactUtils`, so that it is bound automatically to the right store.
-The `query` property accepts many different types of arguments, but the most convenient one is to give it a callback that invokes one of the query (or your own) methods on the store. 
-The [Query object](#query-object) returned from that action will be used to automatically update the rendering.
+The `Query` component is imported from the generated `reactUtils`, so that it is bound automatically to the right store. The `query` property accepts many different types of arguments, but the most convenient one is to give it a callback that invokes one of the query (or your own) methods on the store. The [Query object](#query-object) returned from that action will be used to automatically update the rendering.
 
 The `Query` component takes a children function that receives, among other things, the `store`, `loading` and `data` fields.
 
-The `Query` component is a convenience utility, but the lower primitives can also be used manually. 
-For example, reactivity is provided by using `observer` from `mobx-react`, and you can manually get the `store` in any component by using for example React's `useContext(StoreContext)`.
+The `Query` component is a convenience utility, but the lower primitives can also be used manually. For example, reactivity is provided by using `observer` from `mobx-react`, and you can manually get the `store` in any component by using for example React's `useContext(StoreContext)`.
 
 ### Mutations
 
-Mutations work very similarly to queries. To render a mutation, the `Query` component can be used again.
-Except, this time we start without a `query` property, only to set it later when a mutation is started.
-For example the following component uses a custom `toggle` action that wraps a graphQL mutation:
+Mutations work very similarly to queries. To render a mutation, the `Query` component can be used again. Except, this time we start without a `query` property, only to set it later when a mutation is started. For example the following component uses a custom `toggle` action that wraps a graphQL mutation:
 
 ```javascript
 import * as React from "react"
@@ -316,7 +311,7 @@ export const Todo = MSTGQLObject.named('Todo')
     get store() {
       return self.__getStore<typeof RootStore.Type>()
     }
-  })) 
+  }))
 /* #endregion */
   .actions(self => ({
     toggle() {
@@ -332,7 +327,6 @@ There are few things to notice:
 1. Our `toggle` action wraps around the generated `mutateToggleTodo` mutation, giving us a much more convenient client api
 2. The Query object created by `mutateToggleTodo` is returned from our action, so that we can pass it (for example) to the `setQuery` as done in the previous listing.
 3. We've set the third argument of the mutation, called `optimisticUpdate`. This function is executed immediately when the mutation is created, without awaiting it's result. So that the change becomes immediately visible in the UI. However, MST will record the [patches](https://github.com/mobxjs/mobx-state-tree#patches). If the mutation fails in the future, any changes made inside this `optimisticUpdate` callback will automatically be rolled back by reverse applying the recorded patches!
-
 
 ### Customizing generated files
 
@@ -387,8 +381,7 @@ export const Todo = MSTGQLObject
   }))
 ```
 
-That's it for the introduction!
-For the many different ways in which the above can applied in practice, check out the [examples](#examples)
+That's it for the introduction! For the many different ways in which the above can applied in practice, check out the [examples](#examples)
 
 ---
 
@@ -412,7 +405,7 @@ The `mst-gql` command currently accepts the following arguments:
 
 - `--format ts|js` The type of files that need to be generated (default: `js`)
 - `--outDir <dir>` The output directory of the generated files (default: `src/models`)
-- `--excludes 'type1,type2,typeN'` The types that should be omitted during generation, as we are not interested in for this app. 
+- `--excludes 'type1,type2,typeN'` The types that should be omitted during generation, as we are not interested in for this app.
 - `--roots 'type1,type2,typeN'` The types that should be used as (root types)[#root-types]
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
@@ -448,7 +441,6 @@ The generated RootStore exposes the following members:
 #### QueryOptions
 
 ```typescript
-
 export type FetchPolicy =
   | "cache-first" // Use cache if available, avoid network request if possible
   | "cache-only" // Use cache if available, or error
@@ -464,8 +456,7 @@ export interface QueryOptions {
 
 ## `createHttpClient(url: string, options: HttpClientOptions = {})`
 
-Creates a http client for transportation purposes. 
-For documentation of the options, see: https://github.com/prisma/graphql-request
+Creates a http client for transportation purposes. For documentation of the options, see: https://github.com/prisma/graphql-request
 
 ```typescript
 import { createHttpClient } from "mst-gql"
@@ -498,21 +489,15 @@ const rootStore = RootStore.create(undefined, {
 
 ### Query object
 
+export class Query<T = unknown> implements PromiseLike<T> { loading = false data: T | undefined = undefined error: any = undefined
 
-export class Query<T = unknown> implements PromiseLike<T> {
-  loading = false
-  data: T | undefined = undefined
-  error: any = undefined
+refetch = (): Promise<T> => {
 
-  refetch = (): Promise<T> => {
+case<R>(handlers: CaseHandlers<T, R>): R {
 
-  case<R>(handlers: CaseHandlers<T, R>): R {
+currentPromise()
 
-  currentPromise() 
-
-  then
-
-
+then
 
 ## Query component
 
@@ -539,10 +524,9 @@ export type QueryProps<STORE, DATA> = {
 }
 ```
 
-
 ## `StoreContext`
 
-
+## `localStorageMixin`
 
 # Tips & tricks
 
@@ -562,6 +546,14 @@ Using getters / setters in views for foreign keys
 
 using mutations, see BookTrips component
 
+.prettierignore file:
+
+```
+src/models/index.*
+src/models/reactUtils.*
+src/*.model.*
+```
+
 # 🙈 Examples 🙈
 
 Before running the examples, run the following in the root directory:
@@ -577,12 +569,7 @@ Overview of the examples:
 
 TODO:
 
-1.
-2.
-3.
-4.
-5.
-6.
+1. 2. 3. 4. 5. 6.
 
 Basic http / mst-sql classes / optimistic update
 
@@ -605,6 +592,8 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 #### Quite random iddeas
 
+- [ ] add cli flag to also regenerate entry files
+- [ ] support json config file
 - [ ] Don't generate queries / mutations into the root store, but as static utilities, so that unused ones can be tree-shaken away
 - [ ] automatically insert \_\_typename in gql tag queries, like apollo client does
 - [ ] package react stuff separately, add `--no-react` flag to CLI

@@ -1,0 +1,3 @@
+src/models/index.*
+src/models/reactUtils.*
+src/*.model.*

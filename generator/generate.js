@@ -26,8 +26,11 @@ function generate(
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such)  for which MST classes are generated
-
+  const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
+
+  const header = `/* This is a mst-sql generated file, don't modify it manually */
+/* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
 
   inlineInterfaces(types)
 
@@ -87,6 +90,10 @@ function generate(
       })
   }
 
+  function skipNonNull(type) {
+    return type.kind === "NON_NULL" ? type.ofType : type
+  }
+
   function autoDetectRootTypes() {
     return types
       .filter(
@@ -94,13 +101,9 @@ function generate(
           objectTypes.includes(type.name) &&
           type.fields.some(
             field =>
-              (field.name === "id" &&
-                field.type.kind === "SCALAR" &&
-                field.type.name === "ID") ||
-              (field.name === "id" &&
-                field.type.kind === "NON_NULL" &&
-                field.type.ofType.kind === "SCALAR" &&
-                field.type.ofType.name === "ID")
+              field.name === "id" &&
+              skipNonNull(field.type).kind === "SCALAR" &&
+              skipNonNull(field.type).name === "ID"
           )
       )
       .map(t => t.name)
@@ -108,18 +111,19 @@ function generate(
 
   function handleEnumType(type) {
     const name = type.name
-
-    const header = `\
-/* This is a mst-sql generated file */
-import { types } from "mobx-state-tree"`
+    toExport.push(name)
 
     const contents = `\
+${header}
+import { types } from "mobx-state-tree"
+
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-export const ${name} = ${handleEnumTypeCore(type)}`
+export const ${name} = ${handleEnumTypeCore(type)}
+`
 
-    generateFile(name, [header, createSection("type-def", contents)])
+    generateFile(name, contents, true)
   }
 
   function handleEnumTypeCore(type) {
@@ -138,32 +142,57 @@ export const ${name} = ${handleEnumTypeCore(type)}`
 
   function handleObjectType(type) {
     const name = type.name
-    const imports = []
+    toExport.push(name)
 
+    const imports = []
     let primitives = ["__typename"]
     let refs = []
+    const flowerName = toFirstLower(name)
 
-    const header = `\
-/* This is a mst-sql generated file */`
+    const entryFile = `\
+import { ${name}Model } from "./${name}.model"
 
-    const baseImports = `\
+${
+  format === "ts"
+    ? `/* The TypeScript type of an instance of ${name} */\nexport type ${name}Type = typeof ${name}.Type\n`
+    : ""
+}
+/* A graphql query fragment containing all the primitive fields of ${name} */
+export { ${flowerName}Primitives } from "./${name}.model"
+
+export const ${name} = ${name}Model
+${exampleAction}
+`
+
+    const fields = type.fields
+      .filter(field => field.args.length === 0)
+      .map(field => handleField(field, imports))
+      .join("\n")
+
+    const typeImports = unique(imports)
+      // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
+      .map(i => `import { ${i} } from "./${i}"`)
+      .join("\n")
+
+    const fragments = generateFragments()
+
+    const modelFile = `\
+${header}
+
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./index"`
 
-    const contents = `\
-${format === "ts" ? `export type ${name}Type = typeof ${name}.Type\n` : ""}
+${typeImports}
+import { RootStore } from "./index"
+
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-export const ${name} = MSTGQLObject
+export const ${name}Model = MSTGQLObject
   .named('${name}')
   .props({
     __typename: types.optional(types.literal("${name}"), "${name}"),
-${type.fields
-  .filter(field => field.args.length === 0)
-  .map(field => handleField(field, imports))
-  .join("\n")}
+${fields}
   })
   .views(self => ({
     get store() {
@@ -172,24 +201,12 @@ ${type.fields
       }()
     }
   }))
+
+${fragments}
 `
 
-    const typeImports = unique(imports)
-      // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
-      .map(i => `\nimport { ${i} } from "./${i}"`)
-      .join("\n")
-
-    const flowerName = toFirstLower(name)
-
-    const fragments = generateFragments()
-
-    generateFile(name, [
-      header,
-      createSection("type-imports", baseImports + typeImports),
-      createSection("fragments", fragments),
-      createSection("type-def", contents),
-      exampleAction
-    ])
+    generateFile(name + ".model", modelFile, true)
+    generateFile(name, entryFile)
 
     function handleField(field) {
       let r = ""
@@ -241,7 +258,7 @@ ${type.fields
       if (!knownTypes.includes(type.name)) return `types.frozen()`
 
       // import the type
-      if (!isSelf) imports.push(type.name)
+      imports.push(type.name)
 
       // always using late prevents potential circular dependency issues between files
       const realType = `types.late(()${
@@ -291,25 +308,34 @@ ${primitives.join("\n")}
   }
 
   function generateRootStore() {
-    const header = `\
-/* This is a mst-sql generated file */`
-    const typeImports =
-      `\
+    toExport.push("RootStore")
+
+    const entryFile = `\
+import { RootStoreModel } from "./RootStore.model"
+${format == "ts" ? "export type RootStoreType = typeof RootStore.Type\n" : ""}\
+
+export const RootStore = RootStoreModel
+${exampleAction}
+`
+
+    const modelFile = `\
+${header}
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
-        format === "ts" ? ", QueryOptions" : ""
-      } } from "mst-gql"` +
-      (objectTypes.length === 0
-        ? ``
-        : `\nimport { ${objectTypes
-            .map(t => `${t}, ${toFirstLower(t)}Primitives`)
-            .join(", ")} } from "./index"`)
+      format === "ts" ? ", QueryOptions" : ""
+    } } from "mst-gql"
+${
+  objectTypes.length === 0
+    ? ``
+    : `\nimport { ${objectTypes
+        .map(t => `${t}, ${toFirstLower(t)}Primitives`)
+        .join(", ")} } from "./index"`
+}
 
-    const contents = `\
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStore = MSTGQLStore
+export const RootStoreModel = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([${objectTypes
     .map(s => `['${s}', () => ${s}]`)
@@ -325,12 +351,8 @@ ${rootTypes
   .actions(self => ({${generateQueries()}    
   }))
 `
-    generateFile("RootStore", [
-      header,
-      createSection("type-imports", typeImports),
-      createSection("type-def", contents),
-      exampleAction
-    ])
+    generateFile("RootStore", entryFile)
+    generateFile("RootStore.model", modelFile)
   }
 
   function generateQueries() {
@@ -483,8 +505,10 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
   }
 
   function generateReactUtils() {
-    const header = `\
-/* This is a mst-sql generated file */
+    toExport.push("reactUtils")
+    const contents = `\
+${header}
+
 import { createStoreContext, createQueryComponent } from "mst-gql"
 import { RootStore } from "./RootStore"`
 
@@ -496,27 +520,20 @@ export const StoreContext = createStoreContext${
 export const Query = createQueryComponent(StoreContext)
 `
 
-    generateFile("reactUtils", [
-      createSection("header", header),
-      createSection("body", body)
-    ])
+    generateFile("reactUtils", contents)
   }
 
   function generateBarrelFile() {
-    generateFile("index", [
-      createSection("header", `/* mst-gql generated barrel file*/`),
-      createSection(
-        "exports",
-        files.map(f => `export * from "./${f[0]}"`).join("\n")
-      )
-    ])
+    const contents = `\
+${header}
+
+${toExport.map(f => `export * from "./${f}"`).join("\n")}
+`
+    generateFile("index", contents, true)
   }
 
-  /**
-   * When generating a file, only sections created through createSection are re-generated when the target file exists
-   */
-  function generateFile(name, sections) {
-    files.push([name, sections])
+  function generateFile(name, contents, force = false) {
+    files.push([name, contents, force])
   }
 
   return files
@@ -567,10 +584,6 @@ function inlineInterfaces(types) {
       )
     }
   })
-}
-
-function createSection(name, contents) {
-  return [name, contents]
 }
 
 function sanitizeComment(comment) {

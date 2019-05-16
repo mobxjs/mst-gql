@@ -81,51 +81,19 @@ function main() {
     excludes,
     new Date().toUTCString()
   )
-  files.forEach(([name, sections]) => {
-    writeFile(name, sections, format, outDir)
+  files.forEach(([name, contents, force]) => {
+    writeFile(name, contents, force, format, outDir)
   })
 }
 
-function writeFile(name, sections, format, outDir) {
+function writeFile(name, contents, force, format, outDir) {
   const fnName = path.resolve(outDir, name + "." + format)
-  if (!fs.existsSync(fnName)) {
-    console.log("Generating file " + fnName)
-    const all = sections
-      .map(section =>
-        Array.isArray(section)
-          ? `/* #region ${section[0]} */\n${section[1]}\n/* #endregion */`
-          : "" + section
-      )
-      .join("\n\n")
-    fs.writeFileSync(fnName, all)
-  } else {
-    console.log("Updating file " + fnName)
-    let contents = fs.readFileSync(fnName, "utf8")
-    sections
-      .filter(s => Array.isArray(s))
-      .forEach(([name, text]) => {
-        contents = replaceSection(contents, name, text, fnName)
-      })
+  if (!fs.existsSync(fnName) || force) {
+    console.log("Writing file " + fnName)
     fs.writeFileSync(fnName, contents)
+  } else {
+    console.log("Skipping file " + fnName)
   }
-}
-
-function replaceSection(contents, name, text, fnName) {
-  const startString = `/* #region ${name} */`
-  const start = contents.indexOf(startString)
-  if (start === -1)
-    throw new Error(
-      `Failed to update file: ${fnName}, couldn't find the start of region ${name}. Consider throwing the file away`
-    )
-  const endString = `/* #endregion */`
-  const end = contents.indexOf(endString, start)
-  if (end === -1)
-    throw new Error(
-      `Failed to update file: ${fnName}, couldn't find the end of region ${name}. Consider throwing the file away`
-    )
-  const tail = contents.substring(end - 1)
-  const head = contents.substring(0, start + startString.length + 1)
-  return head + text + tail
 }
 
 main()

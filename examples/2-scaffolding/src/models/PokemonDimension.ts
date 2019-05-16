@@ -1,44 +1,12 @@
-/* This is a mst-sql generated file */
+import { PokemonDimensionModel } from "./PokemonDimension.model"
 
-/* #region type-imports */
-import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
-import { RootStore } from "./index"
-/* #endregion */
-
-/* #region fragments */
-export const pokemonDimensionPrimitives = `
-__typename
-minimum
-maximum
-`
-
-/* #endregion */
-
-/* #region type-def */
+/* The TypeScript type of an instance of PokemonDimension */
 export type PokemonDimensionType = typeof PokemonDimension.Type
 
-/**
-* PokemonDimension
- *
- * Represents a Pokémon's dimensions
-*/
-export const PokemonDimension = MSTGQLObject
-  .named('PokemonDimension')
-  .props({
-    __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
-    /** The minimum value of this dimension */
-    minimum: types.optional(types.string, ''),
-    /** The maximum value of this dimension */
-    maximum: types.optional(types.string, ''),
-  })
-  .views(self => ({
-    get store() {
-      return self.__getStore<typeof RootStore.Type>()
-    }
-  }))
-/* #endregion */
+/* A graphql query fragment containing all the primitive fields of PokemonDimension */
+export { pokemonDimensionPrimitives } from "./PokemonDimension.model"
 
+export const PokemonDimension = PokemonDimensionModel
   .actions(self => ({
     // This is just an auto-generated example action, which can be safely thrown away. 
     // Feel free to add your own actions, props, views etc to the model. 
