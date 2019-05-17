@@ -390,10 +390,11 @@ TODO: philosophical section on whether to define the UI purely in terms of store
 
 The `mst-gql` command currently accepts the following arguments:
 
-- `--format ts|js` The type of files that need to be generated (default: `js`)
+- `--format ts|js|mjs` The type of files that need to be generated (default: `js`)
 - `--outDir <dir>` The output directory of the generated files (default: `src/models`)
 - `--excludes 'type1,type2,typeN'` The types that should be omitted during generation, as we are not interested in for this app.
 - `--roots 'type1,type2,typeN'` The types that should be used as (root types)[#root-types]
+- `--modelsOnly` Generates only models, but no queries or graphQL capabilities. This is great for backend usage, or if you want to create your own root store
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
   - a graphql files, like `schema.graphql`

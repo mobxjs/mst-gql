@@ -1,0 +1,23 @@
+type User {
+  id: ID
+  name: String!
+  avatar: String!
+}
+type Message {
+  id: ID
+  timestamp: Float!
+  user: User!
+  text: String!
+  replyTo: Message
+}
+type Query {
+  messages: [Message]
+  message(id: ID!): Message
+  me: User
+}
+type Subscription {
+  newMessages: Message
+}
+type Mutation {
+  changeName(id: ID!, name: String!): User
+}

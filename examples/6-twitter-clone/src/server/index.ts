@@ -1,11 +1,12 @@
-const { makeExecutableSchema } = require("graphql-tools")
-const { execute, subscribe } = require("graphql")
-const { createServer } = require("http")
-const { SubscriptionServer } = require("subscriptions-transport-ws")
-const { ApolloServer } = require("apollo-server-express")
-const cors = require("cors")
-const express = require("express")
-const { typeDefs, resolvers } = require("./schema")
+import { makeExecutableSchema } from "graphql-tools"
+import { execute, subscribe } from "graphql"
+import { createServer } from "http"
+import { SubscriptionServer } from "subscriptions-transport-ws"
+import { ApolloServer } from "apollo-server-express"
+import cors from "cors"
+import express from "express"
+
+import { typeDefs, resolvers } from "./schema"
 
 const PORT = 4000
 const WS_PORT = 4001
@@ -32,12 +33,13 @@ websocketServer.listen(WS_PORT, () =>
   console.log(`Websocket Server is now running on http://localhost:${WS_PORT}`)
 )
 
-// Setup graphql server
 const app = express()
 
+// @ts-ignore
 app.use(cors())
 
 const server = new ApolloServer({
+  // @ts-ignore
   typeDefs,
   resolvers,
   subscriptionsPath: `http://localhost:${WS_PORT}`

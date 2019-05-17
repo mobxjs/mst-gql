@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "rootDir": "./src/server",
+    "baseUrl": "./src/server",
+    "strict": false,
+    "lib": ["es2018", "esnext.asynciterable", "esnext.array"],
+    "jsx": "react",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "isolatedModules": true
+  },
+  "files": ["index.ts"]
+}

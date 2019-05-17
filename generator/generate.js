@@ -19,7 +19,8 @@ function generate(
   format = "js",
   rootTypes = [],
   excludes = [],
-  generationDate = "a long long time ago..."
+  generationDate = "a long long time ago...",
+  modelsOnly = false
 ) {
   excludes.push(...buildInExcludes)
 
@@ -31,12 +32,15 @@ function generate(
 
   const header = `/* This is a mst-sql generated file, don't modify it manually */
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
+  const importPostFix = format === "mjs" ? ".mjs" : ""
 
   inlineInterfaces(types)
 
   generateTypes()
   generateRootStore()
-  generateReactUtils()
+  if (!modelsOnly) {
+    generateReactUtils()
+  }
   generateBarrelFile(files)
 
   function generateTypes() {
@@ -150,15 +154,19 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     const flowerName = toFirstLower(name)
 
     const entryFile = `\
-import { ${name}ModelBase } from "./${name}Model.base"
+import { ${name}ModelBase } from "./${name}Model.base${importPostFix}"
 
 ${
   format === "ts"
     ? `/* The TypeScript type of an instance of ${name}Model */\nexport type ${name}ModelType = typeof ${name}Model.Type\n`
     : ""
 }
-/* A graphql query fragment containing all the primitive fields of ${name}Model */
-export { ${flowerName}ModelPrimitives } from "./${name}Model.base"
+${
+  modelsOnly
+    ? ""
+    : `/* A graphql query fragment containing all the primitive fields of ${name}Model */
+export { ${flowerName}ModelPrimitives } from "./${name}Model.base${importPostFix}"`
+}
 
 /**
  * ${name}Model${optPrefix("\n *\n * ", sanitizeComment(type.description))}
@@ -174,7 +182,7 @@ ${exampleAction}
 
     const typeImports = unique(imports)
       // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
-      .map(i => `import { ${i} } from "./${i}"`)
+      .map(i => `import { ${i} } from "./${i}${importPostFix}"`)
       .join("\n")
 
     const fragments = generateFragments()
@@ -186,7 +194,7 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 ${typeImports}
-import { RootStore } from "./index"
+import { RootStore } from "./index${importPostFix}"
 
 /**
  * ${name}Base
@@ -284,6 +292,7 @@ ${fragments}
     }
 
     function generateFragments() {
+      if (modelsOnly) return ""
       let fragments = `\
 export const ${flowerName}ModelPrimitives = \`
 ${primitives.join("\n")}
@@ -318,7 +327,7 @@ ${primitives.join("\n")}
     toExport.push("RootStore")
 
     const entryFile = `\
-import { RootStoreBase } from "./RootStore.base"
+import { RootStoreBase } from "./RootStore.base${importPostFix}"
 
 ${
   format == "ts" ? "export type RootStoreType = typeof RootStore.Type\n\n" : ""
@@ -337,14 +346,19 @@ ${
   objectTypes.length === 0
     ? ``
     : `\nimport { ${objectTypes
-        .map(t => `${t}Model, ${toFirstLower(t)}ModelPrimitives`)
-        .join(", ")} } from "./index"`
+        .map(
+          t =>
+            `${t}Model${
+              modelsOnly ? "" : `, ${toFirstLower(t)}ModelPrimitives`
+            }`
+        )
+        .join(", ")} } from "./index${importPostFix}"`
 }
 
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+export const RootStoreBase = ${modelsOnly ? "types.model()" : "MSTGQLStore"}
   .named("RootStore")
   .extend(configureStoreMixin([${objectTypes
     .map(s => `['${s}', () => ${s}Model]`)
@@ -361,10 +375,11 @@ ${rootTypes
   }))
 `
     generateFile("RootStore", entryFile)
-    generateFile("RootStore.base", modelFile)
+    generateFile("RootStore.base", modelFile, true)
   }
 
   function generateQueries() {
+    if (modelsOnly) return ""
     return (
       generateQueryHelper(
         findObjectByName("Query"),
@@ -519,7 +534,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 ${header}
 
 import { createStoreContext, createQueryComponent } from "mst-gql"
-import { RootStore } from "./RootStore"
+import { RootStore } from "./RootStore${importPostFix}"
 
 export const StoreContext = createStoreContext${
       format === "ts" ? `<typeof RootStore.Type>` : ""
@@ -535,7 +550,7 @@ export const Query = createQueryComponent(StoreContext)
     const contents = `\
 ${header}
 
-${toExport.map(f => `export * from "./${f}"`).join("\n")}
+${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
 `
     generateFile("index", contents, true)
   }

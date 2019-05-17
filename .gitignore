@@ -65,3 +65,4 @@ typings/
 dist
 
 tmp_schema.json
+.awcache

@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "jest test",
-    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react'",
+    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'",
     "prepare-examples": "bash scripts/prepare-examples.sh"
   },
   "repository": {

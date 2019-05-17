@@ -4,9 +4,11 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start:server": "node ./src/server/index.js",
-    "start:client": "yarn scaffold && webpack-dev-server --hot --inline",
-    "scaffold": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:4000/graphql",
+    "start:server": "yarn scaffold:server && ts-node --project ./src/server/tsconfig.json ./src/server/index.ts",
+    "start:client": "yarn scaffold:client && webpack-dev-server --hot --inline",
+    "scaffold": "yarn scaffold:server && yarn scaffold:client",
+    "scaffold:client": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts src/server/schema.graphql",
+    "scaffold:server": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --outDir src/server/models/ --format ts --modelsOnly src/server/schema.graphql",
     "start": "run-p start:server start:client",
     "postinstall": "yarn install-mst-gql",
     "install-mst-gql": "bash ../../scripts/install-mst-gql.sh"
@@ -24,11 +26,14 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
     "@types/react": "^16.8.16",
     "@types/react-dom": "^16.8.4",
     "apollo-server-express": "^2.3.3",
     "arg": "^4.1.0",
     "cors": "^2.8.5",
+    "esm": "^3.2.25",
     "express": "^4.16.4",
     "fakergem": "^1.0.3",
     "graphql-playground-middleware-express": "^1.7.11",
@@ -36,8 +41,10 @@
     "mobx": "^5.9.4",
     "mobx-react-lite": "^1.3.1",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "file:./mst-gql1558079637.tgz",
+    "mst-gql": "file:./mst-gql1558084542.tgz",
+    "node-uuid": "^1.4.8",
     "react": "^16.8.1",
-    "react-dom": "^16.8.1"
+    "react-dom": "^16.8.1",
+    "ts-node": "^8.1.0"
   }
 }

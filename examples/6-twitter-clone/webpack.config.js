@@ -26,7 +26,9 @@ module.exports = {
           {
             loader: require.resolve("awesome-typescript-loader"),
             options: {
-              configFileName: require.resolve("./tsconfig.json")
+              useCache: true,
+              transpileOnly: true,
+              configFileName: require.resolve("./src/app/tsconfig.json")
             }
           }
         ]

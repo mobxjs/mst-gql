@@ -15,7 +15,8 @@ function main() {
       "--format": String,
       "--outDir": String,
       "--roots": String,
-      "--excludes": String
+      "--excludes": String,
+      "--modelsOnly": Boolean
     })
   } catch (e) {
     console.error(
@@ -34,6 +35,7 @@ function main() {
   const excludes = args["--excludes"]
     ? args["--excludes"].split(",").map(s => s.trim())
     : []
+  const modelsOnly = !!args["--modelsOnly"]
 
   console.log(
     path.basename(__filename) +
@@ -44,8 +46,8 @@ function main() {
       " " +
       input
   )
-  if (!/^(ts|js)$/.test(format)) {
-    console.error("Invalid format parameter, expected 'js' or 'ts'")
+  if (!/^(ts|js|mjs)$/.test(format)) {
+    console.error("Invalid format parameter, expected 'js' or 'ts' or 'mjs'")
     process.exit(1)
   }
   if (!fs.existsSync(outDir)) {
@@ -79,7 +81,8 @@ function main() {
     format,
     roots,
     excludes,
-    new Date().toUTCString()
+    new Date().toUTCString(),
+    modelsOnly
   )
   files.forEach(([name, contents, force]) => {
     writeFile(name, contents, force, format, outDir)
