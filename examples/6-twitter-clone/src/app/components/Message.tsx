@@ -10,6 +10,8 @@ export const Message = observer(
         <h2>{message.user.name}</h2>
         <img src={message.user.avatar} width={200} height={200} />
         <p>{message.text}</p>
+        {message.isLikedByMe ? "YES" : "NO"}
+        <button onClick={() => message.like()}>Like</button>
       </li>
     )
   }

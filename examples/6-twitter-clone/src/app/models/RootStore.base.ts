@@ -37,6 +37,11 @@ export const RootStoreBase = MSTGQLStore
         ${resultSelector}
       } }`, variables, optimisticUpdate)
     },
+    mutateLike(variables: { msg: string, user: string }, resultSelector = messageModelPrimitives, optimisticUpdate?: () => void) {
+      return self.mutate<typeof MessageModel.Type>(`mutation like($msg: ID!, $user: ID!) { like(msg: $msg, user: $user) {
+        ${resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
     subscribeNewMessages(variables?: {  }, resultSelector = messageModelPrimitives) {
       return self.subscribe<typeof MessageModel.Type>(`subscription newMessages { newMessages {
         ${resultSelector}

@@ -18,10 +18,11 @@ export const MessageModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Message"), "Message"),
     id: types.identifier,
-    timestamp: types.integer,
+    timestamp: types.number,
     user: MSTGQLRef(types.late(() => UserModel)),
     text: types.string,
     replyTo: types.maybe(MSTGQLRef(types.late((): any => MessageModel))),
+    likes: types.array(MSTGQLRef(types.late(() => UserModel))),
   })
   .views(self => ({
     get store() {

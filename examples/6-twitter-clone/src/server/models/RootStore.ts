@@ -44,8 +44,9 @@ export const RootStore = RootStoreBase.views(self => {
       text: ChuckNorris.fact(),
       user: Math.random() < 0.7 ? "chucknorris" : "mweststrate",
       timestamp: Date.now(),
-      replyTo: undefined
-    } as const)
+      replyTo: undefined,
+      likes: []
+    })
   }
 
   setInterval(() => (self as any).addRandomMessage(), 10000)
@@ -62,6 +63,15 @@ export const RootStore = RootStoreBase.views(self => {
         ? __dirname + "/../db/data.json"
         : __dirname + "/../db/initial.json"
       applySnapshot(self, JSON.parse(fs.readFileSync(dataFile, "utf8")))
+    },
+    like(msgId, userId) {
+      const user = self.users.get(userId)
+      const msg = self.messages.get(msgId)
+      if (!user || !msg) throw new Error("Invalid message or user!")
+      if (msg.likes.includes(user)) msg.likes.remove(user)
+      else msg.likes.push(user)
+      // throw new Error("not good!")
+      return msg.serialize()
     }
   }
 })

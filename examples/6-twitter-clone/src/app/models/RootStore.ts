@@ -3,7 +3,11 @@ import { messageModelPrimitives, userModelPrimitives } from "./"
 
 export type RootStoreType = typeof RootStore.Type
 
-export const RootStore = RootStoreBase.actions(self => ({
+export const RootStore = RootStoreBase.views(self => ({
+  get me() {
+    return self.users.get("mweststrate")
+  }
+})).actions(self => ({
   afterCreate() {
     self.subscribeNewMessages(
       undefined,

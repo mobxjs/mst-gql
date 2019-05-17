@@ -9,12 +9,22 @@ export { messageModelPrimitives } from "./MessageModel.base"
 /**
  * MessageModel
  */
-export const MessageModel = MessageModelBase
-  .actions(self => ({
-    // This is just an auto-generated example action, which can be safely thrown away. 
-    // Feel free to add your own actions, props, views etc to the model. 
-    // Any code outside the '#region mst-gql-*'  regions will be preserved
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))
+export const MessageModel = MessageModelBase.views(self => ({
+  get isLikedByMe() {
+    return self.likes.includes(self.store.me)
+  }
+})).actions(self => ({
+  like() {
+    return self.store.mutateLike(
+      {
+        msg: self.id,
+        user: self.store.me.id
+      },
+      `__typename id likes { __typename id }`,
+      () => {
+        if (self.likes.includes(self.store.me)) self.likes.remove(self.store.me)
+        else self.likes.push(self.store.me)
+      }
+    )
+  }
+}))

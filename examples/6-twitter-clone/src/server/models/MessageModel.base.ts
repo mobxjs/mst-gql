@@ -22,6 +22,7 @@ export const MessageModelBase = MSTGQLObject
     user: MSTGQLRef(types.late(() => UserModel)),
     text: types.string,
     replyTo: types.maybe(MSTGQLRef(types.late((): any => MessageModel))),
+    likes: types.array(MSTGQLRef(types.late(() => UserModel))),
   })
   .views(self => ({
     get store() {

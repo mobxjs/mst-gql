@@ -23,7 +23,8 @@ export const resolvers = {
       const user = store.users.get(id)
       user.setName(name)
       return user.serialize()
-    }
+    },
+    like: (root, { msg, user }) => store.like(msg, user)
   }
 }
 
