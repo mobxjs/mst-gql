@@ -319,8 +319,10 @@ ${primitives.join("\n")}
 
     const entryFile = `\
 import { RootStoreBase } from "./RootStore.base"
-${format == "ts" ? "export type RootStoreType = typeof RootStore.Type\n" : ""}\
 
+${
+  format == "ts" ? "export type RootStoreType = typeof RootStore.Type\n\n" : ""
+}\
 export const RootStore = RootStoreBase
 ${exampleAction}
 `
@@ -517,9 +519,8 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 ${header}
 
 import { createStoreContext, createQueryComponent } from "mst-gql"
-import { RootStore } from "./RootStore"`
+import { RootStore } from "./RootStore"
 
-    const body = `
 export const StoreContext = createStoreContext${
       format === "ts" ? `<typeof RootStore.Type>` : ""
     }()
@@ -527,7 +528,7 @@ export const StoreContext = createStoreContext${
 export const Query = createQueryComponent(StoreContext)
 `
 
-    generateFile("reactUtils", contents)
+    generateFile("reactUtils", contents, true)
   }
 
   function generateBarrelFile() {

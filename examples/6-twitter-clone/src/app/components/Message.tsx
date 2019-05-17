@@ -1,10 +1,10 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
 
-import { Message as MessageModel } from "../models/Message"
+import { MessageModelType } from "../models/"
 
 export const Message = observer(
-  ({ message }: { message: typeof MessageModel.Type }) => {
+  ({ message }: { message: MessageModelType }) => {
     return (
       <li>
         <h2>{message.user.name}</h2>

@@ -1,10 +1,8 @@
-/* #region header */
-/* mst-gql generated barrel file*/
-/* #endregion */
+/* This is a mst-sql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
 
-/* #region exports */
-export * from "./Message"
-export * from "./User"
+export * from "./MessageModel"
+export * from "./UserModel"
 export * from "./RootStore"
 export * from "./reactUtils"
-/* #endregion */
