@@ -1,3 +1,4 @@
 node_modules
 .build
 lib
+src/server/db/data.json

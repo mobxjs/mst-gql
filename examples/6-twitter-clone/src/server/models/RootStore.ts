@@ -25,7 +25,10 @@ export const RootStore = RootStoreBase.views(self => {
   const pubsub = new PubSub()
 
   function save() {
-    // TODO
+    fs.writeFileSync(
+      __dirname + "/../db/data.json",
+      JSON.stringify(getSnapshot(self), null, 2)
+    )
   }
 
   function addMessage(msg: typeof MessageModel.CreationType) {
@@ -45,7 +48,7 @@ export const RootStore = RootStoreBase.views(self => {
     } as const)
   }
 
-  setInterval(() => (self as any).addRandomMessage(), 5000)
+  setInterval(() => (self as any).addRandomMessage(), 10000)
 
   return {
     getPubSub() {
