@@ -8,7 +8,8 @@ const store = RootStore.create()
 
 export const resolvers = {
   Query: {
-    messages: (_, { offset, count }) => store.allMessages(offset, count),
+    messages: (_, { offset, count, replyTo }) =>
+      store.allMessages(offset, count, replyTo),
     message: (_, { id }) => store.getMessage(id),
     me: () => store.users.get("mweststrate").serialize()
   },

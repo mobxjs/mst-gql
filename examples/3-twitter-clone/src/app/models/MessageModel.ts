@@ -29,13 +29,6 @@ export const MessageModel = MessageModelBase.views(self => ({
     )
   },
   loadReplies() {
-    return self.store.queryMessage(
-      { id: self.id },
-      `__typename id replies {
-          ${messageModelPrimitives} 
-          user { ${userModelPrimitives} } 
-          likes { ${userModelPrimitives} }
-      } `
-    )
+    return self.store.loadMessages(0, 100, self.id)
   }
 }))

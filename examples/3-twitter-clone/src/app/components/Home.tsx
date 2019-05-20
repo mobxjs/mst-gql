@@ -28,7 +28,9 @@ export const Home = () => (
             ) : (
               <button
                 className="loadmore"
-                onClick={() => setQuery(store.loadMore())}
+                onClick={() => {
+                  setQuery(store.loadMore())
+                }}
               >
                 Load more...
               </button>

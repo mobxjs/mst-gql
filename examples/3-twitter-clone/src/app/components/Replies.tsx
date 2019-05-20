@@ -9,14 +9,14 @@ import { Error } from "./Error"
 
 export const Replies = ({ message }: { message: MessageModelType }) => (
   <div className="replies">
-    <Query<MessageModelType> query={() => message.loadReplies()}>
+    <Query<MessageModelType[]> query={() => message.loadReplies()}>
       {({ data, error, loading }) => {
         if (error) return <Error>{error}</Error>
         if (loading) return <Loading />
         return (
           <>
             <ul>
-              {data.replies.map(message => (
+              {data.map(message => (
                 <Message key={message.id} message={message} asChild />
               ))}
             </ul>

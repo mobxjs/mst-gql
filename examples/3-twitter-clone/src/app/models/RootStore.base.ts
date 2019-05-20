@@ -4,21 +4,21 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
-import { MessageModel, messageModelPrimitives, UserModel, userModelPrimitives, ReplyModel, replyModelPrimitives } from "./index"
+import { MessageModel, messageModelPrimitives, UserModel, userModelPrimitives } from "./index"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Message', () => MessageModel], ['User', () => UserModel], ['Reply', () => ReplyModel]], ['Message', 'User']))
+  .extend(configureStoreMixin([['Message', () => MessageModel], ['User', () => UserModel]], ['Message', 'User']))
   .props({
     messages: types.optional(types.map(types.late(() => MessageModel)), {}),
     users: types.optional(types.map(types.late(() => UserModel)), {})
   })
   .actions(self => ({
-    queryMessages(variables: { offset: string | undefined, count: number | undefined }, resultSelector = messageModelPrimitives, options: QueryOptions = {}) {
-      return self.query<typeof MessageModel.Type[]>(`query messages($offset: ID, $count: Int) { messages(offset: $offset, count: $count) {
+    queryMessages(variables: { offset: string | undefined, count: number | undefined, replyTo: string | undefined }, resultSelector = messageModelPrimitives, options: QueryOptions = {}) {
+      return self.query<typeof MessageModel.Type[]>(`query messages($offset: ID, $count: Int, $replyTo: ID) { messages(offset: $offset, count: $count, replyTo: $replyTo) {
         ${resultSelector}
       } }`, variables, options)
     },

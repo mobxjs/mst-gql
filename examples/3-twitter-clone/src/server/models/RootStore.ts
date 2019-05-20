@@ -12,11 +12,11 @@ export type RootStoreType = typeof RootStore.Type
 
 export const RootStore = RootStoreBase.views(self => {
   return {
-    allMessages(offset = "", count = 10) {
+    allMessages(offset = "", count = 10, replyTo = "") {
       // This is just a stub implementation! Should be powered by real DB in reality
-      const sortedMessages = Array.from(self.messages.values()).sort((a, b) =>
-        a.timestamp < b.timestamp ? 1 : -1
-      )
+      const sortedMessages = Array.from(self.messages.values())
+        .filter(m => (replyTo ? m.replyTo === replyTo : !m.replyTo))
+        .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
       const offsetMessage = self.messages.get(offset)
       const start = offset ? sortedMessages.indexOf(offsetMessage) + 1 : 0
       return sortedMessages
@@ -25,6 +25,12 @@ export const RootStore = RootStoreBase.views(self => {
     },
     getMessage(id: string) {
       return self.messages.get(id).serialize()
+    },
+    getReplies(parent) {
+      return Array.from(self.messages.values())
+        .filter(m => m.replyTo === parent)
+        .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+        .map(m => m.serialize())
     }
   }
 }).actions(self => {
@@ -39,7 +45,8 @@ export const RootStore = RootStoreBase.views(self => {
 
   function addMessage(msg: typeof MessageModel.CreationType) {
     const m = self.messages.put(msg)
-    pubsub.publish("newMessages", { newMessages: m.serialize() })
+    if (!msg.replyTo)
+      pubsub.publish("newMessages", { newMessages: m.serialize() })
     save()
     return m
   }
@@ -52,7 +59,7 @@ export const RootStore = RootStoreBase.views(self => {
       user: Math.random() < 0.7 ? "chucknorris" : "mweststrate",
       timestamp: Date.now(),
       likes: [],
-      replies: []
+      replyTo: undefined
     })
   }
 
@@ -74,28 +81,15 @@ export const RootStore = RootStoreBase.views(self => {
     postTweet(text, userId, replyTo = "") {
       const user = self.users.get(userId)
       if (!user) throw new Error("Invalid user!")
-      let m: MessageModelType
-      if (!replyTo) {
-        m = addMessage({
-          __typename: "Message",
-          id: v4(),
-          text,
-          user: user.id,
-          timestamp: Date.now(),
-          likes: [],
-          replies: []
-        })
-      } else {
-        m = resolveIdentifier(MessageModel, self, replyTo)
-        m.replies.push({
-          __typename: "Reply",
-          id: v4(),
-          text,
-          user: user.id,
-          timestamp: Date.now(),
-          likes: []
-        })
-      }
+      const m = addMessage({
+        __typename: "Message",
+        id: v4(),
+        text,
+        user: user.id,
+        timestamp: Date.now(),
+        likes: [],
+        replyTo: replyTo
+      })
       return m.serialize()
     },
     like(msgId, userId) {

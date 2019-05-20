@@ -14,7 +14,7 @@ That being said, it is pretty safe to adopt this project in the sense that just 
 
 # 🚀 Installation 🚀
 
-Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql`
+Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql graphql-request`
 
 If you want to use graphql tags, also install: `yarn add graphql graphql-tag`
 
@@ -423,8 +423,7 @@ Similar to `query`, but used for mutations. If an `optimisticUpdate` thunk is pa
 
 ### `subscribe(query, variables, onData): () => void`
 
-Similar to `query`, but sets up an websocket based subscription. The `gqlWsClient` needs to be set during the store creation to make this possible.
-`onData` can be provided as callback for when new data arrives
+Similar to `query`, but sets up an websocket based subscription. The `gqlWsClient` needs to be set during the store creation to make this possible. `onData` can be provided as callback for when new data arrives
 
 ### Generated queries, mutations and subscriptions
 
