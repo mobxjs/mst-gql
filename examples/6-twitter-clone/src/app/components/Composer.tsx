@@ -1,0 +1,31 @@
+import React, { useRef } from "react"
+import { Query } from "../models/reactUtils"
+import { Loading } from "./Loading"
+
+export const Composer = () => {
+  const inputRef = useRef<HTMLInputElement>()
+  return (
+    <Query>
+      {({ store, loading, error, setQuery }) =>
+        error ? (
+          <p>Failed to post message: ${error}</p>
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <div>
+            <input ref={inputRef} />
+            <button
+              onClick={() => {
+                const query = store.sendTweet(inputRef.current!.value)
+                inputRef.current.value = ""
+                setQuery(query)
+              }}
+            >
+              Send
+            </button>
+          </div>
+        )
+      }
+    </Query>
+  )
+}

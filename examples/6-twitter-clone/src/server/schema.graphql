@@ -22,4 +22,5 @@ type Subscription {
 type Mutation {
   changeName(id: ID!, name: String!): User
   like(msg: ID!, user: ID!): Message
+  postTweet(text: String!, user: ID!): Message
 }

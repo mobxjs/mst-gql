@@ -1,5 +1,4 @@
 import * as fs from "fs"
-import { getSnapshot } from "mobx-state-tree"
 
 import { RootStore } from "./models"
 
@@ -24,7 +23,8 @@ export const resolvers = {
       user.setName(name)
       return user.serialize()
     },
-    like: (root, { msg, user }) => store.like(msg, user)
+    like: (root, { msg, user }) => store.like(msg, user),
+    postTweet: (root, { text, user }) => store.postTweet(text, user)
   }
 }
 

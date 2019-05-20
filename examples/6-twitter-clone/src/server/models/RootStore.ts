@@ -35,6 +35,7 @@ export const RootStore = RootStoreBase.views(self => {
     const m = self.messages.put(msg)
     pubsub.publish("newMessages", { newMessages: m.serialize() })
     save()
+    return m
   }
 
   function addRandomMessage() {
@@ -49,7 +50,7 @@ export const RootStore = RootStoreBase.views(self => {
     })
   }
 
-  setInterval(() => (self as any).addRandomMessage(), 10000)
+  // setInterval(() => (self as any).addRandomMessage(), 10000)
 
   return {
     getPubSub() {
@@ -63,6 +64,20 @@ export const RootStore = RootStoreBase.views(self => {
         ? __dirname + "/../db/data.json"
         : __dirname + "/../db/initial.json"
       applySnapshot(self, JSON.parse(fs.readFileSync(dataFile, "utf8")))
+    },
+    postTweet(text, userId) {
+      const user = self.users.get(userId)
+      if (!user) throw new Error("Invalid user!")
+      const m = addMessage({
+        __typename: "Message",
+        id: v4(),
+        text,
+        user: user.id,
+        timestamp: Date.now(),
+        replyTo: undefined,
+        likes: []
+      })
+      return m.serialize()
     },
     like(msgId, userId) {
       const user = self.users.get(userId)

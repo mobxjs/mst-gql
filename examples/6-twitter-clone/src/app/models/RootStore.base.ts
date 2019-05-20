@@ -42,6 +42,11 @@ export const RootStoreBase = MSTGQLStore
         ${resultSelector}
       } }`, variables, optimisticUpdate)
     },
+    mutatePostTweet(variables: { text: string, user: string }, resultSelector = messageModelPrimitives, optimisticUpdate?: () => void) {
+      return self.mutate<typeof MessageModel.Type>(`mutation postTweet($text: String!, $user: ID!) { postTweet(text: $text, user: $user) {
+        ${resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
     subscribeNewMessages(variables?: {  }, resultSelector = messageModelPrimitives) {
       return self.subscribe<typeof MessageModel.Type>(`subscription newMessages { newMessages {
         ${resultSelector}

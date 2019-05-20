@@ -24,5 +24,8 @@ export const RootStore = RootStoreBase.views(self => ({
       }
     `
     )
+  },
+  sendTweet(text) {
+    return self.mutatePostTweet({ text, user: self.me.id })
   }
 }))
