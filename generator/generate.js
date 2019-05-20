@@ -186,7 +186,7 @@ ${exampleAction}
       .map(
         i =>
           `import { ${i}${
-            i !== `${currentType}Model` ? `, ${i}Selector` : `` // TODO: hacks! build better import system
+            !modelsOnly && i !== `${currentType}Model` ? `, ${i}Selector` : `` // TODO: hacks! build better import system
           } } from "./${i}${importPostFix}"`
       )
       .join("\n")
@@ -312,7 +312,7 @@ export class ${name}ModelSelector${ifTS("<PARENT>")} extends QueryBuilder${ifTS(
       )} {
 ${primitiveFields
   .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
-  .join("\n")}\
+  .join("\n")}
 ${nonPrimitiveFields
   .map(
     ([field, type]) =>

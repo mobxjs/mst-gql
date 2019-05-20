@@ -5,7 +5,11 @@ import { userModelPrimitives } from "./UserModel"
 export type MessageModelType = typeof MessageModel.Type
 
 /* A graphql query fragment containing all the primitive fields of MessageModel */
-export { messageModelPrimitives } from "./MessageModel.base"
+export {
+  messageModelPrimitives,
+  selectFromMessage,
+  MessageModelSelector
+} from "./MessageModel.base"
 
 /**
  * MessageModel

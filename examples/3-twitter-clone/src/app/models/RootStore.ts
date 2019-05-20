@@ -1,9 +1,15 @@
 import { RootStoreBase } from "./RootStore.base"
-import { messageModelPrimitives, userModelPrimitives } from "./"
 import { types } from "mobx-state-tree"
 import { MessageModel } from "./MessageModel"
+import { selectFromMessage } from "./MessageModel.base"
 
-export const MESSAGE_FRAGMENT = `${messageModelPrimitives} user { ${userModelPrimitives} } likes { ${userModelPrimitives} }`
+// prettier-ignore
+export const MESSAGE_FRAGMENT = selectFromMessage()
+  .timestamp
+  .text
+  .likes().close()
+  .user().close()
+  .build()
 
 export type RootStoreType = typeof RootStore.Type
 
@@ -36,7 +42,12 @@ export const RootStore = RootStoreBase.props({
     sendTweet(text, replyTo = "") {
       return self.mutatePostTweet(
         { text, user: self.me.id, replyTo },
-        `${MESSAGE_FRAGMENT} replies { ${MESSAGE_FRAGMENT}}`
+        selectFromMessage()
+          .text.timestamp.user()
+          .close()
+          .replies()
+          .close()
+          .build()
       )
     },
     loadInitialMessages() {

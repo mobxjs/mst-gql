@@ -3,10 +3,10 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
-import { UserModel } from "./UserModel"
-import { ReplyModel } from "./ReplyModel"
+import { UserModel, UserModelSelector } from "./UserModel"
+import { ReplyModel, ReplyModelSelector } from "./ReplyModel"
 import { RootStore } from "./index"
 
 /**
@@ -30,10 +30,18 @@ export const MessageModelBase = MSTGQLObject
     }
   }))
 
-export const messageModelPrimitives = `
-__typename
-id
-timestamp
-text
-`
+export function selectFromMessage() {
+  return new MessageModelSelector()
+}
+
+export const messageModelPrimitives = selectFromMessage().id.timestamp.text.build()
+
+export class MessageModelSelector<PARENT> extends QueryBuilder<PARENT> {
+  get id() { return this.__attr(`id`) }
+  get timestamp() { return this.__attr(`timestamp`) }
+  get text() { return this.__attr(`text`) }
+  user(): UserModelSelector<this> { return this.__child(`user`, UserModelSelector) as any }
+  likes(): UserModelSelector<this> { return this.__child(`likes`, UserModelSelector) as any }
+  replies(): ReplyModelSelector<this> { return this.__child(`replies`, ReplyModelSelector) as any }
+}
 

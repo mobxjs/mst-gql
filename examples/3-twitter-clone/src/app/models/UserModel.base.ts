@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"
@@ -26,10 +26,16 @@ export const UserModelBase = MSTGQLObject
     }
   }))
 
-export const userModelPrimitives = `
-__typename
-id
-name
-avatar
-`
+export function selectFromUser() {
+  return new UserModelSelector()
+}
+
+export const userModelPrimitives = selectFromUser().id.name.avatar.build()
+
+export class UserModelSelector<PARENT> extends QueryBuilder<PARENT> {
+  get id() { return this.__attr(`id`) }
+  get name() { return this.__attr(`name`) }
+  get avatar() { return this.__attr(`avatar`) }
+
+}
 
