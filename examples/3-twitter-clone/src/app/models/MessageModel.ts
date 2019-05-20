@@ -1,4 +1,5 @@
-import { MessageModelBase } from "./MessageModel.base"
+import { MessageModelBase, messageModelPrimitives } from "./MessageModel.base"
+import { userModelPrimitives } from "./UserModel"
 
 /* The TypeScript type of an instance of MessageModel */
 export type MessageModelType = typeof MessageModel.Type
@@ -28,6 +29,13 @@ export const MessageModel = MessageModelBase.views(self => ({
     )
   },
   loadReplies() {
-    return self.store.queryReplies({ id: self.id })
+    return self.store.queryMessage(
+      { id: self.id },
+      `__typename id replies {
+          ${messageModelPrimitives} 
+          user { ${userModelPrimitives} } 
+          likes { ${userModelPrimitives} }
+      } `
+    )
   }
 }))

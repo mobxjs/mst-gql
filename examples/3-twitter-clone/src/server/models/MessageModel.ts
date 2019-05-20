@@ -12,7 +12,8 @@ export const MessageModel = MessageModelBase.views(self => ({
     return {
       ...getSnapshot(self),
       likes: self.likes.map(like => like.serialize()),
-      user: self.user.serialize()
+      user: self.user.serialize(),
+      replies: self.replies.map(m => m.serialize())
     }
   }
 }))

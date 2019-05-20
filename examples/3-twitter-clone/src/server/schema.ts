@@ -9,7 +9,6 @@ const store = RootStore.create()
 export const resolvers = {
   Query: {
     messages: (_, { offset, count }) => store.allMessages(offset, count),
-    replies: (_, { id }) => store.getReplies(id),
     message: (_, { id }) => store.getMessage(id),
     me: () => store.users.get("mweststrate").serialize()
   },

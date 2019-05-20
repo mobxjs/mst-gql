@@ -58,7 +58,7 @@ function generate(
         if (type.kind === "OBJECT") objectTypes.push(type.name)
       })
 
-    if (!rootTypes.size) {
+    if (!rootTypes.length) {
       rootTypes = autoDetectRootTypes()
       console.warn(
         "Warning: no root types are configured. Probably --roots should be set. Detected the following objects to be possible root types: " +

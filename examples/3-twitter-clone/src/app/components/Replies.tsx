@@ -8,14 +8,15 @@ import { Composer } from "./Composer"
 
 export const Replies = ({ message }: { message: MessageModelType }) => (
   <div>
-    <Query<MessageModelType[]> query={() => message.loadReplies()}>
+    <Query<MessageModelType> query={() => message.loadReplies()}>
       {({ data, error, loading }) => {
         if (error) return <p>{error}</p>
         if (loading) return <Loading />
+        console.dir(data)
         return (
           <>
             <ul>
-              {data.map(message => (
+              {data.replies.map(message => (
                 <Message key={message.id} message={message} />
               ))}
             </ul>

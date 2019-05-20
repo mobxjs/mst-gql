@@ -9,12 +9,18 @@ type Message {
   user: User!
   text: String!
   likes: [User!]
-  replyTo: Message
+  replies: [Reply!]
+}
+type Reply {
+  id: ID
+  timestamp: Float!
+  user: User!
+  text: String!
+  likes: [User!]
 }
 type Query {
   messages(offset: ID, count: Int): [Message]
   message(id: ID!): Message
-  replies(id: ID!): [Message]
   me: User
 }
 type Subscription {

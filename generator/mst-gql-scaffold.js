@@ -61,14 +61,19 @@ function main() {
       `${__dirname}/../node_modules/.bin/apollo schema:download --endpoint=${input} ${tmpFile}`
     )
     json = JSON.parse(fs.readFileSync(tmpFile, "utf8"))
-    // fs.unlinkSync(tmpFile)
+    fs.unlinkSync(tmpFile)
   } else if (input.endsWith(".json")) {
     json = JSON.parse(fs.readFileSync(input, "utf8"))
   } else if (input.endsWith(".graphql")) {
     // Tnx https://blog.apollographql.com/three-ways-to-represent-your-graphql-schema-a41f4175100d!
     const text = fs.readFileSync(input, "utf8")
     const schema = graphql.buildSchema(text)
-    json = graphql.graphqlSync(schema, graphql.introspectionQuery).data
+    const res = graphql.graphqlSync(schema, graphql.introspectionQuery)
+    if (res.data) json = res.data
+    else {
+      console.error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
+      process.exit(1)
+    }
   } else {
     console.error(
       "Expected json, graphql or url as input parameter, got: " + input
@@ -76,6 +81,7 @@ function main() {
     process.exit(1)
   }
 
+  // console.log(JSON.stringify(json, null, 2))
   const files = generate(
     json.__schema.types,
     format,

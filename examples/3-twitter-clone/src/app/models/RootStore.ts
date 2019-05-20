@@ -3,6 +3,8 @@ import { messageModelPrimitives, userModelPrimitives } from "./"
 import { types } from "mobx-state-tree"
 import { MessageModel } from "./MessageModel"
 
+export const MESSAGE_FRAGMENT = `${messageModelPrimitives} user { ${userModelPrimitives} } likes { ${userModelPrimitives} }`
+
 export type RootStoreType = typeof RootStore.Type
 
 export const RootStore = RootStoreBase.props({
@@ -18,19 +20,12 @@ export const RootStore = RootStoreBase.props({
   }))
   .actions(self => ({
     afterCreate() {
-      self.subscribeNewMessages(
-        {},
-        `${messageModelPrimitives} user { ${userModelPrimitives} } `,
-        message => {
-          self.sortedMessages.unshift(message)
-        }
-      )
+      self.subscribeNewMessages({}, MESSAGE_FRAGMENT, message => {
+        self.sortedMessages.unshift(message)
+      })
     },
     loadMessages(offset, count) {
-      const query = self.queryMessages(
-        { offset, count },
-        `${messageModelPrimitives} user { ${userModelPrimitives} } `
-      )
+      const query = self.queryMessages({ offset, count }, MESSAGE_FRAGMENT)
       query.then(data => {
         self.sortedMessages.push(...data)
       })
@@ -39,7 +34,10 @@ export const RootStore = RootStoreBase.props({
   }))
   .actions(self => ({
     sendTweet(text, replyTo = "") {
-      return self.mutatePostTweet({ text, user: self.me.id, replyTo })
+      return self.mutatePostTweet(
+        { text, user: self.me.id, replyTo },
+        `${MESSAGE_FRAGMENT} replies { ${MESSAGE_FRAGMENT}}`
+      )
     },
     loadInitialMessages() {
       return self.loadMessages("", 3)

@@ -7,8 +7,8 @@
     "start:server": "yarn scaffold:server && ts-node-dev --project ./src/server/tsconfig.json ./src/server/index.ts",
     "start:client": "yarn scaffold:client && webpack-dev-server --hot --inline",
     "scaffold": "yarn scaffold:server && yarn scaffold:client",
-    "scaffold:client": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts src/server/schema.graphql",
-    "scaffold:server": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --outDir src/server/models/ --format ts --modelsOnly src/server/schema.graphql",
+    "scaffold:client": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --roots 'Message,User' --outDir src/app/models/ --format ts src/server/schema.graphql",
+    "scaffold:server": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --roots 'Message,User' --outDir src/server/models/ --format ts --modelsOnly src/server/schema.graphql",
     "start": "run-p start:server start:client",
     "postinstall": "yarn install-mst-gql",
     "install-mst-gql": "bash ../../scripts/install-mst-gql.sh"

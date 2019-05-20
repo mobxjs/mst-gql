@@ -6,23 +6,21 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 import { UserModel } from "./UserModel"
-import { ReplyModel } from "./ReplyModel"
 import { RootStore } from "./index"
 
 /**
- * MessageBase
- * auto generated base class for the model MessageModel.
+ * ReplyBase
+ * auto generated base class for the model ReplyModel.
  */
-export const MessageModelBase = MSTGQLObject
-  .named('Message')
+export const ReplyModelBase = MSTGQLObject
+  .named('Reply')
   .props({
-    __typename: types.optional(types.literal("Message"), "Message"),
+    __typename: types.optional(types.literal("Reply"), "Reply"),
     id: types.identifier,
     timestamp: types.number,
     user: MSTGQLRef(types.late(() => UserModel)),
     text: types.string,
     likes: types.array(MSTGQLRef(types.late(() => UserModel))),
-    replies: types.array(types.late(() => ReplyModel)),
   })
   .views(self => ({
     get store() {

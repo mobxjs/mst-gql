@@ -4,5 +4,6 @@
 
 export * from "./MessageModel"
 export * from "./UserModel"
+export * from "./ReplyModel"
 export * from "./RootStore"
 export * from "./reactUtils"
