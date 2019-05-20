@@ -9,6 +9,7 @@ const store = RootStore.create()
 export const resolvers = {
   Query: {
     messages: (_, { offset, count }) => store.allMessages(offset, count),
+    replies: (_, { id }) => store.getReplies(id),
     message: (_, { id }) => store.getMessage(id),
     me: () => store.users.get("mweststrate").serialize()
   },
@@ -24,7 +25,8 @@ export const resolvers = {
       return user.serialize()
     },
     like: (root, { msg, user }) => store.like(msg, user),
-    postTweet: (root, { text, user }) => store.postTweet(text, user)
+    postTweet: (root, { text, user, replyTo }) =>
+      store.postTweet(text, user, replyTo)
   }
 }
 

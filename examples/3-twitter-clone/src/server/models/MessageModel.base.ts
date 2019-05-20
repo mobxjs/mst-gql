@@ -6,6 +6,7 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef } from "mst-gql"
 
 import { UserModel } from "./UserModel"
+import { MessageModel } from "./MessageModel"
 import { RootStore } from "./index"
 
 /**
@@ -21,6 +22,7 @@ export const MessageModelBase = MSTGQLObject
     user: MSTGQLRef(types.late(() => UserModel)),
     text: types.string,
     likes: types.array(MSTGQLRef(types.late(() => UserModel))),
+    replyTo: types.maybe(MSTGQLRef(types.late((): any => MessageModel))),
   })
   .views(self => ({
     get store() {

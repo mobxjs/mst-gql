@@ -27,6 +27,11 @@ export const RootStoreBase = MSTGQLStore
         ${resultSelector}
       } }`, variables, options)
     },
+    queryReplies(variables: { id: string }, resultSelector = messageModelPrimitives, options: QueryOptions = {}) {
+      return self.query<typeof MessageModel.Type[]>(`query replies($id: ID!) { replies(id: $id) {
+        ${resultSelector}
+      } }`, variables, options)
+    },
     queryMe(variables?: {  }, resultSelector = userModelPrimitives, options: QueryOptions = {}) {
       return self.query<typeof UserModel.Type>(`query me { me {
         ${resultSelector}
@@ -42,8 +47,8 @@ export const RootStoreBase = MSTGQLStore
         ${resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutatePostTweet(variables: { text: string, user: string }, resultSelector = messageModelPrimitives, optimisticUpdate?: () => void) {
-      return self.mutate<typeof MessageModel.Type>(`mutation postTweet($text: String!, $user: ID!) { postTweet(text: $text, user: $user) {
+    mutatePostTweet(variables: { text: string, user: string, replyTo: string | undefined }, resultSelector = messageModelPrimitives, optimisticUpdate?: () => void) {
+      return self.mutate<typeof MessageModel.Type>(`mutation postTweet($text: String!, $user: ID!, $replyTo: ID) { postTweet(text: $text, user: $user, replyTo: $replyTo) {
         ${resultSelector}
       } }`, variables, optimisticUpdate)
     },

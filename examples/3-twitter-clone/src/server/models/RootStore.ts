@@ -14,19 +14,23 @@ export const RootStore = RootStoreBase.views(self => {
   return {
     allMessages(offset = "", count = 10) {
       // This is just a stub implementation! Should be powered by real DB in reality
-      const sortedMessages = Array.from(self.messages.values()).sort((a, b) =>
-        a.timestamp > b.timestamp ? 1 : -1
-      )
+      const sortedMessages = Array.from(self.messages.values())
+        .filter(m => !m.replyTo)
+        .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
       const offsetMessage = self.messages.get(offset)
       const start = offset ? sortedMessages.indexOf(offsetMessage) + 1 : 0
-      console.log(sortedMessages.map(m => m.id).join(", "))
-      console.log("query", offset, count, start)
       return sortedMessages
         .slice(start, start + count)
         .map(msg => msg.serialize())
     },
     getMessage(id: string) {
       return self.messages.get(id).serialize()
+    },
+    getReplies(parent) {
+      return Array.from(self.messages.values())
+        .filter(m => m.replyTo === parent)
+        .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+        .map(m => m.serialize())
     }
   }
 }).actions(self => {
@@ -41,7 +45,8 @@ export const RootStore = RootStoreBase.views(self => {
 
   function addMessage(msg: typeof MessageModel.CreationType) {
     const m = self.messages.put(msg)
-    pubsub.publish("newMessages", { newMessages: m.serialize() })
+    if (!msg.replyTo)
+      pubsub.publish("newMessages", { newMessages: m.serialize() })
     save()
     return m
   }
@@ -53,7 +58,8 @@ export const RootStore = RootStoreBase.views(self => {
       text: ChuckNorris.fact(),
       user: Math.random() < 0.7 ? "chucknorris" : "mweststrate",
       timestamp: Date.now(),
-      likes: []
+      likes: [],
+      replyTo: undefined
     })
   }
 
@@ -72,7 +78,7 @@ export const RootStore = RootStoreBase.views(self => {
         : __dirname + "/../db/initial.json"
       applySnapshot(self, JSON.parse(fs.readFileSync(dataFile, "utf8")))
     },
-    postTweet(text, userId) {
+    postTweet(text, userId, replyTo = "") {
       const user = self.users.get(userId)
       if (!user) throw new Error("Invalid user!")
       const m = addMessage({
@@ -81,7 +87,8 @@ export const RootStore = RootStoreBase.views(self => {
         text,
         user: user.id,
         timestamp: Date.now(),
-        likes: []
+        likes: [],
+        replyTo: replyTo
       })
       return m.serialize()
     },

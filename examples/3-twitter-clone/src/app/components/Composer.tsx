@@ -2,7 +2,7 @@ import React, { useRef } from "react"
 import { Query } from "../models/reactUtils"
 import { Loading } from "./Loading"
 
-export const Composer = () => {
+export const Composer = ({ replyTo }: { replyTo: string }) => {
   const inputRef = useRef<HTMLInputElement>()
   return (
     <Query>
@@ -16,7 +16,7 @@ export const Composer = () => {
             <input ref={inputRef} />
             <button
               onClick={() => {
-                const query = store.sendTweet(inputRef.current!.value)
+                const query = store.sendTweet(inputRef.current!.value, replyTo)
                 inputRef.current.value = ""
                 setQuery(query)
               }}

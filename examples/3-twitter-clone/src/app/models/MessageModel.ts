@@ -26,5 +26,8 @@ export const MessageModel = MessageModelBase.views(self => ({
         else self.likes.push(self.store.me)
       }
     )
+  },
+  loadReplies() {
+    return self.store.queryReplies({ id: self.id })
   }
 }))

@@ -38,8 +38,8 @@ export const RootStore = RootStoreBase.props({
     }
   }))
   .actions(self => ({
-    sendTweet(text) {
-      return self.mutatePostTweet({ text, user: self.me.id })
+    sendTweet(text, replyTo = "") {
+      return self.mutatePostTweet({ text, user: self.me.id, replyTo })
     },
     loadInitialMessages() {
       return self.loadMessages("", 3)

@@ -9,10 +9,12 @@ type Message {
   user: User!
   text: String!
   likes: [User!]
+  replyTo: Message
 }
 type Query {
   messages(offset: ID, count: Int): [Message]
   message(id: ID!): Message
+  replies(id: ID!): [Message]
   me: User
 }
 type Subscription {
@@ -21,5 +23,5 @@ type Subscription {
 type Mutation {
   changeName(id: ID!, name: String!): User
   like(msg: ID!, user: ID!): Message
-  postTweet(text: String!, user: ID!): Message
+  postTweet(text: String!, user: ID!, replyTo: ID): Message
 }
