@@ -12,9 +12,17 @@ export type RootStoreType = typeof RootStore.Type
 
 export const RootStore = RootStoreBase.views(self => {
   return {
-    allMessages() {
-      return Array.from(self.messages.values())
-        .sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+    allMessages(offset = "", count = 10) {
+      // This is just a stub implementation! Should be powered by real DB in reality
+      const sortedMessages = Array.from(self.messages.values()).sort((a, b) =>
+        a.timestamp > b.timestamp ? 1 : -1
+      )
+      const offsetMessage = self.messages.get(offset)
+      const start = offset ? sortedMessages.indexOf(offsetMessage) + 1 : 0
+      console.log(sortedMessages.map(m => m.id).join(", "))
+      console.log("query", offset, count, start)
+      return sortedMessages
+        .slice(start, start + count)
         .map(msg => msg.serialize())
     },
     getMessage(id: string) {

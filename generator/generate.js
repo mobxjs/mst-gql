@@ -400,7 +400,9 @@ ${rootTypes
       generateQueryHelper(
         findObjectByName("Subscription"),
         "subscription",
-        "subscribe"
+        "subscribe",
+        format === "ts" ? ", onData?: (item: T) => void" : ", onData",
+        ", onData"
       )
     )
   }

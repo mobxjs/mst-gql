@@ -81,7 +81,8 @@ export const MSTGQLStore = types
     // N.b: the T is ignored, but it does simplify code generation
     function subscribe<T = any>(
       query: string | DocumentNode,
-      variables?: any
+      variables?: any,
+      onData?: (item: T) => void
     ): () => void {
       if (!gqlWsClient) throw new Error("No WS client available")
       const sub = gqlWsClient
@@ -92,9 +93,11 @@ export const MSTGQLStore = types
         .subscribe({
           next(data) {
             if (data.errors) throw new Error(JSON.stringify(data.errors))
-            else {
-              ;(self as any).merge(getFirstValue(data.data))
-            }
+            ;(self as any).__runInStoreContext(() => {
+              const res = (self as any).merge(getFirstValue(data.data))
+              if (onData) onData(res)
+              return res
+            })
           }
         })
       return () => sub.unsubscribe()
@@ -107,6 +110,9 @@ export const MSTGQLStore = types
       query,
       subscribe,
       rawRequest,
+      __runInStoreContext<T>(fn: () => T) {
+        return fn()
+      },
       __cacheResponse(key: string, response: any) {
         self.__queryCache.set(key, response)
       }

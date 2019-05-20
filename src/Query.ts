@@ -158,7 +158,15 @@ export class Query<T = unknown> implements PromiseLike<T> {
       | ((reason: any) => TResult2 | PromiseLike<TResult2>)
       | undefined
       | null
-  ): PromiseLike<TResult1 | TResult2> {
-    return this.promise.then(onfulfilled, onrejected)
+  ): PromiseLike<TResult1 | TResult2>
+  then(onfulfilled: any, onrejected: any) {
+    return this.promise.then(
+      d => {
+        this.store.__runInStoreContext(() => onfulfilled(d))
+      },
+      e => {
+        this.store.__runInStoreContext(() => onrejected(e))
+      }
+    )
   }
 }

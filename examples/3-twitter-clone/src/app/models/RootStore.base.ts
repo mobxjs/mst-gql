@@ -17,8 +17,8 @@ export const RootStoreBase = MSTGQLStore
     users: types.optional(types.map(types.late(() => UserModel)), {})
   })
   .actions(self => ({
-    queryMessages(variables?: {  }, resultSelector = messageModelPrimitives, options: QueryOptions = {}) {
-      return self.query<typeof MessageModel.Type[]>(`query messages { messages {
+    queryMessages(variables: { offset: string | undefined, count: number | undefined }, resultSelector = messageModelPrimitives, options: QueryOptions = {}) {
+      return self.query<typeof MessageModel.Type[]>(`query messages($offset: ID, $count: Int) { messages(offset: $offset, count: $count) {
         ${resultSelector}
       } }`, variables, options)
     },
@@ -47,9 +47,9 @@ export const RootStoreBase = MSTGQLStore
         ${resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    subscribeNewMessages(variables?: {  }, resultSelector = messageModelPrimitives) {
+    subscribeNewMessages(variables?: {  }, resultSelector = messageModelPrimitives, onData?: (item: T) => void) {
       return self.subscribe<typeof MessageModel.Type>(`subscription newMessages { newMessages {
         ${resultSelector}
-      } }`, variables)
+      } }`, variables, onData)
     },    
   }))

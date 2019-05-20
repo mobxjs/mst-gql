@@ -12,7 +12,7 @@ type Message {
   likes: [User!]
 }
 type Query {
-  messages: [Message]
+  messages(offset: ID, count: Int): [Message]
   message(id: ID!): Message
   me: User
 }

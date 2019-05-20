@@ -7,20 +7,22 @@ import { Composer } from "./Composer"
 export const Home = () => (
   <>
     <Composer />
-    <Query query={store => store.loadMessages()}>
-      {({ store, error, query }) => {
+    <Query query={store => store.loadInitialMessages()}>
+      {({ store, error, loading, setQuery }) => {
         if (error) return <Error>{error.message}</Error>
         if (!store.messages.size) return <Loading />
         return (
           <>
             <ul>
-              {Array.from(store.messages.values())
-                .reverse()
-                .map(message => (
-                  <Message key={message.id} message={message} />
-                ))}
+              {store.sortedMessages.map(message => (
+                <Message key={message.id} message={message} />
+              ))}
             </ul>
-            <button onClick={query.refetch}>Refetch</button>
+            {loading ? (
+              <Loading />
+            ) : (
+              <button onClick={() => setQuery(store.loadMore())}>more</button>
+            )}
           </>
         )
       }}
