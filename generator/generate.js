@@ -149,7 +149,8 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     toExport.push(name + "Model")
 
     const imports = []
-    let primitives = ["__typename"]
+    let primitiveFields = []
+    let nonPrimitiveFields = []
     let refs = []
     const flowerName = toFirstLower(name)
 
@@ -164,8 +165,8 @@ ${
 ${
   modelsOnly
     ? ""
-    : `/* A graphql query fragment containing all the primitive fields of ${name}Model */
-export { ${flowerName}ModelPrimitives } from "./${name}Model.base${importPostFix}"`
+    : `/* A graphql query fragment builders for ${name}Model */
+export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector } from "./${name}Model.base${importPostFix}"`
 }
 
 /**
@@ -182,16 +183,19 @@ ${exampleAction}
 
     const typeImports = unique(imports)
       // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
-      .map(i => `import { ${i} } from "./${i}${importPostFix}"`)
+      .map(
+        i =>
+          `import { ${i}${
+            i !== `${currentType}Model` ? `, ${i}Selector` : `` // TODO: hacks! build better import system
+          } } from "./${i}${importPostFix}"`
+      )
       .join("\n")
-
-    const fragments = generateFragments()
 
     const modelFile = `\
 ${header}
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 ${typeImports}
 import { RootStore } from "./index${importPostFix}"
@@ -217,7 +221,7 @@ ${fields}
     }
   }))
 
-${fragments}
+${generateFragments()}
 `
 
     generateFile(name + "Model.base", modelFile, true)
@@ -238,7 +242,7 @@ ${fragments}
     function handleFieldType(fieldName, type, isRoot) {
       switch (type.kind) {
         case "SCALAR":
-          primitives.push(fieldName)
+          primitiveFields.push(fieldName)
           const primitiveType = primitiveToMstType(type.name)
           // a scalar as root, means it is optional!
           return !isRoot || primitiveType === "identifier"
@@ -267,6 +271,7 @@ ${fragments}
     }
 
     function handleObjectFieldType(fieldName, type, isRoot) {
+      nonPrimitiveFields.push([fieldName, type.name])
       const isSelf = type.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
@@ -293,33 +298,33 @@ ${fragments}
 
     function generateFragments() {
       if (modelsOnly) return ""
-      let fragments = `\
-export const ${flowerName}ModelPrimitives = \`
-${primitives.join("\n")}
-\`
+      return `\
+export function selectFrom${name}() {
+  return new ${name}ModelSelector()
+}
+
+export const ${flowerName}ModelPrimitives = selectFrom${name}()${primitiveFields
+        .map(p => `.${p}`)
+        .join("")}.build()
+
+export class ${name}ModelSelector${ifTS("<PARENT>")} extends QueryBuilder${ifTS(
+        "<PARENT>"
+      )} {
+${primitiveFields
+  .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
+  .join("\n")}\
+${nonPrimitiveFields
+  .map(
+    ([field, type]) =>
+      `  ${field}()${ifTS(
+        `: ${type}ModelSelector<this>`
+      )} { return this.__child(\`${field}\`, ${type}ModelSelector)${ifTS(
+        " as any"
+      )} }`
+  )
+  .join("\n")}
+}
 `
-
-      //       if (refs.length === 0) {
-      //         fragments += `\
-      // export const ${flowerName}FieldsShallow = ${flowerName}Primitives
-      // export const ${flowerName}FieldsDeep = ${flowerName}Primitives`
-      //       } else {
-      //         fragments += `\
-      // export const ${flowerName}FieldsShallow = ${flowerName}Primitives + \`
-      // ${refs.map(([fname]) => `${fname} { id __typename }`).join("\n")}
-      // \`
-
-      // export const ${flowerName}FieldsDeep = ${flowerName}Primitives + \`
-      // ${refs
-      //   .map(
-      //     ([fname, type]) =>
-      //       `${fname} { id, __typename` +
-      //       (type === name ? `}` : ` \${${toFirstLower(type)}FieldsDeep} }`)
-      //   )
-      //   .join("\n")}
-      // \``
-      //       }
-      return fragments
     }
   }
 
@@ -559,6 +564,10 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
 
   function generateFile(name, contents, force = false) {
     files.push([name, contents, force])
+  }
+
+  function ifTS(ifTSstr, notTSstr = "") {
+    return format === "ts" ? ifTSstr : notTSstr
   }
 
   return files

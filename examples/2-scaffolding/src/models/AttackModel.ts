@@ -3,8 +3,8 @@ import { AttackModelBase } from "./AttackModel.base"
 /* The TypeScript type of an instance of AttackModel */
 export type AttackModelType = typeof AttackModel.Type
 
-/* A graphql query fragment containing all the primitive fields of AttackModel */
-export { attackModelPrimitives } from "./AttackModel.base"
+/* A graphql query fragment builders for AttackModel */
+export { selectFromAttack, attackModelPrimitives, AttackModelSelector } from "./AttackModel.base"
 
 /**
  * AttackModel

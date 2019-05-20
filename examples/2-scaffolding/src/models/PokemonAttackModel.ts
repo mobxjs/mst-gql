@@ -3,8 +3,8 @@ import { PokemonAttackModelBase } from "./PokemonAttackModel.base"
 /* The TypeScript type of an instance of PokemonAttackModel */
 export type PokemonAttackModelType = typeof PokemonAttackModel.Type
 
-/* A graphql query fragment containing all the primitive fields of PokemonAttackModel */
-export { pokemonAttackModelPrimitives } from "./PokemonAttackModel.base"
+/* A graphql query fragment builders for PokemonAttackModel */
+export { selectFromPokemonAttack, pokemonAttackModelPrimitives, PokemonAttackModelSelector } from "./PokemonAttackModel.base"
 
 /**
  * PokemonAttackModel

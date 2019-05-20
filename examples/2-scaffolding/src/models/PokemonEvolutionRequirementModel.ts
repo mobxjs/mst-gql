@@ -3,8 +3,8 @@ import { PokemonEvolutionRequirementModelBase } from "./PokemonEvolutionRequirem
 /* The TypeScript type of an instance of PokemonEvolutionRequirementModel */
 export type PokemonEvolutionRequirementModelType = typeof PokemonEvolutionRequirementModel.Type
 
-/* A graphql query fragment containing all the primitive fields of PokemonEvolutionRequirementModel */
-export { pokemonEvolutionRequirementModelPrimitives } from "./PokemonEvolutionRequirementModel.base"
+/* A graphql query fragment builders for PokemonEvolutionRequirementModel */
+export { selectFromPokemonEvolutionRequirement, pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 
 /**
  * PokemonEvolutionRequirementModel

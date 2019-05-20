@@ -4,7 +4,7 @@
     "download": "npx apollo schema:download --endpoint=https://graphql-pokemon.now.sh/ graphql-schema.json",
     "postinstall": "yarn install-mst-gql",
     "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
-    "scaffold": "rm -rf src/models && ../../generator/mst-gql-scaffold.js --roots 'Pokemon, Attack' --format ts --outDir src/models graphql-schema.json",
+    "scaffold": "../../generator/mst-gql-scaffold.js --force --roots 'Pokemon, Attack' --format ts --outDir src/models graphql-schema.json",
     "build": "tsc",
     "start": "yarn scaffold && yarn build"
   },
@@ -13,7 +13,7 @@
     "mobx-state-tree": "^3.14.0"
   },
   "devDependencies": {
-    "mst-gql": "file:./mst-gql1557842845.tgz",
+    "mst-gql": "file:./mst-gql1558371906.tgz",
     "typescript": "^3.4.5"
   }
 }

@@ -3,8 +3,8 @@ import { PokemonDimensionModelBase } from "./PokemonDimensionModel.base"
 /* The TypeScript type of an instance of PokemonDimensionModel */
 export type PokemonDimensionModelType = typeof PokemonDimensionModel.Type
 
-/* A graphql query fragment containing all the primitive fields of PokemonDimensionModel */
-export { pokemonDimensionModelPrimitives } from "./PokemonDimensionModel.base"
+/* A graphql query fragment builders for PokemonDimensionModel */
+export { selectFromPokemonDimension, pokemonDimensionModelPrimitives, PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 
 /**
  * PokemonDimensionModel

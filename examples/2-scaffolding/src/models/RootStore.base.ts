@@ -11,9 +11,10 @@ import { PokemonModel, pokemonModelPrimitives, PokemonDimensionModel, pokemonDim
 */
 export const RootStoreBase = MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Pokemon', () => PokemonModel], ['PokemonDimension', () => PokemonDimensionModel], ['PokemonAttack', () => PokemonAttackModel], ['Attack', () => AttackModel], ['PokemonEvolutionRequirement', () => PokemonEvolutionRequirementModel]], ['Pokemon']))
+  .extend(configureStoreMixin([['Pokemon', () => PokemonModel], ['PokemonDimension', () => PokemonDimensionModel], ['PokemonAttack', () => PokemonAttackModel], ['Attack', () => AttackModel], ['PokemonEvolutionRequirement', () => PokemonEvolutionRequirementModel]], ['Pokemon', 'Attack']))
   .props({
-    pokemons: types.optional(types.map(types.late(() => PokemonModel)), {})
+    pokemons: types.optional(types.map(types.late(() => PokemonModel)), {}),
+    attacks: types.optional(types.map(types.late(() => AttackModel)), {})
   })
   .actions(self => ({
     queryPokemons(variables: { first: number }, resultSelector = pokemonModelPrimitives, options: QueryOptions = {}) {

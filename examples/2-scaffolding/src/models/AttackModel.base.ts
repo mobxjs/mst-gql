@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"
@@ -31,10 +31,15 @@ export const AttackModelBase = MSTGQLObject
     }
   }))
 
-export const attackModelPrimitives = `
-__typename
-name
-type
-damage
-`
+export function selectFromAttack() {
+  return new AttackModelSelector()
+}
+
+export const attackModelPrimitives = selectFromAttack().name.type.damage.build()
+
+export class AttackModelSelector<PARENT> extends QueryBuilder<PARENT> {
+  get name() { return this.__attr(`name`) }
+  get type() { return this.__attr(`type`) }
+  get damage() { return this.__attr(`damage`) }
+}
 
