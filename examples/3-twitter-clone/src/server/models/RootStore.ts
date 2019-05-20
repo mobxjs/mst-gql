@@ -53,7 +53,6 @@ export const RootStore = RootStoreBase.views(self => {
       text: ChuckNorris.fact(),
       user: Math.random() < 0.7 ? "chucknorris" : "mweststrate",
       timestamp: Date.now(),
-      replyTo: undefined,
       likes: []
     })
   }
@@ -82,7 +81,6 @@ export const RootStore = RootStoreBase.views(self => {
         text,
         user: user.id,
         timestamp: Date.now(),
-        replyTo: undefined,
         likes: []
       })
       return m.serialize()

@@ -8,7 +8,6 @@ type Message {
   timestamp: Float!
   user: User!
   text: String!
-  replyTo: Message
   likes: [User!]
 }
 type Query {
