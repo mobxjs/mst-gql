@@ -7,23 +7,22 @@ import { Message } from "./Message"
 import { Composer } from "./Composer"
 
 export const Replies = ({ message }: { message: MessageModelType }) => (
-  <div>
+  <div className="replies">
     <Query<MessageModelType> query={() => message.loadReplies()}>
       {({ data, error, loading }) => {
         if (error) return <p>{error}</p>
         if (loading) return <Loading />
-        console.dir(data)
         return (
           <>
             <ul>
               {data.replies.map(message => (
-                <Message key={message.id} message={message} />
+                <Message key={message.id} message={message} asChild />
               ))}
             </ul>
-            <Composer replyTo={message.id} />
           </>
         )
       }}
     </Query>
+    <Composer replyTo={message.id} />
   </div>
 )

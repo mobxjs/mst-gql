@@ -9,15 +9,25 @@ export const Message = observer(
   ({ message, asChild }: { message: MessageModelType; asChild?: boolean }) => {
     const [collapsed, setCollapsed] = useState(true)
     return (
-      <li>
-        <h2>{message.user.name}</h2>
+      <li className="message">
         <img src={message.user.avatar} width={200} height={200} />
-        <p>{message.text}</p>
-        {message.isLikedByMe ? "YES" : "NO"}
-        <button onClick={() => message.like()}>Like</button>
-        {asChild ? null : (
-          <button onClick={() => setCollapsed(c => !c)}>Show replies</button>
-        )}
+        <div className="content">
+          <h4>{message.user.name}</h4>
+          <p>{message.text}</p>
+          <div className="buttons">
+            <div
+              className={message.isLikedByMe ? "like liked" : "like"}
+              onClick={message.like}
+            >
+              💙
+            </div>
+            {asChild ? null : (
+              <div className="collapse" onClick={() => setCollapsed(c => !c)}>
+                💬
+              </div>
+            )}
+          </div>
+        </div>
         {collapsed ? null : <Replies message={message} />}
       </li>
     )

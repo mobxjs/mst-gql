@@ -25,9 +25,8 @@ const rootStore = RootStore.create(undefined, {
 export const App = () => (
   <StoreContext.Provider value={rootStore}>
     <main>
-      <h1>Twitter</h1>
-      <Profile />
       <Home />
+      <Profile />
     </main>
   </StoreContext.Provider>
 )

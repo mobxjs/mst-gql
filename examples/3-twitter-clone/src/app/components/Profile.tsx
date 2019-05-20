@@ -13,6 +13,7 @@ export const Profile = () => {
         if (data)
           return (
             <>
+              <h3>Edit profile</h3>
               <input defaultValue={data.name} ref={inputRef} />
               <button
                 onClick={() => {

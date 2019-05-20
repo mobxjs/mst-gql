@@ -15,7 +15,7 @@ export const RootStore = RootStoreBase.views(self => {
     allMessages(offset = "", count = 10) {
       // This is just a stub implementation! Should be powered by real DB in reality
       const sortedMessages = Array.from(self.messages.values()).sort((a, b) =>
-        a.timestamp > b.timestamp ? 1 : -1
+        a.timestamp < b.timestamp ? 1 : -1
       )
       const offsetMessage = self.messages.get(offset)
       const start = offset ? sortedMessages.indexOf(offsetMessage) + 1 : 0
@@ -56,7 +56,7 @@ export const RootStore = RootStoreBase.views(self => {
     })
   }
 
-  // setInterval(() => (self as any).addRandomMessage(), 10000)
+  setInterval(() => (self as any).addRandomMessage(), 10000)
 
   return {
     getPubSub() {

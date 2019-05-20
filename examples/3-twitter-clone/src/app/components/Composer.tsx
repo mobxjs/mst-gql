@@ -2,7 +2,7 @@ import React, { useRef } from "react"
 import { Query } from "../models/reactUtils"
 import { Loading } from "./Loading"
 
-export const Composer = ({ replyTo }: { replyTo: string }) => {
+export const Composer = ({ replyTo }: { replyTo?: string }) => {
   const inputRef = useRef<HTMLInputElement>()
   return (
     <Query>
@@ -12,7 +12,7 @@ export const Composer = ({ replyTo }: { replyTo: string }) => {
         ) : loading ? (
           <Loading />
         ) : (
-          <div>
+          <div className="composer">
             <input ref={inputRef} />
             <button
               onClick={() => {

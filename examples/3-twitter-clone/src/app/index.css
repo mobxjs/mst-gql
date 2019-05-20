@@ -1,5 +1,5 @@
 html {
-  background: #488;
+  background: white;
   font-family: sans-serif;
 }
 
@@ -27,14 +27,84 @@ ul {
   padding: 0;
 }
 
-li {
+.message {
   background: #fff;
-  display: flex;
-  justify-content: space-between;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
   border-radius: 4px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.message img {
+  float: left;
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+  border: 2px solid #1da1f2;
+  margin: 20px;
+}
+
+.replies {
+  background: #e2e2e2;
+  border-top: 1px solid #ccc;
+  padding: 20px;
+}
+
+.buttons {
+  text-align: right;
+}
+
+.like,
+.collapse {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.5em;
+  margin-left: 10px;
+}
+
+.like {
+  opacity: 0.2;
+}
+
+.like.liked {
+  opacity: 1;
+}
+
+.composer input {
+  font-size: 1.2em;
+  padding: 4px;
+}
+
+.composer input:focus {
+  border: 1px solid #1da1f2;
+}
+
+.loadmore {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.header {
+  background: #ccc;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0 0 20px 0;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #1da1f2;
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  margin-left: 10px;
 }
 
 li span {

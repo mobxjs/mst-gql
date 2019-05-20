@@ -6,7 +6,12 @@ import { Composer } from "./Composer"
 
 export const Home = () => (
   <>
-    <Composer />
+    <div className="header">
+      Share 🤯 experience...
+      <br />
+      <br />
+      <Composer />
+    </div>
     <Query query={store => store.loadInitialMessages()}>
       {({ store, error, loading, setQuery }) => {
         if (error) return <Error>{error.message}</Error>
@@ -21,7 +26,12 @@ export const Home = () => (
             {loading ? (
               <Loading />
             ) : (
-              <button onClick={() => setQuery(store.loadMore())}>more</button>
+              <button
+                className="loadmore"
+                onClick={() => setQuery(store.loadMore())}
+              >
+                Load more...
+              </button>
             )}
           </>
         )
