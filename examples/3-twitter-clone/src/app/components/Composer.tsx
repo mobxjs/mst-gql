@@ -1,6 +1,7 @@
 import React, { useRef } from "react"
 import { Query } from "../models/reactUtils"
 import { Loading } from "./Loading"
+import { Error } from "./Error"
 
 export const Composer = ({ replyTo }: { replyTo?: string }) => {
   const inputRef = useRef<HTMLInputElement>()
@@ -8,7 +9,7 @@ export const Composer = ({ replyTo }: { replyTo?: string }) => {
     <Query>
       {({ store, loading, error, setQuery }) =>
         error ? (
-          <p>Failed to post message: ${error}</p>
+          <Error>Failed to post message: ${error}</Error>
         ) : loading ? (
           <Loading />
         ) : (

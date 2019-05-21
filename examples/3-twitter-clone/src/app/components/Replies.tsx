@@ -5,12 +5,13 @@ import { MessageModelType } from "../models"
 
 import { Message } from "./Message"
 import { Composer } from "./Composer"
+import { Error } from "./Error"
 
 export const Replies = ({ message }: { message: MessageModelType }) => (
   <div className="replies">
     <Query<MessageModelType> query={() => message.loadReplies()}>
       {({ data, error, loading }) => {
-        if (error) return <p>{error}</p>
+        if (error) return <Error>{error}</Error>
         if (loading) return <Loading />
         return (
           <>
