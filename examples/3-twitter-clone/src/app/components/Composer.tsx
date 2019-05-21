@@ -2,8 +2,9 @@ import React, { useRef } from "react"
 import { Query } from "../models/reactUtils"
 import { Loading } from "./Loading"
 import { Error } from "./Error"
+import { MessageModelType } from "../models"
 
-export const Composer = ({ replyTo }: { replyTo?: string }) => {
+export const Composer = ({ replyTo }: { replyTo?: MessageModelType }) => {
   const inputRef = useRef<HTMLInputElement>()
   return (
     <Query>
@@ -16,10 +17,15 @@ export const Composer = ({ replyTo }: { replyTo?: string }) => {
           <div className="composer">
             <input ref={inputRef} />
             <button
-              onClick={() => {
-                const query = store.sendTweet(inputRef.current!.value, replyTo)
+              onClick={async () => {
+                const query = store.sendTweet(
+                  inputRef.current!.value,
+                  replyTo.id
+                )
                 inputRef.current.value = ""
                 setQuery(query)
+                await query
+                replyTo.loadReplies()
               }}
             >
               Send

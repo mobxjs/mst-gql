@@ -229,36 +229,39 @@ ${fragments}
         r += `    /** ${sanitizeComment(field.description)} */\n`
       r += `    ${field.name}: ${handleFieldType(
         field.name,
-        field.type,
+        skipNonNull(field.type),
         true
       )},`
       return r
     }
 
-    function handleFieldType(fieldName, type, isRoot) {
+    function handleFieldType(fieldName, type, useMaybe) {
       switch (type.kind) {
         case "SCALAR":
           primitives.push(fieldName)
           const primitiveType = primitiveToMstType(type.name)
-          // a scalar as root, means it is optional!
-          return !isRoot || primitiveType === "identifier"
-            ? `types.${primitiveType}` // TODO: everything needs to be optional to allow for partials?
-            : `types.optional(types.${primitiveType}, ${getMstDefaultValue(
-                primitiveType
-              )})`
+          return wrap(
+            `types.${primitiveType}`,
+            useMaybe && primitiveType !== "identifier",
+            "types.maybe(",
+            ")"
+          )
         case "OBJECT":
-          return handleObjectFieldType(fieldName, type, isRoot)
-        case "NON_NULL":
-          return handleFieldType(fieldName, type.ofType, false)
+          return wrap(
+            handleObjectFieldType(fieldName, type),
+            useMaybe,
+            "types.maybe(",
+            ")"
+          )
         case "LIST":
-          return `types.array(${handleFieldType(
+          return `types.optional(types.array(${handleFieldType(
             fieldName,
-            type.ofType,
-            false
-          )})`
+            skipNonNull(type.ofType),
+            false // dont wrap contents in maybe
+          )}), [])`
         case "ENUM":
           imports.push(type.name + "Enum")
-          return type.name + "Enum"
+          return wrap(`${type.name}Enum`, useMaybe, "types.maybe(", ")")
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
@@ -266,7 +269,7 @@ ${fragments}
       }
     }
 
-    function handleObjectFieldType(fieldName, type, isRoot) {
+    function handleObjectFieldType(fieldName, type) {
       const isSelf = type.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
@@ -281,14 +284,11 @@ ${fragments}
       } => ${type.name}Model)`
 
       // this object is not a root type, so assume composition relationship
-      if (!isSelf && !rootTypes.includes(type.name))
-        return isRoot ? `types.maybe(${realType})` : realType
+      if (!isSelf && !rootTypes.includes(type.name)) return realType
 
       // the target is a root type, store a reference
       refs.push([fieldName, type.name])
-      return isRoot
-        ? `types.maybe(MSTGQLRef(${realType}))`
-        : `MSTGQLRef(${realType})`
+      return `MSTGQLRef(${realType})`
     }
 
     function generateFragments() {
@@ -298,27 +298,6 @@ export const ${flowerName}ModelPrimitives = \`
 ${primitives.join("\n")}
 \`
 `
-
-      //       if (refs.length === 0) {
-      //         fragments += `\
-      // export const ${flowerName}FieldsShallow = ${flowerName}Primitives
-      // export const ${flowerName}FieldsDeep = ${flowerName}Primitives`
-      //       } else {
-      //         fragments += `\
-      // export const ${flowerName}FieldsShallow = ${flowerName}Primitives + \`
-      // ${refs.map(([fname]) => `${fname} { id __typename }`).join("\n")}
-      // \`
-
-      // export const ${flowerName}FieldsDeep = ${flowerName}Primitives + \`
-      // ${refs
-      //   .map(
-      //     ([fname, type]) =>
-      //       `${fname} { id, __typename` +
-      //       (type === name ? `}` : ` \${${toFirstLower(type)}FieldsDeep} }`)
-      //   )
-      //   .join("\n")}
-      // \``
-      //       }
       return fragments
     }
   }
@@ -631,6 +610,10 @@ function toFirstLower(str) {
 
 function toFirstUpper(str) {
   return str[0].toUpperCase() + str.substr(1)
+}
+
+function wrap(thing, condition, prefix = "", postfix = "") {
+  return condition ? `${prefix}${thing}${postfix}` : thing
 }
 
 function log(thing) {

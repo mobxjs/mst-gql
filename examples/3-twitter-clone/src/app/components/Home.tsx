@@ -1,7 +1,9 @@
 import React from "react"
 
-import { Error, Loading, Message } from "./"
 import { Query } from "../models/reactUtils"
+import { Error } from "./Error"
+import { Loading } from "./Loading"
+import { Message } from "./Message"
 import { Composer } from "./Composer"
 
 export const Home = () => (

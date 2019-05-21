@@ -24,7 +24,7 @@ export const RootStore = RootStoreBase.props({
         self.sortedMessages.unshift(message)
       })
     },
-    loadMessages(offset, count, replyTo) {
+    loadMessages(offset, count, replyTo = undefined) {
       const query = self.queryMessages(
         { offset, count, replyTo },
         MESSAGE_FRAGMENT
@@ -36,7 +36,7 @@ export const RootStore = RootStoreBase.props({
     }
   }))
   .actions(self => ({
-    sendTweet(text, replyTo = "") {
+    sendTweet(text, replyTo = undefined) {
       return self.mutatePostTweet({ text, user: self.me.id, replyTo })
     },
     loadInitialMessages() {

@@ -24,6 +24,6 @@ export const Replies = ({ message }: { message: MessageModelType }) => (
         )
       }}
     </Query>
-    <Composer replyTo={message.id} />
+    <Composer replyTo={message} />
   </div>
 )

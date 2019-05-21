@@ -5,20 +5,37 @@ import { ChuckNorris } from "fakergem"
 import { v4 } from "node-uuid"
 
 import { RootStoreBase } from "./RootStore.base"
-import { MessageModel, MessageModelType } from "./MessageModel"
+import { MessageModel } from "./MessageModel"
 import { getSnapshot, applySnapshot, resolveIdentifier } from "mobx-state-tree"
 
 export type RootStoreType = typeof RootStore.Type
 
+const DB_FILE = __dirname + "/../db/data.json"
+const DB_FILE_INITIAL = __dirname + "/../db/initial.json"
+
 export const RootStore = RootStoreBase.views(self => {
   return {
-    allMessages(offset = "", count = 10, replyTo = "") {
-      // This is just a stub implementation! Should be powered by real DB in reality
+    allMessages(offset = "", count = 10, replyToId?) {
+      /* This is just a stub implementation! Should be powered by real DB in reality */
+
+      // check if we should search for replies
+      const replyTo = replyToId && self.messages.get(replyToId)
+      if (replyToId && !replyTo)
+        throw new Error("Unknown message: " + replyToId)
+
+      // sort messages
       const sortedMessages = Array.from(self.messages.values())
         .filter(m => (replyTo ? m.replyTo === replyTo : !m.replyTo))
         .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+
+      // the timeline is sorted in reverse, compared to replies
+      if (replyTo) sortedMessages.reverse()
+
+      // calculage offset
       const offsetMessage = self.messages.get(offset)
       const start = offset ? sortedMessages.indexOf(offsetMessage) + 1 : 0
+
+      // apply limit, serialize message
       return sortedMessages
         .slice(start, start + count)
         .map(msg => msg.serialize())
@@ -37,10 +54,7 @@ export const RootStore = RootStoreBase.views(self => {
   const pubsub = new PubSub()
 
   function save() {
-    fs.writeFileSync(
-      __dirname + "/../db/data.json",
-      JSON.stringify(getSnapshot(self), null, 2)
-    )
+    fs.writeFileSync(DB_FILE, JSON.stringify(getSnapshot(self), null, 2))
   }
 
   function addMessage(msg: typeof MessageModel.CreationType) {
@@ -63,7 +77,7 @@ export const RootStore = RootStoreBase.views(self => {
     })
   }
 
-  setInterval(() => (self as any).addRandomMessage(), 10000)
+  // setInterval(() => (self as any).addRandomMessage(), 10000)
 
   return {
     getPubSub() {
@@ -73,12 +87,10 @@ export const RootStore = RootStoreBase.views(self => {
     addMessage,
     save,
     afterCreate() {
-      const dataFile = fs.existsSync(__dirname + "/../db/data.json")
-        ? __dirname + "/../db/data.json"
-        : __dirname + "/../db/initial.json"
+      const dataFile = fs.existsSync(DB_FILE) ? DB_FILE : DB_FILE_INITIAL
       applySnapshot(self, JSON.parse(fs.readFileSync(dataFile, "utf8")))
     },
-    postTweet(text, userId, replyTo = "") {
+    postTweet(text, userId, replyTo = undefined) {
       const user = self.users.get(userId)
       if (!user) throw new Error("Invalid user!")
       const m = addMessage({
