@@ -117,7 +117,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   @action private onFailure = (error: any) => {
     this.loading = false
     this.error = error
-    this.onReject(error)
+    if (this.onReject) this.onReject(error)
   }
 
   refetch = (): Promise<T> => {

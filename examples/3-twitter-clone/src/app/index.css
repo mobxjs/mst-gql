@@ -114,3 +114,13 @@ li span {
 .strikethrough {
   text-decoration: line-through;
 }
+
+.error {
+  background: #ffcaca;
+  border: 1px solid red;
+  color: red;
+  border-radius: 4px;
+  padding: 10px 20px;
+  text-align: center;
+  font-style: italic;
+}
