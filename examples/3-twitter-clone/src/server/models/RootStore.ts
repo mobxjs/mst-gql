@@ -112,7 +112,7 @@ export const RootStore = RootStoreBase.views(self => {
       if (msg.likes.includes(user)) msg.likes.remove(user)
       else msg.likes.push(user)
       saveToDB()
-      await sleep(2000)
+      await sleep(1000)
       return msg.serialize()
     }
   }

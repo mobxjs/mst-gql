@@ -26,7 +26,7 @@ export const Composer = ({ replyTo }: { replyTo?: MessageModelType }) => {
                 inputRef.current.value = ""
                 setQuery(query)
                 await query
-                replyTo.loadReplies()
+                if (replyTo) replyTo.loadReplies()
               }}
             >
               Send

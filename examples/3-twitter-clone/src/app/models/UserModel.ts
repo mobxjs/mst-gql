@@ -3,8 +3,8 @@ import { UserModelBase } from "./UserModel.base"
 /* The TypeScript type of an instance of UserModel */
 export type UserModelType = typeof UserModel.Type
 
-/* A graphql query fragment containing all the primitive fields of UserModel */
-export { userModelPrimitives } from "./UserModel.base"
+/* A graphql query fragment builders for UserModel */
+export { selectFromUser, userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
 /**
  * UserModel

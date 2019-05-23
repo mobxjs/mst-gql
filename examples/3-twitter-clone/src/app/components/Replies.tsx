@@ -1,11 +1,11 @@
-import React, { useRef } from "react"
-import { Query } from "../models/reactUtils"
-import { Loading } from "./Loading"
-import { MessageModelType } from "../models"
+import React from "react"
 
+import { Loading, Error } from "./utils"
 import { Message } from "./Message"
 import { Composer } from "./Composer"
-import { Error } from "./Error"
+
+import { Query } from "../models/reactUtils"
+import { MessageModelType } from "../models"
 
 export const Replies = ({ message }: { message: MessageModelType }) => (
   <div className="replies">

@@ -1,6 +1,6 @@
 {
   "name": "mst-gql",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "main": "dist/mst-gql.js",
   "source": "src/mst-gql.ts",

@@ -4536,10 +4536,10 @@ mobx-react-lite@1.1.0:
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-1.1.0.tgz#395930c85defff0f898b91170165617a1c783e0c"
   integrity sha512-1/HwceljNxckfP+dDKlNWy7UR/1b/N2HbYSJt37dJHLrDiFPY6TZo+Ni+/xSl8bLJ1JE6+12sfZ1hqHbch/45A==
 
-mobx-react-lite@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-1.3.1.tgz#32f729b0623ed9f0a17537b5c6239207cd241b64"
-  integrity sha512-SHJWP8BVdMkRqTBXBUeD515vdrCF6J6kd8eB+J1VLjwfh57F58WN9Kqb8FoXQrb2xVehE6u24aCo6cU92fJreQ==
+mobx-react-lite@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-1.3.2.tgz#4366048b5d283d12a82053367638b5d79281951f"
+  integrity sha512-D8VZEsxSxMNYDJmw2SgUXVAgpOlVYmp3hBCusoe+LuBDYUqyn2K3RPrMEF0rIzYJAvqpyv7YRrH8I3eBsPPx1A==
 
 mobx-react@^6.0.0-rc.4:
   version "6.0.0-rc.4"
@@ -4553,10 +4553,10 @@ mobx-state-tree@^3.14.0:
   resolved "https://registry.yarnpkg.com/mobx-state-tree/-/mobx-state-tree-3.14.0.tgz#8611051b93a71439db161b8ec855870cfd7e678d"
   integrity sha512-obQ+LPCff4LqX86ghQpYIVAtCmps7ewCxIds/EmSxBULj9+7Qs2v4YEbvUeWymp/Sj3dPcvDjIMMdIRz6sUE5Q==
 
-mobx@^5.9.4:
-  version "5.9.4"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.9.4.tgz#1dee92aba33f67b7baeeb679e3bd376a12e55812"
-  integrity sha512-L9JjTX2rtQUAhCIgnHokfntNOsF14uioT9LqStf6Mya+16j56ZBe21E8Y9V59tfr2aH2kLQPD10qtCJXBuTAxw==
+mobx@5.9.4-special:
+  version "5.9.4-special"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.9.4-special.tgz#d0c02820768501d93c66fcc380183f5735229de2"
+  integrity sha512-jeAGDKsWypRVaajLsVu8IRB94xaUC4KiXv0ytf3imzyTJ4ATNxQ6HPh7BhPZoq6Qnj1bnJB3uBJu7aUPqJRuUQ==
 
 moment@^2.22.1, moment@^2.22.2:
   version "2.24.0"
