@@ -149,7 +149,8 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     toExport.push(name + "Model")
 
     const imports = []
-    let primitives = ["__typename"]
+    let primitiveFields = []
+    let nonPrimitiveFields = []
     let refs = []
     const flowerName = toFirstLower(name)
 
@@ -164,8 +165,8 @@ ${
 ${
   modelsOnly
     ? ""
-    : `/* A graphql query fragment containing all the primitive fields of ${name}Model */
-export { ${flowerName}ModelPrimitives } from "./${name}Model.base${importPostFix}"`
+    : `/* A graphql query fragment builders for ${name}Model */
+export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector } from "./${name}Model.base${importPostFix}"`
 }
 
 /**
@@ -181,17 +182,22 @@ ${exampleAction}
       .join("\n")
 
     const typeImports = unique(imports)
-      // .map(i => `import { ${i}, ${toFirstLower(i)}FieldsDeep } from "./${i}"`)
-      .map(i => `import { ${i} } from "./${i}${importPostFix}"`)
+      .map(
+        i =>
+          // TODO: hacks! build better import system
+          `import { ${i} } from "./${i}${importPostFix}"${
+            modelsOnly || i === `${currentType}Model` // avoid importing self
+              ? ""
+              : `\nimport { ${i}Selector } from "./${i}.base${importPostFix}"`
+          }`
+      )
       .join("\n")
-
-    const fragments = generateFragments()
 
     const modelFile = `\
 ${header}
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 ${typeImports}
 import { RootStore } from "./index${importPostFix}"
@@ -217,7 +223,7 @@ ${fields}
     }
   }))
 
-${fragments}
+${generateFragments()}
 `
 
     generateFile(name + "Model.base", modelFile, true)
@@ -238,7 +244,7 @@ ${fragments}
     function handleFieldType(fieldName, type, useMaybe) {
       switch (type.kind) {
         case "SCALAR":
-          primitives.push(fieldName)
+          primitiveFields.push(fieldName)
           const primitiveType = primitiveToMstType(type.name)
           return wrap(
             `types.${primitiveType}`,
@@ -270,6 +276,7 @@ ${fragments}
     }
 
     function handleObjectFieldType(fieldName, type) {
+      nonPrimitiveFields.push([fieldName, type.name])
       const isSelf = type.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
@@ -293,12 +300,31 @@ ${fragments}
 
     function generateFragments() {
       if (modelsOnly) return ""
-      let fragments = `\
-export const ${flowerName}ModelPrimitives = \`
-${primitives.join("\n")}
-\`
+      return `\
+export class ${name}ModelSelector extends QueryBuilder {
+${primitiveFields
+  .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
+  .join("\n")}
+${nonPrimitiveFields
+  .map(
+    ([field, type]) =>
+      `  ${field}(builder?: ${ifTS(
+        `string | ((${toFirstLower(
+          type
+        )}: ${type}ModelSelector) => ${type}ModelSelector))`
+      )} { return this.__child(\`${field}\`, ${type}ModelSelector, builder) }`
+  )
+  .join("\n")}
+}
+
+export function selectFrom${name}() {
+  return new ${name}ModelSelector()
+}
+
+export const ${flowerName}ModelPrimitives = selectFrom${name}()${primitiveFields
+        .map(p => `.${p}`)
+        .join("")}.toString()
 `
-      return fragments
     }
   }
 
@@ -324,14 +350,18 @@ import { MSTGQLStore, configureStoreMixin${
 ${
   objectTypes.length === 0
     ? ``
-    : `\nimport { ${objectTypes
+    : objectTypes
         .map(
           t =>
-            `${t}Model${
-              modelsOnly ? "" : `, ${toFirstLower(t)}ModelPrimitives`
+            `\n import { ${t}Model } from "./${t}Model${importPostFix}"${
+              modelsOnly
+                ? ""
+                : `\n import { ${toFirstLower(
+                    t
+                  )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
             }`
         )
-        .join(", ")} } from "./index${importPostFix}"`
+        .join("")
 }
 
 /**
@@ -380,7 +410,9 @@ ${rootTypes
         findObjectByName("Subscription"),
         "subscription",
         "subscribe",
-        format === "ts" ? ", onData?: (item: T) => void" : ", onData",
+        format === "ts"
+          ? `, onData?: (item: any) => void` /* TODO: fix the any */
+          : `, onData`,
         ", onData"
       )
     )
@@ -444,11 +476,17 @@ ${rootTypes
 ${optPrefix("\n    // ", sanitizeComment(description))}
     ${methodPrefix}${toFirstUpper(name)}(variables${
           args.length === 0 && format === "ts" ? "?" : ""
-        }${tsVariablesType}, resultSelector = ${toFirstLower(
-          returnType.name
-        )}ModelPrimitives${extraFormalArgs}) {
+        }${tsVariablesType}, resultSelector${
+          ifTS(
+            `: string | ((qb: ${returnType.name}ModelSelector) => ${
+              returnType.name
+            }ModelSelector)`
+          ) /* TODO or GQL object */
+        } = ${toFirstLower(returnType.name)}ModelPrimitives${extraFormalArgs}) {
       return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
-        \${resultSelector}
+        \${typeof resultSelector === "function" ? resultSelector(new ${
+          returnType.name
+        }ModelSelector()).toString() : resultSelector}
       } }\`, variables${extraActualArgs})
     },`
       })
@@ -514,7 +552,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     const contents = `\
 ${header}
 
-import { createStoreContext, createQueryComponent } from "mst-gql"
+import { createStoreContext, createQueryComponent, createUseQueryHook } from "mst-gql"
 import { RootStore } from "./RootStore${importPostFix}"
 
 export const StoreContext = createStoreContext${
@@ -522,6 +560,8 @@ export const StoreContext = createStoreContext${
     }()
 
 export const Query = createQueryComponent(StoreContext)
+
+export const useQuery = createUseQueryHook(StoreContext)
 `
 
     generateFile("reactUtils", contents, true)
@@ -538,6 +578,10 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
 
   function generateFile(name, contents, force = false) {
     files.push([name, contents, force])
+  }
+
+  function ifTS(ifTSstr, notTSstr = "") {
+    return format === "ts" ? ifTSstr : notTSstr
   }
 
   return files

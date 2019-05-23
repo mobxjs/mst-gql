@@ -7,21 +7,24 @@ const graphql = require("graphql")
 
 const { generate } = require("./generate")
 
+const definition = {
+  "--format": String,
+  "--outDir": String,
+  "--roots": String,
+  "--excludes": String,
+  "--modelsOnly": Boolean,
+  "--force": Boolean
+}
+
 function main() {
   let args
 
   try {
-    args = arg({
-      "--format": String,
-      "--outDir": String,
-      "--roots": String,
-      "--excludes": String,
-      "--modelsOnly": Boolean
-    })
+    args = arg(definition)
   } catch (e) {
     console.error(
-      "Usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json\n" +
-        "Usage: mstgql-scaffold --format=js|ts --outDir=src/models http://host/graphql"
+      "Example usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json\n, valid options: " +
+        Object.keys(definition).join(", ")
     )
     throw e
   }
@@ -36,6 +39,7 @@ function main() {
     ? args["--excludes"].split(",").map(s => s.trim())
     : []
   const modelsOnly = !!args["--modelsOnly"]
+  const forceAll = !!args["--force"]
 
   console.log(
     path.basename(__filename) +
@@ -91,7 +95,7 @@ function main() {
     modelsOnly
   )
   files.forEach(([name, contents, force]) => {
-    writeFile(name, contents, force, format, outDir)
+    writeFile(name, contents, force || forceAll, format, outDir)
   })
 }
 

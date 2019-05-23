@@ -1,9 +1,15 @@
 import { RootStoreBase } from "./RootStore.base"
-import { messageModelPrimitives, userModelPrimitives } from "./"
 import { types } from "mobx-state-tree"
 import { MessageModel } from "./MessageModel"
+import { selectFromMessage } from "./MessageModel.base"
+import { localStorageMixin } from "mst-gql"
 
-export const MESSAGE_FRAGMENT = `${messageModelPrimitives} user { ${userModelPrimitives} } likes { ${userModelPrimitives} }`
+// prettier-ignore
+export const MESSAGE_FRAGMENT = selectFromMessage()
+  .timestamp
+  .text
+  .user(user => user.name.avatar)
+  .toString()
 
 export type RootStoreType = typeof RootStore.Type
 

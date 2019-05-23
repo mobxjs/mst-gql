@@ -2,7 +2,8 @@ import {
   types,
   getParent,
   IAnyModelType,
-  resolveIdentifier
+  resolveIdentifier,
+  IReferenceType
 } from "mobx-state-tree"
 import { observable } from "mobx"
 
@@ -12,7 +13,9 @@ import { StoreType } from "./MSTGQLStore"
  For detached objects (objects that are not part of the Roots, or one of their children, for example: query results),
  we cannot use the default resolution mechanism, since they are not part of the store. So, first fetch the store and resolve from there
 */
-export function MSTGQLRef(targetType: IAnyModelType) {
+export function MSTGQLRef<T extends IAnyModelType>(
+  targetType: T
+): IReferenceType<T> {
   return types.reference(targetType, {
     get(id: string, parent: any) {
       const node = resolveIdentifier(

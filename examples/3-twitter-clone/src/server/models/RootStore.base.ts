@@ -4,7 +4,8 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
-import { MessageModel, UserModel } from "./index"
+ import { MessageModel } from "./MessageModel"
+ import { UserModel } from "./UserModel"
 
 /**
 * Store, managing, among others, all the objects received through graphQL

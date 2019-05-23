@@ -7,6 +7,7 @@ import { v4 } from "node-uuid"
 import { RootStoreBase } from "./RootStore.base"
 import { MessageModel } from "./MessageModel"
 import { getSnapshot, applySnapshot, resolveIdentifier } from "mobx-state-tree"
+import { UserModel } from "./UserModel"
 
 export type RootStoreType = typeof RootStore.Type
 
@@ -53,7 +54,7 @@ export const RootStore = RootStoreBase.views(self => {
 }).actions(self => {
   const pubsub = new PubSub()
 
-  function save() {
+  function saveToDB() {
     fs.writeFileSync(DB_FILE, JSON.stringify(getSnapshot(self), null, 2))
   }
 
@@ -61,7 +62,7 @@ export const RootStore = RootStoreBase.views(self => {
     const m = self.messages.put(msg)
     if (!msg.replyTo)
       pubsub.publish("newMessages", { newMessages: m.serialize() })
-    save()
+    saveToDB()
     return m
   }
 
@@ -85,7 +86,7 @@ export const RootStore = RootStoreBase.views(self => {
     },
     addRandomMessage,
     addMessage,
-    save,
+    save: saveToDB,
     afterCreate() {
       const dataFile = fs.existsSync(DB_FILE) ? DB_FILE : DB_FILE_INITIAL
       applySnapshot(self, JSON.parse(fs.readFileSync(dataFile, "utf8")))
@@ -104,15 +105,19 @@ export const RootStore = RootStoreBase.views(self => {
       })
       return m.serialize()
     },
-    like(msgId, userId) {
-      const user = self.users.get(userId)
+    async like(msgId, userId) {
+      const user = resolveIdentifier(UserModel, self, userId)
       const msg = resolveIdentifier(MessageModel, self, msgId)
       if (!user || !msg) throw new Error("Invalid message or user!")
       if (msg.likes.includes(user)) msg.likes.remove(user)
       else msg.likes.push(user)
-      // throw new Error("not good!")
-      save()
+      saveToDB()
+      await sleep(2000)
       return msg.serialize()
     }
   }
 })
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}

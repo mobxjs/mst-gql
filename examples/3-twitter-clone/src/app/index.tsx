@@ -32,3 +32,7 @@ export const App = () => (
 )
 
 ReactDOM.render(<App />, document.getElementById("root"))
+
+// For debugging
+// @ts-ignore
+window.store = rootStore

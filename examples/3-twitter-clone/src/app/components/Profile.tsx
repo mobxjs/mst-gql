@@ -1,8 +1,8 @@
 import React, { useRef } from "react"
 
+import { Loading, Error } from "./utils"
+
 import { Query } from "../models/reactUtils"
-import { Error } from "./Error"
-import { Loading } from "./Loading"
 
 export const Profile = () => {
   const inputRef = useRef<HTMLInputElement>()

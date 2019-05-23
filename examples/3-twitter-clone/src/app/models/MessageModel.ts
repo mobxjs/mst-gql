@@ -1,5 +1,4 @@
-import { MessageModelBase, messageModelPrimitives } from "./MessageModel.base"
-import { userModelPrimitives } from "./UserModel"
+import { MessageModelBase } from "./MessageModel.base"
 
 /* The TypeScript type of an instance of MessageModel */
 export type MessageModelType = typeof MessageModel.Type

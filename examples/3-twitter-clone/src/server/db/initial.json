@@ -1,31 +1,121 @@
 {
   "messages": {
     "abc": {
+      "__typename": "Message",
       "id": "abc",
       "timestamp": 1558081865759,
+      "user": "mweststrate",
       "text": "#MobX is cool",
-      "user": "mweststrate"
+      "likes": []
     },
     "def": {
+      "__typename": "Message",
       "id": "def",
       "timestamp": 1558081465759,
+      "user": "chucknorris",
       "text": "Chuck Norris doesn't believe in floating point numbers because they can't be typed on his binary keyboard.",
-      "user": "chucknorris"
+      "likes": []
     },
     "ghi": {
+      "__typename": "Message",
       "id": "ghi",
       "timestamp": 1558081462759,
+      "user": "chucknorris",
       "text": "All arrays Chuck Norris declares are of infinite size, because Chuck Norris knows no bounds.",
-      "user": "chucknorris"
+      "likes": []
+    },
+    "684f3788-b7b7-4d95-a651-514d1de411f9": {
+      "__typename": "Message",
+      "id": "684f3788-b7b7-4d95-a651-514d1de411f9",
+      "timestamp": 1558518566746,
+      "user": "chucknorris",
+      "text": "When Chuck Norris' code fails to compile the compiler apologises.",
+      "likes": []
+    },
+    "65135d9e-df4c-42c3-9bfd-8e3b8cbae052": {
+      "__typename": "Message",
+      "id": "65135d9e-df4c-42c3-9bfd-8e3b8cbae052",
+      "timestamp": 1558518567748,
+      "user": "chucknorris",
+      "text": "Quantum cryptography does not work on Chuck Norris. When something is being observed by Chuck it stays in the same state until he's finished.",
+      "likes": []
+    },
+    "42411d1d-e3a0-4237-af08-8538742ff521": {
+      "__typename": "Message",
+      "id": "42411d1d-e3a0-4237-af08-8538742ff521",
+      "timestamp": 1558518568749,
+      "user": "chucknorris",
+      "text": "Chuck Norris's first program was kill -9.",
+      "likes": []
+    },
+    "7cf8a75a-10c8-4b05-a16c-03883bed97a8": {
+      "__typename": "Message",
+      "id": "7cf8a75a-10c8-4b05-a16c-03883bed97a8",
+      "timestamp": 1558518569751,
+      "user": "chucknorris",
+      "text": "Chuck Norris' protocol design method has no status, requests or responses, only commands.",
+      "likes": []
+    },
+    "6ac9b931-73ec-4704-8256-53a7cd5d6e2b": {
+      "__typename": "Message",
+      "id": "6ac9b931-73ec-4704-8256-53a7cd5d6e2b",
+      "timestamp": 1558518570752,
+      "user": "chucknorris",
+      "text": "Chuck Norris' preferred IDE is hexedit.",
+      "likes": []
+    },
+    "17a97189-1164-41ed-bc90-ed76921f1a65": {
+      "__typename": "Message",
+      "id": "17a97189-1164-41ed-bc90-ed76921f1a65",
+      "timestamp": 1558518571753,
+      "user": "chucknorris",
+      "text": "Chuck Norris hosting is 101% uptime guaranteed.",
+      "likes": []
+    },
+    "e64bf8a8-2e74-41e2-bf3a-aff0e2c65851": {
+      "__typename": "Message",
+      "id": "e64bf8a8-2e74-41e2-bf3a-aff0e2c65851",
+      "timestamp": 1558518572755,
+      "user": "chucknorris",
+      "text": "Chuck Norris doesn't need a java compiler, he goes straight to .war",
+      "likes": []
+    },
+    "c54130b6-8c6d-4b86-9965-7b0cecd20114": {
+      "__typename": "Message",
+      "id": "c54130b6-8c6d-4b86-9965-7b0cecd20114",
+      "timestamp": 1558518633379,
+      "user": "mweststrate",
+      "text": "Chuck Norris doesn't believe in floating point numbers because they can't be typed on his binary keyboard.",
+      "likes": []
+    },
+    "b80752cb-57b9-4e72-8ffa-cd7279ccf6d2": {
+      "__typename": "Message",
+      "id": "b80752cb-57b9-4e72-8ffa-cd7279ccf6d2",
+      "timestamp": 1558518652787,
+      "user": "mweststrate",
+      "text": "Good point!",
+      "likes": [],
+      "replyTo": "e64bf8a8-2e74-41e2-bf3a-aff0e2c65851"
+    },
+    "7cddcbf9-c485-4ca2-a9c6-b0b6f92beff9": {
+      "__typename": "Message",
+      "id": "7cddcbf9-c485-4ca2-a9c6-b0b6f92beff9",
+      "timestamp": 1558518659760,
+      "user": "mweststrate",
+      "text": "...But, Java?",
+      "likes": [],
+      "replyTo": "e64bf8a8-2e74-41e2-bf3a-aff0e2c65851"
     }
   },
   "users": {
     "mweststrate": {
+      "__typename": "User",
       "id": "mweststrate",
       "name": "Michel Weststrate",
       "avatar": "michel.jpg"
     },
     "chucknorris": {
+      "__typename": "User",
       "id": "chucknorris",
       "name": "Chuck Norris",
       "avatar": "chuck.jpg"
