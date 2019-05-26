@@ -306,11 +306,11 @@ ${primitiveFields
 ${nonPrimitiveFields
   .map(
     ([field, type]) =>
-      `  ${field}(builder?: ${ifTS(
-        `string | ((${toFirstLower(
+      `  ${field}(builder${ifTS(
+        `?: string | ((${toFirstLower(
           type
-        )}: ${type}ModelSelector) => ${type}ModelSelector))`
-      )} { return this.__child(\`${field}\`, ${type}ModelSelector, builder) }`
+        )}: ${type}ModelSelector) => ${type}ModelSelector)`
+      )}) { return this.__child(\`${field}\`, ${type}ModelSelector, builder) }`
   )
   .join("\n")}
 }

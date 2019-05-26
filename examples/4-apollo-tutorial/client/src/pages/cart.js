@@ -1,13 +1,13 @@
 import React, { Fragment, useContext } from "react"
-import { useObserver } from "mobx-react"
+import { observer } from "mobx-react"
 
 import { StoreContext } from "../models/reactUtils"
 import { Header } from "../components"
 import { CartItem, BookTrips } from "../containers"
 
-export default function Cart() {
+export default observer(function Cart() {
   const store = useContext(StoreContext)
-  return useObserver(() => (
+  return (
     <Fragment>
       <Header>My Cart</Header>
       {!store.cartItems.length ? (
@@ -21,5 +21,5 @@ export default function Cart() {
         </Fragment>
       )}
     </Fragment>
-  ))
-}
+  )
+})

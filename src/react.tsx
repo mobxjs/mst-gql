@@ -96,7 +96,7 @@ export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
     React.useEffect(() => {
       if (!queryIn || typeof queryIn === "function") return // ignore changes to initializer func
       setQueryHelper(queryIn)
-    }, [queryIn, opts.raw, opts.fetchPolicy, opts.variables]) // TODO: props.variables should be checked on shallow-equality!
+    }, [queryIn, opts.raw, opts.fetchPolicy, JSON.stringify(opts.variables)]) // TODO: use a decent deep equal
 
     return {
       store,

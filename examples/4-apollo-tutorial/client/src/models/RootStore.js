@@ -1,13 +1,8 @@
-/* This is a mst-sql generated file */
-import { flow, getSnapshot } from "mobx-state-tree"
+import { types, flow, getSnapshot } from "mobx-state-tree"
 import { localStorageMixin } from "mst-gql"
+import gql from "graphql-tag"
 
-/* #region type-imports */
-import { types } from "mobx-state-tree"
-import { MSTGQLStore, configureStoreMixin } from "mst-gql"
-import { LaunchConnection, launchConnectionPrimitives, Launch, launchPrimitives, Mission, missionPrimitives, Rocket, rocketPrimitives, User, userPrimitives } from "./index"
-import gql from "graphql-tag";
-/* #endregion */
+import { RootStoreBase } from "./RootStore.base"
 
 export const LAUNCH_TILE_DATA = gql`
   fragment LaunchTile on Launch {
@@ -62,40 +57,10 @@ const loginStatus = types.enumeration("loginStatus", [
   "loggedIn"
 ])
 
-/* #region type-def */
-/**
-* Store, managing, among others, all the objects received through graphQL
-*/
-export const RootStore = MSTGQLStore
-  .named("RootStore")
-  .extend(configureStoreMixin([['LaunchConnection', () => LaunchConnection], ['Launch', () => Launch], ['Mission', () => Mission], ['Rocket', () => Rocket], ['User', () => User]], ['Launch', 'Rocket', 'User']))
-  .props({
-    launchs: types.optional(types.map(types.late(() => Launch)), {}),
-    rockets: types.optional(types.map(types.late(() => Rocket)), {}),
-    users: types.optional(types.map(types.late(() => User)), {})
-  })
-  .actions(self => ({
-    queryLaunches(variables, resultSelector = launchConnectionPrimitives, options = {}) {
-      return self.query(`query launches($pageSize: Int, $after: String) { launches(pageSize: $pageSize, after: $after) {
-        ${resultSelector}
-      } }`, variables, options)
-    },
-    queryLaunch(variables, resultSelector = launchPrimitives, options = {}) {
-      return self.query(`query launch($id: ID!) { launch(id: $id) {
-        ${resultSelector}
-      } }`, variables, options)
-    },
-    queryMe(variables, resultSelector = userPrimitives, options = {}) {
-      return self.query(`query me { me {
-        ${resultSelector}
-      } }`, variables, options)
-    },    
-  }))
- /* #endregion */
-  .props({
-    loginStatus: loginStatus,
-    cartItems: types.array(types.string)
-  })
+export const RootStore = RootStoreBase.props({
+  loginStatus: loginStatus,
+  cartItems: types.array(types.string)
+})
   .views(self => ({
     get me() {
       return Array.from(self.users.values())[0]

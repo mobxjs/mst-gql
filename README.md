@@ -660,7 +660,14 @@ Before running the examples, run the following in the root directory:
 
 ```
 yarn install
-yarn prepare-examples
+yarn build
+```
+
+After that, run the following in the example directory
+
+```
+yarn
+yarn start
 ```
 
 All examples start on url http://localhost:3000/

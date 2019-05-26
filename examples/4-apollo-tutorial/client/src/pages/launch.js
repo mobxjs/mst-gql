@@ -1,7 +1,8 @@
 import React, { Fragment } from "react"
 import gql from "graphql-tag"
+import { observer } from "mobx-react"
 
-import { Query } from "../models/reactUtils"
+import { useQuery } from "../models/reactUtils"
 import { LAUNCH_TILE_DATA } from "../models/"
 import { Loading, Header, LaunchDetail } from "../components"
 import { ActionButton } from "../containers"
@@ -19,24 +20,19 @@ export const GET_LAUNCH_DETAILS = gql`
   ${LAUNCH_TILE_DATA}
 `
 
-export default function Launch({ launchId }) {
-  return (
-    <Query query={GET_LAUNCH_DETAILS} variables={{ launchId }}>
-      {({ query }) =>
-        query.case({
-          error: error => <p>ERROR: {error.message}</p>,
-          loading: () => <Loading />,
-          data: launch => (
-            <Fragment>
-              <Header image={launch.mission.missionPatch}>
-                {launch.mission.name}
-              </Header>
-              <LaunchDetail {...launch} />
-              <ActionButton launch={launch} />
-            </Fragment>
-          )
-        })
-      }
-    </Query>
-  )
-}
+export default observer(function Launch({ launchId }) {
+  const { query } = useQuery(GET_LAUNCH_DETAILS, { variables: { launchId } })
+  return query.case({
+    error: error => <p>ERROR: {error.message}</p>,
+    loading: () => <Loading />,
+    data: launch => (
+      <Fragment>
+        <Header image={launch.mission.missionPatch}>
+          {launch.mission.name}
+        </Header>
+        <LaunchDetail {...launch} />
+        <ActionButton launch={launch} />
+      </Fragment>
+    )
+  })
+})
