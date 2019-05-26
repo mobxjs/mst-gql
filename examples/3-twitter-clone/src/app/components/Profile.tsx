@@ -1,36 +1,41 @@
 import React, { useRef } from "react"
+import { observer } from "mobx-react-lite"
 
-import { Loading, Error } from "./utils"
+import { Error } from "./utils"
 
-import { Query } from "../models/reactUtils"
+import { useQuery } from "../models/reactUtils"
 
-export const Profile = () => {
+export const Profile = observer(() => {
   const inputRef = useRef<HTMLInputElement>()
-  return (
-    <Query query={store => store.queryMe()}>
-      {({ loading, error, data, store, setQuery }) => {
-        if (error) return <Error>{error.message}</Error>
-        if (loading) return <Loading />
-        if (data)
-          return (
-            <>
-              <h3>Edit profile</h3>
-              <input defaultValue={data.name} ref={inputRef} />
-              <button
-                onClick={() => {
-                  setQuery(
-                    store.mutateChangeName({
-                      id: data.id,
-                      name: inputRef.current!.value
-                    })
-                  )
-                }}
-              >
-                Save
-              </button>
-            </>
-          )
-      }}
-    </Query>
+  const { loading, error, data, store, setQuery } = useQuery(store =>
+    store.queryMe()
   )
-}
+
+  if (error) return <Error>{error.message}</Error>
+  return (
+    <>
+      <h3>Edit profile</h3>
+      <input
+        disabled={!data || loading}
+        defaultValue={data && data.name}
+        ref={inputRef}
+      />
+      <button
+        disabled={!data || loading}
+        onClick={() => {
+          setQuery(
+            store.mutateChangeName(
+              {
+                id: data.id,
+                name: inputRef.current!.value
+              },
+              u => u.name
+            )
+          )
+        }}
+      >
+        Save
+      </button>
+    </>
+  )
+})

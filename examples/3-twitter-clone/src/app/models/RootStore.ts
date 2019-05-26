@@ -9,6 +9,7 @@ export const MESSAGE_FRAGMENT = selectFromMessage()
   .timestamp
   .text
   .user(user => user.name.avatar)
+  .likes()
   .toString()
 
 export type RootStoreType = typeof RootStore.Type
