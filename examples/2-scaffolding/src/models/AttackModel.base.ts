@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"
@@ -19,11 +19,11 @@ export const AttackModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Attack"), "Attack"),
     /** The name of this Pokémon attack */
-    name: types.optional(types.string, ''),
+    name: types.maybe(types.string),
     /** The type of this Pokémon attack */
-    type: types.optional(types.string, ''),
+    type: types.maybe(types.string),
     /** The damage of this Pokémon attack */
-    damage: types.optional(types.integer, 0),
+    damage: types.maybe(types.integer),
   })
   .views(self => ({
     get store() {
@@ -31,10 +31,16 @@ export const AttackModelBase = MSTGQLObject
     }
   }))
 
-export const attackModelPrimitives = `
-__typename
-name
-type
-damage
-`
+export class AttackModelSelector extends QueryBuilder {
+  get name() { return this.__attr(`name`) }
+  get type() { return this.__attr(`type`) }
+  get damage() { return this.__attr(`damage`) }
+
+}
+
+export function selectFromAttack() {
+  return new AttackModelSelector()
+}
+
+export const attackModelPrimitives = selectFromAttack().name.type.damage.toString()
 

@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"
@@ -19,9 +19,9 @@ export const PokemonEvolutionRequirementModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("PokemonEvolutionRequirement"), "PokemonEvolutionRequirement"),
     /** The amount of candy to evolve */
-    amount: types.optional(types.integer, 0),
+    amount: types.maybe(types.integer),
     /** The name of the candy to evolve */
-    name: types.optional(types.string, ''),
+    name: types.maybe(types.string),
   })
   .views(self => ({
     get store() {
@@ -29,9 +29,15 @@ export const PokemonEvolutionRequirementModelBase = MSTGQLObject
     }
   }))
 
-export const pokemonEvolutionRequirementModelPrimitives = `
-__typename
-amount
-name
-`
+export class PokemonEvolutionRequirementModelSelector extends QueryBuilder {
+  get amount() { return this.__attr(`amount`) }
+  get name() { return this.__attr(`name`) }
+
+}
+
+export function selectFromPokemonEvolutionRequirement() {
+  return new PokemonEvolutionRequirementModelSelector()
+}
+
+export const pokemonEvolutionRequirementModelPrimitives = selectFromPokemonEvolutionRequirement().amount.name.toString()
 

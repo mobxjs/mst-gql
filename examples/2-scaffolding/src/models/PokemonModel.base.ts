@@ -3,12 +3,15 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 import { PokemonDimensionModel } from "./PokemonDimensionModel"
+import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 import { PokemonAttackModel } from "./PokemonAttackModel"
+import { PokemonAttackModelSelector } from "./PokemonAttackModel.base"
 import { PokemonModel } from "./PokemonModel"
 import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
+import { PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 import { RootStore } from "./index"
 
 /**
@@ -24,33 +27,33 @@ export const PokemonModelBase = MSTGQLObject
     /** The ID of an object */
     id: types.identifier,
     /** The identifier of this Pokémon */
-    number: types.optional(types.string, ''),
+    number: types.maybe(types.string),
     /** The name of this Pokémon */
-    name: types.optional(types.string, ''),
+    name: types.maybe(types.string),
     /** The minimum and maximum weight of this Pokémon */
     weight: types.maybe(types.late(() => PokemonDimensionModel)),
     /** The minimum and maximum weight of this Pokémon */
     height: types.maybe(types.late(() => PokemonDimensionModel)),
     /** The classification of this Pokémon */
-    classification: types.optional(types.string, ''),
+    classification: types.maybe(types.string),
     /** The type(s) of this Pokémon */
-    types: types.array(types.string),
+    types: types.optional(types.array(types.string), []),
     /** The type(s) of Pokémons that this Pokémon is resistant to */
-    resistant: types.array(types.string),
+    resistant: types.optional(types.array(types.string), []),
     /** The attacks of this Pokémon */
     attacks: types.maybe(types.late(() => PokemonAttackModel)),
     /** The type(s) of Pokémons that this Pokémon weak to */
-    weaknesses: types.array(types.string),
-    fleeRate: types.optional(types.number, 0),
+    weaknesses: types.optional(types.array(types.string), []),
+    fleeRate: types.maybe(types.number),
     /** The maximum CP of this Pokémon */
-    maxCP: types.optional(types.integer, 0),
+    maxCP: types.maybe(types.integer),
     /** The evolutions of this Pokémon */
-    evolutions: types.array(MSTGQLRef(types.late((): any => PokemonModel))),
+    evolutions: types.optional(types.array(MSTGQLRef(types.late((): any => PokemonModel))), []),
     /** The evolution requirements of this Pokémon */
     evolutionRequirements: types.maybe(types.late(() => PokemonEvolutionRequirementModel)),
     /** The maximum HP of this Pokémon */
-    maxHP: types.optional(types.integer, 0),
-    image: types.optional(types.string, ''),
+    maxHP: types.maybe(types.integer),
+    image: types.maybe(types.string),
   })
   .views(self => ({
     get store() {
@@ -58,18 +61,28 @@ export const PokemonModelBase = MSTGQLObject
     }
   }))
 
-export const pokemonModelPrimitives = `
-__typename
-id
-number
-name
-classification
-types
-resistant
-weaknesses
-fleeRate
-maxCP
-maxHP
-image
-`
+export class PokemonModelSelector extends QueryBuilder {
+  get id() { return this.__attr(`id`) }
+  get number() { return this.__attr(`number`) }
+  get name() { return this.__attr(`name`) }
+  get classification() { return this.__attr(`classification`) }
+  get types() { return this.__attr(`types`) }
+  get resistant() { return this.__attr(`resistant`) }
+  get weaknesses() { return this.__attr(`weaknesses`) }
+  get fleeRate() { return this.__attr(`fleeRate`) }
+  get maxCP() { return this.__attr(`maxCP`) }
+  get maxHP() { return this.__attr(`maxHP`) }
+  get image() { return this.__attr(`image`) }
+  weight(builder?: string | ((pokemonDimension: PokemonDimensionModelSelector) => PokemonDimensionModelSelector)) { return this.__child(`weight`, PokemonDimensionModelSelector, builder) }
+  height(builder?: string | ((pokemonDimension: PokemonDimensionModelSelector) => PokemonDimensionModelSelector)) { return this.__child(`height`, PokemonDimensionModelSelector, builder) }
+  attacks(builder?: string | ((pokemonAttack: PokemonAttackModelSelector) => PokemonAttackModelSelector)) { return this.__child(`attacks`, PokemonAttackModelSelector, builder) }
+  evolutions(builder?: string | ((pokemon: PokemonModelSelector) => PokemonModelSelector)) { return this.__child(`evolutions`, PokemonModelSelector, builder) }
+  evolutionRequirements(builder?: string | ((pokemonEvolutionRequirement: PokemonEvolutionRequirementModelSelector) => PokemonEvolutionRequirementModelSelector)) { return this.__child(`evolutionRequirements`, PokemonEvolutionRequirementModelSelector, builder) }
+}
+
+export function selectFromPokemon() {
+  return new PokemonModelSelector()
+}
+
+export const pokemonModelPrimitives = selectFromPokemon().id.number.name.classification.types.resistant.weaknesses.fleeRate.maxCP.maxHP.image.toString()
 

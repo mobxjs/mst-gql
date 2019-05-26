@@ -2,5 +2,9 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { createStoreContext, createQueryComponent } from "mst-gql"
+import { createStoreContext, createUseQueryHook } from "mst-gql"
 import { RootStore } from "./RootStore"
+
+export const StoreContext = createStoreContext<typeof RootStore.Type>()
+
+export const useQuery = createUseQueryHook(StoreContext)

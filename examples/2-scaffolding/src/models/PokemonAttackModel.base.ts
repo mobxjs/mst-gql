@@ -3,9 +3,10 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 import { AttackModel } from "./AttackModel"
+import { AttackModelSelector } from "./AttackModel.base"
 import { RootStore } from "./index"
 
 /**
@@ -19,9 +20,9 @@ export const PokemonAttackModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("PokemonAttack"), "PokemonAttack"),
     /** The fast attacks of this Pokémon */
-    fast: types.array(types.late(() => AttackModel)),
+    fast: types.optional(types.array(MSTGQLRef(types.late(() => AttackModel))), []),
     /** The special attacks of this Pokémon */
-    special: types.array(types.late(() => AttackModel)),
+    special: types.optional(types.array(MSTGQLRef(types.late(() => AttackModel))), []),
   })
   .views(self => ({
     get store() {
@@ -29,7 +30,15 @@ export const PokemonAttackModelBase = MSTGQLObject
     }
   }))
 
-export const pokemonAttackModelPrimitives = `
-__typename
-`
+export class PokemonAttackModelSelector extends QueryBuilder {
+
+  fast(builder?: string | ((attack: AttackModelSelector) => AttackModelSelector)) { return this.__child(`fast`, AttackModelSelector, builder) }
+  special(builder?: string | ((attack: AttackModelSelector) => AttackModelSelector)) { return this.__child(`special`, AttackModelSelector, builder) }
+}
+
+export function selectFromPokemonAttack() {
+  return new PokemonAttackModelSelector()
+}
+
+export const pokemonAttackModelPrimitives = selectFromPokemonAttack().toString()
 

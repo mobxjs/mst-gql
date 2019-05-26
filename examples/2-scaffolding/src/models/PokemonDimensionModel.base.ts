@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"
@@ -19,9 +19,9 @@ export const PokemonDimensionModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
     /** The minimum value of this dimension */
-    minimum: types.optional(types.string, ''),
+    minimum: types.maybe(types.string),
     /** The maximum value of this dimension */
-    maximum: types.optional(types.string, ''),
+    maximum: types.maybe(types.string),
   })
   .views(self => ({
     get store() {
@@ -29,9 +29,15 @@ export const PokemonDimensionModelBase = MSTGQLObject
     }
   }))
 
-export const pokemonDimensionModelPrimitives = `
-__typename
-minimum
-maximum
-`
+export class PokemonDimensionModelSelector extends QueryBuilder {
+  get minimum() { return this.__attr(`minimum`) }
+  get maximum() { return this.__attr(`maximum`) }
+
+}
+
+export function selectFromPokemonDimension() {
+  return new PokemonDimensionModelSelector()
+}
+
+export const pokemonDimensionModelPrimitives = selectFromPokemonDimension().minimum.maximum.toString()
 
