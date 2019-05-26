@@ -1,9 +1,7 @@
-/* #region header */
-/* mst-gql generated barrel file*/
-/* #endregion */
+/* This is a mst-sql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
 
-/* #region exports */
-export * from "./Todo"
+export * from "./TodoModel"
 export * from "./RootStore"
 export * from "./reactUtils"
-/* #endregion */

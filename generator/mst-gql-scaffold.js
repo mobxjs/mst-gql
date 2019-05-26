@@ -85,6 +85,11 @@ function main() {
     process.exit(1)
   }
 
+  console.log(
+    "Detected types: \n" +
+      json.__schema.types.map(t => `  - [${t.kind}] ${t.name}`).join("\n")
+  )
+
   // console.log(JSON.stringify(json, null, 2))
   const files = generate(
     json.__schema.types,

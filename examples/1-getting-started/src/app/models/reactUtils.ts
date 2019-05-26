@@ -1,13 +1,12 @@
-/* #region header */
-/* This is a mst-sql generated file */
-import { createStoreContext, createQueryComponent } from "mst-gql"
-import { RootStore } from "./RootStore"
-/* #endregion */
+/* This is a mst-sql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
 
-/* #region body */
+import { createStoreContext, createQueryComponent, createUseQueryHook } from "mst-gql"
+import { RootStore } from "./RootStore"
 
 export const StoreContext = createStoreContext<typeof RootStore.Type>()
 
 export const Query = createQueryComponent(StoreContext)
 
-/* #endregion */
+export const useQuery = createUseQueryHook(StoreContext)

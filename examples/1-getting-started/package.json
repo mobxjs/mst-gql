@@ -5,9 +5,9 @@
   "license": "MIT",
   "scripts": {
     "start:server": "node ./src/server/index.js",
-    "start:client": "yarn scaffold && webpack-dev-server --hot --inline",
+    "start:client": "sleep 1 && yarn scaffold && webpack-dev-server --hot --inline",
     "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
-    "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Message' --excludes 'CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:3001/graphql",
+    "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Todo' --excludes 'CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:3001/graphql",
     "postinstall": "yarn install-mst-gql",
     "start": "run-p start:server start:client"
   },
@@ -39,7 +39,6 @@
     "mobx": "^5.9.4",
     "mobx-react": "^6.0.0-rc.4",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "file:./mst-gql1557842644.tgz",
     "react": "^16.8.1",
     "react-dom": "^16.8.1"
   }
