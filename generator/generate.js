@@ -550,14 +550,12 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     const contents = `\
 ${header}
 
-import { createStoreContext, createQueryComponent, createUseQueryHook } from "mst-gql"
+import { createStoreContext, createUseQueryHook } from "mst-gql"
 import { RootStore } from "./RootStore${importPostFix}"
 
 export const StoreContext = createStoreContext${
       format === "ts" ? `<typeof RootStore.Type>` : ""
     }()
-
-export const Query = createQueryComponent(StoreContext)
 
 export const useQuery = createUseQueryHook(StoreContext)
 `

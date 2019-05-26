@@ -1,6 +1,5 @@
 import * as React from "react"
 import { useState, useContext, useRef, useCallback } from "react"
-import { observer } from "mobx-react"
 import { DocumentNode } from "graphql"
 
 import { Query, FetchPolicy } from "./Query"
@@ -109,40 +108,4 @@ export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
       setQuery: setQueryHelper
     }
   }
-}
-
-export function createQueryComponent<STORE extends typeof MSTGQLStore.Type>(
-  context: React.Context<STORE>
-) {
-  // TODO: it would be great to infer DATA from the props.query property, but saddly, we cannot infer the .children prop from the .query prop atm
-  return observer(function Query<DATA = any>(props: QueryProps<STORE, DATA>) {
-    const store = props.store || useContext(context)
-    // const prevData = useRef<DATA>() // TODO: is this useful?
-    const [query, setQuery] = useState<Query<DATA> | undefined>(() => {
-      if (!props.query) return undefined
-      return normalizeQuery<STORE, DATA>(store, props.query, props)
-    })
-
-    const setQueryHelper = useCallback((newQuery: QueryLike<STORE, DATA>) => {
-      // if the current query had results already, save it in prevData
-      // if (query && query.data) prevData.current = query.data
-      setQuery(normalizeQuery(store, newQuery, props))
-    }, [])
-
-    // if new query or variables are passed in, replace the query!
-    React.useEffect(() => {
-      if (!props.query || typeof props.query === "function") return // ignore changes to initializer func
-      setQueryHelper(props.query)
-    }, [props.query, props.raw, props.fetchPolicy, props.variables]) // TODO: props.variables should be checked on shallow-equality!
-
-    return props.children({
-      store,
-      loading: query ? query.loading : false,
-      error: query && query.error,
-      data: query && query.data,
-      // prevData: prevData.current,
-      query,
-      setQuery: setQueryHelper
-    })
-  })
 }
