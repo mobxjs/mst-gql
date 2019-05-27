@@ -4,6 +4,8 @@ Bindings for mobx-state-tree and GraphQL
 
 This project can be sponsored through our [open collective](https://opencollective.com/mobx)!
 
+[![OpenCollective](https://opencollective.com/mobx/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/mobx/sponsors/badge.svg)](#sponsors) [![CircleCI](https://circleci.com/gh/mobxjs/mst-gql/tree/master.svg?style=svg)](https://circleci.com/gh/mobxjs/mst-gql/tree/master)
+
 # ⚠ Warning: experimental project ahead ⚠
 
 _This project is an experimental integration between GraphQL and mobx-state-tree. The project will help you to bootstrap mobx-state-tree and graphQL based projects very quickly. However, be aware, there are currently no active maintainers for this project, so we are looking for maintainers that need use project in real life situations and evolve it further!_
@@ -654,6 +656,8 @@ src/models/reactUtils.*
 src/models/*.base.*
 ```
 
+- [ ] stubHttpClient
+
 # 🙈 Examples 🙈
 
 Before running the examples, run the following in the root directory:
@@ -688,18 +692,9 @@ more in depth example TODO: create diff branch / MR link with the changes
 
 # 💥 Roadmap 💥
 
-- [ ] implement example 5 / add prisma demo with standardized api's
 - [ ] clean up readme example
-- [ ] tests
-- [ ] fix tests in the examples
-- [ ] create PR to show diff on the apollo example
-- [ ] CI
-- [ ] clean up / beautify example 5-todos
 - [ ] clean up rootstore in apollo example, many queries are now defined twice
-- [ ] all fields should be generated as optional
-- [ ] stubHttpClient
 - [ ] QueryViewModel for order retrievals and such
-- [ ] Turn QueryObject into a MST model
 
 #### Quite random iddeas
 
@@ -708,16 +703,11 @@ more in depth example TODO: create diff branch / MR link with the changes
 - [ ] Don't generate queries / mutations into the root store, but as static utilities, so that unused ones can be tree-shaken away
 - [ ] automatically insert \_\_typename in gql tag queries, like apollo client does
 - [ ] package react stuff separately, add `--no-react` flag to CLI
-- [ ] add // prettier, eslint ignore comments
 - [ ] support a config file instead of CLI args
-- [ ] auto load / auto save?
-- [ ] offline actions?
 - [ ] use apollo client / urql instead of grapqhl-request as back-end?
 - [ ] be able to specify ownership between types?
 - [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix ?
 - [ ] generate generation data + mst-sql version into file headers
-- [ ] Lerna for simpler repo setup
 - [ ] add support for identifier attributes not called \_id
 - [ ] detect superfluous files in the models directory
 - [ ] drop Query component in favor of hook
-- [ ] write select queries as objects instead of method calls? `{ likes: { name: 1 }, user: 1}` etc
