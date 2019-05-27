@@ -5,7 +5,7 @@ const fs = require("fs")
 const child_process = require("child_process")
 const graphql = require("graphql")
 
-const { getConfig } = require('./config');
+const { getConfig, mergeConfigs } = require('./config');
 const { generate, writeFiles } = require("./generate")
 
 const definition = {
