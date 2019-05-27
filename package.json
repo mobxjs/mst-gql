@@ -34,7 +34,11 @@
   "homepage": "https://github.com/mobxjs/mst-gql#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/plugin-transform-modules-commonjs": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
     "@babel/register": "^7.4.4",
     "@types/graphql": "^14.2.0",
     "@types/jest": "^24.0.13",
@@ -74,14 +78,5 @@
   },
   "resolutions": {
     "graphql": "14.3.0"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/examples/"
-    ],
-    "watchPathIgnorePatterns": [
-      "/tests/lib/todos/models/"
-    ]
   }
 }
