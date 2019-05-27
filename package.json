@@ -69,5 +69,11 @@
   },
   "resolutions": {
     "graphql": "14.3.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/examples/"
+    ]
   }
 }
