@@ -33,15 +33,15 @@ function main() {
 
   const format = config.format || args["--format"] || "js"
   const outDir = path.resolve(process.cwd(), config.outDir || args["--outDir"] || "src/models")
-  const input = args._[0] || "graphql-schema.json"
-  const roots = config.roots || args["--roots"]
+  const input = config.input || args._[0] || "graphql-schema.json"
+  const roots = config.roots || (args["--roots"]
     ? args["--roots"].split(",").map(s => s.trim())
-    : []
-  const excludes = config.excludes || args["--excludes"]
+    : [])
+  const excludes = config.excludes || (args["--excludes"]
     ? args["--excludes"].split(",").map(s => s.trim())
-    : []
+    : [])
   const modelsOnly = config.modelsOnly || !!args["--modelsOnly"]
-  const forceAll = confic.force || !!args["--force"]
+  const forceAll = config.force || !!args["--force"]
 
   console.log(
     path.basename(__filename) +
