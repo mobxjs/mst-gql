@@ -5,7 +5,7 @@ const fs = require("fs")
 const child_process = require("child_process")
 const graphql = require("graphql")
 
-const { generate } = require("./generate")
+const { generate, writeFiles } = require("./generate")
 
 const definition = {
   "--format": String,
@@ -99,19 +99,7 @@ function main() {
     new Date().toUTCString(),
     modelsOnly
   )
-  files.forEach(([name, contents, force]) => {
-    writeFile(name, contents, force || forceAll, format, outDir)
-  })
-}
-
-function writeFile(name, contents, force, format, outDir) {
-  const fnName = path.resolve(outDir, name + "." + format)
-  if (!fs.existsSync(fnName) || force) {
-    console.log("Writing file " + fnName)
-    fs.writeFileSync(fnName, contents)
-  } else {
-    console.log("Skipping file " + fnName)
-  }
+  writeFiles(outDir, files, format, forceAll, true)
 }
 
 main()

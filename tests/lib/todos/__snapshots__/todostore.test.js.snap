@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`todos.graphql tests it should be able to instantiate store and load initial data 1`] = `
+Object {
+  "__queryCache": Object {},
+  "todos": Object {
+    "a": Object {
+      "__typename": "Todo",
+      "complete": false,
+      "id": "a",
+      "text": "Initially loaded todo",
+    },
+  },
+}
+`;

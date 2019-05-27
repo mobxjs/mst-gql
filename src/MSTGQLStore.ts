@@ -1,11 +1,16 @@
 import { SubscriptionClient } from "subscriptions-transport-ws"
 import { types, getEnv, recordPatches, IAnyModelType } from "mobx-state-tree"
-import { GraphQLClient } from "graphql-request"
 import { DocumentNode } from "graphql"
 
 import { mergeHelper } from "./mergeHelper"
 import { getFirstValue } from "./utils"
 import { QueryOptions, Query } from "./Query"
+
+export interface RequestHandler<T = any> {
+  request(query: string, variables: any): Promise<T>
+}
+
+// TODO: also provide an interface for stream handler
 
 export const MSTGQLStore = types
   .model("MSTGQLStore", {
@@ -13,10 +18,10 @@ export const MSTGQLStore = types
   })
   .actions(self => {
     const {
-      gqlHttpClient,
-      gqlWsClient
+      gqlHttpClient, // TODO: rename to requestHandler
+      gqlWsClient // TODO: rename to streamHandler
     }: {
-      gqlHttpClient: GraphQLClient
+      gqlHttpClient: RequestHandler
       gqlWsClient: SubscriptionClient
     } = getEnv(self)
     if (!gqlHttpClient && !gqlWsClient)

@@ -13,7 +13,8 @@
     "mst-gql": "./generator/mst-gql-scaffold.js"
   },
   "scripts": {
-    "test": "jest test",
+    "test": "jest test && yarn -C examples/2-scaffolding start",
+    "watch": "jest test --watch",
     "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'",
     "prepare-examples": "bash scripts/prepare-examples.sh"
   },
@@ -32,8 +33,12 @@
   },
   "homepage": "https://github.com/mobxjs/mst-gql#readme",
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.4.4",
+    "@babel/register": "^7.4.4",
     "@types/graphql": "^14.2.0",
-    "@types/react": "^16.8.17",
+    "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
     "graphql-tag": "^2.10.1",
     "jest": "^24.8.0",
@@ -74,6 +79,9 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/examples/"
+    ],
+    "watchPathIgnorePatterns": [
+      "/tests/lib/todos/models/"
     ]
   }
 }

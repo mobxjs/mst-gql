@@ -1,3 +1,7 @@
+const path = require("path")
+const fs = require("fs")
+const graphql = require("graphql")
+
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
     log() {
@@ -59,7 +63,7 @@ function generate(
     if (!rootTypes.length) {
       rootTypes = autoDetectRootTypes()
       console.warn(
-        "Warning: no root types are configured. Probably --roots should be set. Detected the following objects to be possible root types: " +
+        "Warning: no root types are configured. Probably --roots should be set. Auto-detected and using the following types as root types: " +
           rootTypes.join(", ")
       )
     }
@@ -75,7 +79,7 @@ function generate(
       .filter(type => knownTypes.includes(type.name))
       .forEach(type => {
         currentType = type.name
-        console.log(`Generating type '${type.name}' (${type.kind})`)
+        // console.log(`Generating type '${type.name}' (${type.kind})`)
         try {
           switch (type.kind) {
             case "OBJECT":
@@ -320,6 +324,7 @@ export function selectFrom${name}() {
 }
 
 export const ${flowerName}ModelPrimitives = selectFrom${name}()${primitiveFields
+        .filter(p => p !== "id") // id will be automatically inserted by the query generator
         .map(p => `.${p}`)
         .join("")}.toString()
 `
@@ -661,4 +666,50 @@ function log(thing) {
   return thing
 }
 
-module.exports = { generate }
+function writeFiles(
+  outDir,
+  files,
+  format = "ts",
+  forceAll = false,
+  log = false
+) {
+  files.forEach(([name, contents, force]) => {
+    writeFile(name, contents, force || forceAll, format, outDir, log)
+  })
+}
+
+function writeFile(name, contents, force, format, outDir, log) {
+  const fnName = path.resolve(outDir, name + "." + format)
+  if (!fs.existsSync(fnName) || force) {
+    log && console.log("Writing file " + fnName)
+    fs.writeFileSync(fnName, contents)
+  } else {
+    log && console.log("Skipping file " + fnName)
+  }
+}
+
+// used by tests
+function scaffold(
+  definition,
+  options = {
+    format: "ts",
+    roots: [],
+    excludes: [],
+    modelsOnly: false
+  }
+) {
+  const schema = graphql.buildSchema(definition)
+  const res = graphql.graphqlSync(schema, graphql.introspectionQuery)
+  if (!res.data)
+    throw new Error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
+  return generate(
+    res.data.__schema.types,
+    options.format || "ts",
+    options.roots || [],
+    options.excludes || [],
+    "<during unit test run>",
+    options.modelsOnly || false
+  )
+}
+
+module.exports = { generate, writeFiles, scaffold }
