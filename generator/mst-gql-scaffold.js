@@ -22,7 +22,8 @@ function main() {
 
   try {
     args = arg(definition)
-    config = getConfig();
+    const configPath = args["--config"]
+    config = getConfig(configPath)
   } catch (e) {
     console.error(
       "Example usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json\n, valid options: " +
@@ -31,17 +32,7 @@ function main() {
     throw e
   }
 
-  const format = config.format || args["--format"] || "js"
-  const outDir = path.resolve(process.cwd(), config.outDir || args["--outDir"] || "src/models")
-  const input = config.input || args._[0] || "graphql-schema.json"
-  const roots = config.roots || (args["--roots"]
-    ? args["--roots"].split(",").map(s => s.trim())
-    : [])
-  const excludes = config.excludes || (args["--excludes"]
-    ? args["--excludes"].split(",").map(s => s.trim())
-    : [])
-  const modelsOnly = config.modelsOnly || !!args["--modelsOnly"]
-  const forceAll = config.force || !!args["--force"]
+  const { format, outDir, input, roots, excludes, modelsOnly, forceAll } = mergeConfigs(args, config);
 
   console.log(
     path.basename(__filename) +
