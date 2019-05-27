@@ -13,7 +13,7 @@
     "mst-gql": "./generator/mst-gql-scaffold.js"
   },
   "scripts": {
-    "test": "jest test && yarn -C examples/2-scaffolding start",
+    "test": "jest test && cd examples/2-scaffolding && yarn start",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'",
     "prepare-examples": "bash scripts/prepare-examples.sh"

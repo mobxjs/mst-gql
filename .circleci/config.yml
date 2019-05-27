@@ -25,7 +25,10 @@ jobs:
             - node-modules-{{ arch }}-{{ .Branch }}
             - node-modules-{{ arch }}
 
-      - run: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - run:
+          - yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+          - yarn build
+          - cd examples/2-scaffolding && yarn install
 
       - save_cache:
           name: cache .cache/yarn
@@ -37,8 +40,6 @@ jobs:
           key: node-modules-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-
-      - run: yarn build
 
       - persist_to_workspace:
           root: .

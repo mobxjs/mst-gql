@@ -84,5 +84,5 @@ export function selectFromPokemon() {
   return new PokemonModelSelector()
 }
 
-export const pokemonModelPrimitives = selectFromPokemon().id.number.name.classification.types.resistant.weaknesses.fleeRate.maxCP.maxHP.image.toString()
+export const pokemonModelPrimitives = selectFromPokemon().number.name.classification.types.resistant.weaknesses.fleeRate.maxCP.maxHP.image.toString()
 

@@ -13,6 +13,10 @@
     "mobx-state-tree": "^3.14.0"
   },
   "devDependencies": {
+    "@types/react": "^16.8.18",
+    "@types/react-dom": "^16.8.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "typescript": "^3.4.5"
   }
 }
