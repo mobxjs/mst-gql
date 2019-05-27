@@ -31,7 +31,7 @@ Benefits:
 - Model oriented
 - Type reuse between GraphQL and MobX-state-tree
 - Generates types, queries, mutations and subscription code
-- Strongly typed (TypeScript). Auto complete all the things!
+- Strongly typed queries, mutations, result selectors, hooks! Auto complete all the things!
 - Local views, actions, state and model life-cycles
 - Automatic instance reuse
 - Built-in support for local storage, caching, query caching, subscriptions (over websockets), optimistic updates
@@ -72,7 +72,7 @@ After running the scaffolder, a bunch of files will be generated in the `src/mod
   - (TypeScript only) a `type` that describes the runtime type of a model instance. These are useful to type parameters and react component properties
 - `reactUtils`. This is a set of utilities to be used in React, exposing the following:
   - `StoreContext`: a strongly typed React context, that can be used to make the `RootStore` available through your app
-  - `Query`: A react component that can be used to render queries, mutations etc. It is bound to the `StoreContext` automatically.
+  - `useQuery`: A react hook that can be used to render queries, mutations etc. It is bound to the `StoreContext` automatically.
 
 For the root store and every grapqhl object type, two files will be generated. For example `TodoModel.js` and `TodoModel.base.js`. The `TodoModel.base.js` file holds all the generated code, and will be replaced on every next run of `mst-gql`. The `TodoModel.js` file defines the model that you will actually be using throughout your application. Any further customizations to the type can be made to this file, as explained below.
 
@@ -105,30 +105,18 @@ type Mutation {
 `MessageModel.base.ts` (shortened):
 
 ```typescript
-export const MessageModelBase = MSTGQLObject.named("Message")
-  .props({
-    __typename: types.optional(types.literal("Message"), "Message"),
-    id: types.identifier,
-    user: MSTGQLRef(types.late(() => User)),
-    text: types.string
-  })
-  .views(self => ({
-    get store() {
-      return self.__getStore<typeof RootStore.Type>()
-    }
-  }))
+export const MessageModelBase = MSTGQLObject.named("Message").props({
+  __typename: types.optional(types.literal("Message"), "Message"),
+  id: types.identifier,
+  user: MSTGQLRef(types.late(() => User)),
+  text: types.string
+})
 ```
 
 `RootStoreModel.base.ts` (shortened):
 
 ```typescript
 export const RootStoreBase = MSTGQLStore.named("RootStore")
-  .extend(
-    configureStoreMixin(
-      [["Message", () => MessageModel], ["User", () => UserModel]],
-      ["Message", "User"]
-    )
-  )
   .props({
     messages: types.optional(types.map(types.late(() => Message)), {}),
     users: types.optional(types.map(types.late(() => User)), {})
@@ -139,60 +127,14 @@ export const RootStoreBase = MSTGQLStore.named("RootStore")
       resultSelector = messagePrimitives,
       options: QueryOptions = {}
     ) {
-      return self.query<typeof Message.Type[]>(
-        `query messages { messages {
-        ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
-    },
-    queryMessage(
-      variables: { id: string },
-      resultSelector = messagePrimitives,
-      options: QueryOptions = {}
-    ) {
-      return self.query<typeof Message.Type>(
-        `query message($id: ID!) { message(id: $id) {
-        ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
-    },
-    queryMe(
-      variables?: {},
-      resultSelector = userPrimitives,
-      options: QueryOptions = {}
-    ) {
-      return self.query<typeof User.Type>(
-        `query me { me {
-        ${resultSelector}
-      } }`,
-        variables,
-        options
-      )
+      // implementation omitted
     },
     mutateChangeName(
       variables: { id: string; name: string },
       resultSelector = userPrimitives,
       optimisticUpdate?: () => void
     ) {
-      return self.mutate<typeof User.Type>(
-        `mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
-        ${resultSelector}
-      } }`,
-        variables,
-        optimisticUpdate
-      )
-    },
-    subscribeNewMessages(variables?: {}, resultSelector = messagePrimitives) {
-      return self.subscribe<typeof Message.Type>(
-        `subscription newMessages { newMessages {
-        ${resultSelector}
-      } }`,
-        variables
-      )
+      // implementation omitted
     }
   }))
 ```
@@ -246,56 +188,57 @@ window.store = rootStore
 
 Now, we are ready to write our first React components that use the store! Because the store is a normal MST store, like usual, `observer` based components can be used to render the contents of the store.
 
-However, mst-sql also provides the [Query component](#query-component) that can be used to track the state of an ongoing query or mutation. It can be used in many different ways (see the details below), but here is a quick example:
+However, mst-sql also provides the [useQuery](#useQuery-hook) hook that can be used to track the state of an ongoing query or mutation. It can be used in many different ways (see the details below), but here is a quick example:
 
 ```typescript
 import React from "react"
+import { observer } from "mobx-react"
 
 import { Error, Loading, Message } from "./"
-import { Query } from "../models/reactUtils"
+import { useQuery } from "../models/reactUtils"
 
-export const Home = () => (
-  <Query query={store => store.queryMessages()}>
-    {({ store, error, data }) => {
-      if (error) return <Error>{error.message}</Error>
-      if (loading) return <Loading />
-      return (
-        <ul>
-          {data.map(message => (
-            <Message key={message.id} message={message} />
-          ))}
-        </ul>
-      )
-    }}
-  </Query>
-)
+export const Home = observer(() => {
+  const { store, error, data } = useQuery(store => store.queryMessages())
+  if (error) return <Error>{error.message}</Error>
+  if (loading) return <Loading />
+  return (
+    <ul>
+      {data.map(message => (
+        <Message key={message.id} message={message} />
+      ))}
+    </ul>
+  )
+})
 ```
 
-The `Query` component is imported from the generated `reactUtils`, so that it is bound automatically to the right store. The `query` property accepts many different types of arguments, but the most convenient one is to give it a callback that invokes one of the query (or your own) methods on the store. The [Query object](#query-object) returned from that action will be used to automatically update the rendering.
+_Important: `useQuery` should always be used in combination with `observer` from the `"mobx-react"` or `"mobx-react-lite"` package! Without that, the component will not re-render automatically!_
 
-The `Query` component takes a children function that receives, among other things, the `store`, `loading` and `data` fields.
+The `useQuery` hook is imported from the generated `reactUtils`, and is bound automatically to the right store context. The first parameter, `query`, accepts many different types of arguments, but the most convenient one is to give it a callback that invokes one of the query (or your own) methods on the store. The [Query object](#query-object) returned from that action will be used to automatically update the rendering. It will also be typed correctly when used in this form.
 
-The `Query` component is a convenience utility, but the lower primitives can also be used manually. For example, reactivity is provided by using `observer` from `mobx-react`, and you can manually get the `store` in any component by using for example React's `useContext(StoreContext)`.
+The `useQuery` hook component returns, among other things, the `store`, `loading` and `data` fields.
+
+If you just need access to the store, the `useContext` hook can be used: `useContext(StoreContext)`. The `StoreContext` can be imported from `reactUtils` as well.
 
 ### Mutations
 
-Mutations work very similarly to queries. To render a mutation, the `Query` component can be used again. Except, this time we start without a `query` property, only to set it later when a mutation is started. For example the following component uses a custom `toggle` action that wraps a graphQL mutation:
+Mutations work very similarly to queries. To render a mutation, the `useQuery` hook can be used again. Except, this time we start without an initial `query` parameter. We only set it once a mutation is started. For example the following component uses a custom `toggle` action that wraps a graphQL mutation:
 
 ```javascript
 import * as React from "react"
-import { Query } from "../models/reactUtils"
+import { observer } from "mobx-react"
 
-export const Todo = ({ todo }) => (
-  <Query>
-    {({ setQuery, loading, error }) => (
-      <li onClick={() => setQuery(todo.toggle())}>
-        <p className={`${todo.complete ? "strikethrough" : ""}`}>{todo.text}</p>
-        {error && <span>Failed to update: {error}</span>}
-        {loading && <span>(updating)</span>}
-      </li>
-    )}
-  </Query>
-)
+import { useQuery } from "../models/reactUtils"
+
+export const Todo = observer(({ todo }) => {
+  const { setQuery, loading, error } = useQuery()
+  return (
+    <li onClick={() => setQuery(todo.toggle())}>
+      <p className={`${todo.complete ? "strikethrough" : ""}`}>{todo.text}</p>
+      {error && <span>Failed to update: {error}</span>}
+      {loading && <span>(updating)</span>}
+    </li>
+  )
+})
 ```
 
 ### Optimistic updates
@@ -317,6 +260,54 @@ There are few things to notice:
 1. Our `toggle` action wraps around the generated `mutateToggleTodo` mutation of the base model, giving us a much more convenient client api
 2. The Query object created by `mutateToggleTodo` is returned from our action, so that we can pass it (for example) to the `setQuery` as done in the previous listing.
 3. We've set the third argument of the mutation, called `optimisticUpdate`. This function is executed immediately when the mutation is created, without awaiting it's result. So that the change becomes immediately visible in the UI. However, MST will record the [patches](https://github.com/mobxjs/mobx-state-tree#patches). If the mutation fails in the future, any changes made inside this `optimisticUpdate` callback will automatically be rolled back by reverse applying the recorded patches!
+
+### Customizing the query result
+
+Mutations and queries take as second argument a result selector, which defines which objects we want to receive back from the backend. Our `mutateToggleTodo` above leaves it to `undefined`, which defaults to querying all the shallow, primitive fields of the object (including `__typename` and `id`).
+
+However, in the case of toggling a Todo, this is actually overfetching, as we know the text won't change by the mutation. So instead we can provide a selector to indicate that we we are only interested in the `complete` property: `"__typename id complete"`. Note that we have to include `__typename` and `id` so that mst-gql knows to which object the result should be applied!
+
+Children can be retrieved as well by specifying them explicitly in the result selector, for example: `"__typename id complete assignee { __typename id name }`. Note that for children `__typename` and `id` (if applicable) should be selected as well!
+
+It is possible to use `gql` from the `graphql-tag` package. This enables highlighting in some IDEs, and potentially enables static analysis.
+
+However, the recommended way to write the result selectors is to use the query builder that mst-gql will generate for you. This querybuilder is entirely strongly typed, provides auto completion and automatically takes care of `__typename` and `id` fields. It can be used by passing a function as second argument to a mutation or query. That callback will be invoked with a querybuilder for the type of object that is returned. With the querybuilder, we could write the above mutation as:
+
+```javascript
+export const TodoModel = TodoModelBase.actions(self => ({
+  toggle() {
+    return self.store.mutateToggleTodo({ id: self.id }, todo => todo.complete)
+  }
+}))
+```
+
+To select multiple fields, simply keep "dotting", as the query is a fluent interface. For example: `user => user.fistname.lastname.avatar` selects 3 fields.
+
+Complex children can be selected by calling the field as function, and provide a callback to that field function (which in turn is again a query builder for the appropiate type). So the following example selector selects the `timestamp` and `text` of a message. The `name` and `avatar` inside the `user` property, and finally also the `likes` properties. For the `likes` no further subselector was specified, which means that only `__typename` and `id` will be retrieved.
+
+```javascript
+// prettier-ignore
+msg => msg
+  .timestamp
+  .text
+  .user(user => user.name.avatar)
+  .likes()
+  .toString()
+```
+
+To create reusable query fragments, instead the following syntax can be used:
+
+```javascript
+import { selectFromMessage } from "./MessageModel.base"
+
+// prettier-ignore
+export const MESSAGE_FRAGMENT = selectFromMessage()
+  .timestamp
+  .text
+  .user(user => user.name.avatar)
+  .likes()
+  .toString()
+```
 
 ### Customizing generated files
 
@@ -380,10 +371,6 @@ The query cache in is actually stored in MST as well, and can be accessed throug
 
 Since the query cache is stored in the store, this means that mixins like `useLocalStore` will serialize them. This will help significantly in building offline-first applications.
 
-## To use Query components or not to use Query components
-
-TODO: philosophical section on whether to define the UI purely in terms of stores and models, or whether to control data fetching from the UI
-
 ---
 
 # 🦄 API 🦄
@@ -397,6 +384,7 @@ The `mst-gql` command currently accepts the following arguments:
 - `--excludes 'type1,type2,typeN'` The types that should be omitted during generation, as we are not interested in for this app.
 - `--roots 'type1,type2,typeN'` The types that should be used as (root types)[#root-types]
 - `--modelsOnly` Generates only models, but no queries or graphQL capabilities. This is great for backend usage, or if you want to create your own root store
+- `--force` When set, exiting files will always be overriden. This will drop all customizations of model classes!
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
   - a graphql files, like `schema.graphql`
@@ -488,6 +476,7 @@ Beyond that, the the following top-level exports are exposed from each model fil
 
 - `xxxxPrimitives`: A simple string that provides a ready-to-use selector for graphQL queries, that selects all the primitive fields. For example: `"__typename id title text done`
 - `xxxModelType`: A TypeScript type definition that can be used in the application if you need to refer to the instance type of this specific model
+- `selectFromXXX()`: Returns a strongly typed querybuilder that can be used to write graphql result selector fragments more easily. Don't forget to call `toString()` in the end!
 
 ## QueryOptions
 
@@ -579,24 +568,29 @@ class Query<T> implements PromiseLike<T> {
 
 In the generated `reactUtils` you will find the `StoreContext`, which is a pre-initialized React context that can be used to distribute the RootStore through your application. It's primary benefit is that it is strongly typed, and that `Query` components will automatically pick up the store distributed by this context.
 
-## Query component
+## useQuery hook
 
-The Query component, as found in `reactUtils` (and not to be confused with the [Query object](#query-object)) is a convenient utility if you want to control or render queries or mutations from React components.
+The `useQuery` hook, as found in `reactUtils` can be used to create and render queries or mutations in React.
 
-It supports the following properties
+The `useQuery` hook should always be used inside an `observer` (provided by the `mobx-react` or `mobx-react-lite` package) based component!
 
-- `store`, the root store to use to execute the query. Optional and defaults to the store provided through the [`StoreContext`](#storecontext)
+It accepts zero, one or 2 arguments:
+
 - `query`, the query to execute. This parameter can take the following forms:
   - Nothing - the parameter is optional, in case you want to only set the query to be tracked later on using `setQuery`, for example when a mutation should be tracked.
   - A string, e.g. `query messages { allMessages { __typename id message date }}`
   - A `graphql-tag` based template string
   - A [`Query` object](#query-object)
   - A callback, that will receive as first argument the `store`, and should return a `Query` object. The callback will be invoked when the component is rendered for the first time, and is a great way to delegate the query logic itself to the store. This is the recommend approach. For example `store => store.queryAllMessages()`
-- The query settings `variables`, `raw` and `fetchPolicy`. Those properties have only meaning when a string or graphql-tag is used as `query`.
+- `options`, an object which can specify further options, such as
+  - `variables`: The variables to be substituted into the graphQL query (only used if the query is specified as graphql tag or string!)
+  - `raw`: See the raw option of queries
+  - `fetchPolicy`: See fetch policy
+  - `store`: This can be used to customize which store should be used. This can be pretty convenient for testing, as it means that no Provider needs to be used.
 
 The query component takes a render callback, that is rendered based on the current status of the `Query` objects that is created based on the `query` property. The callback is also automatically wrapped in MobX-reacts' `observer` HoC.
 
-The callback receives a single object with the following properties:
+The hook returns one object, with the following properties:
 
 - `loading`
 - `error`
@@ -605,9 +599,9 @@ The callback receives a single object with the following properties:
 - `query` - the current `Query` object
 - `setQuery` - replaces the current query being rendered. This is particalary useful for mutations or loading more data
 
-For examples, see the sections [Loading and rendering your first data](#loading-and-rendering-your-first-data) and [Mutations](#mutations).
+The `useQuery` hook is strongly typed; if everything is setup correctly, the type of `data` should be inferred correctly when using TypeScript.
 
-Tip: The `Query` component is strongly typed, however, due to limitations in the TS type inference, it is not possible to derive the type of `data` from the `query` property. So it might be useful to call the component like `<Query<Message[]> query={store => store.queryAllMessages()}>{({ data }) => ... }`
+For examples, see the sections [Loading and rendering your first data](#loading-and-rendering-your-first-data) and [Mutations](#mutations).
 
 ## `localStorageMixin`
 
@@ -626,39 +620,9 @@ const RootStore = RootStoreBase.extend(
 )
 ```
 
-# Tips & tricks
-
-TODO:
-
-Modeling ordered retrieval with refs
-
-Mutation should select the fields they change
-
-Data is plain, rather than mst object -> make sure your query includes \_\_typename
-
-Data is MST object, but not merged with the store state -> mase sure your query includes id
-
-Should scaffolded files be generated
-
-Fold sections in VSCode with this [extension](https://marketplace.visualstudio.com/items?itemName=maptz.regionfolder)
-
-Withstore like in example 4
-
-Using getters / setters in views for foreign keys
-
-using mutations, see BookTrips component
-
-.prettierignore file:
-
-```
-src/models/index.*
-src/models/reactUtils.*
-src/models/*.base.*
-```
-
-- [ ] stubHttpClient
-
 # 🙈 Examples 🙈
+
+### Running the examples
 
 Before running the examples, run the following in the root directory:
 
@@ -678,36 +642,86 @@ All examples start on url http://localhost:3000/
 
 Overview of the examples:
 
-TODO:
+### 1. Getting started
 
-1. 2. 3. 4. 5. 6.
+The [`1-getting-started](examples/1-getting-started) example is a very trivial project, that shows how to use `mst-gql` together with TypeScript and React. Features:
 
-Basic http / mst-sql classes / optimistic update
+- React
+- TypeScript
+- Scaffolding
+- Simple query
+- Simple mutation
+- Customizes `TodoModel` by introduce an `toggle` action, which uses an optimistic update.
+- Renders loading state
 
-Scaffolding
+### 2. Scaffolding
 
-webservices, scaffolded classes
+The [`2-scaffolding1](examples/2-scaffolding) examples generates code for a non trivial projects and runs it through the compiler.
 
-more in depth example TODO: create diff branch / MR link with the changes
+### 3. Twitter clone
 
-# 💥 Roadmap 💥
+[`3-twitter-clone`](examples/3-twitter-clone) Is the most intersting example project. Highlights:
 
-- [ ] clean up readme example
-- [ ] clean up rootstore in apollo example, many queries are now defined twice
-- [ ] QueryViewModel for order retrievals and such
+- Shows a twitter feed using a subscription over websocket
+- A load more button for paging
+- Tweets can be expanded (to show replies) and liked
+- It is possible to compose new tweets
+- The data model has references, such as `MessageModel.user` and `MessageModel.likes`.
+- `MessageModel.replyTo` is field that refers to a `MessageModel`, so that a tweet tree can be expressed.
+- When changing the name of the currently logged in user, this is properly reflected in the UI, thanks to the normalization and MobX reactivity. There is non need to re-fetch the tweet wall.
+- `MessageModel.isLikedByMe` introduce a client-only derived view.
+- To store the message order (new messages go in front, messaged insertd by loading more data are appended to the end), the `RootStore` has a property `sortedMessages` to store local state.
+- All the query logic is abstracted into the models, so that the UI doesn't has as little logic as possible.
+- The twitter example not only scaffolds the client side models, it also scaffolds models to be used on the server!
 
-#### Quite random iddeas
+### 4. Apollo tutorial
 
-- [ ] add cli flag to also regenerate entry files
-- [ ] support json config file
-- [ ] Don't generate queries / mutations into the root store, but as static utilities, so that unused ones can be tree-shaken away
-- [ ] automatically insert \_\_typename in gql tag queries, like apollo client does
-- [ ] package react stuff separately, add `--no-react` flag to CLI
-- [ ] support a config file instead of CLI args
-- [ ] use apollo client / urql instead of grapqhl-request as back-end?
-- [ ] be able to specify ownership between types?
-- [ ] add post run comment option to cli, to run e.g. prettier / eslint --fix ?
-- [ ] generate generation data + mst-sql version into file headers
-- [ ] add support for identifier attributes not called \_id
-- [ ] detect superfluous files in the models directory
-- [ ] drop Query component in favor of hook
+[`4-apollo-tutorial`](examples/4-apollo-tutorial) is a port of the [apollo full-stack tutorial](https://github.com/apollographql/fullstack-tutorial/tree/d780ec0ceed274fdc296eebfaf20d54499e8ea31/final). Note that the example doesn't use apollo anymore. See it's readme for specific install instructions.
+
+The examples has a lot of similarities with example 3, and also has
+
+1. routing
+2. leverages the caching policies in several views, such as switching to specific views, responding initially with cached results until fresh data is fetched
+3. Uses the `localStorageMixin` so that the app can start without netwokr requests
+
+# Tips & tricks
+
+### If the result of a query doesn't show up in the store
+
+... you might have forgotten to include `__typename` or `id` in the result selector of your string or graphql-tag based queries.
+
+### Views is stuck is in loading state
+
+If the view is stuck in loading state, but you can see in the network requests that you did get a proper response, you probably forget to include `observer` on the component that renders the query
+
+### Setup prettier to ignore generated files
+
+If you are using prettier, it is strongly recommended to make sure that the files that are generated over and over again, are not formatted, by setting up a `.prettierignore` file.
+
+```
+src/models/index.*
+src/models/reactUtils.*
+src/models/*.base.*
+```
+
+Or, alternatively, if you want to properly format the generated files based on your standards, make sure that you always run prettier on those files after scaffolding.
+
+### Keep components dumb
+
+In general we recommend to keep the components dumb, and create utility functions in the store or models to perform queries needed for a certain UI component. This encourages reuse of queries between components. Furthermore, it makes testing easier, as it will be possible to test your query methods directly, without depending on rendering components. As is done for example [here](https://github.com/mobxjs/mst-gql/blob/d9d7738a53fa0daf97f6ca2522c5fd6069a2f9ae/tests/lib/todos/todostore.test.js#L18-L110)
+
+### Paging, search state or other complex ui states
+
+...are best modelled using separate models, or by introducing additional properties and actions to keep track of paging, offset, search filters, etcetera. This is done for example in the [twitter example](https://github.com/mobxjs/mst-gql/blob/d9d7738a53fa0daf97f6ca2522c5fd6069a2f9ae/examples/3-twitter-clone/src/app/models/RootStore.ts#L18-L56) and the [apollo example](https://github.com/mobxjs/mst-gql/blob/d9d7738a53fa0daf97f6ca2522c5fd6069a2f9ae/examples/4-apollo-tutorial/client/src/models/LaunchConnectionModel.js#L15-L32)
+
+### Mutations should select the fields they change
+
+Mutation should select the fields they change in the result selection
+
+### Using mst-gql with other graphql clients
+
+It is possible to scaffold with the `--modelsOnly` flag. This generates a RootStore and the model classes, but no code for the queries or React, and hence it is environment and transportation independent. Use this option if you want to use models on the server, or on the client in combination with another graphql client. Use `store.merge(data)` to merge in query results you get from your graphql client, and get back instantiated model objects.
+
+### Stub the transportation layer in unit tests
+
+It is quite easy to stub away the backend and transportation layer, by providing a custom client to the rootStore, as is done [here](https://github.com/mobxjs/mst-gql/blob/d9d7738a53fa0daf97f6ca2522c5fd6069a2f9ae/tests/lib/todos/todostore.test.js#L18-L110).

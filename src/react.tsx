@@ -11,23 +11,6 @@ export type QueryLike<STORE, DATA> =
   | string
   | DocumentNode
 
-export type QueryProps<STORE, DATA> = {
-  store?: STORE
-  query?: QueryLike<STORE, DATA>
-  variables?: any
-  fetchPolicy?: FetchPolicy
-  raw?: boolean
-  children: (args: {
-    store: STORE
-    loading: boolean
-    error: any
-    data: DATA | undefined
-    // prevData: DATA | undefined // set of previously fetched values, in case the query was replaced
-    query: Query<DATA> | undefined
-    setQuery: (query: QueryLike<STORE, DATA>) => void
-  }) => React.ReactElement
-}
-
 export function createStoreContext<STORE extends typeof MSTGQLStore.Type>() {
   return React.createContext<STORE>(null as any)
 }
