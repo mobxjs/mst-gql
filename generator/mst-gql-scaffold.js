@@ -13,7 +13,8 @@ const definition = {
   "--roots": String,
   "--excludes": String,
   "--modelsOnly": Boolean,
-  "--force": Boolean
+  "--force": Boolean,
+  "--noReact": Boolean
 }
 
 function main() {
@@ -40,6 +41,7 @@ function main() {
     : []
   const modelsOnly = !!args["--modelsOnly"]
   const forceAll = !!args["--force"]
+  const noReact = !!args["--noReact"]
 
   console.log(
     path.basename(__filename) +
@@ -97,7 +99,8 @@ function main() {
     roots,
     excludes,
     new Date().toUTCString(),
-    modelsOnly
+    modelsOnly,
+    noReact
   )
   writeFiles(outDir, files, format, forceAll, true)
 }

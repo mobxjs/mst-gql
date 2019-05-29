@@ -384,6 +384,7 @@ The `mst-gql` command currently accepts the following arguments:
 - `--excludes 'type1,type2,typeN'` The types that should be omitted during generation, as we are not interested in for this app.
 - `--roots 'type1,type2,typeN'` The types that should be used as (root types)[#root-types]
 - `--modelsOnly` Generates only models, but no queries or graphQL capabilities. This is great for backend usage, or if you want to create your own root store
+- `--noReact` doesn't generate the React related utilities
 - `--force` When set, exiting files will always be overridden. This will drop all customizations of model classes!
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
