@@ -22,7 +22,8 @@ function generate(
   rootTypes = [],
   excludes = [],
   generationDate = "a long long time ago...",
-  modelsOnly = false
+  modelsOnly = false,
+  noReact = false
 ) {
   excludes.push(...buildInExcludes)
 
@@ -40,7 +41,7 @@ function generate(
 
   generateTypes()
   generateRootStore()
-  if (!modelsOnly) {
+  if (!modelsOnly || !noReact) {
     generateReactUtils()
   }
   generateBarrelFile(files)
