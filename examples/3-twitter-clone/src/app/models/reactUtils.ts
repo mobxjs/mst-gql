@@ -3,8 +3,9 @@
 /* tslint:disable */
 
 import { createStoreContext, createUseQueryHook } from "mst-gql"
+import * as React from "react"
 import { RootStore } from "./RootStore"
 
-export const StoreContext = createStoreContext<typeof RootStore.Type>()
+export const StoreContext = createStoreContext<typeof RootStore.Type>(React)
 
-export const useQuery = createUseQueryHook(StoreContext)
+export const useQuery = createUseQueryHook(StoreContext, React)
