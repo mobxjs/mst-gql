@@ -37,5 +37,5 @@ export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().id.name.avatar.toString()
+export const userModelPrimitives = selectFromUser().name.avatar.toString()
 
