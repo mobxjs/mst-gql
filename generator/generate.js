@@ -37,7 +37,7 @@ function generate(
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
   const importPostFix = format === "mjs" ? ".mjs" : ""
 
-  inlineInterfaces(types)
+  resolveAbstractTypes(types)
 
   generateTypes()
   generateRootStore()
@@ -88,6 +88,8 @@ function generate(
               return handleObjectType(type)
             case "ENUM":
               return handleEnumType(type)
+            case "UNION":
+              return null
             default:
               throw new Error("Unhandled type: " + type.kind)
           }
@@ -271,6 +273,20 @@ ${generateFragments()}
         case "ENUM":
           imports.push(type.name + "Enum")
           return wrap(`${type.name}Enum`, useMaybe, "types.maybe(", ")")
+        case "INTERFACE":
+          return wrap(
+            handleInterfaceFieldType(fieldName, type), 
+            useMaybe, 
+            "types.maybe(", 
+            ")"
+          )
+        case "UNION":
+            return wrap(
+              handleUnionFieldType(fieldName, type), 
+              useMaybe, 
+              "types.maybe(", 
+              ")"
+            )
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
@@ -299,6 +315,32 @@ ${generateFragments()}
       // the target is a root type, store a reference
       refs.push([fieldName, type.name])
       return `MSTGQLRef(${realType})`
+    }
+
+    function handleInterfaceFieldType(fieldName, type) {
+      nonPrimitiveFields.push([fieldName, type.name])
+
+      const derivedObjects = interfaceToDerivedObjects.get(type.name)
+      const interfaceCompoundedTypes = Array.from(derivedObjects).map(t => {
+        const typeName = t.name + "Model"
+        imports.push(typeName)
+        return typeName
+      })
+      return `types.union(${interfaceCompoundedTypes.join(', ')})`
+    }
+
+    function handleUnionFieldType(fieldName, type) {
+      nonPrimitiveFields.push([fieldName, type.name])
+      
+      const unionType = unions.get(type.name)
+      const unionCompoundedTypes = unionType.possibleTypes.map(t => {
+        // Note that members of a union type need to be concrete object types; 
+        // you can't create a union type out of interfaces or other unions.
+        const typeName = t.name + "Model"
+        imports.push(typeName)
+        return typeName
+      })
+      return `types.union(${unionCompoundedTypes.join(', ')})`
     }
 
     function generateFragments() {
@@ -523,6 +565,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "LIST":
         return `${printTsType(type.ofType, true)}[]`
       case "ENUM":
+      case "INPUT_OBJECT":
       case "OBJECT":
         return type.name + (isRoot ? " | undefined" : "")
       case "SCALAR":
@@ -615,15 +658,24 @@ function getMstDefaultValue(type) {
   return res[type]
 }
 
-function inlineInterfaces(types) {
-  // This function spreads all the fields defined in interfaces into the object definitions themselves
+const unions = new Map()
+const interfaceToDerivedObjects = new Map()
+function resolveAbstractTypes(types) {
+  // This function: 
+  // - spreads all the fields defined in interfaces into the object definitions themselves
+  // - keeps a reference to all unions
   const interfaces = new Map()
   types.forEach(t => {
-    if (t.kind === "INTERFACE") interfaces.set(t.name, t)
+    if (t.kind === "INTERFACE") { 
+      interfaces.set(t.name, t)
+      interfaceToDerivedObjects.set(t.name, new Set())
+    }
+    else if (t.kind === "UNION") unions.set(t.name, t)
   })
   types.forEach(t => {
     if (t.kind === "OBJECT") {
-      t.interfaces.forEach(i =>
+      t.interfaces.forEach(i => {
+        interfaceToDerivedObjects.get(i.name).add(t)
         interfaces.get(i.name).fields.forEach(interfaceField => {
           if (
             !t.fields.some(
@@ -632,7 +684,7 @@ function inlineInterfaces(types) {
           )
             t.fields.push(interfaceField)
         })
-      )
+      })
     }
   })
 }
