@@ -274,18 +274,13 @@ ${generateFragments()}
           imports.push(type.name + "Enum")
           return wrap(`${type.name}Enum`, useMaybe, "types.maybe(", ")")
         case "INTERFACE":
-          return wrap(
-            handleInterfaceFieldType(fieldName, type), 
-            useMaybe, 
-            "types.maybe(", 
-            ")"
-          )
         case "UNION":
             return wrap(
-              handleUnionFieldType(fieldName, type), 
+              handleInterfaceOrUnionFieldType(fieldName, type), 
               useMaybe, 
               "types.maybe(", 
-              ")"
+              ")",
+              nonPrimitiveFields
             )
         default:
           throw new Error(
@@ -317,30 +312,25 @@ ${generateFragments()}
       return `MSTGQLRef(${realType})`
     }
 
-    function handleInterfaceFieldType(fieldName, type) {
+    function handleInterfaceOrUnionFieldType(fieldName, type) {
       nonPrimitiveFields.push([fieldName, type.name])
-
-      const derivedObjects = interfaceToDerivedObjects.get(type.name)
-      const interfaceCompoundedTypes = Array.from(derivedObjects).map(t => {
-        const typeName = t.name + "Model"
-        imports.push(typeName)
-        return typeName
-      })
-      return `types.union(${interfaceCompoundedTypes.join(', ')})`
-    }
-
-    function handleUnionFieldType(fieldName, type) {
-      nonPrimitiveFields.push([fieldName, type.name])
+  
+      // import the type
+      imports.push(type.name + "Model")
       
-      const unionType = unions.get(type.name)
-      const unionCompoundedTypes = unionType.possibleTypes.map(t => {
+      const compoundedTypes = abstractTypeToCompoundTypes.get(type.name)
+      const unionArguments = compoundedTypes.map(t => {
         // Note that members of a union type need to be concrete object types; 
         // you can't create a union type out of interfaces or other unions.
         const typeName = t.name + "Model"
         imports.push(typeName)
-        return typeName
+        const isSelf = type.name === currentType
+        // always using late prevents potential circular dependency issues between files
+        return `types.late(()${
+          isSelf && format === "ts" ? ": any" : ""
+        } => ${typeName})`
       })
-      return `types.union(${unionCompoundedTypes.join(', ')})`
+      return `types.union(${unionArguments.join(', ')})`
     }
 
     function generateFragments() {
@@ -658,35 +648,51 @@ function getMstDefaultValue(type) {
   return res[type]
 }
 
-const unions = new Map()
-const interfaceToDerivedObjects = new Map()
+const abstractTypeToCompoundTypes = new Map()
 function resolveAbstractTypes(types) {
   // This function: 
-  // - spreads all the fields defined in interfaces into the object definitions themselves
-  // - keeps a reference to all unions
+  // - inlines interfaces by spreading all the fields defined in interfaces into the object definitions themselves
+  // - maps unions to possibleTypes
+  // - maps interfaces to derived object types
   const interfaces = new Map()
-  types.forEach(t => {
-    if (t.kind === "INTERFACE") { 
-      interfaces.set(t.name, t)
-      interfaceToDerivedObjects.set(t.name, new Set())
+  const interfaceToDerivedObjectTypes = new Map()
+  const compoundNameToUnionNames = new Map()
+  types.forEach(type => {
+    if (type.kind === "INTERFACE") { 
+      interfaces.set(type.name, type)
+      interfaceToDerivedObjectTypes.set(type.name, new Set())
+    } else if (type.kind === "UNION") {
+      type.possibleTypes.forEach(possibleType => 
+        compoundNameToUnionNames.set(possibleType.name, type.name)
+      )
     }
-    else if (t.kind === "UNION") unions.set(t.name, t)
   })
-  types.forEach(t => {
-    if (t.kind === "OBJECT") {
-      t.interfaces.forEach(i => {
-        interfaceToDerivedObjects.get(i.name).add(t)
+  types.forEach(type => {
+    if (type.kind === "OBJECT") {
+      type.interfaces.forEach(i => {
+        interfaceToDerivedObjectTypes.get(i.name).add(type)
         interfaces.get(i.name).fields.forEach(interfaceField => {
           if (
-            !t.fields.some(
+            !type.fields.some(
               objectField => objectField.name === interfaceField.name
             )
           )
-            t.fields.push(interfaceField)
+            type.fields.push(interfaceField) // Note: is inlining necessary? Deriving objects need to define all interface properties?
         })
       })
+      if (compoundNameToUnionNames.has(type.name)) {
+        const unionName = compoundNameToUnionNames.get(type.name)
+        const compoundTypes = abstractTypeToCompoundTypes.has(unionName) 
+          ? abstractTypeToCompoundTypes.get(unionName) 
+          : []
+        compoundTypes.push(type)
+        abstractTypeToCompoundTypes.set(unionName, compoundTypes)
+      }
     }
   })
+  interfaceToDerivedObjectTypes.forEach((value, key) => 
+    abstractTypeToCompoundTypes.set(key, Array.from(value))
+  )
 }
 
 function sanitizeComment(comment) {

@@ -57,7 +57,7 @@ type Query {
   const repoModelBase = findFile(output, 'RepoModel.base')
   expect(repoModelBase).toBeTruthy()
   expect(
-    hasFileContent(repoModelBase, 'owner: types.maybe(types.union(UserModel, OrganizationModel)),')
+    hasFileContent(repoModelBase, 'owner: types.maybe(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),')
   ).toBeTruthy()
 })
 
@@ -88,10 +88,10 @@ type Query {
     { roots: ["SearchResult"] }
   )  
   expect(output).toMatchSnapshot()
-
+  
   const searchResultBase = findFile(output, 'SearchResultModel.base')
   expect(searchResultBase).toBeTruthy()
   expect(
-    hasFileContent(searchResultBase, 'item: types.maybe(types.union(UserModel, MovieModel, BookModel)),')
+    hasFileContent(searchResultBase, 'item: types.maybe(types.union(types.late(() => UserModel), types.late(() => MovieModel), types.late(() => BookModel))),')
   ).toBeTruthy()
 })
