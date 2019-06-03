@@ -6,7 +6,7 @@ import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
 
 import { LaunchModel } from "./LaunchModel"
 import { LaunchModelSelector } from "./LaunchModel.base"
-import { RootStore } from "./index"
+
 
 /**
  * LaunchConnectionBase
@@ -33,10 +33,8 @@ export class LaunchConnectionModelSelector extends QueryBuilder {
   get hasMore() { return this.__attr(`hasMore`) }
   launches(builder) { return this.__child(`launches`, LaunchModelSelector, builder) }
 }
-
 export function selectFromLaunchConnection() {
   return new LaunchConnectionModelSelector()
 }
 
-export const launchConnectionModelPrimitives = selectFromLaunchConnection().cursor.hasMore.toString()
-
+export const launchConnectionModelPrimitives = selectFromLaunchConnection().cursor.hasMore

@@ -2,10 +2,10 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
-import { RootStore } from "./index"
+
 
 /**
  * MissionBase
@@ -25,12 +25,9 @@ export const MissionModelBase = MSTGQLObject
 
 export class MissionModelSelector extends QueryBuilder {
   get name() { return this.__attr(`name`) }
-
 }
-
 export function selectFromMission() {
   return new MissionModelSelector()
 }
 
-export const missionModelPrimitives = selectFromMission().name.toString()
-
+export const missionModelPrimitives = selectFromMission().name

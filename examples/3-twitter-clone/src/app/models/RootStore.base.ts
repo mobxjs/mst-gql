@@ -20,37 +20,37 @@ export const RootStoreBase = MSTGQLStore
     users: types.optional(types.map(types.late(() => UserModel)), {})
   })
   .actions(self => ({
-    queryMessages(variables: { offset: string | undefined, count: number | undefined, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives, options: QueryOptions = {}) {
+    queryMessages(variables: { offset: string | undefined, count: number | undefined, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof MessageModel.Type[]>(`query messages($offset: ID, $count: Int, $replyTo: ID) { messages(offset: $offset, count: $count, replyTo: $replyTo) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryMessage(variables: { id: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives, options: QueryOptions = {}) {
+    queryMessage(variables: { id: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof MessageModel.Type>(`query message($id: ID!) { message(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives, options: QueryOptions = {}) {
+    queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof UserModel.Type>(`query me { me {
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    mutateChangeName(variables: { id: string, name: string }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives, optimisticUpdate?: () => void) {
+    mutateChangeName(variables: { id: string, name: string }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<typeof UserModel.Type>(`mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateLike(variables: { msg: string, user: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives, optimisticUpdate?: () => void) {
+    mutateLike(variables: { msg: string, user: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<typeof MessageModel.Type>(`mutation like($msg: ID!, $user: ID!) { like(msg: $msg, user: $user) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutatePostTweet(variables: { text: string, user: string, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives, optimisticUpdate?: () => void) {
+    mutatePostTweet(variables: { text: string, user: string, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<typeof MessageModel.Type>(`mutation postTweet($text: String!, $user: ID!, $replyTo: ID) { postTweet(text: $text, user: $user, replyTo: $replyTo) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    subscribeNewMessages(variables?: {  }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives, onData?: (item: any) => void) {
+    subscribeNewMessages(variables?: {  }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), onData?: (item: any) => void) {
       return self.subscribe<typeof MessageModel.Type>(`subscription newMessages { newMessages {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, onData)

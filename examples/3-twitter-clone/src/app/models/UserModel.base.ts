@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"
@@ -30,12 +30,9 @@ export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get name() { return this.__attr(`name`) }
   get avatar() { return this.__attr(`avatar`) }
-
 }
-
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().name.avatar.toString()
-
+export const userModelPrimitives = selectFromUser().name.avatar

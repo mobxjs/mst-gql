@@ -3,7 +3,7 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
 import { RootStore } from "./index"

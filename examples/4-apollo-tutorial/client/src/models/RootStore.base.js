@@ -26,17 +26,17 @@ export const RootStoreBase = MSTGQLStore
     users: types.optional(types.map(types.late(() => UserModel)), {})
   })
   .actions(self => ({
-    queryLaunches(variables, resultSelector = launchConnectionModelPrimitives, options = {}) {
+    queryLaunches(variables, resultSelector = launchConnectionModelPrimitives.toString(), options = {}) {
       return self.query(`query launches($pageSize: Int, $after: String) { launches(pageSize: $pageSize, after: $after) {
         ${typeof resultSelector === "function" ? resultSelector(new LaunchConnectionModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryLaunch(variables, resultSelector = launchModelPrimitives, options = {}) {
+    queryLaunch(variables, resultSelector = launchModelPrimitives.toString(), options = {}) {
       return self.query(`query launch($id: ID!) { launch(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new LaunchModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryMe(variables, resultSelector = userModelPrimitives, options = {}) {
+    queryMe(variables, resultSelector = userModelPrimitives.toString(), options = {}) {
       return self.query(`query me { me {
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }`, variables, options)

@@ -8,7 +8,7 @@ import { MissionModel } from "./MissionModel"
 import { MissionModelSelector } from "./MissionModel.base"
 import { RocketModel } from "./RocketModel"
 import { RocketModelSelector } from "./RocketModel.base"
-import { RootStore } from "./index"
+
 
 /**
  * LaunchBase
@@ -37,10 +37,8 @@ export class LaunchModelSelector extends QueryBuilder {
   mission(builder) { return this.__child(`mission`, MissionModelSelector, builder) }
   rocket(builder) { return this.__child(`rocket`, RocketModelSelector, builder) }
 }
-
 export function selectFromLaunch() {
   return new LaunchModelSelector()
 }
 
-export const launchModelPrimitives = selectFromLaunch().id.site.isBooked.toString()
-
+export const launchModelPrimitives = selectFromLaunch().site.isBooked
