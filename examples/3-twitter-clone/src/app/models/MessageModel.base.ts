@@ -44,5 +44,5 @@ export function selectFromMessage() {
   return new MessageModelSelector()
 }
 
-export const messageModelPrimitives = selectFromMessage().id.timestamp.text.toString()
+export const messageModelPrimitives = selectFromMessage().timestamp.text.toString()
 

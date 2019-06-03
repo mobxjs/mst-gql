@@ -22,6 +22,8 @@ If you want to use graphql tags, also install: `yarn add graphql graphql-tag`
 
 # 👩‍🎓 Why 👩‍🎓
 
+Watch the introduction talk @ react-europe 2019: [Data models all the way](https://www.youtube.com/watch?v=Sq2M00vghqY&list=PLCC436JpVnK3kcTnPyhcs7QnHK2PKl33D&index=12&t=0s) by [Michel Weststrate](https://twitter.com/mweststrate)
+
 Both GraphQL and mobx-state-tree are model-first driven approaches, so they have a naturally matching architecture. If you are tired of having your data shapes defined in GraphQL, MobX-state-tree and possible TypeScript as well, this project might be a great help!
 
 Furthermore, this project closes the gap between GraphQL and mobx-state-tree as state management solutions. GraphQL is very transport oriented, while MST is great for client side state management. GraphQL clients like apollo do support some form of client-side state, but that is still quite cumbersome compared to the full model driven power unlocked by MST, where local actions, reactive views, and MobX optimized rendering model be used.

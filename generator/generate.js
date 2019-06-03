@@ -42,7 +42,7 @@ function generate(
 
   generateTypes()
   generateRootStore()
-  if (!modelsOnly || !noReact) {
+  if (!modelsOnly && !noReact) {
     generateReactUtils()
   }
   generateBarrelFile(files)
