@@ -12,7 +12,6 @@ import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 
 
-
 import { RootStore } from \\"./index\\"
 
 /**
@@ -37,15 +36,12 @@ export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
   get name() { return this.__attr(\`name\`) }
   get avatar() { return this.__attr(\`avatar\`) }
-
 }
-
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
 export const userModelPrimitives = selectFromUser().name.avatar
-
 ",
     true,
   ],
@@ -163,7 +159,6 @@ import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
 import { UserModel } from \\"./UserModel\\"
 import { OrganizationModel } from \\"./OrganizationModel\\"
-
 import { RootStore } from \\"./index\\"
 
 /**
@@ -185,15 +180,13 @@ export const RepoModelBase = MSTGQLObject
 
 export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
-  owner(builder?: string | ((owner: OwnerModelSelector) => OwnerModelSelector | OwnerModelSelector)) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
+  owner(builder?: string | OwnerModelSelector | ((selector: OwnerModelSelector) => OwnerModelSelector)) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
 }
-
 export function selectFromRepo() {
   return new RepoModelSelector()
 }
 
 export const repoModelPrimitives = selectFromRepo()
-
 ",
     true,
   ],
@@ -229,11 +222,11 @@ import { OrganizationModelSelector, organizationModelPrimitives } from \\"./Orga
 export class OwnerModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
   get name() { return this.__attr(\`name\`) }
-  user(builder?: string | ((User: UserModelSelector) => UserModelSelector | UserModelSelector)) { return this.__inlineFragment(\`User\`, UserModelSelector, builder) }
-  organization(builder?: string | ((Organization: OrganizationModelSelector) => OrganizationModelSelector | OrganizationModelSelector)) { return this.__inlineFragment(\`Organization\`, OrganizationModelSelector, builder) }
+  user(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__inlineFragment(\`User\`, UserModelSelector, builder) }
+  organization(builder?: string | OrganizationModelSelector | ((selector: OrganizationModelSelector) => OrganizationModelSelector)) { return this.__inlineFragment(\`Organization\`, OrganizationModelSelector, builder) }
 }
 export function selectFromOwner() {
-	return new OwnerModelSelector()
+  return new OwnerModelSelector()
 }
 
 export const ownerModelPrimitives = selectFromOwner().name",
@@ -247,7 +240,6 @@ export const ownerModelPrimitives = selectFromOwner().name",
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
 
 
 import { RootStore } from \\"./index\\"
@@ -274,15 +266,12 @@ export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
   get name() { return this.__attr(\`name\`) }
   get avatar() { return this.__attr(\`avatar\`) }
-
 }
-
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
 export const userModelPrimitives = selectFromUser().name.avatar
-
 ",
     true,
   ],
@@ -319,7 +308,6 @@ import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 
 
-
 import { RootStore } from \\"./index\\"
 
 /**
@@ -344,15 +332,12 @@ export class OrganizationModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
   get name() { return this.__attr(\`name\`) }
   get logo() { return this.__attr(\`logo\`) }
-
 }
-
 export function selectFromOrganization() {
   return new OrganizationModelSelector()
 }
 
 export const organizationModelPrimitives = selectFromOrganization().name.logo
-
 ",
     true,
   ],
@@ -477,7 +462,6 @@ import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
 import { MovieModel } from \\"./MovieModel\\"
 import { BookModel } from \\"./BookModel\\"
-
 import { RootStore } from \\"./index\\"
 
 /**
@@ -499,15 +483,13 @@ export const SearchResultModelBase = MSTGQLObject
 
 export class SearchResultModelSelector extends QueryBuilder {
   get inputQuery() { return this.__attr(\`inputQuery\`) }
-  items(builder?: string | ((searchItem: SearchItemModelSelector) => SearchItemModelSelector | SearchItemModelSelector)) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
+  items(builder?: string | SearchItemModelSelector | ((selector: SearchItemModelSelector) => SearchItemModelSelector)) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
 }
-
 export function selectFromSearchResult() {
   return new SearchResultModelSelector()
 }
 
 export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
-
 ",
     true,
   ],
@@ -541,11 +523,11 @@ import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
 import { BookModelSelector, bookModelPrimitives } from \\"./BookModel.base\\"
 
 export class SearchItemModelSelector extends QueryBuilder {
-  movie(builder?: string | ((Movie: MovieModelSelector) => MovieModelSelector | MovieModelSelector)) { return this.__inlineFragment(\`Movie\`, MovieModelSelector, builder) }
-  book(builder?: string | ((Book: BookModelSelector) => BookModelSelector | BookModelSelector)) { return this.__inlineFragment(\`Book\`, BookModelSelector, builder) }
+  movie(builder?: string | MovieModelSelector | ((selector: MovieModelSelector) => MovieModelSelector)) { return this.__inlineFragment(\`Movie\`, MovieModelSelector, builder) }
+  book(builder?: string | BookModelSelector | ((selector: BookModelSelector) => BookModelSelector)) { return this.__inlineFragment(\`Book\`, BookModelSelector, builder) }
 }
 export function selectFromSearchItem() {
-	return new SearchItemModelSelector()
+  return new SearchItemModelSelector()
 }
 
 // provides all primitive fields of union member types combined together
@@ -560,7 +542,6 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
 
 
 import { RootStore } from \\"./index\\"
@@ -585,15 +566,12 @@ export const MovieModelBase = MSTGQLObject
 export class MovieModelSelector extends QueryBuilder {
   get description() { return this.__attr(\`description\`) }
   get director() { return this.__attr(\`director\`) }
-
 }
-
 export function selectFromMovie() {
   return new MovieModelSelector()
 }
 
 export const movieModelPrimitives = selectFromMovie().description.director
-
 ",
     true,
   ],
@@ -630,7 +608,6 @@ import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 
 
-
 import { RootStore } from \\"./index\\"
 
 /**
@@ -653,15 +630,12 @@ export const BookModelBase = MSTGQLObject
 export class BookModelSelector extends QueryBuilder {
   get description() { return this.__attr(\`description\`) }
   get author() { return this.__attr(\`author\`) }
-
 }
-
 export function selectFromBook() {
   return new BookModelSelector()
 }
 
 export const bookModelPrimitives = selectFromBook().description.author
-
 ",
     true,
   ],

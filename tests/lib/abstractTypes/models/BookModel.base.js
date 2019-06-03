@@ -7,7 +7,6 @@ import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
 
-
 /**
  * BookBase
  * auto generated base class for the model BookModel.
@@ -28,12 +27,9 @@ export const BookModelBase = MSTGQLObject
 export class BookModelSelector extends QueryBuilder {
   get description() { return this.__attr(`description`) }
   get author() { return this.__attr(`author`) }
-
 }
-
 export function selectFromBook() {
   return new BookModelSelector()
 }
 
 export const bookModelPrimitives = selectFromBook().description.author
-

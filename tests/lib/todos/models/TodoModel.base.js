@@ -7,7 +7,6 @@ import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
 
-
 /**
  * TodoBase
  * auto generated base class for the model TodoModel.
@@ -30,12 +29,9 @@ export class TodoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get text() { return this.__attr(`text`) }
   get complete() { return this.__attr(`complete`) }
-
 }
-
 export function selectFromTodo() {
   return new TodoModelSelector()
 }
 
 export const todoModelPrimitives = selectFromTodo().text.complete
-

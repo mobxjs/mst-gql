@@ -7,7 +7,6 @@ import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
 
-
 /**
  * MovieBase
  * auto generated base class for the model MovieModel.
@@ -28,12 +27,9 @@ export const MovieModelBase = MSTGQLObject
 export class MovieModelSelector extends QueryBuilder {
   get description() { return this.__attr(`description`) }
   get director() { return this.__attr(`director`) }
-
 }
-
 export function selectFromMovie() {
   return new MovieModelSelector()
 }
 
 export const movieModelPrimitives = selectFromMovie().description.director
-

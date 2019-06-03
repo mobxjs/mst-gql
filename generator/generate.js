@@ -1,7 +1,6 @@
 const path = require("path")
 const fs = require("fs")
 const graphql = require("graphql")
-const { handleInterfaceOrUnionType } = require('./handleInterfaceOrUnionType')
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -89,7 +88,7 @@ function generate(
               return handleEnumType(type)
             case "INTERFACE":
             case "UNION":
-              return handleInterfaceOrUnionType(type, interfaceAndUnionTypes, modelsOnly, importPostFix, toExport, format, generateFile)
+              return handleInterfaceOrUnionType(type)
             default:
               throw new Error("Unhandled type: " + type.kind)
           }
@@ -150,14 +149,15 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
   }
 
   function handleObjectType(type) {
-    const name = type.name
-    toExport.push(name + "Model")
+    const { 
+      primitiveFields,
+      nonPrimitiveFields,
+      imports,
+      modelProperties,
+      refs 
+    } = resolveFieldsAndImports(type)
 
-    const directImports = []
-    const modelImports = []
-    let primitiveFields = []
-    let nonPrimitiveFields = []
-    let refs = []
+    const { name } = type
     const flowerName = toFirstLower(name)
 
     const entryFile = `\
@@ -182,22 +182,7 @@ export const ${name}Model = ${name}ModelBase
 ${exampleAction}
 `
 
-    const fields = type.fields
-      .filter(field => field.args.length === 0)
-      .map(field => handleField(field, modelImports))
-      .join("\n")
 
-    const typeImports = unique(modelImports)
-      .map(
-        i =>
-          // TODO: hacks! build better import system
-          `import { ${i} } from "./${i}${importPostFix}"${
-            modelsOnly || i === `${currentType}Model` // avoid importing self
-              ? ""
-              : `\nimport { ${i}Selector } from "./${i}.base${importPostFix}"`
-          }`
-      )
-      .join("\n")
 
     const modelFile = `\
 ${header}
@@ -205,8 +190,7 @@ ${header}
 import { types } from "mobx-state-tree"
 import { MSTGQLObject,${refs.length > 0 ? ' MSTGQLRef,' : ''} QueryBuilder } from "mst-gql"
 
-${directImports.map(([toBeImported, module]) => `import { ${toBeImported} } from "./${module}${importPostFix}"`).join("\n")}
-${typeImports}
+${imports.join("\n")}
 ${ifTS(`import { RootStore } from "./index${importPostFix}"`)}
 
 /**
@@ -220,7 +204,7 @@ export const ${name}ModelBase = MSTGQLObject
   .named('${name}')
   .props({
     __typename: types.optional(types.literal("${name}"), "${name}"),
-${fields}
+${modelProperties}
   })
   .views(self => ({
     get store() {
@@ -230,11 +214,76 @@ ${fields}
     }
   }))
 
-${generateFragments()}
+${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 `
 
+    toExport.push(name + "Model")
     generateFile(name + "Model.base", modelFile, true)
     generateFile(name + "Model", entryFile)
+  }
+
+  function handleInterfaceOrUnionType(type) {
+    // Only a model selector will be generated, not a mst model
+    // That is, interface/unions don't have a mst model
+    if (modelsOnly) return
+
+    const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
+
+    const { 
+      primitiveFields,
+      nonPrimitiveFields,
+      imports,
+    } = resolveFieldsAndImports(type)
+    
+    let contents = 'import { QueryBuilder } from "mst-gql"\n'
+    contents += interfaceOrUnionType.ofTypes
+      .map(
+        t =>
+          `import { ${t.name}ModelSelector, ${toFirstLower(
+            t.name
+          )}ModelPrimitives } from "./${t.name}Model.base${importPostFix}"`
+      )
+      .join("\n")
+
+    contents += imports.join("\n")
+    contents += `\n\n`
+    contents += generateFragments(type.name, primitiveFields, nonPrimitiveFields, interfaceOrUnionType)
+
+    toExport.push(type.name + "ModelSelector")
+    generateFile(type.name + "ModelSelector", contents)
+  }
+
+  function resolveFieldsAndImports(type) {
+
+    const directImports = []
+    const modelImports = []
+    const primitiveFields = []
+    const nonPrimitiveFields = []
+    const refs = []
+
+    let modelProperties = ""
+    if (type.fields) {
+      modelProperties = type.fields
+      .filter(field => field.args.length === 0)
+      .map(field => handleField(field, modelImports))
+      .join("\n")
+    }
+
+    const imports = unique(modelImports)
+      .map(
+        i =>
+          // TODO: hacks! build better import system
+          `import { ${i} } from "./${i}${importPostFix}"${
+            modelsOnly || i === `${currentType}Model` // avoid importing self
+              ? ""
+              : `\nimport { ${i}Selector } from "./${i}.base${importPostFix}"`
+          }`
+      )
+      .concat(
+        directImports.map(([toBeImported, module]) => `import { ${toBeImported} } from "./${module}${importPostFix}"`)
+      )
+
+    return { primitiveFields, nonPrimitiveFields, imports, modelProperties, refs }
 
     function handleField(field) {
       let r = ""
@@ -334,36 +383,78 @@ ${generateFragments()}
       })
       return `types.union(${mstUnionArgs.join(', ')})`
     }
+  }
 
-    function generateFragments() {
-      if (modelsOnly) return ""
-      return `\
-export class ${name}ModelSelector extends QueryBuilder {
-${primitiveFields
-  .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
-  .join("\n")}
-${nonPrimitiveFields
-  .map(
-    ([field, type]) =>
-      `  ${field}(builder${ifTS(
-        `?: string | ((${toFirstLower(
-          type
-        )}: ${type}ModelSelector) => ${type}ModelSelector | ${type}ModelSelector)`
-      )}) { return this.__child(\`${field}\`, ${type}ModelSelector, builder) }`
-  )
-  .join("\n")}
-}
+  function generateFragments(
+    name,
+    primitiveFields,
+    nonPrimitiveFields,
+    interfaceOrUnionType = null
+  ) {
+    if (modelsOnly) return ""
+    
+    let output = `export class ${name}ModelSelector extends QueryBuilder {\n`
+    output += primitiveFields
+      .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
+      .join("\n")
+    output += primitiveFields.length > 0 ? "\n" : ""
+    output += nonPrimitiveFields
+      .map(
+        ([field, fieldName]) => {
+          const selector = `${fieldName}ModelSelector`
+          let p = `  ${field}(builder`
+          p += ifTS(`?: string | ${selector} | ((selector: ${selector}) => ${selector})`)
+          p += `) { return this.__child(\`${field}\`, ${selector}, builder) }`
+          return p
+        })
+      .join("\n")
+    output += nonPrimitiveFields.length > 0 ? "\n" : ""
+    
+    if (interfaceOrUnionType) {
+      output += interfaceOrUnionType.ofTypes
+        .map(
+          subType => { 
+            const selector = `${subType.name}ModelSelector`
+            let p = `  ${toFirstLower(subType.name)}(builder`
+            p += ifTS(`?: string | ${selector} | ((selector: ${selector}) => ${selector})`)
+            p += `) { return this.__inlineFragment(\`${subType.name}\`, ${selector}, builder) }`
+            return p
+          })
+        .join("\n")
+        output += interfaceOrUnionType.ofTypes.length > 0 ? "\n" : ""
+    }
+    output += "}\n"
 
-export function selectFrom${name}() {
-  return new ${name}ModelSelector()
-}
+    output += `export function selectFrom${name}() {\n`
+    output += `  return new ${name}ModelSelector()\n`
+    output += "}\n\n"
 
-export const ${flowerName}ModelPrimitives = selectFrom${name}()${primitiveFields
+    const flowername = toFirstLower(name)
+    const modelPrimitives = `export const ${flowername}ModelPrimitives = selectFrom${name}()`
+
+    if (interfaceOrUnionType && interfaceOrUnionType.kind === "UNION") {
+      // for unions, select all primitive fields of member types
+      output +=
+        "// provides all primitive fields of union member types combined together\n"
+      output += modelPrimitives
+      output += interfaceOrUnionType.ofTypes
+        .map(
+          memberType =>
+            `.${toFirstLower(memberType.name)}(${toFirstLower(
+              memberType.name
+            )}ModelPrimitives)`
+        )
+        .join("")    
+    } else {
+      // for interaces and objects, select the defined fields
+      output += modelPrimitives
+      output += primitiveFields
         .filter(p => p !== "id") // id will be automatically inserted by the query generator
         .map(p => `.${p}`)
-        .join("")}
-`
+        .join("")
     }
+
+    return output
   }
 
   function generateRootStore() {

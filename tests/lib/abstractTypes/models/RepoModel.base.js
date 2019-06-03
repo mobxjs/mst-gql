@@ -9,7 +9,6 @@ import { UserModel } from "./UserModel"
 import { OrganizationModel } from "./OrganizationModel"
 
 
-
 /**
  * RepoBase
  * auto generated base class for the model RepoModel.
@@ -31,10 +30,8 @@ export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   owner(builder) { return this.__child(`owner`, OwnerModelSelector, builder) }
 }
-
 export function selectFromRepo() {
   return new RepoModelSelector()
 }
 
 export const repoModelPrimitives = selectFromRepo()
-

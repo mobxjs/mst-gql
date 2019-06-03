@@ -9,7 +9,6 @@ import { MovieModel } from "./MovieModel"
 import { BookModel } from "./BookModel"
 
 
-
 /**
  * SearchResultBase
  * auto generated base class for the model SearchResultModel.
@@ -31,10 +30,8 @@ export class SearchResultModelSelector extends QueryBuilder {
   get inputQuery() { return this.__attr(`inputQuery`) }
   items(builder) { return this.__child(`items`, SearchItemModelSelector, builder) }
 }
-
 export function selectFromSearchResult() {
   return new SearchResultModelSelector()
 }
 
 export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
-

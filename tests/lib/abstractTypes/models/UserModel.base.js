@@ -7,7 +7,6 @@ import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
 
-
 /**
  * UserBase
  * auto generated base class for the model UserModel.
@@ -30,12 +29,9 @@ export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get name() { return this.__attr(`name`) }
   get avatar() { return this.__attr(`avatar`) }
-
 }
-
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
 export const userModelPrimitives = selectFromUser().name.avatar
-
