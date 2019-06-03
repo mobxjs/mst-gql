@@ -14,7 +14,8 @@ export interface RequestHandler<T = any> {
 
 export const MSTGQLStore = types
   .model("MSTGQLStore", {
-    __queryCache: types.optional(types.map(types.frozen()), {})
+    __queryCache: types.optional(types.map(types.frozen()), {}),
+    __promises: types.optional(types.array(types.frozen()), [])
   })
   .actions(self => {
     const {
@@ -108,6 +109,14 @@ export const MSTGQLStore = types
       return () => sub.unsubscribe()
     }
 
+    function pushPromise(promise: Promise<{}>) {
+      self.__promises.push(promise)
+    }
+
+    function cleanPromises() {
+      self.__promises.clear()
+    }
+
     // exposed actions
     return {
       merge,
@@ -115,6 +124,8 @@ export const MSTGQLStore = types
       query,
       subscribe,
       rawRequest,
+      pushPromise,
+      cleanPromises,
       __runInStoreContext<T>(fn: () => T) {
         return fn()
       },

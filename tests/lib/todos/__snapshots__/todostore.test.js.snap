@@ -2,6 +2,7 @@
 
 exports[`todos.graphql tests it should be able to instantiate store and load initial data 1`] = `
 Object {
+  "__promises": Array [],
   "__queryCache": Object {},
   "todos": Object {
     "a": Object {

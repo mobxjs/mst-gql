@@ -5,7 +5,6 @@ import { DocumentNode, print } from "graphql"
 import { StoreType } from "./MSTGQLStore"
 import { getFirstValue } from "./utils"
 import { observable, action } from "mobx"
-import { refStructEnhancer } from "mobx/lib/internal"
 
 export type CaseHandlers<T, R> = {
   loading(): R
@@ -31,9 +30,9 @@ export class Query<T = unknown> implements PromiseLike<T> {
   @observable error: any = undefined
 
   public query: string
+  public promise!: Promise<T>
   private fetchPolicy: FetchPolicy
   private cacheKey: string
-  private promise!: Promise<T>
   private onResolve!: (data: T) => void
   private onReject!: (error: any) => void
 
