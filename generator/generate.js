@@ -1,6 +1,7 @@
 const path = require("path")
 const fs = require("fs")
 const graphql = require("graphql")
+const { handleInterfaceOrUnionType } = require('./handleInterfaceOrUnionType')
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -29,7 +30,7 @@ function generate(
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
-  const knownTypes = [] // all known types (including enums and such)  for which MST classes are generated
+  const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
   const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
 
@@ -37,7 +38,7 @@ function generate(
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
   const importPostFix = format === "mjs" ? ".mjs" : ""
 
-  resolveAbstractTypes(types)
+  const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
 
   generateTypes()
   generateRootStore()
@@ -53,8 +54,7 @@ function generate(
       .filter(
         type =>
           type.kind !== "SCALAR" &&
-          type.kind !== "INPUT_OBJECT" &&
-          type.kind !== "INTERFACE"
+          type.kind !== "INPUT_OBJECT"
       )
       .forEach(type => {
         knownTypes.push(type.name)
@@ -84,12 +84,12 @@ function generate(
         try {
           switch (type.kind) {
             case "OBJECT":
-            case "INTERFACE":
               return handleObjectType(type)
             case "ENUM":
               return handleEnumType(type)
+            case "INTERFACE":
             case "UNION":
-              return null
+              return handleInterfaceOrUnionType(type, interfaceAndUnionTypes, modelsOnly, importPostFix, toExport, format, generateFile)
             default:
               throw new Error("Unhandled type: " + type.kind)
           }
@@ -153,7 +153,8 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     const name = type.name
     toExport.push(name + "Model")
 
-    const imports = []
+    const directImports = []
+    const modelImports = []
     let primitiveFields = []
     let nonPrimitiveFields = []
     let refs = []
@@ -183,10 +184,10 @@ ${exampleAction}
 
     const fields = type.fields
       .filter(field => field.args.length === 0)
-      .map(field => handleField(field, imports))
+      .map(field => handleField(field, modelImports))
       .join("\n")
 
-    const typeImports = unique(imports)
+    const typeImports = unique(modelImports)
       .map(
         i =>
           // TODO: hacks! build better import system
@@ -202,10 +203,11 @@ ${exampleAction}
 ${header}
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLObject,${refs.length > 0 ? ' MSTGQLRef,' : ''} QueryBuilder } from "mst-gql"
 
+${directImports.map(([toBeImported, module]) => `import { ${toBeImported} } from "./${module}${importPostFix}"`).join("\n")}
 ${typeImports}
-import { RootStore } from "./index${importPostFix}"
+${ifTS(`import { RootStore } from "./index${importPostFix}"`)}
 
 /**
  * ${name}Base
@@ -271,7 +273,7 @@ ${generateFragments()}
             false // dont wrap contents in maybe
           )}), [])`
         case "ENUM":
-          imports.push(type.name + "Enum")
+          modelImports.push(type.name + "Enum")
           return wrap(`${type.name}Enum`, useMaybe, "types.maybe(", ")")
         case "INTERFACE":
         case "UNION":
@@ -279,8 +281,7 @@ ${generateFragments()}
               handleInterfaceOrUnionFieldType(fieldName, type), 
               useMaybe, 
               "types.maybe(", 
-              ")",
-              nonPrimitiveFields
+              ")"
             )
         default:
           throw new Error(
@@ -297,7 +298,7 @@ ${generateFragments()}
       if (!knownTypes.includes(type.name)) return `types.frozen()`
 
       // import the type
-      imports.push(type.name + "Model")
+      modelImports.push(type.name + "Model")
 
       // always using late prevents potential circular dependency issues between files
       const realType = `types.late(()${
@@ -316,21 +317,22 @@ ${generateFragments()}
       nonPrimitiveFields.push([fieldName, type.name])
   
       // import the type
-      imports.push(type.name + "Model")
+      const className = `${type.name}ModelSelector`
+      directImports.push([className, className])
       
-      const compoundedTypes = abstractTypeToCompoundTypes.get(type.name)
-      const unionArguments = compoundedTypes.map(t => {
+      const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
+      const mstUnionArgs = interfaceOrUnionType.ofTypes.map(t => {
         // Note that members of a union type need to be concrete object types; 
         // you can't create a union type out of interfaces or other unions.
-        const typeName = t.name + "Model"
-        imports.push(typeName)
+        const subTypeClassName = t.name + "Model"
+        directImports.push([subTypeClassName, subTypeClassName])
         const isSelf = type.name === currentType
         // always using late prevents potential circular dependency issues between files
         return `types.late(()${
           isSelf && format === "ts" ? ": any" : ""
-        } => ${typeName})`
+        } => ${subTypeClassName})`
       })
-      return `types.union(${unionArguments.join(', ')})`
+      return `types.union(${mstUnionArgs.join(', ')})`
     }
 
     function generateFragments() {
@@ -346,7 +348,7 @@ ${nonPrimitiveFields
       `  ${field}(builder${ifTS(
         `?: string | ((${toFirstLower(
           type
-        )}: ${type}ModelSelector) => ${type}ModelSelector)`
+        )}: ${type}ModelSelector) => ${type}ModelSelector | ${type}ModelSelector)`
       )}) { return this.__child(\`${field}\`, ${type}ModelSelector, builder) }`
   )
   .join("\n")}
@@ -359,7 +361,7 @@ export function selectFrom${name}() {
 export const ${flowerName}ModelPrimitives = selectFrom${name}()${primitiveFields
         .filter(p => p !== "id") // id will be automatically inserted by the query generator
         .map(p => `.${p}`)
-        .join("")}.toString()
+        .join("")}
 `
     }
   }
@@ -518,7 +520,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
               returnType.name
             }ModelSelector)`
           ) /* TODO or GQL object */
-        } = ${toFirstLower(returnType.name)}ModelPrimitives${extraFormalArgs}) {
+        } = ${toFirstLower(returnType.name)}ModelPrimitives.toString()${extraFormalArgs}) {
       return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
         \${typeof resultSelector === "function" ? resultSelector(new ${
           returnType.name
@@ -648,30 +650,34 @@ function getMstDefaultValue(type) {
   return res[type]
 }
 
-const abstractTypeToCompoundTypes = new Map()
-function resolveAbstractTypes(types) {
+function resolveInterfaceAndUnionTypes(types) {
   // This function: 
   // - inlines interfaces by spreading all the fields defined in interfaces into the object definitions themselves
-  // - maps unions to possibleTypes
-  // - maps interfaces to derived object types
+  // - returns a map of union and interfaces and each union and interface contains the member/derived types
+  const result = new Map()
   const interfaces = new Map()
-  const interfaceToDerivedObjectTypes = new Map()
-  const compoundNameToUnionNames = new Map()
+  const memberTypesToUnions = new Map()
   types.forEach(type => {
     if (type.kind === "INTERFACE") { 
       interfaces.set(type.name, type)
-      interfaceToDerivedObjectTypes.set(type.name, new Set())
     } else if (type.kind === "UNION") {
-      type.possibleTypes.forEach(possibleType => 
-        compoundNameToUnionNames.set(possibleType.name, type.name)
-      )
+      type.possibleTypes.forEach(possibleType => {       
+        if (memberTypesToUnions.has(possibleType.name)) {
+          const unions = memberTypesToUnions.get(possibleType.name)
+          unions.add(type)
+        } else {
+          memberTypesToUnions.set(possibleType.name, new Set([type]))
+        }
+      })
     }
   })
   types.forEach(type => {
     if (type.kind === "OBJECT") {
       type.interfaces.forEach(i => {
-        interfaceToDerivedObjectTypes.get(i.name).add(type)
-        interfaces.get(i.name).fields.forEach(interfaceField => {
+        const interfaceType = interfaces.get(i.name)
+        upsertInterfaceOrUnionType(interfaceType, type, result)
+        
+        interfaceType.fields.forEach(interfaceField => {
           if (
             !type.fields.some(
               objectField => objectField.name === interfaceField.name
@@ -680,19 +686,31 @@ function resolveAbstractTypes(types) {
             type.fields.push(interfaceField) // Note: is inlining necessary? Deriving objects need to define all interface properties?
         })
       })
-      if (compoundNameToUnionNames.has(type.name)) {
-        const unionName = compoundNameToUnionNames.get(type.name)
-        const compoundTypes = abstractTypeToCompoundTypes.has(unionName) 
-          ? abstractTypeToCompoundTypes.get(unionName) 
-          : []
-        compoundTypes.push(type)
-        abstractTypeToCompoundTypes.set(unionName, compoundTypes)
+      if (memberTypesToUnions.has(type.name)) {
+        memberTypesToUnions.get(type.name).forEach(union => 
+          upsertInterfaceOrUnionType(union, type, result)
+        )
       }
     }
   })
-  interfaceToDerivedObjectTypes.forEach((value, key) => 
-    abstractTypeToCompoundTypes.set(key, Array.from(value))
-  )
+
+  return result
+}
+function upsertInterfaceOrUnionType(type, subType, result) {
+  if (result.has(type.name)) {
+    const interfaceOrUnionType = result.get(type.name)
+    interfaceOrUnionType.ofTypes.push(subType)
+  } else {
+    const interfaceOrUnionType  = {
+      name: type.name,
+      kind: type.kind,
+      ofTypes: [ subType ]
+    }
+    if (type.kind === 'INTERFACE') {
+      interfaceOrUnionType.fields = type.fields
+    }
+    result.set(type.name, interfaceOrUnionType)
+  }
 }
 
 function sanitizeComment(comment) {

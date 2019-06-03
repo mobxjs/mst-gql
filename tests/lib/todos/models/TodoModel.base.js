@@ -2,10 +2,11 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
-import { RootStore } from "./index"
+
+
 
 /**
  * TodoBase
@@ -36,5 +37,5 @@ export function selectFromTodo() {
   return new TodoModelSelector()
 }
 
-export const todoModelPrimitives = selectFromTodo().text.complete.toString()
+export const todoModelPrimitives = selectFromTodo().text.complete
 

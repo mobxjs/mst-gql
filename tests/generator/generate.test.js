@@ -38,7 +38,7 @@ type User implements Owner {
   avatar: String!
 }
 type Organization implements Owner {
-id: ID!
+  id: ID!
   name: String!
   logo: String!
 }
@@ -54,6 +54,8 @@ type Query {
   )  
   expect(output).toMatchSnapshot()
 
+  expect(findFile(output, 'OwnerModelSelector')).toBeTruthy()
+
   const repoModelBase = findFile(output, 'RepoModel.base')
   expect(repoModelBase).toBeTruthy()
   expect(
@@ -64,34 +66,32 @@ type Query {
 test("union field type to work", () => {
   const output = scaffold(
     `
-type User {
-  searchPreviewText: String!
-  username: String!
-}
 type Movie {
-  searchPreviewText: String!
-  directory: String!
+  description: String!
+  director: String!
 }
 type Book {
-  searchPreviewText: String!
+  description: String!
   author: String!
 }
-union FoundItem = User | Movie | Book
+union SearchItem = Movie | Book
 type SearchResult {
-  input: String!
-  item: FoundItem
+  inputQuery: String!
+  items: [SearchItem]!
 }
 type Query {
-  search(text: String!): [SearchResult]!
+  search(text: String!): SearchResult!
 }
 `,
     { roots: ["SearchResult"] }
   )  
   expect(output).toMatchSnapshot()
   
+  expect(findFile(output, 'SearchItemModelSelector')).toBeTruthy()
+  
   const searchResultBase = findFile(output, 'SearchResultModel.base')
   expect(searchResultBase).toBeTruthy()
   expect(
-    hasFileContent(searchResultBase, 'item: types.maybe(types.union(types.late(() => UserModel), types.late(() => MovieModel), types.late(() => BookModel))),')
+    hasFileContent(searchResultBase, 'items: types.optional(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel))), []),')
   ).toBeTruthy()
 })

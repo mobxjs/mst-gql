@@ -9,7 +9,8 @@ Array [
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+
 
 
 import { RootStore } from \\"./index\\"
@@ -43,7 +44,7 @@ export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().name.avatar.toString()
+export const userModelPrimitives = selectFromUser().name.avatar
 
 ",
     true,
@@ -108,7 +109,7 @@ export const RootStoreBase = MSTGQLStore
     users: types.optional(types.map(types.late(() => UserModel)), {})
   })
   .actions(self => ({
-    queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives, options: QueryOptions = {}) {
+    queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof UserModel.Type>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
@@ -157,14 +158,12 @@ Array [
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 
-import { OwnerModel } from \\"./OwnerModel\\"
-import { OwnerModelSelector } from \\"./OwnerModel.base\\"
+import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
 import { UserModel } from \\"./UserModel\\"
-import { UserModelSelector } from \\"./UserModel.base\\"
 import { OrganizationModel } from \\"./OrganizationModel\\"
-import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+
 import { RootStore } from \\"./index\\"
 
 /**
@@ -186,14 +185,14 @@ export const RepoModelBase = MSTGQLObject
 
 export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
-  owner(builder?: string | ((owner: OwnerModelSelector) => OwnerModelSelector)) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
+  owner(builder?: string | ((owner: OwnerModelSelector) => OwnerModelSelector | OwnerModelSelector)) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
 }
 
 export function selectFromRepo() {
   return new RepoModelSelector()
 }
 
-export const repoModelPrimitives = selectFromRepo().toString()
+export const repoModelPrimitives = selectFromRepo()
 
 ",
     true,
@@ -222,13 +221,33 @@ export const RepoModel = RepoModelBase
     false,
   ],
   Array [
+    "OwnerModelSelector",
+    "import { QueryBuilder } from \\"mst-gql\\"
+import { UserModelSelector, userModelPrimitives } from \\"./UserModel.base\\"
+import { OrganizationModelSelector, organizationModelPrimitives } from \\"./OrganizationModel.base\\"
+
+export class OwnerModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get name() { return this.__attr(\`name\`) }
+  user(builder?: string | ((User: UserModelSelector) => UserModelSelector | UserModelSelector)) { return this.__inlineFragment(\`User\`, UserModelSelector, builder) }
+  organization(builder?: string | ((Organization: OrganizationModelSelector) => OrganizationModelSelector | OrganizationModelSelector)) { return this.__inlineFragment(\`Organization\`, OrganizationModelSelector, builder) }
+}
+export function selectFromOwner() {
+	return new OwnerModelSelector()
+}
+
+export const ownerModelPrimitives = selectFromOwner().name",
+    false,
+  ],
+  Array [
     "UserModel.base",
     "/* This is a mst-sql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+
 
 
 import { RootStore } from \\"./index\\"
@@ -262,7 +281,7 @@ export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().name.avatar.toString()
+export const userModelPrimitives = selectFromUser().name.avatar
 
 ",
     true,
@@ -297,7 +316,8 @@ export const UserModel = UserModelBase
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+
 
 
 import { RootStore } from \\"./index\\"
@@ -331,7 +351,7 @@ export function selectFromOrganization() {
   return new OrganizationModelSelector()
 }
 
-export const organizationModelPrimitives = selectFromOrganization().name.logo.toString()
+export const organizationModelPrimitives = selectFromOrganization().name.logo
 
 ",
     true,
@@ -400,7 +420,7 @@ export const RootStoreBase = MSTGQLStore
     repos: types.optional(types.map(types.late(() => RepoModel)), {})
   })
   .actions(self => ({
-    queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives, options: QueryOptions = {}) {
+    queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof RepoModel.Type>(\`query repo { repo {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
@@ -432,6 +452,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./RepoModel\\"
+export * from \\"./OwnerModelSelector\\"
 export * from \\"./UserModel\\"
 export * from \\"./OrganizationModel\\"
 export * from \\"./RootStore\\"
@@ -451,16 +472,12 @@ Array [
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 
-import { FoundItemModel } from \\"./FoundItemModel\\"
-import { FoundItemModelSelector } from \\"./FoundItemModel.base\\"
-import { UserModel } from \\"./UserModel\\"
-import { UserModelSelector } from \\"./UserModel.base\\"
+import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
 import { MovieModel } from \\"./MovieModel\\"
-import { MovieModelSelector } from \\"./MovieModel.base\\"
 import { BookModel } from \\"./BookModel\\"
-import { BookModelSelector } from \\"./BookModel.base\\"
+
 import { RootStore } from \\"./index\\"
 
 /**
@@ -471,8 +488,8 @@ export const SearchResultModelBase = MSTGQLObject
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
-    input: types.maybe(types.string),
-    item: types.maybe(types.union(types.late(() => UserModel), types.late(() => MovieModel), types.late(() => BookModel))),
+    inputQuery: types.maybe(types.string),
+    items: types.optional(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel))), []),
   })
   .views(self => ({
     get store() {
@@ -481,15 +498,15 @@ export const SearchResultModelBase = MSTGQLObject
   }))
 
 export class SearchResultModelSelector extends QueryBuilder {
-  get input() { return this.__attr(\`input\`) }
-  item(builder?: string | ((foundItem: FoundItemModelSelector) => FoundItemModelSelector)) { return this.__child(\`item\`, FoundItemModelSelector, builder) }
+  get inputQuery() { return this.__attr(\`inputQuery\`) }
+  items(builder?: string | ((searchItem: SearchItemModelSelector) => SearchItemModelSelector | SearchItemModelSelector)) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
 }
 
 export function selectFromSearchResult() {
   return new SearchResultModelSelector()
 }
 
-export const searchResultModelPrimitives = selectFromSearchResult().input.toString()
+export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
 
 ",
     true,
@@ -518,70 +535,21 @@ export const SearchResultModel = SearchResultModelBase
     false,
   ],
   Array [
-    "UserModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
-/* eslint-disable */
-/* tslint:disable */
+    "SearchItemModelSelector",
+    "import { QueryBuilder } from \\"mst-gql\\"
+import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
+import { BookModelSelector, bookModelPrimitives } from \\"./BookModel.base\\"
 
-import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
-
-
-import { RootStore } from \\"./index\\"
-
-/**
- * UserBase
- * auto generated base class for the model UserModel.
- */
-export const UserModelBase = MSTGQLObject
-  .named('User')
-  .props({
-    __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
-    searchPreviewText: types.maybe(types.string),
-    username: types.maybe(types.string),
-  })
-  .views(self => ({
-    get store() {
-      return self.__getStore<typeof RootStore.Type>()
-    }
-  }))
-
-export class UserModelSelector extends QueryBuilder {
-  get searchPreviewText() { return this.__attr(\`searchPreviewText\`) }
-  get username() { return this.__attr(\`username\`) }
-
+export class SearchItemModelSelector extends QueryBuilder {
+  movie(builder?: string | ((Movie: MovieModelSelector) => MovieModelSelector | MovieModelSelector)) { return this.__inlineFragment(\`Movie\`, MovieModelSelector, builder) }
+  book(builder?: string | ((Book: BookModelSelector) => BookModelSelector | BookModelSelector)) { return this.__inlineFragment(\`Book\`, BookModelSelector, builder) }
+}
+export function selectFromSearchItem() {
+	return new SearchItemModelSelector()
 }
 
-export function selectFromUser() {
-  return new UserModelSelector()
-}
-
-export const userModelPrimitives = selectFromUser().searchPreviewText.username.toString()
-
-",
-    true,
-  ],
-  Array [
-    "UserModel",
-    "import { UserModelBase } from \\"./UserModel.base\\"
-
-/* The TypeScript type of an instance of UserModel */
-export type UserModelType = typeof UserModel.Type
-
-/* A graphql query fragment builders for UserModel */
-export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
-
-/**
- * UserModel
- */
-export const UserModel = UserModelBase
-  .actions(self => ({
-    // This is an auto-generated example action.
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))
-",
+// provides all primitive fields of union member types combined together
+export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModelPrimitives).book(bookModelPrimitives)",
     false,
   ],
   Array [
@@ -591,7 +559,8 @@ export const UserModel = UserModelBase
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+
 
 
 import { RootStore } from \\"./index\\"
@@ -604,8 +573,8 @@ export const MovieModelBase = MSTGQLObject
   .named('Movie')
   .props({
     __typename: types.optional(types.literal(\\"Movie\\"), \\"Movie\\"),
-    searchPreviewText: types.maybe(types.string),
-    directory: types.maybe(types.string),
+    description: types.maybe(types.string),
+    director: types.maybe(types.string),
   })
   .views(self => ({
     get store() {
@@ -614,8 +583,8 @@ export const MovieModelBase = MSTGQLObject
   }))
 
 export class MovieModelSelector extends QueryBuilder {
-  get searchPreviewText() { return this.__attr(\`searchPreviewText\`) }
-  get directory() { return this.__attr(\`directory\`) }
+  get description() { return this.__attr(\`description\`) }
+  get director() { return this.__attr(\`director\`) }
 
 }
 
@@ -623,7 +592,7 @@ export function selectFromMovie() {
   return new MovieModelSelector()
 }
 
-export const movieModelPrimitives = selectFromMovie().searchPreviewText.directory.toString()
+export const movieModelPrimitives = selectFromMovie().description.director
 
 ",
     true,
@@ -658,7 +627,8 @@ export const MovieModel = MovieModelBase
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from \\"mst-gql\\"
+import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+
 
 
 import { RootStore } from \\"./index\\"
@@ -671,7 +641,7 @@ export const BookModelBase = MSTGQLObject
   .named('Book')
   .props({
     __typename: types.optional(types.literal(\\"Book\\"), \\"Book\\"),
-    searchPreviewText: types.maybe(types.string),
+    description: types.maybe(types.string),
     author: types.maybe(types.string),
   })
   .views(self => ({
@@ -681,7 +651,7 @@ export const BookModelBase = MSTGQLObject
   }))
 
 export class BookModelSelector extends QueryBuilder {
-  get searchPreviewText() { return this.__attr(\`searchPreviewText\`) }
+  get description() { return this.__attr(\`description\`) }
   get author() { return this.__attr(\`author\`) }
 
 }
@@ -690,7 +660,7 @@ export function selectFromBook() {
   return new BookModelSelector()
 }
 
-export const bookModelPrimitives = selectFromBook().searchPreviewText.author.toString()
+export const bookModelPrimitives = selectFromBook().description.author
 
 ",
     true,
@@ -744,8 +714,6 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
  import { SearchResultModel } from \\"./SearchResultModel\\"
  import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
- import { UserModel } from \\"./UserModel\\"
- import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
  import { MovieModel } from \\"./MovieModel\\"
  import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
  import { BookModel } from \\"./BookModel\\"
@@ -756,13 +724,13 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 */
 export const RootStoreBase = MSTGQLStore
   .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['User', () => UserModel], ['Movie', () => MovieModel], ['Book', () => BookModel]], ['SearchResult']))
+  .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel]], ['SearchResult']))
   .props({
     searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {})
   })
   .actions(self => ({
-    querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives, options: QueryOptions = {}) {
-      return self.query<typeof SearchResultModel.Type[]>(\`query search($text: String!) { search(text: $text) {
+    querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<typeof SearchResultModel.Type>(\`query search($text: String!) { search(text: $text) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },    
@@ -793,7 +761,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./SearchResultModel\\"
-export * from \\"./UserModel\\"
+export * from \\"./SearchItemModelSelector\\"
 export * from \\"./MovieModel\\"
 export * from \\"./BookModel\\"
 export * from \\"./RootStore\\"

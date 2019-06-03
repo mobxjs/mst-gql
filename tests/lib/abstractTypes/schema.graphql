@@ -1,0 +1,43 @@
+type Query {
+  search(text: String!): SearchResult!
+  getAllRepos: [Repo]
+}
+type Mutation {
+  addMovie(description: String!, director: String!): Movie
+  addRepo(name: String!, ownerName: String!, avatar: String, logo: String): Repo
+}
+
+# union types setup
+type Movie {
+  description: String!
+  director: String!
+}
+type Book {
+  description: String!
+  author: String!
+}
+union SearchItem = Movie | Book
+type SearchResult {
+  inputQuery: String!
+  items: [SearchItem]!
+}
+
+# interface types setup
+interface Owner {
+  id: ID!
+  name: String!
+}      
+type User implements Owner {
+  id: ID!
+  name: String!
+  avatar: String!
+}
+type Organization implements Owner {
+  id: ID!
+  name: String!
+  logo: String!
+}
+type Repo {
+  id: ID!
+  owner: Owner
+}

@@ -16,12 +16,12 @@ export const RootStoreBase = MSTGQLStore
     todos: types.optional(types.map(types.late(() => TodoModel)), {})
   })
   .actions(self => ({
-    queryTodos(variables, resultSelector = todoModelPrimitives, options = {}) {
+    queryTodos(variables, resultSelector = todoModelPrimitives.toString(), options = {}) {
       return self.query(`query todos { todos {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    mutateToggleTodo(variables, resultSelector = todoModelPrimitives, optimisticUpdate) {
+    mutateToggleTodo(variables, resultSelector = todoModelPrimitives.toString(), optimisticUpdate) {
       return self.mutate(`mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
