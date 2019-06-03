@@ -9,7 +9,7 @@
  *      name
  *    }
  * }
- * TODO: for now, just copy from generate.js what we need.. if it is okay, refactor later
+ * TODO: for now, just copy from generate.js what we need.. if this is okay, refactor later
  */
 const handleInterfaceOrUnionType = (
   type,

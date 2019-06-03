@@ -557,7 +557,6 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "LIST":
         return `${printTsType(type.ofType, true)}[]`
       case "ENUM":
-      case "INPUT_OBJECT":
       case "OBJECT":
         return type.name + (isRoot ? " | undefined" : "")
       case "SCALAR":
