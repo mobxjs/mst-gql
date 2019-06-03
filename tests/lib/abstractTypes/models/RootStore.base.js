@@ -37,11 +37,6 @@ export const RootStoreBase = MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    mutateAddMovie(variables, resultSelector = movieModelPrimitives.toString(), optimisticUpdate) {
-      return self.mutate(`mutation addMovie($description: String!, $director: String!) { addMovie(description: $description, director: $director) {
-        ${typeof resultSelector === "function" ? resultSelector(new MovieModelSelector()).toString() : resultSelector}
-      } }`, variables, optimisticUpdate)
-    },
     mutateAddRepo(variables, resultSelector = repoModelPrimitives.toString(), optimisticUpdate) {
       return self.mutate(`mutation addRepo($name: String!, $ownerName: String!, $avatar: String, $logo: String) { addRepo(name: $name, ownerName: $ownerName, avatar: $avatar, logo: $logo) {
         ${typeof resultSelector === "function" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}

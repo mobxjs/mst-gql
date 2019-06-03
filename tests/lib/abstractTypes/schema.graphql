@@ -3,7 +3,6 @@ type Query {
   getAllRepos: [Repo]
 }
 type Mutation {
-  addMovie(description: String!, director: String!): Movie
   addRepo(name: String!, ownerName: String!, avatar: String, logo: String): Repo
 }
 
