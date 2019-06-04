@@ -88,6 +88,11 @@ export class Query<T = unknown> implements PromiseLike<T> {
       this.onResolve = resolve
       this.onReject = reject
     })
+    .finally(() => {
+      this.store.ssr && this.store.unpushPromise(this.promise)
+    })
+
+    this.store.ssr && this.store.pushPromise(this.promise)
   }
 
   @action private onSuccess = (data: any) => {

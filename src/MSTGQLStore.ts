@@ -14,9 +14,19 @@ export interface RequestHandler<T = any> {
 
 export const MSTGQLStore = types
   .model("MSTGQLStore", {
-    __queryCache: types.optional(types.map(types.frozen()), {}),
-    __promises: types.optional(types.array(types.frozen()), [])
+    __queryCache: types.optional(types.map(types.frozen()), {})
   })
+  .volatile(((self): { ssr: boolean, __promises: Set<Promise<unknown>> } => {
+    const {
+      ssr = false
+    }: {
+      ssr: boolean
+    } = getEnv(self)
+    return {
+      __promises: new Set(),
+      ssr
+    }
+  }))
   .actions(self => {
     const {
       gqlHttpClient, // TODO: rename to requestHandler
@@ -99,22 +109,22 @@ export const MSTGQLStore = types
         .subscribe({
           next(data) {
             if (data.errors) throw new Error(JSON.stringify(data.errors))
-            ;(self as any).__runInStoreContext(() => {
-              const res = (self as any).merge(getFirstValue(data.data))
-              if (onData) onData(res)
-              return res
-            })
+              ; (self as any).__runInStoreContext(() => {
+                const res = (self as any).merge(getFirstValue(data.data))
+                if (onData) onData(res)
+                return res
+              })
           }
         })
       return () => sub.unsubscribe()
     }
 
     function pushPromise(promise: Promise<{}>) {
-      self.__promises.push(promise)
+      self.__promises.add(promise)
     }
 
-    function cleanPromises() {
-      self.__promises.clear()
+    function unpushPromise(promise: Promise<{}>) {
+      self.__promises.delete(promise)
     }
 
     // exposed actions
@@ -125,7 +135,7 @@ export const MSTGQLStore = types
       subscribe,
       rawRequest,
       pushPromise,
-      cleanPromises,
+      unpushPromise,
       __runInStoreContext<T>(fn: () => T) {
         return fn()
       },

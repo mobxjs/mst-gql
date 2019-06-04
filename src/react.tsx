@@ -1,5 +1,4 @@
 import { DocumentNode } from "graphql"
-import { renderToStaticMarkup } from "react-dom/server"
 
 import { Query, FetchPolicy } from "./Query"
 import { MSTGQLStore } from "./MSTGQLStore"
@@ -24,11 +23,10 @@ export async function getDataFromTree<STORE extends typeof MSTGQLStore.Type>(
   client: STORE,
   renderFunction: (
     tree: React.ReactElement<any>
-  ) => string = renderToStaticMarkup
+  ) => string = require("react-dom/server").renderToStaticMarkup
 ): Promise<string> {
   const html = renderFunction(tree)
-  await Promise.all(client.__promises as Promise<{}>[])
-  client.cleanPromises()
+  await Promise.all(client.__promises)
   return html
 }
 
@@ -47,19 +45,10 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
 ): Query<DATA> {
   if (typeof query === "function") return query(store)
   if (query instanceof Query) return query
-  if (typeof window === "undefined") {
-    const queryPromise = store.query<DATA>(query, variables, {
-      fetchPolicy: fetchPolicy,
-      raw: raw
-    })
-    store.pushPromise(queryPromise.promise)
-    return queryPromise
-  } else {
-    return store.query(query, variables, {
-      fetchPolicy: fetchPolicy,
-      raw: raw
-    })
-  }
+  return store.query(query, variables, {
+    fetchPolicy: fetchPolicy,
+    raw: raw
+  })
 }
 
 export type UseQueryHookOptions<STORE> = {
