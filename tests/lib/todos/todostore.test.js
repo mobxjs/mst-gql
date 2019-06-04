@@ -139,6 +139,8 @@ describe("todos.graphql tests", () => {
     )
 
     store.queryTodos()
+    expect(store.__promises.size).toBe(1)
+    expect(store.todos.size).toBe(1)
     await Promise.all(store.__promises)
     expect(store.todos.size).toBe(2)
     const todoB = store.todos.get("b")
