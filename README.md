@@ -332,9 +332,22 @@ export const TodoModel = TodoModelBase.actions(self => ({
 
 That's it for the introduction! For the many different ways in which the above can applied in practice, check out the [examples](#examples)
 
-### Server side rendering
+### Server side rendering with react
 
+There is an exported function called `getDataFromTree` which you can use to preload all queries, note that you must set `ssr: true` as an option in order for this to work
 
+```js
+ async function preload() {
+    const client = RootStore.create(undefined, {
+      gqlHttpClient: createHttpClient('http://localhost:4000/graphql'),
+      ssr: true
+    });
+    const html = await getDataFromTree(<App client={client} />, client);
+    const initalState = getSnapshot(client);
+
+    return [html, initalState];
+}
+```
 
 ---
 
