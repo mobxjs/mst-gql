@@ -3,10 +3,9 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, QueryBuilder } from "mst-gql"
-
-import { SearchItemModelSelector } from "./SearchItemModelSelector"
-import { MovieModel } from "./MovieModel"
 import { BookModel } from "./BookModel"
+import { MovieModel } from "./MovieModel"
+import { SearchItemModelSelector } from "./SearchItemModelSelector"
 
 
 /**

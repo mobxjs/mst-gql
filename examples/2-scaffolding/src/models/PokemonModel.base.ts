@@ -4,15 +4,15 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-import { PokemonDimensionModel } from "./PokemonDimensionModel"
-import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 import { PokemonAttackModel } from "./PokemonAttackModel"
 import { PokemonAttackModelSelector } from "./PokemonAttackModel.base"
-import { PokemonModel } from "./PokemonModel"
+import { PokemonDimensionModel } from "./PokemonDimensionModel"
+import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
 import { PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
+import { PokemonModel } from "./PokemonModel"
 import { RootStore } from "./index"
+
 
 /**
  * PokemonBase

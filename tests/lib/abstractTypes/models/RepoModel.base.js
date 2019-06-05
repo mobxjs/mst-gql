@@ -3,10 +3,9 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, QueryBuilder } from "mst-gql"
-
+import { OrganizationModel } from "./OrganizationModel"
 import { OwnerModelSelector } from "./OwnerModelSelector"
 import { UserModel } from "./UserModel"
-import { OrganizationModel } from "./OrganizationModel"
 
 
 /**

@@ -10,9 +10,8 @@ Array [
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
-
 import { RootStore } from \\"./index\\"
+
 
 /**
  * UserBase
@@ -155,11 +154,11 @@ Array [
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
+import { OrganizationModel } from \\"./OrganizationModel\\"
 import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
 import { UserModel } from \\"./UserModel\\"
-import { OrganizationModel } from \\"./OrganizationModel\\"
 import { RootStore } from \\"./index\\"
+
 
 /**
  * RepoBase
@@ -216,8 +215,8 @@ export const RepoModel = RepoModelBase
   Array [
     "OwnerModelSelector",
     "import { QueryBuilder } from \\"mst-gql\\"
-import { UserModelSelector, userModelPrimitives } from \\"./UserModel.base\\"
-import { OrganizationModelSelector, organizationModelPrimitives } from \\"./OrganizationModel.base\\"
+import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+import { UserModelSelector } from \\"./UserModel.base\\"
 
 export class OwnerModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -230,7 +229,7 @@ export function selectFromOwner() {
 }
 
 export const ownerModelPrimitives = selectFromOwner().name",
-    false,
+    true,
   ],
   Array [
     "UserModel.base",
@@ -240,9 +239,8 @@ export const ownerModelPrimitives = selectFromOwner().name",
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
-
 import { RootStore } from \\"./index\\"
+
 
 /**
  * UserBase
@@ -306,9 +304,8 @@ export const UserModel = UserModelBase
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
-
 import { RootStore } from \\"./index\\"
+
 
 /**
  * OrganizationBase
@@ -458,11 +455,11 @@ Array [
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
-import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
-import { MovieModel } from \\"./MovieModel\\"
 import { BookModel } from \\"./BookModel\\"
+import { MovieModel } from \\"./MovieModel\\"
+import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
 import { RootStore } from \\"./index\\"
+
 
 /**
  * SearchResultBase
@@ -519,8 +516,8 @@ export const SearchResultModel = SearchResultModelBase
   Array [
     "SearchItemModelSelector",
     "import { QueryBuilder } from \\"mst-gql\\"
-import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
 import { BookModelSelector, bookModelPrimitives } from \\"./BookModel.base\\"
+import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
 
 export class SearchItemModelSelector extends QueryBuilder {
   movie(builder?: string | MovieModelSelector | ((selector: MovieModelSelector) => MovieModelSelector)) { return this.__inlineFragment(\`Movie\`, MovieModelSelector, builder) }
@@ -532,7 +529,7 @@ export function selectFromSearchItem() {
 
 // provides all primitive fields of union member types combined together
 export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModelPrimitives).book(bookModelPrimitives)",
-    false,
+    true,
   ],
   Array [
     "MovieModel.base",
@@ -542,9 +539,8 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
-
 import { RootStore } from \\"./index\\"
+
 
 /**
  * MovieBase
@@ -606,9 +602,8 @@ export const MovieModel = MovieModelBase
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-
-
 import { RootStore } from \\"./index\\"
+
 
 /**
  * BookBase

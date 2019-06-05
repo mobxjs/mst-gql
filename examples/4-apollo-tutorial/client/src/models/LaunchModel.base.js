@@ -3,7 +3,6 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
 import { MissionModel } from "./MissionModel"
 import { MissionModelSelector } from "./MissionModel.base"
 import { RocketModel } from "./RocketModel"

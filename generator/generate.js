@@ -182,17 +182,16 @@ export const ${name}Model = ${name}ModelBase
 ${exampleAction}
 `
 
-
+    if (format === "ts") {
+      addImportToMap(imports, name + "Model.base", "index", "RootStore")
+    }
 
     const modelFile = `\
 ${header}
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject,${refs.length > 0 ? ' MSTGQLRef,' : ''} QueryBuilder } from "mst-gql"
-
-${imports.join("\n")}
-${ifTS(`import { RootStore } from "./index${importPostFix}"`)}
-
+${printRelativeImports(imports)}
 /**
  * ${name}Base
  * auto generated base class for the model ${name}Model.${optPrefix(
@@ -228,35 +227,41 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     if (modelsOnly) return
 
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
-
+    const isUnion = interfaceOrUnionType.kind === "UNION"
+    const fileName = type.name + "ModelSelector"
     const { 
       primitiveFields,
       nonPrimitiveFields,
       imports,
-    } = resolveFieldsAndImports(type)
-    
-    let contents = 'import { QueryBuilder } from "mst-gql"\n'
-    contents += interfaceOrUnionType.ofTypes
-      .map(
-        t =>
-          `import { ${t.name}ModelSelector, ${toFirstLower(
-            t.name
-          )}ModelPrimitives } from "./${t.name}Model.base${importPostFix}"`
-      )
-      .join("\n")
+    } = resolveFieldsAndImports(type, fileName)
 
-    contents += imports.join("\n")
-    contents += `\n\n`
+    interfaceOrUnionType.ofTypes
+      .forEach(t => {
+        const toBeImported = [`${t.name}ModelSelector`]
+        if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
+        addImportToMap(
+          imports,
+          fileName, 
+          `${t.name}Model.base`,
+          ...toBeImported
+        )
+      })
+
+    let contents = header + "\n\n"
+    contents = 'import { QueryBuilder } from "mst-gql"\n'
+    
+    contents += printRelativeImports(imports) 
     contents += generateFragments(type.name, primitiveFields, nonPrimitiveFields, interfaceOrUnionType)
 
-    toExport.push(type.name + "ModelSelector")
-    generateFile(type.name + "ModelSelector", contents)
+    toExport.push(fileName)
+    generateFile(fileName, contents, true)
   }
 
-  function resolveFieldsAndImports(type) {
+  function resolveFieldsAndImports(type, currentModuleName = `${currentType}Model.base`) {
 
-    const directImports = []
-    const modelImports = []
+    const imports = new Map()
+    const addImport = (moduleName, ...toBeImported) =>
+      addImportToMap(imports, currentModuleName, moduleName, ...toBeImported)
     const primitiveFields = []
     const nonPrimitiveFields = []
     const refs = []
@@ -265,23 +270,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     if (type.fields) {
       modelProperties = type.fields
       .filter(field => field.args.length === 0)
-      .map(field => handleField(field, modelImports))
+      .map(field => handleField(field))
       .join("\n")
     }
-
-    const imports = unique(modelImports)
-      .map(
-        i =>
-          // TODO: hacks! build better import system
-          `import { ${i} } from "./${i}${importPostFix}"${
-            modelsOnly || i === `${currentType}Model` // avoid importing self
-              ? ""
-              : `\nimport { ${i}Selector } from "./${i}.base${importPostFix}"`
-          }`
-      )
-      .concat(
-        directImports.map(([toBeImported, module]) => `import { ${toBeImported} } from "./${module}${importPostFix}"`)
-      )
 
     return { primitiveFields, nonPrimitiveFields, imports, modelProperties, refs }
 
@@ -297,11 +288,11 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       return r
     }
 
-    function handleFieldType(fieldName, type, useMaybe) {
-      switch (type.kind) {
+    function handleFieldType(fieldName, fieldType, useMaybe) {
+      switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
-          const primitiveType = primitiveToMstType(type.name)
+          const primitiveType = primitiveToMstType(fieldType.name)
           return wrap(
             `types.${primitiveType}`,
             useMaybe && primitiveType !== "identifier",
@@ -310,7 +301,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           )
         case "OBJECT":
           return wrap(
-            handleObjectFieldType(fieldName, type),
+            handleObjectFieldType(fieldName, fieldType),
             useMaybe,
             "types.maybe(",
             ")"
@@ -318,64 +309,73 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "LIST":
           return `types.optional(types.array(${handleFieldType(
             fieldName,
-            skipNonNull(type.ofType),
+            skipNonNull(fieldType.ofType),
             false // dont wrap contents in maybe
           )}), [])`
         case "ENUM":
-          modelImports.push(type.name + "Enum")
-          return wrap(`${type.name}Enum`, useMaybe, "types.maybe(", ")")
+          const enumType = fieldType.name + "Enum"
+          if (type.kind !== "UNION" && type.kind !== "INTERFACE") {  // TODO: import again when enums in query builders are supported
+            addImport(enumType, enumType)
+          }
+          return wrap(enumType, useMaybe, "types.maybe(", ")")
         case "INTERFACE":
         case "UNION":
             return wrap(
-              handleInterfaceOrUnionFieldType(fieldName, type), 
+              handleInterfaceOrUnionFieldType(fieldName, fieldType), 
               useMaybe, 
               "types.maybe(", 
               ")"
             )
         default:
           throw new Error(
-            `Failed to convert type ${JSON.stringify(type)}. PR Welcome!`
+            `Failed to convert type ${JSON.stringify(fieldType)}. PR Welcome!`
           )
       }
     }
 
-    function handleObjectFieldType(fieldName, type) {
-      nonPrimitiveFields.push([fieldName, type.name])
-      const isSelf = type.name === currentType
+    function handleObjectFieldType(fieldName, fieldType) {
+      nonPrimitiveFields.push([fieldName, fieldType.name])
+      const isSelf = fieldType.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
-      if (!knownTypes.includes(type.name)) return `types.frozen()`
+      if (!knownTypes.includes(fieldType.name)) return `types.frozen()`
 
       // import the type
-      modelImports.push(type.name + "Model")
+      const modelType = fieldType.name + "Model"
+      addImport(modelType, modelType)
+      if (!modelsOnly) {
+        addImport(`${modelType}.base`, `${modelType}Selector`)
+      }
 
       // always using late prevents potential circular dependency issues between files
       const realType = `types.late(()${
         isSelf && format === "ts" ? ": any" : ""
-      } => ${type.name}Model)`
+      } => ${fieldType.name}Model)`
 
       // this object is not a root type, so assume composition relationship
-      if (!isSelf && !rootTypes.includes(type.name)) return realType
+      if (!isSelf && !rootTypes.includes(fieldType.name)) return realType
 
       // the target is a root type, store a reference
-      refs.push([fieldName, type.name])
+      refs.push([fieldName, fieldType.name])
       return `MSTGQLRef(${realType})`
     }
 
-    function handleInterfaceOrUnionFieldType(fieldName, type) {
-      nonPrimitiveFields.push([fieldName, type.name])
+    function handleInterfaceOrUnionFieldType(fieldName, fieldType) {
+      nonPrimitiveFields.push([fieldName, fieldType.name])
   
       // import the type
-      const className = `${type.name}ModelSelector`
-      directImports.push([className, className])
+      const className = `${fieldType.name}ModelSelector`
+      addImport(className, className)
       
-      const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
+      const interfaceOrUnionType = interfaceAndUnionTypes.get(fieldType.name)
       const mstUnionArgs = interfaceOrUnionType.ofTypes.map(t => {
         // Note that members of a union type need to be concrete object types; 
         // you can't create a union type out of interfaces or other unions.
         const subTypeClassName = t.name + "Model"
-        directImports.push([subTypeClassName, subTypeClassName])
-        const isSelf = type.name === currentType
+        if (type.kind !== "INTERFACE" && type.kind !== "UNION") { // TODO: split field type resolvement from model properties output
+          addImport(subTypeClassName, subTypeClassName)
+        }
+        const isSelf = fieldType.name === currentType
         // always using late prevents potential circular dependency issues between files
         return `types.late(()${
           isSelf && format === "ts" ? ": any" : ""
@@ -650,6 +650,8 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "ENUM":
       case "OBJECT":
         return type.name + (isRoot ? " | undefined" : "")
+      case "INPUT_OBJECT":
+        return "any" // TODO: support input objects
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
       default:
@@ -706,6 +708,28 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
 
   function generateFile(name, contents, force = false) {
     files.push([name, contents, force])
+  }
+
+  function addImportToMap(importMap, currentModuleName, moduleName, ...toBeImported) {
+    if (moduleName !== currentModuleName) {
+      if (importMap.has(moduleName)) {
+        importMap.get(moduleName).add(...toBeImported)
+      } else {
+        importMap.set(moduleName, new Set(toBeImported))
+      }
+    }
+  }
+
+
+  function printRelativeImports(imports) {
+    const moduleNames = [ ...imports.keys() ].sort()
+    return moduleNames
+      .map(moduleName => {
+        const toBeImported = [ ...imports.get(moduleName) ].sort()
+        return `import { ${[...toBeImported].join(", ")} } from "./${moduleName}${importPostFix}"`
+      })
+      .join("\n")
+      + (moduleNames.length > 0 ? "\n\n" : "\n")
   }
 
   function ifTS(ifTSstr, notTSstr = "") {

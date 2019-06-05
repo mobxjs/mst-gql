@@ -4,10 +4,10 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-import { UserModel } from "./UserModel"
 import { MessageModel } from "./MessageModel"
+import { UserModel } from "./UserModel"
 import { RootStore } from "./index"
+
 
 /**
  * MessageBase

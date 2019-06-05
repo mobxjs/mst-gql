@@ -4,9 +4,8 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, QueryBuilder } from "mst-gql"
-
-
 import { RootStore } from "./index"
+
 
 /**
  * PokemonEvolutionRequirementBase

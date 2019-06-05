@@ -4,10 +4,10 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
 import { AttackModel } from "./AttackModel"
 import { AttackModelSelector } from "./AttackModel.base"
 import { RootStore } from "./index"
+
 
 /**
  * PokemonAttackBase

@@ -5,8 +5,6 @@ import { types } from "mobx-state-tree"
 import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
 
-
-
 /**
  * BookBase
  * auto generated base class for the model BookModel.

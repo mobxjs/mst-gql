@@ -1,6 +1,6 @@
 import { QueryBuilder } from "mst-gql"
-import { UserModelSelector, userModelPrimitives } from "./UserModel.base"
-import { OrganizationModelSelector, organizationModelPrimitives } from "./OrganizationModel.base"
+import { OrganizationModelSelector } from "./OrganizationModel.base"
+import { UserModelSelector } from "./UserModel.base"
 
 export class OwnerModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
@@ -9,7 +9,7 @@ export class OwnerModelSelector extends QueryBuilder {
   organization(builder) { return this.__inlineFragment(`Organization`, OrganizationModelSelector, builder) }
 }
 export function selectFromOwner() {
-	return new OwnerModelSelector()
+  return new OwnerModelSelector()
 }
 
 export const ownerModelPrimitives = selectFromOwner().name
