@@ -1,9 +1,10 @@
-import * as React from "react"
-import { useState, useContext, useRef, useCallback } from "react"
 import { DocumentNode } from "graphql"
 
 import { Query, FetchPolicy } from "./Query"
 import { MSTGQLStore } from "./MSTGQLStore"
+
+// import react namespace only; statement gets removed after transpiling
+declare var ReactNamespace: typeof import('react')
 
 export type QueryLike<STORE, DATA> =
   | ((store: STORE) => Query<DATA>)
@@ -11,7 +12,7 @@ export type QueryLike<STORE, DATA> =
   | string
   | DocumentNode
 
-export function createStoreContext<STORE extends typeof MSTGQLStore.Type>() {
+export function createStoreContext<STORE extends typeof MSTGQLStore.Type>(React: typeof ReactNamespace) {
   return React.createContext<STORE>(null as any)
 }
 
@@ -56,20 +57,21 @@ export type UseQueryHook<STORE> = <DATA>(
 ) => UseQueryHookResult<STORE, DATA>
 
 export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
-  context: React.Context<STORE>
+  context: React.Context<STORE>,
+  React: typeof ReactNamespace
 ): UseQueryHook<STORE> {
   return function<DATA>(
     queryIn: undefined | QueryLike<STORE, DATA> = undefined,
     opts: UseQueryHookOptions<STORE> = {}
   ) {
-    const store = (opts && opts.store) || useContext(context)
+    const store = (opts && opts.store) || React.useContext(context)
     // const prevData = useRef<DATA>() // TODO: is this useful?
-    const [query, setQuery] = useState<Query<DATA> | undefined>(() => {
+    const [query, setQuery] = React.useState<Query<DATA> | undefined>(() => {
       if (!queryIn) return undefined
       return normalizeQuery(store, queryIn, opts)
     })
 
-    const setQueryHelper = useCallback((newQuery: QueryLike<STORE, DATA>) => {
+    const setQueryHelper = React.useCallback((newQuery: QueryLike<STORE, DATA>) => {
       // if the current query had results already, save it in prevData
       // if (query && query.data) prevData.current = query.data
       setQuery(normalizeQuery(store, newQuery, opts))

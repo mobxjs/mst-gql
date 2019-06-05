@@ -9,8 +9,9 @@ const defaultConfig = {
   modelsOnly: false,
   outDir: "src/models",
   roots: [],
+  noReact: false,
 }
-''
+
 exports.getConfig = function getConfig(configPath) {
   let configLocation
   if (configPath) {
@@ -36,7 +37,7 @@ exports.getConfig = function getConfig(configPath) {
 exports.mergeConfigs = function mergeConfigs(args, config) {
   const format = args["--format"] || config.format
   const outDir = path.resolve(process.cwd(), args["--outDir"] || config.outDir)
-  const input = args._[0] || config.input,
+  const input = args._[0] || config.input
   const roots = args["--roots"]
     ? args["--roots"].split(",").map(s => s.trim())
     : config.roots
@@ -45,6 +46,8 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     : config.excludes
   const modelsOnly =!!args["--modelsOnly"] || config.modelsOnly
   const forceAll = !!args["--force"] || config.force
+  const noReact = !!args["--noReact"] || config.noReact
+
   return {
     format,
     outDir,

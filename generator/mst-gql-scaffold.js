@@ -14,7 +14,8 @@ const definition = {
   "--roots": String,
   "--excludes": String,
   "--modelsOnly": Boolean,
-  "--force": Boolean
+  "--force": Boolean,
+  "--noReact": Boolean
 }
 
 function main() {
@@ -32,7 +33,7 @@ function main() {
     throw e
   }
 
-  const { format, outDir, input, roots, excludes, modelsOnly, forceAll } = mergeConfigs(args, config);
+  const { format, outDir, input, roots, excludes, modelsOnly, forceAll, noReact } = mergeConfigs(args, config);
 
   console.log(
     path.basename(__filename) +
@@ -90,7 +91,8 @@ function main() {
     roots,
     excludes,
     new Date().toUTCString(),
-    modelsOnly
+    modelsOnly,
+    noReact
   )
   writeFiles(outDir, files, format, forceAll, true)
 }

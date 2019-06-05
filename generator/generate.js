@@ -22,7 +22,8 @@ function generate(
   rootTypes = [],
   excludes = [],
   generationDate = "a long long time ago...",
-  modelsOnly = false
+  modelsOnly = false,
+  noReact = false
 ) {
   excludes.push(...buildInExcludes)
 
@@ -40,7 +41,7 @@ function generate(
 
   generateTypes()
   generateRootStore()
-  if (!modelsOnly) {
+  if (!modelsOnly && !noReact) {
     generateReactUtils()
   }
   generateBarrelFile(files)
@@ -556,13 +557,14 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 ${header}
 
 import { createStoreContext, createUseQueryHook } from "mst-gql"
-import { RootStore } from "./RootStore${importPostFix}"
+import * as React from "react"
+${format === "ts" ? `import { RootStore } from "./RootStore${importPostFix}"` : ""}
 
 export const StoreContext = createStoreContext${
       format === "ts" ? `<typeof RootStore.Type>` : ""
-    }()
+    }(React)
 
-export const useQuery = createUseQueryHook(StoreContext)
+export const useQuery = createUseQueryHook(StoreContext, React)
 `
 
     generateFile("reactUtils", contents, true)
