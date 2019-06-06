@@ -169,7 +169,7 @@ const rootStore = RootStore.create(undefined, {
 // 4
 ReactDOM.render(
   <StoreContext.Provider value={rootStore}>
-    <Home />
+    <App />
   </StoreContext.Provider>,
   document.getElementById("root")
 )
