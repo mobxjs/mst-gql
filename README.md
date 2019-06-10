@@ -330,7 +330,7 @@ export const TodoModel = TodoModelBase.actions(self => ({
 }))
 ```
 
-That's it for the introduction! For the many different ways in which the above can applied in practice, check out the [examples](#examples)
+That's it for the introduction! For the many different ways in which the above can applied in practice, check out the [examples](#-examples-)
 
 ---
 
