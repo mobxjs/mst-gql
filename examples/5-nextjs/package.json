@@ -3,16 +3,17 @@
   "scripts": {
     "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
     "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Todo' --excludes 'CacheControlScope,Query,Subscription' --outDir src/models/ --format ts http://localhost:4000/graphql",
-    "build": "tsc",
-    "dev": "next",
-    "start": "next start"
+    "client:build": "next build",
+    "client:dev": "next",
+    "client:start": "next start",
+    "server:start": "node server"
   },
   "dependencies": {
-    "apollo-server-express": "^2.6.1",
+    "apollo-server": "^2.6.2",
+    "isomorphic-fetch": "^2.2.1",
     "mobx": "^5.9.4",
     "mobx-react": "^6.0.3",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "file:./my-package1559643209.tgz",
     "next": "^8.1.0"
   },
   "devDependencies": {
