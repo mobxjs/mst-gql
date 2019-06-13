@@ -33,7 +33,7 @@ function generate(
   const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
 
-  const header = `/* This is a mst-sql generated file, don't modify it manually */
+  const header = `/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
   const importPostFix = format === "mjs" ? ".mjs" : ""
 
