@@ -200,7 +200,7 @@ import { Error, Loading, Message } from "./"
 import { useQuery } from "../models/reactUtils"
 
 export const Home = observer(() => {
-  const { store, error, data } = useQuery(store => store.queryMessages())
+  const { store, error, loading, data } = useQuery(store => store.queryMessages())
   if (error) return <Error>{error.message}</Error>
   if (loading) return <Loading />
   return (
