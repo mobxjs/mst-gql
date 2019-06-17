@@ -510,7 +510,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return type.name
       default:
         throw new Error(
-          "Not implemented printTsType yet, PR welcome for " +
+          "Not implemented printGraphQLType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
     }
