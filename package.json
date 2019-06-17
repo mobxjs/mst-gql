@@ -66,6 +66,7 @@
   "dependencies": {
     "apollo": "^2.9.0",
     "arg": "^4.1.0",
+    "cosmiconfig": "^5.2.1",
     "fast-json-stable-stringify": "^2.0.0",
     "graphql": "^14.3.0",
     "graphql-request": "^1.8.2"

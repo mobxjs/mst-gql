@@ -1,5 +1,8 @@
 const { existsSync } = require("fs");
 const { resolve } = require("path");
+const cosmiconfig = require('cosmiconfig');
+
+const explorer = cosmiconfig('mst-gql');
 
 const defaultConfig = {
   excludes: [],
@@ -12,31 +15,19 @@ const defaultConfig = {
   noReact: false,
 }
 
-exports.getConfig = function getConfig(configPath) {
-  let configLocation
-  if (configPath) {
-    configLocation = resolve(process.cwd(), configPath)
-  } else {
-    if (existsSync(resolve(process.cwd(), 'mst-gql.config.json'))) {
-      configLocation = resolve(process.cwd(), 'mst-gql.config.json')
-    } else if (existsSync(resolve(process.cwd(), 'mst-gql.config.js'))) {
-      configLocation = resolve(process.cwd(), 'mst-gql.config.js')
-    } else {
-      return defaultConfig;
-    }
+exports.getConfig = function getConfig() {
+  try {
+    const result = explorer.searchSync();
+    return result ? result.config : defaultConfig;
+  } catch (e) {
+    console.error(e.message);
+    return defaultConfig;
   }
-
-  if (configLocation.endsWith('.json')) {
-    return JSON.parse(readFileSync(configLocation, 'utf-8'));
-  } else if (configLocation.endsWith('.js')) {
-    return require(configLocation);
-  }
-  return defaultConfig;
 }
 
 exports.mergeConfigs = function mergeConfigs(args, config) {
   const format = args["--format"] || config.format
-  const outDir = path.resolve(process.cwd(), args["--outDir"] || config.outDir)
+  const outDir = resolve(process.cwd(), args["--outDir"] || config.outDir)
   const input = args._[0] || config.input
   const roots = args["--roots"]
     ? args["--roots"].split(",").map(s => s.trim())

@@ -23,8 +23,7 @@ function main() {
 
   try {
     args = arg(definition)
-    const configPath = args["--config"]
-    config = getConfig(configPath)
+    config = getConfig()
   } catch (e) {
     console.error(
       "Example usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json\n, valid options: " +
