@@ -37,7 +37,7 @@ const typeDefs = `
   input CreateTodoInput {
     id: ID!,
     text: String!,
-    complete: Boolean!,
+    complete: Boolean,
   }
 `
 
@@ -53,8 +53,11 @@ const resolvers = {
       store.todos[args.id].complete = !store.todos[args.id].complete
       return store.todos[args.id]
     },
-    createTodo: (root, { todo }, context) => {
-      console.log('todo', todo)
+    createTodo: (root, args, context) => {
+      const todo = {
+        ...args.todo,
+        complete: !!args.todo.complete,
+      }
       store.todos.push(todo)
       return todo
     }
