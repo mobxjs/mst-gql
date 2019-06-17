@@ -26,11 +26,18 @@ const typeDefs = `
   }
   type Mutation {
     toggleTodo(id: ID!): Todo
+    createTodo(todo: CreateTodoInput!): Todo
   }
   type Todo {
     id: ID,
     text: String,
     complete: Boolean,
+  }
+
+  input CreateTodoInput {
+    id: ID!,
+    text: String!,
+    complete: Boolean!,
   }
 `
 
@@ -45,6 +52,11 @@ const resolvers = {
       const { id } = args
       store.todos[args.id].complete = !store.todos[args.id].complete
       return store.todos[args.id]
+    },
+    createTodo: (root, { todo }, context) => {
+      console.log('todo', todo)
+      store.todos.push(todo)
+      return todo
     }
   }
 }

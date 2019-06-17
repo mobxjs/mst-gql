@@ -509,10 +509,11 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "SCALAR":
         return type.name
       default:
-        throw new Error(
-          "Not implemented printGraphQLType yet, PR welcome for " +
+        console.warn(
+          "Not implemented printTsType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
+        return "any"
     }
   }
 
@@ -528,10 +529,11 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
       default:
-        throw new Error(
+        console.warn(
           "Not implemented printTsType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
+        return "any"
     }
   }
 
