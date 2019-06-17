@@ -509,11 +509,10 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "SCALAR":
         return type.name
       default:
-        console.warn(
+        throw new Error(
           "Not implemented printTsType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
-        return "any"
     }
   }
 
