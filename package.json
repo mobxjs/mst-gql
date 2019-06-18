@@ -15,7 +15,8 @@
   "scripts": {
     "test": "jest test && cd examples/2-scaffolding && yarn start",
     "watch": "jest test --watch",
-    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'"
+    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
     "@types/jest": "^24.0.13",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
+    "cz-conventional-changelog": "2.1.0",
     "graphql-tag": "^2.10.1",
     "jest": "^24.8.0",
     "microbundle": "^0.11.0",
@@ -72,5 +74,10 @@
   },
   "resolutions": {
     "graphql": "14.3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
