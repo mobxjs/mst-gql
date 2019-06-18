@@ -52,6 +52,16 @@ jobs:
 
       - run: yarn test
 
+  release:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run: yarn install
+      # Run optional required steps before releasing
+      # - run: npm run build-script
+      - run: npx semantic-release
+
 workflows:
   version: 2
   build-and-test:
@@ -61,3 +71,6 @@ workflows:
       - test-dev:
           requires:
             - build
+      - release:
+          requires:
+            - test-dev
