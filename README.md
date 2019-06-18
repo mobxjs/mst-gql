@@ -637,6 +637,7 @@ yarn build
 After that, run the following in the example directory
 
 ```
+yarn global add realpath # not needed for Linux users
 yarn
 yarn start
 ```
