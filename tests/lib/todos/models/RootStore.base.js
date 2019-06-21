@@ -3,8 +3,8 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 
- import { TodoModel } from "./TodoModel"
- import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
+import { TodoModel } from "./TodoModel"
+import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 
 /**
 * Store, managing, among others, all the objects received through graphQL

@@ -91,8 +91,8 @@ export const RootStore = RootStoreBase
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
- import { UserModel } from \\"./UserModel\\"
- import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+import { UserModel } from \\"./UserModel\\"
+import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -148,7 +148,7 @@ exports[`interface field type to work 1`] = `
 Array [
   Array [
     "RepoModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -213,27 +213,8 @@ export const RepoModel = RepoModelBase
     false,
   ],
   Array [
-    "OwnerModelSelector",
-    "import { QueryBuilder } from \\"mst-gql\\"
-import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
-import { UserModelSelector } from \\"./UserModel.base\\"
-
-export class OwnerModelSelector extends QueryBuilder {
-  get id() { return this.__attr(\`id\`) }
-  get name() { return this.__attr(\`name\`) }
-  user(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__inlineFragment(\`User\`, UserModelSelector, builder) }
-  organization(builder?: string | OrganizationModelSelector | ((selector: OrganizationModelSelector) => OrganizationModelSelector)) { return this.__inlineFragment(\`Organization\`, OrganizationModelSelector, builder) }
-}
-export function selectFromOwner() {
-  return new OwnerModelSelector()
-}
-
-export const ownerModelPrimitives = selectFromOwner().name",
-    true,
-  ],
-  Array [
     "UserModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -298,7 +279,7 @@ export const UserModel = UserModelBase
   ],
   Array [
     "OrganizationModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -379,18 +360,18 @@ export const RootStore = RootStoreBase
   ],
   Array [
     "RootStore.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
- import { RepoModel } from \\"./RepoModel\\"
- import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
- import { UserModel } from \\"./UserModel\\"
- import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
- import { OrganizationModel } from \\"./OrganizationModel\\"
- import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+import { RepoModel } from \\"./RepoModel\\"
+import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
+import { UserModel } from \\"./UserModel\\"
+import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+import { OrganizationModel } from \\"./OrganizationModel\\"
+import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -413,7 +394,7 @@ export const RootStoreBase = MSTGQLStore
   ],
   Array [
     "reactUtils",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -429,12 +410,11 @@ export const useQuery = createUseQueryHook(StoreContext, React)
   ],
   Array [
     "index",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 export * from \\"./RepoModel\\"
-export * from \\"./OwnerModelSelector\\"
 export * from \\"./UserModel\\"
 export * from \\"./OrganizationModel\\"
 export * from \\"./RootStore\\"
@@ -449,7 +429,7 @@ exports[`union field type to work 1`] = `
 Array [
   Array [
     "SearchResultModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -533,7 +513,7 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
   ],
   Array [
     "MovieModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -596,7 +576,7 @@ export const MovieModel = MovieModelBase
   ],
   Array [
     "BookModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -675,18 +655,18 @@ export const RootStore = RootStoreBase
   ],
   Array [
     "RootStore.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
- import { SearchResultModel } from \\"./SearchResultModel\\"
- import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
- import { MovieModel } from \\"./MovieModel\\"
- import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
- import { BookModel } from \\"./BookModel\\"
- import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+import { SearchResultModel } from \\"./SearchResultModel\\"
+import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
+import { MovieModel } from \\"./MovieModel\\"
+import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
+import { BookModel } from \\"./BookModel\\"
+import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -709,7 +689,7 @@ export const RootStoreBase = MSTGQLStore
   ],
   Array [
     "reactUtils",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -725,7 +705,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
   ],
   Array [
     "index",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 

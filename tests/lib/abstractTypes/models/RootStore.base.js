@@ -1,20 +1,20 @@
-/* This is a mst-sql generated file, don't modify it manually */
+/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 
- import { SearchResultModel } from "./SearchResultModel"
- import { searchResultModelPrimitives, SearchResultModelSelector } from "./SearchResultModel.base"
- import { MovieModel } from "./MovieModel"
- import { movieModelPrimitives, MovieModelSelector } from "./MovieModel.base"
- import { BookModel } from "./BookModel"
- import { bookModelPrimitives, BookModelSelector } from "./BookModel.base"
- import { RepoModel } from "./RepoModel"
- import { repoModelPrimitives, RepoModelSelector } from "./RepoModel.base"
- import { UserModel } from "./UserModel"
- import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
- import { OrganizationModel } from "./OrganizationModel"
- import { organizationModelPrimitives, OrganizationModelSelector } from "./OrganizationModel.base"
+import { SearchResultModel } from "./SearchResultModel"
+import { searchResultModelPrimitives, SearchResultModelSelector } from "./SearchResultModel.base"
+import { MovieModel } from "./MovieModel"
+import { movieModelPrimitives, MovieModelSelector } from "./MovieModel.base"
+import { BookModel } from "./BookModel"
+import { bookModelPrimitives, BookModelSelector } from "./BookModel.base"
+import { RepoModel } from "./RepoModel"
+import { repoModelPrimitives, RepoModelSelector } from "./RepoModel.base"
+import { UserModel } from "./UserModel"
+import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
+import { OrganizationModel } from "./OrganizationModel"
+import { organizationModelPrimitives, OrganizationModelSelector } from "./OrganizationModel.base"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
