@@ -1,4 +1,4 @@
-# Installs mst-sql in the current directory
+# Installs mst-gql in the current directory
 # this file exists because of https://github.com/yarnpkg/yarn/issues/5357, once a tarball is installed, it is cached *FOREVER*
 set -e
 

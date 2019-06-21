@@ -4,7 +4,7 @@ exports[`basic scaffolding to work 1`] = `
 Array [
   Array [
     "UserModel.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -85,7 +85,7 @@ export const RootStore = RootStoreBase
   ],
   Array [
     "RootStore.base",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 import { types } from \\"mobx-state-tree\\"
@@ -115,7 +115,7 @@ export const RootStoreBase = MSTGQLStore
   ],
   Array [
     "reactUtils",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
@@ -131,7 +131,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
   ],
   Array [
     "index",
-    "/* This is a mst-sql generated file, don't modify it manually */
+    "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 

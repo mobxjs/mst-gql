@@ -6,7 +6,7 @@ This example demonstrates a simple mst-gql project (without scaffolding set up)
 
 ## Usage
 
-#### 0. Build mst-sql
+#### 0. Build mst-gql
 
 ```bash
 yarn build-mst-gql

@@ -29,11 +29,12 @@ function generate(
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
+  const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
   const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
 
-  const header = `/* This is a mst-sql generated file, don't modify it manually */
+  const header = `/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
   const importPostFix = format === "mjs" ? ".mjs" : ""
 
@@ -53,11 +54,13 @@ function generate(
       .filter(
         type =>
           type.kind !== "SCALAR" &&
-          type.kind !== "INPUT_OBJECT"
+          type.kind !== "INPUT_OBJECT" &&
+          type.kind !== "INTERFACE"
       )
       .forEach(type => {
         knownTypes.push(type.name)
         if (type.kind === "OBJECT") objectTypes.push(type.name)
+        else if (type.kind === "INPUT_OBJECT") inputTypes.push(type)
       })
 
     if (!rootTypes.length) {
@@ -89,6 +92,8 @@ function generate(
             case "INTERFACE":
             case "UNION":
               return handleInterfaceOrUnionType(type)
+            case "INPUT_OBJECT":
+              return
             default:
               throw new Error("Unhandled type: " + type.kind)
           }
@@ -477,22 +482,25 @@ import { MSTGQLStore, configureStoreMixin${
       format === "ts" ? ", QueryOptions" : ""
     } } from "mst-gql"
 ${
-  objectTypes.length === 0
-    ? ``
-    : objectTypes
-        .map(
-          t =>
-            `\n import { ${t}Model } from "./${t}Model${importPostFix}"${
-              modelsOnly
-                ? ""
-                : `\n import { ${toFirstLower(
-                    t
-                  )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
-            }`
-        )
-        .join("")
+  objectTypes.map(
+      t =>
+        `\nimport { ${t}Model } from "./${t}Model${importPostFix}"${
+          modelsOnly
+            ? ""
+            : `\nimport { ${toFirstLower(
+                t
+              )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
+        }`
+    )
+    .join("")
 }
-
+${
+  inputTypes.map(t => `\nexport type ${t.name} = {\n${
+    t.inputFields.map(field =>
+      `  ${field.name}: ${printTsType(field.type)}`
+    ).join('\n')
+  }\n}`).join("")
+}
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -658,11 +666,14 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return "any" // TODO: support input objects and enum types
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
+      case "INPUT_OBJECT":
+        return type.name + (isRoot ? " | undefined" : "")
       default:
-        throw new Error(
+        console.warn(
           "Not implemented printTsType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
+        return "any"
     }
   }
 
