@@ -19,16 +19,40 @@ export abstract class QueryBuilder {
   protected __child<T extends QueryBuilder>(
     childName: string,
     childType: new () => T,
-    builder?: string | ((q: T) => T)
+    builder?: string | ((q: T) => T) | T
   ): this {
     this._(`${childName} {\n`)
-    const childBuilder = new childType()
-    if (typeof builder === "string") childBuilder._(builder)
-    else if (typeof builder === "function") builder(childBuilder)
-    // undefined is ok as well, no fields at all
-    this._(childBuilder.toString())
+    this.__buildChild(childType, builder)
     this._(`}`)
     return this
+  }
+
+  // used for interfaces and unions
+  protected __inlineFragment<T extends QueryBuilder>(
+    childName: string,
+    childType: new () => T,
+    builder?: string | ((q: T) => T) | T
+  ) {
+    this._(`... on ${childName} {\n`)
+    this.__buildChild(childType, builder)
+    this._(`}`)
+    return this
+  }
+
+  protected __buildChild<T extends QueryBuilder>(
+    childType: new () => T,
+    builder?: string | ((q: T) => T) | T
+  ) {
+    // already instantiated child builder
+    if (builder instanceof QueryBuilder) {
+      this._(builder.toString())
+    } else {
+      const childBuilder = new childType()
+      if (typeof builder === "string") childBuilder._(builder)
+      else if (typeof builder === "function") builder(childBuilder)
+      // undefined is ok as well, no fields at all
+      this._(childBuilder.toString())
+    }
   }
 
   public toString() {

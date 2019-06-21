@@ -4,15 +4,15 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-import { PokemonDimensionModel } from "./PokemonDimensionModel"
-import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 import { PokemonAttackModel } from "./PokemonAttackModel"
 import { PokemonAttackModelSelector } from "./PokemonAttackModel.base"
-import { PokemonModel } from "./PokemonModel"
+import { PokemonDimensionModel } from "./PokemonDimensionModel"
+import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
 import { PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
+import { PokemonModel } from "./PokemonModel"
 import { RootStore } from "./index"
+
 
 /**
  * PokemonBase
@@ -73,16 +73,14 @@ export class PokemonModelSelector extends QueryBuilder {
   get maxCP() { return this.__attr(`maxCP`) }
   get maxHP() { return this.__attr(`maxHP`) }
   get image() { return this.__attr(`image`) }
-  weight(builder?: string | ((pokemonDimension: PokemonDimensionModelSelector) => PokemonDimensionModelSelector)) { return this.__child(`weight`, PokemonDimensionModelSelector, builder) }
-  height(builder?: string | ((pokemonDimension: PokemonDimensionModelSelector) => PokemonDimensionModelSelector)) { return this.__child(`height`, PokemonDimensionModelSelector, builder) }
-  attacks(builder?: string | ((pokemonAttack: PokemonAttackModelSelector) => PokemonAttackModelSelector)) { return this.__child(`attacks`, PokemonAttackModelSelector, builder) }
-  evolutions(builder?: string | ((pokemon: PokemonModelSelector) => PokemonModelSelector)) { return this.__child(`evolutions`, PokemonModelSelector, builder) }
-  evolutionRequirements(builder?: string | ((pokemonEvolutionRequirement: PokemonEvolutionRequirementModelSelector) => PokemonEvolutionRequirementModelSelector)) { return this.__child(`evolutionRequirements`, PokemonEvolutionRequirementModelSelector, builder) }
+  weight(builder?: string | PokemonDimensionModelSelector | ((selector: PokemonDimensionModelSelector) => PokemonDimensionModelSelector)) { return this.__child(`weight`, PokemonDimensionModelSelector, builder) }
+  height(builder?: string | PokemonDimensionModelSelector | ((selector: PokemonDimensionModelSelector) => PokemonDimensionModelSelector)) { return this.__child(`height`, PokemonDimensionModelSelector, builder) }
+  attacks(builder?: string | PokemonAttackModelSelector | ((selector: PokemonAttackModelSelector) => PokemonAttackModelSelector)) { return this.__child(`attacks`, PokemonAttackModelSelector, builder) }
+  evolutions(builder?: string | PokemonModelSelector | ((selector: PokemonModelSelector) => PokemonModelSelector)) { return this.__child(`evolutions`, PokemonModelSelector, builder) }
+  evolutionRequirements(builder?: string | PokemonEvolutionRequirementModelSelector | ((selector: PokemonEvolutionRequirementModelSelector) => PokemonEvolutionRequirementModelSelector)) { return this.__child(`evolutionRequirements`, PokemonEvolutionRequirementModelSelector, builder) }
 }
-
 export function selectFromPokemon() {
   return new PokemonModelSelector()
 }
 
-export const pokemonModelPrimitives = selectFromPokemon().number.name.classification.types.resistant.weaknesses.fleeRate.maxCP.maxHP.image.toString()
-
+export const pokemonModelPrimitives = selectFromPokemon().number.name.classification.types.resistant.weaknesses.fleeRate.maxCP.maxHP.image
