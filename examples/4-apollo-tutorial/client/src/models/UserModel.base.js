@@ -3,10 +3,9 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
 import { LaunchModel } from "./LaunchModel"
 import { LaunchModelSelector } from "./LaunchModel.base"
-import { RootStore } from "./index"
+
 
 /**
  * UserBase
@@ -31,10 +30,8 @@ export class UserModelSelector extends QueryBuilder {
   get email() { return this.__attr(`email`) }
   trips(builder) { return this.__child(`trips`, LaunchModelSelector, builder) }
 }
-
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().id.email.toString()
-
+export const userModelPrimitives = selectFromUser().email

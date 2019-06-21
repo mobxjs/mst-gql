@@ -3,10 +3,9 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 import { RootStore } from "./index"
+
 
 /**
  * PokemonDimensionBase
@@ -32,12 +31,9 @@ export const PokemonDimensionModelBase = MSTGQLObject
 export class PokemonDimensionModelSelector extends QueryBuilder {
   get minimum() { return this.__attr(`minimum`) }
   get maximum() { return this.__attr(`maximum`) }
-
 }
-
 export function selectFromPokemonDimension() {
   return new PokemonDimensionModelSelector()
 }
 
-export const pokemonDimensionModelPrimitives = selectFromPokemonDimension().minimum.maximum.toString()
-
+export const pokemonDimensionModelPrimitives = selectFromPokemonDimension().minimum.maximum

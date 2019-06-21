@@ -3,10 +3,9 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 import { RootStore } from "./index"
+
 
 /**
  * PokemonEvolutionRequirementBase
@@ -32,12 +31,9 @@ export const PokemonEvolutionRequirementModelBase = MSTGQLObject
 export class PokemonEvolutionRequirementModelSelector extends QueryBuilder {
   get amount() { return this.__attr(`amount`) }
   get name() { return this.__attr(`name`) }
-
 }
-
 export function selectFromPokemonEvolutionRequirement() {
   return new PokemonEvolutionRequirementModelSelector()
 }
 
-export const pokemonEvolutionRequirementModelPrimitives = selectFromPokemonEvolutionRequirement().amount.name.toString()
-
+export const pokemonEvolutionRequirementModelPrimitives = selectFromPokemonEvolutionRequirement().amount.name

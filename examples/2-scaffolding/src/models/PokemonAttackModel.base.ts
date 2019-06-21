@@ -4,10 +4,10 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
 import { AttackModel } from "./AttackModel"
 import { AttackModelSelector } from "./AttackModel.base"
 import { RootStore } from "./index"
+
 
 /**
  * PokemonAttackBase
@@ -31,14 +31,11 @@ export const PokemonAttackModelBase = MSTGQLObject
   }))
 
 export class PokemonAttackModelSelector extends QueryBuilder {
-
-  fast(builder?: string | ((attack: AttackModelSelector) => AttackModelSelector)) { return this.__child(`fast`, AttackModelSelector, builder) }
-  special(builder?: string | ((attack: AttackModelSelector) => AttackModelSelector)) { return this.__child(`special`, AttackModelSelector, builder) }
+  fast(builder?: string | AttackModelSelector | ((selector: AttackModelSelector) => AttackModelSelector)) { return this.__child(`fast`, AttackModelSelector, builder) }
+  special(builder?: string | AttackModelSelector | ((selector: AttackModelSelector) => AttackModelSelector)) { return this.__child(`special`, AttackModelSelector, builder) }
 }
-
 export function selectFromPokemonAttack() {
   return new PokemonAttackModelSelector()
 }
 
-export const pokemonAttackModelPrimitives = selectFromPokemonAttack().toString()
-
+export const pokemonAttackModelPrimitives = selectFromPokemonAttack()

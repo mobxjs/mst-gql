@@ -4,9 +4,14 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
- import { TodoModel } from "./TodoModel"
- import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
+import { TodoModel } from "./TodoModel"
+import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 
+export type CreateTodoInput = {
+  id: string
+  text: string
+  complete: boolean | undefined
+}
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -17,13 +22,18 @@ export const RootStoreBase = MSTGQLStore
     todos: types.optional(types.map(types.late(() => TodoModel)), {})
   })
   .actions(self => ({
-    queryTodos(variables?: {  }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives, options: QueryOptions = {}) {
+    queryTodos(variables?: {  }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof TodoModel.Type[]>(`query todos { todos {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    mutateToggleTodo(variables: { id: string }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives, optimisticUpdate?: () => void) {
+    mutateToggleTodo(variables: { id: string }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<typeof TodoModel.Type>(`mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {
+        ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
+    mutateCreateTodo(variables: { todo: CreateTodoInput }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives, optimisticUpdate?: () => void) {
+      return self.mutate<typeof TodoModel.Type>(`mutation createTodo($todo: CreateTodoInput!) { createTodo(todo: $todo) {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },    

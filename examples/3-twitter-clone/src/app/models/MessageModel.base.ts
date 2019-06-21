@@ -4,11 +4,11 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
+import { MessageModel } from "./MessageModel"
 import { UserModel } from "./UserModel"
 import { UserModelSelector } from "./UserModel.base"
-import { MessageModel } from "./MessageModel"
 import { RootStore } from "./index"
+
 
 /**
  * MessageBase
@@ -35,14 +35,12 @@ export class MessageModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get timestamp() { return this.__attr(`timestamp`) }
   get text() { return this.__attr(`text`) }
-  user(builder?: string | ((user: UserModelSelector) => UserModelSelector)) { return this.__child(`user`, UserModelSelector, builder) }
-  likes(builder?: string | ((user: UserModelSelector) => UserModelSelector)) { return this.__child(`likes`, UserModelSelector, builder) }
-  replyTo(builder?: string | ((message: MessageModelSelector) => MessageModelSelector)) { return this.__child(`replyTo`, MessageModelSelector, builder) }
+  user(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__child(`user`, UserModelSelector, builder) }
+  likes(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__child(`likes`, UserModelSelector, builder) }
+  replyTo(builder?: string | MessageModelSelector | ((selector: MessageModelSelector) => MessageModelSelector)) { return this.__child(`replyTo`, MessageModelSelector, builder) }
 }
-
 export function selectFromMessage() {
   return new MessageModelSelector()
 }
 
-export const messageModelPrimitives = selectFromMessage().timestamp.text.toString()
-
+export const messageModelPrimitives = selectFromMessage().timestamp.text
