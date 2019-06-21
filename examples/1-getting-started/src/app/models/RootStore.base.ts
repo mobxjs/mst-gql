@@ -4,9 +4,14 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
- import { TodoModel } from "./TodoModel"
- import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
+import { TodoModel } from "./TodoModel"
+import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 
+export type CreateTodoInput = {
+  id: string
+  text: string
+  complete: boolean | undefined
+}
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -24,6 +29,11 @@ export const RootStoreBase = MSTGQLStore
     },
     mutateToggleTodo(variables: { id: string }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives, optimisticUpdate?: () => void) {
       return self.mutate<typeof TodoModel.Type>(`mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {
+        ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
+      } }`, variables, optimisticUpdate)
+    },
+    mutateCreateTodo(variables: { todo: CreateTodoInput }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives, optimisticUpdate?: () => void) {
+      return self.mutate<typeof TodoModel.Type>(`mutation createTodo($todo: CreateTodoInput!) { createTodo(todo: $todo) {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },    

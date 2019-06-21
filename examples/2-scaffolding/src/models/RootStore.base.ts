@@ -4,16 +4,16 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
- import { PokemonModel } from "./PokemonModel"
- import { pokemonModelPrimitives, PokemonModelSelector } from "./PokemonModel.base"
- import { PokemonDimensionModel } from "./PokemonDimensionModel"
- import { pokemonDimensionModelPrimitives, PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
- import { PokemonAttackModel } from "./PokemonAttackModel"
- import { pokemonAttackModelPrimitives, PokemonAttackModelSelector } from "./PokemonAttackModel.base"
- import { AttackModel } from "./AttackModel"
- import { attackModelPrimitives, AttackModelSelector } from "./AttackModel.base"
- import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
- import { pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
+import { PokemonModel } from "./PokemonModel"
+import { pokemonModelPrimitives, PokemonModelSelector } from "./PokemonModel.base"
+import { PokemonDimensionModel } from "./PokemonDimensionModel"
+import { pokemonDimensionModelPrimitives, PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
+import { PokemonAttackModel } from "./PokemonAttackModel"
+import { pokemonAttackModelPrimitives, PokemonAttackModelSelector } from "./PokemonAttackModel.base"
+import { AttackModel } from "./AttackModel"
+import { attackModelPrimitives, AttackModelSelector } from "./AttackModel.base"
+import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
+import { pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 
 /**
 * Store, managing, among others, all the objects received through graphQL

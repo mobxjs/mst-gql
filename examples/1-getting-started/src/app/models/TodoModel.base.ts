@@ -37,5 +37,5 @@ export function selectFromTodo() {
   return new TodoModelSelector()
 }
 
-export const todoModelPrimitives = selectFromTodo().id.text.complete.toString()
+export const todoModelPrimitives = selectFromTodo().text.complete.toString()
 
