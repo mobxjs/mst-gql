@@ -644,14 +644,7 @@ const RootStore = RootStoreBase.extend(
 
 ### Running the examples
 
-Before running the examples, run the following in the root directory:
-
-```
-yarn install
-yarn build
-```
-
-After that, run the following in the example directory
+Run the following in the example directory
 
 ```
 yarn global add realpath # not needed for Linux users
