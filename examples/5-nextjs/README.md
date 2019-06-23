@@ -1,7 +1,14 @@
-# Scaffolding example
+# SSR example
 
-This example shows a minimal example of how to configure the code scaffolding, if you have some schema available somewhere.
+This example shows a minimal example of how to use SSR:
 
-`yarn start` Runs the scaffolder and uses TypeScript to compile the generated sources.
+`yarn install` install
 
-`yarn download` Re-fetches the graphql-schema from the demo endpoint (this might take a while). The schema definition is downloaded from: https://graphql-pokemon.now.sh/
+`yarn install-mst-gql` install mst-gql locally in this example package's node modules
+
+`yarn server:start` Runs the graphql server
+
+`yarn scaffold` scaffold MST models
+
+`yarn client:dev` start client
+

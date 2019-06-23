@@ -1,5 +1,5 @@
 {
-  "name": "scaffold-test",
+  "name": "ssr-example",
   "scripts": {
     "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
     "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Todo' --excludes 'CacheControlScope,Query,Subscription' --outDir src/models/ --format ts http://localhost:4000/graphql",

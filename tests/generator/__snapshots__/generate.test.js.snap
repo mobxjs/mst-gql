@@ -213,6 +213,25 @@ export const RepoModel = RepoModelBase
     false,
   ],
   Array [
+    "OwnerModelSelector",
+    "import { QueryBuilder } from \\"mst-gql\\"
+import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+import { UserModelSelector } from \\"./UserModel.base\\"
+
+export class OwnerModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get name() { return this.__attr(\`name\`) }
+  user(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__inlineFragment(\`User\`, UserModelSelector, builder) }
+  organization(builder?: string | OrganizationModelSelector | ((selector: OrganizationModelSelector) => OrganizationModelSelector)) { return this.__inlineFragment(\`Organization\`, OrganizationModelSelector, builder) }
+}
+export function selectFromOwner() {
+  return new OwnerModelSelector()
+}
+
+export const ownerModelPrimitives = selectFromOwner().name",
+    true,
+  ],
+  Array [
     "UserModel.base",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
@@ -415,6 +434,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./RepoModel\\"
+export * from \\"./OwnerModelSelector\\"
 export * from \\"./UserModel\\"
 export * from \\"./OrganizationModel\\"
 export * from \\"./RootStore\\"
