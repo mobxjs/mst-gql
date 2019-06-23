@@ -10,8 +10,7 @@
     "scaffold:client": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --roots 'Message,User' --outDir src/app/models/ --format ts src/server/schema.graphql",
     "scaffold:server": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --roots 'Message,User' --outDir src/server/models/ --format ts --modelsOnly src/server/schema.graphql",
     "start": "run-p start:server start:client",
-    "postinstall": "yarn install-mst-gql",
-    "install-mst-gql": "bash ../../scripts/install-mst-gql.sh"
+    "postinstall": "../../node_modules/.bin/relative-deps"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
@@ -42,9 +41,13 @@
     "mobx": "5.9.4-special",
     "mobx-react-lite": "^1.3.2",
     "mobx-state-tree": "^3.14.0",
+    "mst-gql": "^0.1.2",
     "node-uuid": "^1.4.8",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "ts-node": "^8.1.0"
+  },
+  "relativeDependencies": {
+    "mst-gql": "../../"
   }
 }
