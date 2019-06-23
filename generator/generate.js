@@ -656,13 +656,8 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return `${printTsType(type.ofType, true)}[]`
       case "OBJECT":
         return type.name + (isRoot ? " | undefined" : "")
-      case "ENUM":
       case "INPUT_OBJECT":
-        console.warn(
-          "Not implemented printTsType yet, PR welcome for " +
-            JSON.stringify(type, null, 2)
-        )
-        return "any" // TODO: support input objects and enum types
+        return type.name + (isRoot ? " | undefined" : "")
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
       default:
