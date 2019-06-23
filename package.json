@@ -15,7 +15,7 @@
   "scripts": {
     "test": "jest test && cd examples/2-scaffolding && yarn start",
     "watch": "jest test --watch",
-    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'"
+    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request'"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,28 @@
+{
+  "name": "scaffold-test",
+  "scripts": {
+    "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
+    "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Todo' --excludes 'CacheControlScope,Query,Subscription' --outDir src/models/ --format ts http://localhost:4000/graphql",
+    "client:build": "next build",
+    "client:dev": "next",
+    "client:start": "next start",
+    "server:start": "node server"
+  },
+  "dependencies": {
+    "apollo-server": "^2.6.2",
+    "isomorphic-fetch": "^2.2.1",
+    "mobx": "^5.9.4",
+    "mobx-react": "^6.0.3",
+    "mobx-state-tree": "^3.14.0",
+    "next": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/next": "^8.0.5",
+    "@types/react": "^16.8.18",
+    "@types/react-dom": "^16.8.4",
+    "@zeit/next-typescript": "^1.1.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "typescript": "^3.4.5"
+  }
+}

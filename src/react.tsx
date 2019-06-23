@@ -4,7 +4,7 @@ import { Query, FetchPolicy } from "./Query"
 import { MSTGQLStore } from "./MSTGQLStore"
 
 // import react namespace only; statement gets removed after transpiling
-declare var ReactNamespace: typeof import('react')
+declare var ReactNamespace: typeof import("react")
 
 export type QueryLike<STORE, DATA> =
   | ((store: STORE) => Query<DATA>)
@@ -12,8 +12,22 @@ export type QueryLike<STORE, DATA> =
   | string
   | DocumentNode
 
-export function createStoreContext<STORE extends typeof MSTGQLStore.Type>(React: typeof ReactNamespace) {
+export function createStoreContext<STORE extends typeof MSTGQLStore.Type>(
+  React: typeof ReactNamespace
+) {
   return React.createContext<STORE>(null as any)
+}
+
+export async function getDataFromTree<STORE extends typeof MSTGQLStore.Type>(
+  tree: React.ReactElement<any>,
+  client: STORE,
+  renderFunction: (
+    tree: React.ReactElement<any>
+  ) => string = require("react-dom/server").renderToStaticMarkup
+): Promise<string> {
+  const html = renderFunction(tree)
+  await Promise.all(client.__promises)
+  return html
 }
 
 function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
@@ -31,7 +45,10 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
 ): Query<DATA> {
   if (typeof query === "function") return query(store)
   if (query instanceof Query) return query
-  return store.query(query, variables, { fetchPolicy, raw })
+  return store.query(query, variables, {
+    fetchPolicy: fetchPolicy,
+    raw: raw
+  })
 }
 
 export type UseQueryHookOptions<STORE> = {
@@ -71,11 +88,14 @@ export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
       return normalizeQuery(store, queryIn, opts)
     })
 
-    const setQueryHelper = React.useCallback((newQuery: QueryLike<STORE, DATA>) => {
-      // if the current query had results already, save it in prevData
-      // if (query && query.data) prevData.current = query.data
-      setQuery(normalizeQuery(store, newQuery, opts))
-    }, [])
+    const setQueryHelper = React.useCallback(
+      (newQuery: QueryLike<STORE, DATA>) => {
+        // if the current query had results already, save it in prevData
+        // if (query && query.data) prevData.current = query.data
+        setQuery(normalizeQuery(store, newQuery, opts))
+      },
+      []
+    )
 
     // if new query or variables are passed in, replace the query!
     React.useEffect(() => {
