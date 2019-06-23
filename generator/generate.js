@@ -666,8 +666,6 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return "any" // TODO: support input objects and enum types
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
-      case "INPUT_OBJECT":
-        return type.name + (isRoot ? " | undefined" : "")
       default:
         console.warn(
           "Not implemented printTsType yet, PR welcome for " +
