@@ -226,11 +226,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
   }
 
   function handleInterfaceOrUnionType(type) {
-    debugger;
     // Only a model selector will be generated, not a mst model
     // That is, interface/unions don't have a mst model
     if (modelsOnly) return
-    
+
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
     const isUnion = interfaceOrUnionType.kind === "UNION"
     const fileName = type.name + "ModelSelector"
