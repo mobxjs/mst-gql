@@ -283,7 +283,7 @@ export const TodoModel = TodoModelBase.actions(self => ({
 }))
 ```
 
-To select multiple fields, simply keep "dotting", as the query is a fluent interface. For example: `user => user.fistname.lastname.avatar` selects 3 fields.
+To select multiple fields, simply keep "dotting", as the query is a fluent interface. For example: `user => user.firstname.lastname.avatar` selects 3 fields.
 
 Complex children can be selected by calling the field as function, and provide a callback to that field function (which in turn is again a query builder for the appropriate type). So the following example selector selects the `timestamp` and `text` of a message. The `name` and `avatar` inside the `user` property, and finally also the `likes` properties. For the `likes` no further subselector was specified, which means that only `__typename` and `id` will be retrieved.
 
