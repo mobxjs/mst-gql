@@ -3,7 +3,6 @@ import stringify from "fast-json-stable-stringify"
 import { DocumentNode, print } from "graphql"
 
 import { StoreType } from "./MSTGQLStore"
-import { getFirstValue } from "./utils"
 import { observable, action } from "mobx"
 
 export type CaseHandlers<T, R> = {
@@ -101,7 +100,6 @@ export class Query<T = unknown> implements PromiseLike<T> {
       this.store.__cacheResponse(this.cacheKey, data)
     }
 
-    const value = getFirstValue(data)
     if (this.options.raw) {
       this.loading = false
       this.data = data
@@ -109,7 +107,10 @@ export class Query<T = unknown> implements PromiseLike<T> {
     } else {
       try {
         this.loading = false
-        const normalized = this.store.merge(value)
+        const normalized: any = {}
+        Object.keys(data).forEach(key => {
+          normalized[key] = this.store.merge(data[key])
+        })
         this.data = normalized
         this.onResolve(this.data!)
       } catch (e) {
