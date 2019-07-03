@@ -22,7 +22,7 @@ export const RootStoreBase = MSTGQLStore
     todos: types.optional(types.map(types.late(() => TodoModel)), {})
   })
   .actions(self => ({
-    queryTodos(variables?: {  }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryTodos(variables?: {}, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<typeof TodoModel.Type[]>(`query todos { todos {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, options)
@@ -32,9 +32,9 @@ export const RootStoreBase = MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateCreateTodo(variables: { todo: CreateTodoInput }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives, optimisticUpdate?: () => void) {
+    mutateCreateTodo(variables: { todo: CreateTodoInput }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<typeof TodoModel.Type>(`mutation createTodo($todo: CreateTodoInput!) { createTodo(todo: $todo) {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
-    },    
+    },
   }))

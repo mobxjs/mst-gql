@@ -25,7 +25,7 @@ export default observer(function Launch({ launchId }) {
   return query.case({
     error: error => <p>ERROR: {error.message}</p>,
     loading: () => <Loading />,
-    data: launch => (
+    data: ({ launch }) => (
       <Fragment>
         <Header image={launch.mission.missionPatch}>
           {launch.mission.name}
