@@ -52,8 +52,7 @@ The scaffolder is a compile-time utility that generates a MST store and models b
 The runtime library is configured by the scaffolder, and provides entry points to use the generated generated or hand-written queries, React components, and additional utilities you want to _mixin_ to your stores.
 
 ### Scaffolding
-
-To get started,after [installing](#installation) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
+To get started,after [installing](#-installation-) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
 
 To scaffold TypeScript models based on a locally running graphQL endpoint on port 4000, run: `yarn mst-gql --format ts http://localhost:4000/graphql`. There are several additional flags that can be passed to the CLI, which are detailed [below](#cli).
 
