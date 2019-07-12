@@ -655,7 +655,6 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "LIST":
         return `${printTsType(type.ofType, true)}[]`
       case "OBJECT":
-        return type.name + (isRoot ? " | undefined" : "")
       case "INPUT_OBJECT":
         return type.name + (isRoot ? " | undefined" : "")
       case "SCALAR":
