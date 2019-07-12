@@ -2,15 +2,15 @@
   "name": "scaffold-test",
   "scripts": {
     "download": "npx apollo schema:download --endpoint=https://graphql-pokemon.now.sh/ graphql-schema.json",
-    "postinstall": "yarn install-mst-gql",
-    "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
+    "postinstall": "../../node_modules/.bin/relative-deps",
     "scaffold": "../../generator/mst-gql-scaffold.js --force --roots 'Pokemon, Attack' --format ts --outDir src/models graphql-schema.json",
     "build": "tsc",
     "start": "yarn scaffold && yarn build"
   },
   "dependencies": {
     "mobx": "^5.9.4",
-    "mobx-state-tree": "^3.14.0"
+    "mobx-state-tree": "^3.14.0",
+    "mst-gql": "^0.1.2"
   },
   "devDependencies": {
     "@types/react": "^16.8.18",
@@ -18,5 +18,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "typescript": "^3.4.5"
+  },
+  "relativeDependencies": {
+    "mst-gql": "../../"
   }
 }

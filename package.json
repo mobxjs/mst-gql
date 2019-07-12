@@ -53,6 +53,7 @@
     "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "relative-deps": "^0.1.0",
     "subscriptions-transport-ws": "^0.9.16",
     "typescript": "^3.4.5"
   },
