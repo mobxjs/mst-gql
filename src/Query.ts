@@ -107,7 +107,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     } else {
       try {
         this.loading = false
-        const normalized: any = {}
+        const normalized: { [key: string]: any } = {}
         Object.keys(data).forEach(key => {
           normalized[key] = this.store.merge(data[key])
         })
