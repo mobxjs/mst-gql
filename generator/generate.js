@@ -128,9 +128,9 @@ function generate(
  * Typescript type for values of this enum
  */
 
-export type ${name}EnumValueType = ${type.enumValues
-            .map(enumV => `"${enumV.name}"`)
-            .join(" | ")}`
+export enum ${name} {
+  ${type.enumValues.map(enumV => `${enumV.name}="${enumV.name}"`).join(",\n")}
+}`
         : ""
 
     const contents = `\
