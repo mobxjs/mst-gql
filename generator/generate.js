@@ -125,7 +125,7 @@ function generate(
       format === "ts"
         ? `\
 /**
- * Typescript type for values of this enum
+ * Typescript enum
  */
 
 export enum ${name} {
