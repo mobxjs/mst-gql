@@ -715,6 +715,7 @@ If you are using prettier, it is strongly recommended to make sure that the file
 src/models/index.*
 src/models/reactUtils.*
 src/models/*.base.*
+src/models/*Enum.*
 ```
 
 Or, alternatively, if you want to properly format the generated files based on your standards, make sure that you always run prettier on those files after scaffolding.
