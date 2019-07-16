@@ -59,7 +59,7 @@ type Query {
   const repoModelBase = findFile(output, 'RepoModel.base')
   expect(repoModelBase).toBeTruthy()
   expect(
-    hasFileContent(repoModelBase, 'owner: types.maybe(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),')
+    hasFileContent(repoModelBase, 'owner: types.maybeNull(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),')
   ).toBeTruthy()
 })
 

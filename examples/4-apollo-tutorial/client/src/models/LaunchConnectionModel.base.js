@@ -17,8 +17,8 @@ export const LaunchConnectionModelBase = MSTGQLObject
   .named('LaunchConnection')
   .props({
     __typename: types.optional(types.literal("LaunchConnection"), "LaunchConnection"),
-    cursor: types.maybe(types.string),
-    hasMore: types.maybe(types.boolean),
+    cursor: types.maybeNull(types.string),
+    hasMore: types.maybeNull(types.boolean),
     launches: types.optional(types.array(MSTGQLRef(types.late(() => LaunchModel))), []),
   })
   .views(self => ({

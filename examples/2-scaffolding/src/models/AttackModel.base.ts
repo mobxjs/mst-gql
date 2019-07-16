@@ -18,11 +18,11 @@ export const AttackModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Attack"), "Attack"),
     /** The name of this Pokémon attack */
-    name: types.maybe(types.string),
+    name: types.maybeNull(types.string),
     /** The type of this Pokémon attack */
-    type: types.maybe(types.string),
+    type: types.maybeNull(types.string),
     /** The damage of this Pokémon attack */
-    damage: types.maybe(types.integer),
+    damage: types.maybeNull(types.integer),
   })
   .views(self => ({
     get store() {
