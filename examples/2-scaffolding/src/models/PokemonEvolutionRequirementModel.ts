@@ -4,17 +4,22 @@ import { PokemonEvolutionRequirementModelBase } from "./PokemonEvolutionRequirem
 export type PokemonEvolutionRequirementModelType = typeof PokemonEvolutionRequirementModel.Type
 
 /* A graphql query fragment builders for PokemonEvolutionRequirementModel */
-export { selectFromPokemonEvolutionRequirement, pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
+export {
+  selectFromPokemonEvolutionRequirement,
+  pokemonEvolutionRequirementModelPrimitives,
+  PokemonEvolutionRequirementModelSelector
+} from "./PokemonEvolutionRequirementModel.base"
 
 /**
  * PokemonEvolutionRequirementModel
  *
  * Represents a Pokémon's requirement to evolve
  */
-export const PokemonEvolutionRequirementModel = PokemonEvolutionRequirementModelBase
-  .actions(self => ({
+export const PokemonEvolutionRequirementModel = PokemonEvolutionRequirementModelBase.actions(
+  self => ({
     // This is an auto-generated example action.
     log() {
       console.log(JSON.stringify(self))
     }
-  }))
+  })
+)

@@ -11,4 +11,3 @@ This example shows a minimal example of how to use SSR:
 `yarn scaffold` scaffold MST models
 
 `yarn client:dev` start client
-
