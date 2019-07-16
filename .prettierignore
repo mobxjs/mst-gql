@@ -1,4 +1,4 @@
-src/models/index.*
-src/models/reactUtils.*
-src/models/*.base.*
-src/models/*Enum.*
+**/models/index.*
+**/models/reactUtils.*
+**/models/*.base.*
+**/models/*Enum.*
