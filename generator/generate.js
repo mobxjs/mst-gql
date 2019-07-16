@@ -83,7 +83,7 @@ function generate(
             case "OBJECT":
               return handleObjectType(type)
             case "ENUM":
-              return handleEnumType(type)
+              return handleEnumType(type, format)
             case "INTERFACE":
             case "UNION":
               return handleInterfaceOrUnionType(type)
@@ -117,13 +117,27 @@ function generate(
       .map(t => t.name)
   }
 
-  function handleEnumType(type) {
+  function handleEnumType(type, format) {
     const name = type.name
     toExport.push(name + "Enum")
+
+    const tsType =
+      format === "ts"
+        ? `\
+/**
+ * Typescript type for values of this enum
+ */
+
+export type ${name}EnumValueType = ${type.enumValues
+            .map(enumV => `"${enumV.name}"`)
+            .join(" | ")}`
+        : ""
 
     const contents = `\
 ${header}
 import { types } from "mobx-state-tree"
+
+${tsType}
 
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
