@@ -309,7 +309,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             useMaybe,
             "types.maybeNull(",
             ")"
-          
+)
         case "LIST":
           return `types.optional(types.array(${handleFieldType(
             fieldName,
