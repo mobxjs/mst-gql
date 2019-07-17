@@ -31,6 +31,7 @@ function generate(
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
+  const enumTypes = [] // enum types to be imported when using typescript
   const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
 
@@ -118,6 +119,14 @@ function generate(
   }
 
   function handleEnumType(type, format) {
+    const {
+      primitiveFields,
+      nonPrimitiveFields,
+      imports,
+      modelProperties,
+      refs
+    } = resolveFieldsAndImports(type)
+
     const name = type.name
     toExport.push(name + "Enum")
 
@@ -144,7 +153,9 @@ ${tsType}
 */
 export const ${name}Enum = ${handleEnumTypeCore(type)}
 `
-
+    if (format === "ts") {
+      enumTypes.push(type.name)
+    }
     generateFile(name + "Enum", contents, true)
   }
 
@@ -518,6 +529,9 @@ ${objectTypes
       }`
   )
   .join("")}
+${enumTypes
+  .map(t => `\nimport { ${t} } from "./${t}Enum${importPostFix}"`)
+  .join("")}
 ${inputTypes
   .map(
     t =>
@@ -687,6 +701,8 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return type.name + (isRoot ? " | undefined" : "")
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
+      case "ENUM":
+        return type.name
       default:
         console.warn(
           "Not implemented printTsType yet, PR welcome for " +
