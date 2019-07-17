@@ -84,7 +84,7 @@ function generate(
             case "OBJECT":
               return handleObjectType(type)
             case "ENUM":
-              return handleEnumType(type, format)
+              return handleEnumType(type)
             case "INTERFACE":
             case "UNION":
               return handleInterfaceOrUnionType(type)
@@ -118,15 +118,7 @@ function generate(
       .map(t => t.name)
   }
 
-  function handleEnumType(type, format) {
-    const {
-      primitiveFields,
-      nonPrimitiveFields,
-      imports,
-      modelProperties,
-      refs
-    } = resolveFieldsAndImports(type)
-
+  function handleEnumType(type) {
     const name = type.name
     toExport.push(name + "Enum")
 
