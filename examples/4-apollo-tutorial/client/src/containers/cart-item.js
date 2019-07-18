@@ -21,6 +21,6 @@ export default observer(function CartItem({ launchId }) {
   return query.case({
     error: error => <p>ERROR: {error.message}</p>,
     loading: () => <p>Loading...</p>,
-    data: launch => <LaunchTile launch={launch} />
+    data: ({ launch }) => <LaunchTile launch={launch} />
   })
 })
