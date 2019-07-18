@@ -111,7 +111,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
         Object.keys(data).forEach(key => {
           normalized[key] = this.store.merge(data[key])
         })
-        this.data = normalized
+        this.data = normalized as T
         this.onResolve(this.data!)
       } catch (e) {
         this.onFailure(e)
