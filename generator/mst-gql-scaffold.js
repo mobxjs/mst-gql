@@ -14,7 +14,8 @@ const definition = {
   "--excludes": String,
   "--modelsOnly": Boolean,
   "--force": Boolean,
-  "--noReact": Boolean
+  "--noReact": Boolean,
+  "--separate": Boolean
 }
 
 function main() {
@@ -42,6 +43,7 @@ function main() {
   const modelsOnly = !!args["--modelsOnly"]
   const forceAll = !!args["--force"]
   const noReact = !!args["--noReact"]
+  const separate = !!args["--separate"]
 
   console.log(
     path.basename(__filename) +
@@ -102,7 +104,7 @@ function main() {
     modelsOnly,
     noReact
   )
-  writeFiles(outDir, files, format, forceAll, true)
+  writeFiles(outDir, files, format, forceAll, true, separate)
 }
 
 main()

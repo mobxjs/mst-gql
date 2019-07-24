@@ -153,12 +153,12 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
   }
 
   function handleObjectType(type) {
-    const { 
+    const {
       primitiveFields,
       nonPrimitiveFields,
       imports,
       modelProperties,
-      refs 
+      refs
     } = resolveFieldsAndImports(type)
 
     const { name } = type
@@ -233,7 +233,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
     const isUnion = interfaceOrUnionType.kind === "UNION"
     const fileName = type.name + "ModelSelector"
-    const { 
+    const {
       primitiveFields,
       nonPrimitiveFields,
       imports,
@@ -245,7 +245,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
         addImportToMap(
           imports,
-          fileName, 
+          fileName,
           `${t.name}Model.base`,
           ...toBeImported
         )
@@ -254,7 +254,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     let contents = header + "\n\n"
     contents = 'import { QueryBuilder } from "mst-gql"\n'
     
-    contents += printRelativeImports(imports) 
+    contents += printRelativeImports(imports)
     contents += generateFragments(type.name, primitiveFields, nonPrimitiveFields, interfaceOrUnionType)
 
     toExport.push(fileName)
@@ -325,9 +325,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "INTERFACE":
         case "UNION":
             return wrap(
-              handleInterfaceOrUnionFieldType(fieldName, fieldType), 
-              useMaybe, 
-              "types.maybe(", 
+              handleInterfaceOrUnionFieldType(fieldName, fieldType),
+              useMaybe,
+              "types.maybe(",
               ")"
             )
         default:
@@ -373,7 +373,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       
       const interfaceOrUnionType = interfaceAndUnionTypes.get(fieldType.name)
       const mstUnionArgs = interfaceOrUnionType.ofTypes.map(t => {
-        // Note that members of a union type need to be concrete object types; 
+        // Note that members of a union type need to be concrete object types;
         // you can't create a union type out of interfaces or other unions.
         const subTypeClassName = t.name + "Model"
         if (type.kind !== "INTERFACE" && type.kind !== "UNION") { // TODO: split field type resolvement from model properties output
@@ -417,7 +417,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     if (interfaceOrUnionType) {
       output += interfaceOrUnionType.ofTypes
         .map(
-          subType => { 
+          subType => {
             const selector = `${subType.name}ModelSelector`
             let p = `  ${toFirstLower(subType.name)}(builder`
             p += ifTS(`?: string | ${selector} | ((selector: ${selector}) => ${selector})`)
@@ -448,7 +448,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
               memberType.name
             )}ModelPrimitives)`
         )
-        .join("")    
+        .join("")
     } else {
       // for interaces and objects, select the defined fields
       output += modelPrimitives
@@ -516,7 +516,7 @@ ${rootTypes
   ) // optional should not be needed here..
   .join(",\n")}
   })
-  .actions(self => ({${generateQueries()}    
+  .actions(self => ({${generateQueries()}
   }))
 `
     generateFile("RootStore", entryFile)
@@ -771,17 +771,17 @@ function getMstDefaultValue(type) {
 }
 
 function resolveInterfaceAndUnionTypes(types) {
-  // This function: 
+  // This function:
   // - inlines interfaces by spreading all the fields defined in interfaces into the object definitions themselves
   // - returns a map of union and interfaces and each union and interface contains the member/derived types
   const result = new Map()
   const interfaces = new Map()
   const memberTypesToUnions = new Map()
   types.forEach(type => {
-    if (type.kind === "INTERFACE") { 
+    if (type.kind === "INTERFACE") {
       interfaces.set(type.name, type)
     } else if (type.kind === "UNION") {
-      type.possibleTypes.forEach(possibleType => {       
+      type.possibleTypes.forEach(possibleType => {
         if (memberTypesToUnions.has(possibleType.name)) {
           const unions = memberTypesToUnions.get(possibleType.name)
           unions.add(type)
@@ -807,7 +807,7 @@ function resolveInterfaceAndUnionTypes(types) {
         })
       })
       if (memberTypesToUnions.has(type.name)) {
-        memberTypesToUnions.get(type.name).forEach(union => 
+        memberTypesToUnions.get(type.name).forEach(union =>
           upsertInterfaceOrUnionType(union, type, result)
         )
       }
@@ -869,10 +869,28 @@ function writeFiles(
   files,
   format = "ts",
   forceAll = false,
-  log = false
+  log = false,
+  separate = false
 ) {
+  
+  function deCapitalize(str) {
+    return `${str.charAt(0).toLowerCase()}${str.slice(1)}`
+  }
+  
   files.forEach(([name, contents, force]) => {
-    writeFile(name, contents, force || forceAll, format, outDir, log)
+    const splits = name.split('.');
+    const isModelOrStore = /(Model|Store)$/.test(splits[0]);
+  
+    if (!separate || !isModelOrStore) {
+      writeFile(name, contents, force || forceAll, format, outDir, log)
+    } else {
+        const targetDir = `${outDir}/${deCapitalize(splits[0])}`
+        if(!fs.existsSync(targetDir)) {
+          fs.mkdirSync(targetDir)
+        }
+  
+        writeFile(splits[1] || 'index', contents, force || forceAll, format, targetDir, log)
+    }
   })
 }
 
