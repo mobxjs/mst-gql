@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react"
 
-import { renderApollo, cleanup } from '../../test-utils';
-import Footer from '../footer';
+import { renderApollo, cleanup } from "../../test-utils"
+import Footer from "../footer"
 
-describe('Footer', () => {
+describe("Footer", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  afterEach(cleanup)
 
-  it('renders without error', () => {
-    renderApollo(<Footer />);
-  });
-});
+  it("renders without error", () => {
+    renderApollo(<Footer />)
+  })
+})

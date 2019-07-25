@@ -20,7 +20,7 @@ const Home = observer(() => {
         )}
       </>
     )
-  return 'Loading'
+  return "Loading"
 })
 
 export default Home

@@ -5,6 +5,7 @@ const fs = require("fs")
 const child_process = require("child_process")
 const graphql = require("graphql")
 
+const { getConfig, mergeConfigs } = require('./config');
 const { generate, writeFiles } = require("./generate")
 
 const definition = {
@@ -14,14 +15,16 @@ const definition = {
   "--excludes": String,
   "--modelsOnly": Boolean,
   "--force": Boolean,
-  "--noReact": Boolean
+  "--noReact": Boolean,
+  "--separate": Boolean
 }
 
 function main() {
-  let args
+  let args, config
 
   try {
     args = arg(definition)
+    config = getConfig()
   } catch (e) {
     console.error(
       "Example usage: mstgql-scaffold --format=js|ts --outDir=src/models graphql-schema.json\n, valid options: " +
@@ -30,18 +33,8 @@ function main() {
     throw e
   }
 
-  const format = args["--format"] || "js"
-  const outDir = path.resolve(process.cwd(), args["--outDir"] || "src/models")
-  const input = args._[0] || "graphql-schema.json"
-  const roots = args["--roots"]
-    ? args["--roots"].split(",").map(s => s.trim())
-    : []
-  const excludes = args["--excludes"]
-    ? args["--excludes"].split(",").map(s => s.trim())
-    : []
-  const modelsOnly = !!args["--modelsOnly"]
-  const forceAll = !!args["--force"]
-  const noReact = !!args["--noReact"]
+  const { format, outDir, input, roots, excludes, modelsOnly, forceAll, noReact } = mergeConfigs(args, config);
+  const separate = !!args["--separate"]
 
   console.log(
     path.basename(__filename) +
@@ -102,7 +95,7 @@ function main() {
     modelsOnly,
     noReact
   )
-  writeFiles(outDir, files, format, forceAll, true)
+  writeFiles(outDir, files, format, forceAll, true, separate)
 }
 
 main()

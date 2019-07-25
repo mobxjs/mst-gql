@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react"
 
-import { render, cleanup } from '../../test-utils';
-import Header from '../header';
+import { render, cleanup } from "../../test-utils"
+import Header from "../header"
 
-describe('Header', () => {
+describe("Header", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  afterEach(cleanup)
 
-  it('renders without error', () => {
-    render(<Header />);
-  });
-});
+  it("renders without error", () => {
+    render(<Header />)
+  })
+})

@@ -52,6 +52,7 @@ The scaffolder is a compile-time utility that generates a MST store and models b
 The runtime library is configured by the scaffolder, and provides entry points to use the generated generated or hand-written queries, React components, and additional utilities you want to _mixin_ to your stores.
 
 ### Scaffolding
+
 To get started,after [installing](#-installation-) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
 
 To scaffold TypeScript models based on a locally running graphQL endpoint on port 4000, run: `yarn mst-gql --format ts http://localhost:4000/graphql`. There are several additional flags that can be passed to the CLI, which are detailed [below](#cli).
@@ -199,7 +200,9 @@ import { Error, Loading, Message } from "./"
 import { useQuery } from "../models/reactUtils"
 
 export const Home = observer(() => {
-  const { store, error, loading, data } = useQuery(store => store.queryMessages())
+  const { store, error, loading, data } = useQuery(store =>
+    store.queryMessages()
+  )
   if (error) return <Error>{error.message}</Error>
   if (loading) return <Loading />
   return (
@@ -336,15 +339,15 @@ That's it for the introduction! For the many different ways in which the above c
 There is an exported function called `getDataFromTree` which you can use to preload all queries, note that you must set `ssr: true` as an option in order for this to work
 
 ```js
- async function preload() {
-    const client = RootStore.create(undefined, {
-      gqlHttpClient: createHttpClient('http://localhost:4000/graphql'),
-      ssr: true
-    });
-    const html = await getDataFromTree(<App client={client} />, client);
-    const initalState = getSnapshot(client);
+async function preload() {
+  const client = RootStore.create(undefined, {
+    gqlHttpClient: createHttpClient("http://localhost:4000/graphql"),
+    ssr: true
+  })
+  const html = await getDataFromTree(<App client={client} />, client)
+  const initalState = getSnapshot(client)
 
-    return [html, initalState];
+  return [html, initalState]
 }
 ```
 
@@ -715,6 +718,7 @@ If you are using prettier, it is strongly recommended to make sure that the file
 src/models/index.*
 src/models/reactUtils.*
 src/models/*.base.*
+src/models/*Enum.*
 ```
 
 Or, alternatively, if you want to properly format the generated files based on your standards, make sure that you always run prettier on those files after scaffolding.

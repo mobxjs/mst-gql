@@ -3,16 +3,16 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 
- import { LaunchConnectionModel } from "./LaunchConnectionModel"
- import { launchConnectionModelPrimitives, LaunchConnectionModelSelector } from "./LaunchConnectionModel.base"
- import { LaunchModel } from "./LaunchModel"
- import { launchModelPrimitives, LaunchModelSelector } from "./LaunchModel.base"
- import { MissionModel } from "./MissionModel"
- import { missionModelPrimitives, MissionModelSelector } from "./MissionModel.base"
- import { RocketModel } from "./RocketModel"
- import { rocketModelPrimitives, RocketModelSelector } from "./RocketModel.base"
- import { UserModel } from "./UserModel"
- import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
+import { LaunchConnectionModel } from "./LaunchConnectionModel"
+import { launchConnectionModelPrimitives, LaunchConnectionModelSelector } from "./LaunchConnectionModel.base"
+import { LaunchModel } from "./LaunchModel"
+import { launchModelPrimitives, LaunchModelSelector } from "./LaunchModel.base"
+import { MissionModel } from "./MissionModel"
+import { missionModelPrimitives, MissionModelSelector } from "./MissionModel.base"
+import { RocketModel } from "./RocketModel"
+import { rocketModelPrimitives, RocketModelSelector } from "./RocketModel.base"
+import { UserModel } from "./UserModel"
+import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
 /**
 * Store, managing, among others, all the objects received through graphQL

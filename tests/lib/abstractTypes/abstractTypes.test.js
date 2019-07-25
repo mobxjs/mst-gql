@@ -148,23 +148,23 @@ describe("Abstract types tests", () => {
       const owner = variables.avatar
         ? {
             __typename: "User",
-            id: addedRepos.length === 0 ? 'y' : 'z',
+            id: addedRepos.length === 0 ? "y" : "z",
             name: variables.ownerName
           }
         : {
             __typename: "Organization",
-            id: addedRepos.length === 0 ? 'y' : 'z',
+            id: addedRepos.length === 0 ? "y" : "z",
             name: variables.ownerName
           }
 
       const repo = {
         __typename: "Repo",
-        id: addedRepos.length === 0 ? 'a' : 'b',
+        id: addedRepos.length === 0 ? "a" : "b",
         name: variables.name,
-        owner,
+        owner
       }
       addedRepos.push(repo)
-        
+
       return {
         data: {
           addRepo: {
@@ -184,9 +184,11 @@ describe("Abstract types tests", () => {
       }
     }
 
-    
-
-    mockResponses = [mockAddRepoMutation, mockAddRepoMutation, mockGetReposQuery]
+    mockResponses = [
+      mockAddRepoMutation,
+      mockAddRepoMutation,
+      mockGetReposQuery
+    ]
 
     await store.mutateAddRepo({
       name: "Repo 1",
@@ -213,6 +215,5 @@ describe("Abstract types tests", () => {
 
     const mobxRepo = repos.get("b")
     expect(mobxRepo.owner.name).toBe("Mobx")
-
   })
 })
