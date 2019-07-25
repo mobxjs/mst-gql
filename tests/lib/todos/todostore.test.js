@@ -6,9 +6,9 @@ const { scaffold, writeFiles } = require("../../../generator/generate")
 describe("todos.graphql tests", () => {
   let models // lazy loaded models module
 
-    /** This functions provides a mock implementation for loading todos from the graphql endpoint. Also verifies the incoming arguments */
-    function mockLoadTodos(query, variables) {
-      expect(query).toMatchInlineSnapshot(`
+  /** This functions provides a mock implementation for loading todos from the graphql endpoint. Also verifies the incoming arguments */
+  function mockLoadTodos(query, variables) {
+    expect(query).toMatchInlineSnapshot(`
                         "query todos { todos {
                                 __typename
                         id
@@ -17,30 +17,30 @@ describe("todos.graphql tests", () => {
 
                               } }"
                   `)
-      expect(variables).toEqual(undefined)
-      return {
-        data: {
-          todos: [
-            {
-              id: "a",
-              __typename: "Todo",
-              complete: true,
-              text: "Initially loaded todo, now updated"
-            },
-            {
-              id: "b",
-              __typename: "Todo",
-              complete: false,
-              text: "Another todo"
-            }
-          ]
-        }
+    expect(variables).toEqual(undefined)
+    return {
+      data: {
+        todos: [
+          {
+            id: "a",
+            __typename: "Todo",
+            complete: true,
+            text: "Initially loaded todo, now updated"
+          },
+          {
+            id: "b",
+            __typename: "Todo",
+            complete: false,
+            text: "Another todo"
+          }
+        ]
       }
     }
+  }
 
-    /** This functions provides a mock implementation for mutating a todo. Also verifies the incoming arguments */
-    function mockToggleTodos(query, variables) {
-      expect(query).toMatchInlineSnapshot(`
+  /** This functions provides a mock implementation for mutating a todo. Also verifies the incoming arguments */
+  function mockToggleTodos(query, variables) {
+    expect(query).toMatchInlineSnapshot(`
         "mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {
                 __typename
         id
@@ -48,13 +48,13 @@ describe("todos.graphql tests", () => {
 
               } }"
       `)
-      expect(variables).toEqual({ id: "b" })
-      return {
-        data: {
-          toggleTodo: { id: "b", __typename: "Todo", complete: true }
-        }
+    expect(variables).toEqual({ id: "b" })
+    return {
+      data: {
+        toggleTodo: { id: "b", __typename: "Todo", complete: true }
       }
     }
+  }
 
   beforeAll(() => {
     const files = scaffold(
@@ -66,7 +66,6 @@ describe("todos.graphql tests", () => {
   })
 
   test("it should be able to instantiate store and load initial data", async () => {
-
     /** This test will make two following two requests */
     const mockResponses = [mockLoadTodos, mockToggleTodos]
     const mockClient = {
@@ -112,7 +111,6 @@ describe("todos.graphql tests", () => {
   })
 
   test("it should preload and push pending queries to '__promises'", async () => {
-
     /** This test will make two following two requests */
     const mockResponses = [mockLoadTodos, mockToggleTodos]
     const mockClient = {

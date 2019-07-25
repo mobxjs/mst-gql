@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react"
 
-import { render, cleanup } from '../../test-utils';
-import Button from '../button';
+import { render, cleanup } from "../../test-utils"
+import Button from "../button"
 
-describe('Button', () => {
+describe("Button", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  afterEach(cleanup)
 
-  it('renders without error', () => {
-    render(<Button>Hello World</Button>);
-  });
-});
+  it("renders without error", () => {
+    render(<Button>Hello World</Button>)
+  })
+})

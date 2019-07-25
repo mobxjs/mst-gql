@@ -4,7 +4,6 @@
 import { createStoreContext, createUseQueryHook } from "mst-gql"
 import * as React from "react"
 
-
 export const StoreContext = createStoreContext(React)
 
 export const useQuery = createUseQueryHook(StoreContext, React)

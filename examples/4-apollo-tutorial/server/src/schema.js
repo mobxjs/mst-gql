@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server")
 
 const typeDefs = gql`
   type Query {
@@ -72,6 +72,6 @@ const typeDefs = gql`
     SMALL
     LARGE
   }
-`;
+`
 
-module.exports = typeDefs;
+module.exports = typeDefs

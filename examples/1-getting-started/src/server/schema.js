@@ -56,7 +56,7 @@ const resolvers = {
     createTodo: (root, args, context) => {
       const todo = {
         ...args.todo,
-        complete: !!args.todo.complete,
+        complete: !!args.todo.complete
       }
       store.todos.push(todo)
       return todo

@@ -51,11 +51,7 @@ function generate(
     types
       .filter(type => !excludes.includes(type.name))
       .filter(type => !type.name.startsWith("__"))
-      .filter(
-        type =>
-          type.kind !== "SCALAR" &&
-          type.kind !== "INPUT_OBJECT"
-      )
+      .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
       .forEach(type => {
         knownTypes.push(type.name)
         if (type.kind === "OBJECT") objectTypes.push(type.name)
@@ -194,7 +190,9 @@ ${exampleAction}
 ${header}
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject,${refs.length > 0 ? ' MSTGQLRef,' : ''} QueryBuilder } from "mst-gql"
+import { MSTGQLObject,${
+      refs.length > 0 ? " MSTGQLRef," : ""
+    } QueryBuilder } from "mst-gql"
 ${printRelativeImports(imports)}
 /**
  * ${name}Base
@@ -236,33 +234,34 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const {
       primitiveFields,
       nonPrimitiveFields,
-      imports,
+      imports
     } = resolveFieldsAndImports(type, fileName)
 
-    interfaceOrUnionType.ofTypes
-      .forEach(t => {
-        const toBeImported = [`${t.name}ModelSelector`]
-        if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
-        addImportToMap(
-          imports,
-          fileName,
-          `${t.name}Model.base`,
-          ...toBeImported
-        )
-      })
+    interfaceOrUnionType.ofTypes.forEach(t => {
+      const toBeImported = [`${t.name}ModelSelector`]
+      if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
+      addImportToMap(imports, fileName, `${t.name}Model.base`, ...toBeImported)
+    })
 
     let contents = header + "\n\n"
     contents = 'import { QueryBuilder } from "mst-gql"\n'
-    
+
     contents += printRelativeImports(imports)
-    contents += generateFragments(type.name, primitiveFields, nonPrimitiveFields, interfaceOrUnionType)
+    contents += generateFragments(
+      type.name,
+      primitiveFields,
+      nonPrimitiveFields,
+      interfaceOrUnionType
+    )
 
     toExport.push(fileName)
     generateFile(fileName, contents, true)
   }
 
-  function resolveFieldsAndImports(type, currentModuleName = `${currentType}Model.base`) {
-
+  function resolveFieldsAndImports(
+    type,
+    currentModuleName = `${currentType}Model.base`
+  ) {
     const imports = new Map()
     const addImport = (moduleName, ...toBeImported) =>
       addImportToMap(imports, currentModuleName, moduleName, ...toBeImported)
@@ -273,12 +272,18 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     let modelProperties = ""
     if (type.fields) {
       modelProperties = type.fields
-      .filter(field => field.args.length === 0)
-      .map(field => handleField(field))
-      .join("\n")
+        .filter(field => field.args.length === 0)
+        .map(field => handleField(field))
+        .join("\n")
     }
 
-    return { primitiveFields, nonPrimitiveFields, imports, modelProperties, refs }
+    return {
+      primitiveFields,
+      nonPrimitiveFields,
+      imports,
+      modelProperties,
+      refs
+    }
 
     function handleField(field) {
       let r = ""
@@ -319,18 +324,19 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "ENUM":
           primitiveFields.push(fieldName)
           const enumType = fieldType.name + "Enum"
-          if (type.kind !== "UNION" && type.kind !== "INTERFACE") {  // TODO: import again when enums in query builders are supported
+          if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
+            // TODO: import again when enums in query builders are supported
             addImport(enumType, enumType)
           }
           return wrap(enumType, useMaybe, "types.maybe(", ")")
         case "INTERFACE":
         case "UNION":
-            return wrap(
-              handleInterfaceOrUnionFieldType(fieldName, fieldType),
-              useMaybe,
-              "types.maybe(",
-              ")"
-            )
+          return wrap(
+            handleInterfaceOrUnionFieldType(fieldName, fieldType),
+            useMaybe,
+            "types.maybe(",
+            ")"
+          )
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(fieldType)}. PR Welcome!`
@@ -367,17 +373,18 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     function handleInterfaceOrUnionFieldType(fieldName, fieldType) {
       nonPrimitiveFields.push([fieldName, fieldType.name])
-  
+
       // import the type
       const className = `${fieldType.name}ModelSelector`
       addImport(className, className)
-      
+
       const interfaceOrUnionType = interfaceAndUnionTypes.get(fieldType.name)
       const mstUnionArgs = interfaceOrUnionType.ofTypes.map(t => {
         // Note that members of a union type need to be concrete object types;
         // you can't create a union type out of interfaces or other unions.
         const subTypeClassName = t.name + "Model"
-        if (type.kind !== "INTERFACE" && type.kind !== "UNION") { // TODO: split field type resolvement from model properties output
+        if (type.kind !== "INTERFACE" && type.kind !== "UNION") {
+          // TODO: split field type resolvement from model properties output
           addImport(subTypeClassName, subTypeClassName)
         }
         const isSelf = fieldType.name === currentType
@@ -386,7 +393,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           isSelf && format === "ts" ? ": any" : ""
         } => ${subTypeClassName})`
       })
-      return `types.union(${mstUnionArgs.join(', ')})`
+      return `types.union(${mstUnionArgs.join(", ")})`
     }
   }
 
@@ -397,36 +404,40 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     interfaceOrUnionType = null
   ) {
     if (modelsOnly) return ""
-    
+
     let output = `export class ${name}ModelSelector extends QueryBuilder {\n`
     output += primitiveFields
       .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
       .join("\n")
     output += primitiveFields.length > 0 ? "\n" : ""
     output += nonPrimitiveFields
-      .map(
-        ([field, fieldName]) => {
-          const selector = `${fieldName}ModelSelector`
-          let p = `  ${field}(builder`
-          p += ifTS(`?: string | ${selector} | ((selector: ${selector}) => ${selector})`)
-          p += `) { return this.__child(\`${field}\`, ${selector}, builder) }`
-          return p
-        })
+      .map(([field, fieldName]) => {
+        const selector = `${fieldName}ModelSelector`
+        let p = `  ${field}(builder`
+        p += ifTS(
+          `?: string | ${selector} | ((selector: ${selector}) => ${selector})`
+        )
+        p += `) { return this.__child(\`${field}\`, ${selector}, builder) }`
+        return p
+      })
       .join("\n")
     output += nonPrimitiveFields.length > 0 ? "\n" : ""
-    
+
     if (interfaceOrUnionType) {
       output += interfaceOrUnionType.ofTypes
-        .map(
-          subType => {
-            const selector = `${subType.name}ModelSelector`
-            let p = `  ${toFirstLower(subType.name)}(builder`
-            p += ifTS(`?: string | ${selector} | ((selector: ${selector}) => ${selector})`)
-            p += `) { return this.__inlineFragment(\`${subType.name}\`, ${selector}, builder) }`
-            return p
-          })
+        .map(subType => {
+          const selector = `${subType.name}ModelSelector`
+          let p = `  ${toFirstLower(subType.name)}(builder`
+          p += ifTS(
+            `?: string | ${selector} | ((selector: ${selector}) => ${selector})`
+          )
+          p += `) { return this.__inlineFragment(\`${
+            subType.name
+          }\`, ${selector}, builder) }`
+          return p
+        })
         .join("\n")
-        output += interfaceOrUnionType.ofTypes.length > 0 ? "\n" : ""
+      output += interfaceOrUnionType.ofTypes.length > 0 ? "\n" : ""
     }
     output += "}\n"
 
@@ -481,26 +492,26 @@ import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
       format === "ts" ? ", QueryOptions" : ""
     } } from "mst-gql"
-${
-  objectTypes.map(
-      t =>
-        `\nimport { ${t}Model } from "./${t}Model${importPostFix}"${
-          modelsOnly
-            ? ""
-            : `\nimport { ${toFirstLower(
-                t
-              )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
-        }`
-    )
-    .join("")
-}
-${
-  inputTypes.map(t => `\nexport type ${t.name} = {\n${
-    t.inputFields.map(field =>
-      `  ${field.name}: ${printTsType(field.type)}`
-    ).join('\n')
-  }\n}`).join("")
-}
+${objectTypes
+  .map(
+    t =>
+      `\nimport { ${t}Model } from "./${t}Model${importPostFix}"${
+        modelsOnly
+          ? ""
+          : `\nimport { ${toFirstLower(
+              t
+            )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
+      }`
+  )
+  .join("")}
+${inputTypes
+  .map(
+    t =>
+      `\nexport type ${t.name} = {\n${t.inputFields
+        .map(field => `  ${field.name}: ${printTsType(field.type)}`)
+        .join("\n")}\n}`
+  )
+  .join("")}
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -619,7 +630,9 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
               returnType.name
             }ModelSelector)`
           ) /* TODO or GQL object */
-        } = ${toFirstLower(returnType.name)}ModelPrimitives.toString()${extraFormalArgs}) {
+        } = ${toFirstLower(
+          returnType.name
+        )}ModelPrimitives.toString()${extraFormalArgs}) {
       return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
         \${typeof resultSelector === "function" ? resultSelector(new ${
           returnType.name
@@ -692,7 +705,11 @@ ${header}
 
 import { createStoreContext, createUseQueryHook } from "mst-gql"
 import * as React from "react"
-${format === "ts" ? `import { RootStore } from "./RootStore${importPostFix}"` : ""}
+${
+  format === "ts"
+    ? `import { RootStore } from "./RootStore${importPostFix}"`
+    : ""
+}
 
 export const StoreContext = createStoreContext${
       format === "ts" ? `<typeof RootStore.Type>` : ""
@@ -717,7 +734,12 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
     files.push([name, contents, force])
   }
 
-  function addImportToMap(importMap, currentModuleName, moduleName, ...toBeImported) {
+  function addImportToMap(
+    importMap,
+    currentModuleName,
+    moduleName,
+    ...toBeImported
+  ) {
     if (moduleName !== currentModuleName) {
       if (importMap.has(moduleName)) {
         importMap.get(moduleName).add(...toBeImported)
@@ -727,16 +749,18 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
     }
   }
 
-
   function printRelativeImports(imports) {
-    const moduleNames = [ ...imports.keys() ].sort()
-    return moduleNames
-      .map(moduleName => {
-        const toBeImported = [ ...imports.get(moduleName) ].sort()
-        return `import { ${[...toBeImported].join(", ")} } from "./${moduleName}${importPostFix}"`
-      })
-      .join("\n")
-      + (moduleNames.length > 0 ? "\n\n" : "\n")
+    const moduleNames = [...imports.keys()].sort()
+    return (
+      moduleNames
+        .map(moduleName => {
+          const toBeImported = [...imports.get(moduleName)].sort()
+          return `import { ${[...toBeImported].join(
+            ", "
+          )} } from "./${moduleName}${importPostFix}"`
+        })
+        .join("\n") + (moduleNames.length > 0 ? "\n\n" : "\n")
+    )
   }
 
   function ifTS(ifTSstr, notTSstr = "") {
@@ -797,7 +821,7 @@ function resolveInterfaceAndUnionTypes(types) {
       type.interfaces.forEach(i => {
         const interfaceType = interfaces.get(i.name)
         upsertInterfaceOrUnionType(interfaceType, type, result)
-        
+
         interfaceType.fields.forEach(interfaceField => {
           if (
             !type.fields.some(
@@ -808,9 +832,9 @@ function resolveInterfaceAndUnionTypes(types) {
         })
       })
       if (memberTypesToUnions.has(type.name)) {
-        memberTypesToUnions.get(type.name).forEach(union =>
-          upsertInterfaceOrUnionType(union, type, result)
-        )
+        memberTypesToUnions
+          .get(type.name)
+          .forEach(union => upsertInterfaceOrUnionType(union, type, result))
       }
     }
   })
@@ -822,12 +846,12 @@ function upsertInterfaceOrUnionType(type, subType, result) {
     const interfaceOrUnionType = result.get(type.name)
     interfaceOrUnionType.ofTypes.push(subType)
   } else {
-    const interfaceOrUnionType  = {
+    const interfaceOrUnionType = {
       name: type.name,
       kind: type.kind,
-      ofTypes: [ subType ]
+      ofTypes: [subType]
     }
-    if (type.kind === 'INTERFACE') {
+    if (type.kind === "INTERFACE") {
       interfaceOrUnionType.fields = type.fields
     }
     result.set(type.name, interfaceOrUnionType)
@@ -873,24 +897,30 @@ function writeFiles(
   log = false,
   separate = false
 ) {
-  
   function deCapitalize(str) {
     return `${str.charAt(0).toLowerCase()}${str.slice(1)}`
   }
-  
+
   files.forEach(([name, contents, force]) => {
-    const splits = name.split('.');
-    const isModelOrStore = /(Model|Store)$/.test(splits[0]);
-  
+    const splits = name.split(".")
+    const isModelOrStore = /(Model|Store)$/.test(splits[0])
+
     if (!separate || !isModelOrStore) {
       writeFile(name, contents, force || forceAll, format, outDir, log)
     } else {
-        const targetDir = `${outDir}/${deCapitalize(splits[0])}`
-        if(!fs.existsSync(targetDir)) {
-          fs.mkdirSync(targetDir)
-        }
-  
-        writeFile(splits[1] || 'index', contents, force || forceAll, format, targetDir, log)
+      const targetDir = `${outDir}/${deCapitalize(splits[0])}`
+      if (!fs.existsSync(targetDir)) {
+        fs.mkdirSync(targetDir)
+      }
+
+      writeFile(
+        splits[1] || "index",
+        contents,
+        force || forceAll,
+        format,
+        targetDir,
+        log
+      )
     }
   })
 }

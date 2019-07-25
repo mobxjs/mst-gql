@@ -1,10 +1,11 @@
 /// <reference types="jest"/>
 
 const { scaffold } = require("../../generator/generate")
-const escapeStringRegexp = require('escape-string-regexp')
+const escapeStringRegexp = require("escape-string-regexp")
 
-const toRegex = (snippet) => new RegExp(`\\s+${escapeStringRegexp(snippet)}\\s+`)
-const findFile = (output, name) => output.find(o => o.length && o.length > 1 && o[0] === name)
+const toRegex = snippet => new RegExp(`\\s+${escapeStringRegexp(snippet)}\\s+`)
+const findFile = (output, name) =>
+  output.find(o => o.length && o.length > 1 && o[0] === name)
 const hasFileContent = (file, snippet) => file[1].match(toRegex(snippet))
 
 test("basic scaffolding to work", () => {
@@ -51,15 +52,18 @@ type Query {
 }
 `,
     { roots: ["Repo"] }
-  )  
+  )
   expect(output).toMatchSnapshot()
 
-  expect(findFile(output, 'OwnerModelSelector')).toBeTruthy()
+  expect(findFile(output, "OwnerModelSelector")).toBeTruthy()
 
-  const repoModelBase = findFile(output, 'RepoModel.base')
+  const repoModelBase = findFile(output, "RepoModel.base")
   expect(repoModelBase).toBeTruthy()
   expect(
-    hasFileContent(repoModelBase, 'owner: types.maybe(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),')
+    hasFileContent(
+      repoModelBase,
+      "owner: types.maybe(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),"
+    )
   ).toBeTruthy()
 })
 
@@ -84,14 +88,17 @@ type Query {
 }
 `,
     { roots: ["SearchResult"] }
-  )  
+  )
   expect(output).toMatchSnapshot()
-  
-  expect(findFile(output, 'SearchItemModelSelector')).toBeTruthy()
-  
-  const searchResultBase = findFile(output, 'SearchResultModel.base')
+
+  expect(findFile(output, "SearchItemModelSelector")).toBeTruthy()
+
+  const searchResultBase = findFile(output, "SearchResultModel.base")
   expect(searchResultBase).toBeTruthy()
   expect(
-    hasFileContent(searchResultBase, 'items: types.optional(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel))), []),')
+    hasFileContent(
+      searchResultBase,
+      "items: types.optional(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel))), []),"
+    )
   ).toBeTruthy()
 })

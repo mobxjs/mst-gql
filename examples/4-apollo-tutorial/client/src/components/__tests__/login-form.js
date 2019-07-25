@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react"
 
-import { render, cleanup } from '../../test-utils';
-import LoginForm from '../login-form';
+import { render, cleanup } from "../../test-utils"
+import LoginForm from "../login-form"
 
-describe('Login Form', () => {
+describe("Login Form", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  afterEach(cleanup)
 
-  it('renders without error', () => {
-    render(<LoginForm />);
-  });
-});
+  it("renders without error", () => {
+    render(<LoginForm />)
+  })
+})

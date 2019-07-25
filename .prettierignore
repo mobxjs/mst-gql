@@ -1,3 +1,11 @@
-src/models/index.*
-src/models/reactUtils.*
-src/models/*.base.*
+# build files
+.circleci/
+.rts2*/
+.vscode/
+dist/
+
+# mst-gql generated files
+**/models/index.*
+**/models/reactUtils.*
+**/models/*.base.*
+**/models/*Enum.*

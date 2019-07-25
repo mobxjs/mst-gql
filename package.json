@@ -2,6 +2,20 @@
   "name": "mst-gql",
   "version": "0.2.0",
   "description": "Bindings for mobx-state-tree and GraphQL",
+  "author": "Michel Weststrate",
+  "keywords": [
+    "mobx-state-tree",
+    "graphql"
+  ],
+  "homepage": "https://github.com/mobxjs/mst-gql#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mobxjs/mst-gql.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mobxjs/mst-gql/issues"
+  },
+  "license": "MIT",
   "main": "dist/mst-gql.js",
   "source": "src/mst-gql.ts",
   "umd:main": "dist/mst-gql.umd.js",
@@ -12,25 +26,29 @@
   "bin": {
     "mst-gql": "./generator/mst-gql-scaffold.js"
   },
+  "files": [
+    "dist",
+    "generator"
+  ],
   "scripts": {
     "test": "jest test && cd examples/2-scaffolding && yarn start",
     "watch": "jest test --watch",
-    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request'"
+    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request'",
+    "format": "prettier --write /**/*"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mobxjs/mst-gql.git"
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
-  "keywords": [
-    "mobx-state-tree",
-    "graphql"
-  ],
-  "author": "Michel Weststrate",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mobxjs/mst-gql/issues"
+  "dependencies": {
+    "apollo": "^2.9.0",
+    "arg": "^4.1.0",
+    "cosmiconfig": "^5.2.1",
+    "fast-json-stable-stringify": "^2.0.0",
+    "graphql": "^14.3.0",
+    "graphql-request": "^1.8.2"
   },
-  "homepage": "https://github.com/mobxjs/mst-gql#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
@@ -45,12 +63,14 @@
     "@types/react-dom": "^16.8.4",
     "escape-string-regexp": "^2.0.0",
     "graphql-tag": "^2.10.1",
+    "husky": "^3.0.0",
     "jest": "^24.8.0",
     "microbundle": "^0.11.0",
     "mobx": "^5.9.4",
     "mobx-react": "^6.0.0-rc.4",
     "mobx-state-tree": "^3.14.0",
-    "prettier": "^1.17.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "relative-deps": "^0.1.0",
@@ -60,18 +80,6 @@
   "peerDependencies": {
     "mobx": "^4.0.0 || ^5.0.0",
     "mobx-state-tree": "^3.0.0"
-  },
-  "files": [
-    "dist",
-    "generator"
-  ],
-  "dependencies": {
-    "apollo": "^2.9.0",
-    "arg": "^4.1.0",
-    "cosmiconfig": "^5.2.1",
-    "fast-json-stable-stringify": "^2.0.0",
-    "graphql": "^14.3.0",
-    "graphql-request": "^1.8.2"
   },
   "resolutions": {
     "graphql": "14.3.0"

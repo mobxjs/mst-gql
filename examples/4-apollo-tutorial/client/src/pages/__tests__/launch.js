@@ -1,46 +1,42 @@
-import React from 'react';
+import React from "react"
 
-import {
-  renderApollo,
-  cleanup,
-  waitForElement,
-} from '../../test-utils';
-import Launch, { GET_LAUNCH_DETAILS } from '../launch';
+import { renderApollo, cleanup, waitForElement } from "../../test-utils"
+import Launch, { GET_LAUNCH_DETAILS } from "../launch"
 
 const mockLaunch = {
-  __typename: 'Launch',
+  __typename: "Launch",
   id: 1,
   isBooked: true,
   rocket: {
-    __typename: 'Rocket',
+    __typename: "Rocket",
     id: 1,
-    name: 'tester',
-    type: 'test',
+    name: "tester",
+    type: "test"
   },
   mission: {
-    __typename: 'Mission',
+    __typename: "Mission",
     id: 1,
-    name: 'test mission',
-    missionPatch: '/',
+    name: "test mission",
+    missionPatch: "/"
   },
-  site: 'earth',
-  isInCart: false,
-};
+  site: "earth",
+  isInCart: false
+}
 
-describe('Launch Page', () => {
+describe("Launch Page", () => {
   // automatically unmount and cleanup DOM after the test is finished.
-  afterEach(cleanup);
+  afterEach(cleanup)
 
-  it('renders launch', async () => {
+  it("renders launch", async () => {
     const mocks = [
       {
         request: { query: GET_LAUNCH_DETAILS, variables: { launchId: 1 } },
-        result: { data: { launch: mockLaunch } },
-      },
-    ];
+        result: { data: { launch: mockLaunch } }
+      }
+    ]
     const { getByText } = await renderApollo(<Launch launchId={1} />, {
-      mocks,
-    });
-    await waitForElement(() => getByText(/test mission/i));
-  });
-});
+      mocks
+    })
+    await waitForElement(() => getByText(/test mission/i))
+  })
+})

@@ -25,7 +25,7 @@ type SearchResult {
 interface Owner {
   id: ID!
   name: String!
-}      
+}
 type User implements Owner {
   id: ID!
   name: String!

@@ -1,8 +1,8 @@
-const { HttpLink } = require('apollo-link-http');
-const fetch = require('node-fetch');
-const { execute, toPromise } = require('apollo-link');
+const { HttpLink } = require("apollo-link-http")
+const fetch = require("node-fetch")
+const { execute, toPromise } = require("apollo-link")
 
-module.exports.toPromise = toPromise;
+module.exports.toPromise = toPromise
 
 const {
   dataSources,
@@ -12,27 +12,27 @@ const {
   ApolloServer,
   LaunchAPI,
   UserAPI,
-  store,
-} = require('../');
+  store
+} = require("../")
 
 /**
  * Integration testing utils
  */
 const constructTestServer = ({ context = defaultContext } = {}) => {
-  const userAPI = new UserAPI({ store });
-  const launchAPI = new LaunchAPI();
+  const userAPI = new UserAPI({ store })
+  const launchAPI = new LaunchAPI()
 
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     dataSources: () => ({ userAPI, launchAPI }),
-    context,
-  });
+    context
+  })
 
-  return { server, userAPI, launchAPI };
-};
+  return { server, userAPI, launchAPI }
+}
 
-module.exports.constructTestServer = constructTestServer;
+module.exports.constructTestServer = constructTestServer
 
 /**
  * e2e Testing Utils
@@ -44,21 +44,21 @@ const startTestServer = async server => {
   // server.applyMiddleware({ app });
   // const httpServer = await app.listen(0);
 
-  const httpServer = await server.listen({ port: 0 });
+  const httpServer = await server.listen({ port: 0 })
 
   const link = new HttpLink({
     uri: `http://localhost:${httpServer.port}`,
-    fetch,
-  });
+    fetch
+  })
 
   const executeOperation = ({ query, variables = {} }) =>
-    execute(link, { query, variables });
+    execute(link, { query, variables })
 
   return {
     link,
     stop: () => httpServer.server.close(),
-    graphql: executeOperation,
-  };
-};
+    graphql: executeOperation
+  }
+}
 
-module.exports.startTestServer = startTestServer;
+module.exports.startTestServer = startTestServer

@@ -86,8 +86,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     this.promise = new Promise<T>((resolve, reject) => {
       this.onResolve = resolve
       this.onReject = reject
-    })
-    .finally(() => {
+    }).finally(() => {
       this.store.ssr && this.store.unpushPromise(this.promise)
     })
 
