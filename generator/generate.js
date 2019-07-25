@@ -31,6 +31,7 @@ function generate(
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
+  const enumTypes = [] // enum types to be imported when using typescript
   const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
 
@@ -121,16 +122,32 @@ function generate(
     const name = type.name
     toExport.push(name + "Enum")
 
+    const tsType =
+      format === "ts"
+        ? `\
+/**
+ * Typescript enum
+ */
+
+export enum ${name} {
+  ${type.enumValues.map(enumV => `${enumV.name}="${enumV.name}"`).join(",\n")}
+}`
+        : ""
+
     const contents = `\
 ${header}
 import { types } from "mobx-state-tree"
+
+${tsType}
 
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
 export const ${name}Enum = ${handleEnumTypeCore(type)}
 `
-
+    if (format === "ts") {
+      enumTypes.push(type.name)
+    }
     generateFile(name + "Enum", contents, true)
   }
 
@@ -504,6 +521,9 @@ ${objectTypes
       }`
   )
   .join("")}
+${enumTypes
+  .map(t => `\nimport { ${t} } from "./${t}Enum${importPostFix}"`)
+  .join("")}
 ${inputTypes
   .map(
     t =>
@@ -673,6 +693,8 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         return type.name + (isRoot ? " | undefined" : "")
       case "SCALAR":
         return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
+      case "ENUM":
+        return type.name
       default:
         console.warn(
           "Not implemented printTsType yet, PR welcome for " +
