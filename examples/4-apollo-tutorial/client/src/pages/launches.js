@@ -12,7 +12,7 @@ export default observer(function Launches() {
       {query.case({
         error: () => <p>ERROR</p>,
         loading: () => <Loading />,
-        data: launchConnection => (
+        data: ({ launches: launchConnection }) => (
           <Fragment>
             {launchConnection.launches.map(launch => (
               <LaunchTile key={launch.id} launch={launch} />

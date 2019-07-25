@@ -1,6 +1,6 @@
 {
   "name": "mst-gql",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "main": "dist/mst-gql.js",
   "source": "src/mst-gql.ts",
@@ -15,7 +15,7 @@
   "scripts": {
     "test": "jest test && cd examples/2-scaffolding && yarn start",
     "watch": "jest test --watch",
-    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,graphql-request'"
+    "build": "microbundle --no-compress --external 'mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request'"
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "@types/jest": "^24.0.13",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
+    "escape-string-regexp": "^2.0.0",
     "graphql-tag": "^2.10.1",
     "jest": "^24.8.0",
     "microbundle": "^0.11.0",
@@ -52,6 +53,7 @@
     "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "relative-deps": "^0.1.0",
     "subscriptions-transport-ws": "^0.9.16",
     "typescript": "^3.4.5"
   },

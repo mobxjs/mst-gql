@@ -1,12 +1,11 @@
-/* This is a mst-sql generated file, don't modify it manually */
+/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 import { RootStore } from "./index"
+
 
 /**
  * AttackBase
@@ -35,12 +34,9 @@ export class AttackModelSelector extends QueryBuilder {
   get name() { return this.__attr(`name`) }
   get type() { return this.__attr(`type`) }
   get damage() { return this.__attr(`damage`) }
-
 }
-
 export function selectFromAttack() {
   return new AttackModelSelector()
 }
 
-export const attackModelPrimitives = selectFromAttack().name.type.damage.toString()
-
+export const attackModelPrimitives = selectFromAttack().name.type.damage

@@ -1,12 +1,11 @@
-/* This is a mst-sql generated file, don't modify it manually */
+/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 import { RootStore } from "./index"
+
 
 /**
  * UserBase
@@ -30,12 +29,9 @@ export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get name() { return this.__attr(`name`) }
   get avatar() { return this.__attr(`avatar`) }
-
 }
-
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().name.avatar.toString()
-
+export const userModelPrimitives = selectFromUser().name.avatar

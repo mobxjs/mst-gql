@@ -1,11 +1,9 @@
-/* This is a mst-sql generated file, don't modify it manually */
+/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 
-
-import { RootStore } from "./index"
 
 /**
  * RocketBase
@@ -29,12 +27,9 @@ export class RocketModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get name() { return this.__attr(`name`) }
   get type() { return this.__attr(`type`) }
-
 }
-
 export function selectFromRocket() {
   return new RocketModelSelector()
 }
 
-export const rocketModelPrimitives = selectFromRocket().id.name.type.toString()
-
+export const rocketModelPrimitives = selectFromRocket().name.type

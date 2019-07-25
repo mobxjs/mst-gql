@@ -1,12 +1,11 @@
-/* This is a mst-sql generated file, don't modify it manually */
+/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-
-
+import { MSTGQLObject, QueryBuilder } from "mst-gql"
 import { RootStore } from "./index"
+
 
 /**
  * UserBase
