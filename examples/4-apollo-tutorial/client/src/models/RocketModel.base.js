@@ -14,8 +14,8 @@ export const RocketModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Rocket"), "Rocket"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    type: types.maybe(types.string),
+    name: types.maybeNull(types.string),
+    type: types.maybeNull(types.string),
   })
   .views(self => ({
     get store() {

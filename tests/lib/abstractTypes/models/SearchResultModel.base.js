@@ -16,7 +16,7 @@ export const SearchResultModelBase = MSTGQLObject
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal("SearchResult"), "SearchResult"),
-    inputQuery: types.maybe(types.string),
+    inputQuery: types.maybeNull(types.string),
     items: types.optional(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel))), []),
   })
   .views(self => ({

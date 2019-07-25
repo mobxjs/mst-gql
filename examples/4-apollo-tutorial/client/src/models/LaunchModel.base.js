@@ -18,10 +18,10 @@ export const LaunchModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Launch"), "Launch"),
     id: types.identifier,
-    site: types.maybe(types.string),
-    mission: types.maybe(types.late(() => MissionModel)),
-    rocket: types.maybe(MSTGQLRef(types.late(() => RocketModel))),
-    isBooked: types.maybe(types.boolean),
+    site: types.maybeNull(types.string),
+    mission: types.maybeNull(types.late(() => MissionModel)),
+    rocket: types.maybeNull(MSTGQLRef(types.late(() => RocketModel))),
+    isBooked: types.maybeNull(types.boolean),
   })
   .views(self => ({
     get store() {

@@ -17,8 +17,8 @@ export const TodoModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),
     id: types.identifier,
-    text: types.maybe(types.string),
-    complete: types.maybe(types.boolean),
+    text: types.maybeNull(types.string),
+    complete: types.maybeNull(types.boolean),
   })
   .views(self => ({
     get store() {

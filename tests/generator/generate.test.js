@@ -62,7 +62,7 @@ type Query {
   expect(
     hasFileContent(
       repoModelBase,
-      "owner: types.maybe(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),"
+      "owner: types.maybeNull(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),"
     )
   ).toBeTruthy()
 })

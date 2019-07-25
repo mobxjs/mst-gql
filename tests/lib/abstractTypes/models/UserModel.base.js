@@ -14,8 +14,8 @@ export const UserModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("User"), "User"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    avatar: types.maybe(types.string),
+    name: types.maybeNull(types.string),
+    avatar: types.maybeNull(types.string),
   })
   .views(self => ({
     get store() {

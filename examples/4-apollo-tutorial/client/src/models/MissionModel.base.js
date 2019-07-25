@@ -13,7 +13,7 @@ export const MissionModelBase = MSTGQLObject
   .named('Mission')
   .props({
     __typename: types.optional(types.literal("Mission"), "Mission"),
-    name: types.maybe(types.string),
+    name: types.maybeNull(types.string),
   })
   .views(self => ({
     get store() {

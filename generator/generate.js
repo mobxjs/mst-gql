@@ -322,16 +322,16 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           return wrap(
             `types.${primitiveType}`,
             useMaybe && primitiveType !== "identifier",
-            "types.maybe(",
+            "types.maybeNull(",
             ")"
           )
         case "OBJECT":
           return wrap(
             handleObjectFieldType(fieldName, fieldType),
             useMaybe,
-            "types.maybe(",
+            "types.maybeNull(",
             ")"
-          )
+)
         case "LIST":
           return `types.optional(types.array(${handleFieldType(
             fieldName,
@@ -345,7 +345,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             // TODO: import again when enums in query builders are supported
             addImport(enumType, enumType)
           }
-          return wrap(enumType, useMaybe, "types.maybe(", ")")
+          return wrap(enumType, useMaybe, "types.maybeNull(", ")")
         case "INTERFACE":
         case "UNION":
           return wrap(

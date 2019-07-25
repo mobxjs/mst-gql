@@ -27,33 +27,33 @@ export const PokemonModelBase = MSTGQLObject
     /** The ID of an object */
     id: types.identifier,
     /** The identifier of this Pokémon */
-    number: types.maybe(types.string),
+    number: types.maybeNull(types.string),
     /** The name of this Pokémon */
-    name: types.maybe(types.string),
+    name: types.maybeNull(types.string),
     /** The minimum and maximum weight of this Pokémon */
-    weight: types.maybe(types.late(() => PokemonDimensionModel)),
+    weight: types.maybeNull(types.late(() => PokemonDimensionModel)),
     /** The minimum and maximum weight of this Pokémon */
-    height: types.maybe(types.late(() => PokemonDimensionModel)),
+    height: types.maybeNull(types.late(() => PokemonDimensionModel)),
     /** The classification of this Pokémon */
-    classification: types.maybe(types.string),
+    classification: types.maybeNull(types.string),
     /** The type(s) of this Pokémon */
     types: types.optional(types.array(types.string), []),
     /** The type(s) of Pokémons that this Pokémon is resistant to */
     resistant: types.optional(types.array(types.string), []),
     /** The attacks of this Pokémon */
-    attacks: types.maybe(types.late(() => PokemonAttackModel)),
+    attacks: types.maybeNull(types.late(() => PokemonAttackModel)),
     /** The type(s) of Pokémons that this Pokémon weak to */
     weaknesses: types.optional(types.array(types.string), []),
-    fleeRate: types.maybe(types.number),
+    fleeRate: types.maybeNull(types.number),
     /** The maximum CP of this Pokémon */
-    maxCP: types.maybe(types.integer),
+    maxCP: types.maybeNull(types.integer),
     /** The evolutions of this Pokémon */
     evolutions: types.optional(types.array(MSTGQLRef(types.late((): any => PokemonModel))), []),
     /** The evolution requirements of this Pokémon */
-    evolutionRequirements: types.maybe(types.late(() => PokemonEvolutionRequirementModel)),
+    evolutionRequirements: types.maybeNull(types.late(() => PokemonEvolutionRequirementModel)),
     /** The maximum HP of this Pokémon */
-    maxHP: types.maybe(types.integer),
-    image: types.maybe(types.string),
+    maxHP: types.maybeNull(types.integer),
+    image: types.maybeNull(types.string),
   })
   .views(self => ({
     get store() {
