@@ -25,5 +25,5 @@ export const RootStoreBase = MSTGQLStore
       return self.mutate(`mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
-    },    
+    },
   }))
