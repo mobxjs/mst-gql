@@ -331,7 +331,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             useMaybe,
             "types.maybeNull(",
             ")"
-)
+          )
         case "LIST":
           return `types.optional(types.array(${handleFieldType(
             fieldName,
@@ -351,7 +351,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           return wrap(
             handleInterfaceOrUnionFieldType(fieldName, fieldType),
             useMaybe,
-            "types.maybe(",
+            "types.maybeNull(",
             ")"
           )
         default:

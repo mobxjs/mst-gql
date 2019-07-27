@@ -94,6 +94,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 import { UserModel } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -108,7 +109,7 @@ export const RootStoreBase = MSTGQLStore
       return self.query<typeof UserModel.Type>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
-    },    
+    },
   }))
 ",
     true,
@@ -392,6 +393,7 @@ import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { OrganizationModel } from \\"./OrganizationModel\\"
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -406,7 +408,7 @@ export const RootStoreBase = MSTGQLStore
       return self.query<typeof RepoModel.Type>(\`query repo { repo {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
-    },    
+    },
   }))
 ",
     true,
@@ -688,6 +690,7 @@ import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
 import { BookModel } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -702,7 +705,7 @@ export const RootStoreBase = MSTGQLStore
       return self.query<typeof SearchResultModel.Type>(\`query search($text: String!) { search(text: $text) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
-    },    
+    },
   }))
 ",
     true,
