@@ -629,13 +629,39 @@ For examples, see the sections [Loading and rendering your first data](#loading-
 
 The `localStorageMixin` can be used to automatically safe the full state of the `RootStore`. By default the store is saved after every change, but throttle to be saved once per 5 seconds. (The reason for the trotthling is that, although snapshotting is cheap, serializing a a snapshot to a string is expensive).
 
-Two options are available: `throttle` (in milliseconds) and `storageKey` (the key to be used to store in the local storage).
+Options:
+
+- `storage` (the storage object to use. Defaults to `window.localStorage`)
+- `throttle` (in milliseconds)
+- `storageKey` (the key to be used to store in the local storage).
 
 Example:
+
+`models/RootStore.js`
 
 ```typescript
 const RootStore = RootStoreBase.extend(
   localStorageMixin({
+    throttle: 1000,
+    storageKey: "appFluff"
+  })
+)
+```
+
+### Use with react-native
+
+To use this mixin with react-native you can pass `AsyncStorage` to the mixin using the `storage` option:
+
+Example:
+
+`models/RootStore.js`
+
+```typescript
+import AsyncStorage from "@react-native-community/async-storage"
+
+const RootStore = RootStoreBase.extend(
+  localStorageMixin({
+    storage: AsyncStorage,
     throttle: 1000,
     storageKey: "appFluff"
   })
