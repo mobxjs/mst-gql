@@ -16,7 +16,7 @@ That being said, it is pretty safe to adopt this project in the sense that just 
 
 # 🚀 Installation 🚀
 
-Installation: `yarn add mobx mobx-state-tree mobx-react@6.0.0-rc.4 react react-dom mst-gql graphql-request`
+Installation: `yarn add mobx mobx-state-tree mobx-react react react-dom mst-gql graphql-request`
 
 If you want to use graphql tags, also install: `yarn add graphql graphql-tag`
 
