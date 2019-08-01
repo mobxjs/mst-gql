@@ -15,6 +15,7 @@ import { attackModelPrimitives, AttackModelSelector } from "./AttackModel.base"
 import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
 import { pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -35,5 +36,5 @@ export const RootStoreBase = MSTGQLStore
       return self.query<typeof PokemonModel.Type>(`query pokemon($id: String, $name: String) { pokemon(id: $id, name: $name) {
         ${typeof resultSelector === "function" ? resultSelector(new PokemonModelSelector()).toString() : resultSelector}
       } }`, variables, options)
-    },    
+    },
   }))
