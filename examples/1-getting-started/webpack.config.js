@@ -9,27 +9,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: [
-          {
-            loader: require.resolve("source-map-loader")
-          }
-        ],
-        include: [/node_modules/, context],
-        exclude: [/node_modules\/subscriptions\-transport\-ws/],
-        enforce: "pre"
-      },
-      {
         test: /\.tsx?$/,
-        exclude: /\.*node_modules\/*/,
-        use: [
-          {
-            loader: require.resolve("awesome-typescript-loader"),
-            options: {
-              configFileName: require.resolve("./tsconfig.json")
-            }
-          }
-        ]
+        loader: require.resolve("babel-loader")
       },
       {
         test: /\.css$/,

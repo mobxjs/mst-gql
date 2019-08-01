@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "rootDir": "./src",
-    "baseUrl": "./src",
-    "strict": true,
-    "lib": ["dom", "es2018", "esnext.asynciterable", "esnext.array"],
-    "jsx": "react",
+    "target": "esnext",
+    "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "strict": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react",
+    "noEmit": true,
     "moduleResolution": "node"
   }
 }
