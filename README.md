@@ -670,20 +670,6 @@ const RootStore = RootStoreBase.extend(
 
 # 🙈 Examples 🙈
 
-### Running the examples
-
-Run the following in the example directory
-
-```
-yarn global add realpath # not needed for Linux users
-yarn
-yarn start
-```
-
-All examples start on url http://localhost:3000/
-
-Overview of the examples:
-
 ### 1. Getting started
 
 The [`1-getting-started](examples/1-getting-started) example is a very trivial project, that shows how to use `mst-gql` together with TypeScript and React. Features:
