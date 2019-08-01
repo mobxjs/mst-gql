@@ -55,7 +55,7 @@ The runtime library is configured by the scaffolder, and provides entry points t
 
 To get started,after [installing](#-installation-) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
 
-To scaffold TypeScript models based on a locally running graphQL endpoint on port 4000, run: `yarn mst-gql --format ts http://localhost:4000/graphql`. There are several additional args that can be passed to the CLI or put in a config file—both are detailed [below](#cli).
+To scaffold TypeScript models based on a locally running graphQL endpoint on port 4000, run: `yarn mst-gql --format ts http://localhost:4000/graphql`. There are several additional args that can be passed to the CLI or put in a config file. Both are detailed [below](#cli).
 
 Tip: Note that API descriptions found in the graphQL endpoint will generally end up in the generated code, so make sure to write them!
 
@@ -416,7 +416,7 @@ The `mst-gql` command currently accepts the following arguments:
 
 `mst-gql` also supports [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) as an alternative to using cli arguments.
 
-and example config can be found in example 2 [here](https://github.com/mobxjs/mst-gql/blob/master/examples/2-scaffolding/mst-gql.config.js).
+A sample config can be found in [Example 2](https://github.com/mobxjs/mst-gql/blob/master/examples/2-scaffolding/mst-gql.config.js).
 
 ## RootStore
 
