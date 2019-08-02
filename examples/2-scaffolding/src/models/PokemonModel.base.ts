@@ -11,7 +11,7 @@ import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
 import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
 import { PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 import { PokemonModel } from "./PokemonModel"
-import { RootStore } from "./index"
+import { RootStoreType } from "./index"
 
 
 /**
@@ -57,7 +57,7 @@ export const PokemonModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 

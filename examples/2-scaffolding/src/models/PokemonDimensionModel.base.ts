@@ -4,7 +4,7 @@
 
 import { types } from "mobx-state-tree"
 import { MSTGQLObject, QueryBuilder } from "mst-gql"
-import { RootStore } from "./index"
+import { RootStoreType } from "./index"
 
 
 /**
@@ -24,7 +24,7 @@ export const PokemonDimensionModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 

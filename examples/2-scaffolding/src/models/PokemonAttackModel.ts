@@ -1,7 +1,9 @@
+import { Instance } from "mobx-state-tree"
 import { PokemonAttackModelBase } from "./PokemonAttackModel.base"
 
 /* The TypeScript type of an instance of PokemonAttackModel */
-export type PokemonAttackModelType = typeof PokemonAttackModel.Type
+export interface PokemonAttackModelType
+  extends Instance<typeof PokemonAttackModel.Type> {}
 
 /* A graphql query fragment builders for PokemonAttackModel */
 export {

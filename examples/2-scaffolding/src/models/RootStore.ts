@@ -1,6 +1,7 @@
+import { Instance } from "mobx-state-tree"
 import { RootStoreBase } from "./RootStore.base"
 
-export type RootStoreType = typeof RootStore.Type
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
 export const RootStore = RootStoreBase.actions(self => ({
   // This is an auto-generated example action.
