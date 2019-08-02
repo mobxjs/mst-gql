@@ -182,7 +182,7 @@ import { ${name}ModelBase } from "./${name}Model.base${importPostFix}"
 
 ${
   format === "ts"
-    ? `/* The TypeScript type of an instance of ${name}Model */\nexport type ${name}ModelType = typeof ${name}Model.Type\n`
+    ? `/* The TypeScript type of an instance of ${name}Model */\nexport interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}\n`
     : ""
 }
 ${
@@ -200,7 +200,7 @@ ${exampleAction}
 `
 
     if (format === "ts") {
-      addImportToMap(imports, name + "Model.base", "index", "RootStore")
+      addImportToMap(imports, name + "Model.base", "index", "RootStoreType")
     }
 
     const modelFile = `\
@@ -226,9 +226,7 @@ ${modelProperties}
   })
   .views(self => ({
     get store() {
-      return self.__getStore${
-        format === "ts" ? `<typeof RootStore.Type>` : ""
-      }()
+      return self.__getStore${format === "ts" ? `<RootStoreType>` : ""}()
     }
   }))
 
@@ -448,9 +446,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           p += ifTS(
             `?: string | ${selector} | ((selector: ${selector}) => ${selector})`
           )
-          p += `) { return this.__inlineFragment(\`${
-            subType.name
-          }\`, ${selector}, builder) }`
+          p += `) { return this.__inlineFragment(\`${subType.name}\`, ${selector}, builder) }`
           return p
         })
         .join("\n")
@@ -493,11 +489,13 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
   function generateRootStore() {
     toExport.push("RootStore")
 
-    const entryFile = `\
+    const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
 import { RootStoreBase } from "./RootStore.base${importPostFix}"
 
 ${
-  format == "ts" ? "export type RootStoreType = typeof RootStore.Type\n\n" : ""
+  format == "ts"
+    ? "export interface RootStoreType extends Instance<typeof RootStore.Type> {}\n\n"
+    : ""
 }\
 export const RootStore = RootStoreBase
 ${exampleAction}
@@ -512,7 +510,9 @@ import { MSTGQLStore, configureStoreMixin${
 ${objectTypes
   .map(
     t =>
-      `\nimport { ${t}Model } from "./${t}Model${importPostFix}"${
+      `\nimport { ${t}Model${ifTS(
+        `, ${t}ModelType`
+      )} } from "./${t}Model${importPostFix}"${
         modelsOnly
           ? ""
           : `\nimport { ${toFirstLower(
@@ -617,7 +617,7 @@ ${rootTypes
         const tsType =
           format !== "ts"
             ? ""
-            : `<typeof ${returnType.name}Model.Type${returnsList ? "[]" : ""}>`
+            : `<${returnType.name}ModelType${returnsList ? "[]" : ""}>`
 
         const formalArgs =
           args.length === 0
@@ -646,9 +646,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
           args.length === 0 && format === "ts" ? "?" : ""
         }${tsVariablesType}, resultSelector${
           ifTS(
-            `: string | ((qb: ${returnType.name}ModelSelector) => ${
-              returnType.name
-            }ModelSelector)`
+            `: string | ((qb: ${returnType.name}ModelSelector) => ${returnType.name}ModelSelector)`
           ) /* TODO or GQL object */
         } = ${toFirstLower(
           returnType.name
@@ -729,12 +727,14 @@ import { createStoreContext, createUseQueryHook } from "mst-gql"
 import * as React from "react"
 ${
   format === "ts"
-    ? `import { RootStore } from "./RootStore${importPostFix}"`
+    ? `import { RootStore${ifTS(
+        ", RootStoreType"
+      )} } from "./RootStore${importPostFix}"`
     : ""
 }
 
 export const StoreContext = createStoreContext${
-      format === "ts" ? `<typeof RootStore.Type>` : ""
+      format === "ts" ? `<RootStoreType>` : ""
     }(React)
 
 export const useQuery = createUseQueryHook(StoreContext, React)
