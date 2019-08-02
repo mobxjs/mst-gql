@@ -672,10 +672,11 @@ const RootStore = RootStoreBase.extend(
 
 ### Running the examples
 
+Make sure to run `yarn` at least once in the root directory of your git clone
+
 Run the following in the example directory
 
 ```
-yarn global add realpath # not needed for Linux users
 yarn
 yarn start
 ```

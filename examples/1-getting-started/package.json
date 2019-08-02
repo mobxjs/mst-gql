@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start:server": "node ./src/server/index.js",
-    "start:client": "sleep 1 && yarn scaffold && parcel -w public/index.html",
+    "start:client": "sleep 1 && yarn scaffold && parcel serve public/index.html",
     "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Todo' --excludes 'CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:3001/graphql",
     "postinstall": "../../node_modules/.bin/relative-deps",
     "start": "run-p start:server start:client",
