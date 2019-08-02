@@ -52,7 +52,7 @@ function generate(
     types
       .filter(type => !excludes.includes(type.name))
       .filter(type => !type.name.startsWith("__"))
-      .filter(type => type.kind !== "SCALAR" && type.kind !== "INPUT_OBJECT")
+      .filter(type => type.kind !== "SCALAR")
       .forEach(type => {
         knownTypes.push(type.name)
         if (type.kind === "OBJECT") objectTypes.push(type.name)
@@ -177,7 +177,7 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     const { name } = type
     const flowerName = toFirstLower(name)
 
-    const entryFile = `\
+    const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
 import { ${name}ModelBase } from "./${name}Model.base${importPostFix}"
 
 ${
