@@ -11,7 +11,7 @@ export const Home = observer(() => {
     return (
       <>
         <ul>
-          {data.todo.map(todo => (
+          {data.todos.map(todo => (
             <Todo key={todo.id} todo={todo} />
           ))}
         </ul>
