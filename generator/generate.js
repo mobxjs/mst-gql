@@ -617,7 +617,9 @@ ${rootTypes
         const tsType =
           format !== "ts"
             ? ""
-            : `<${returnType.name}ModelType${returnsList ? "[]" : ""}>`
+            : `<{ ${name}: ${returnType.name}ModelType${
+                returnsList ? "[]" : ""
+              }}>`
 
         const formalArgs =
           args.length === 0
