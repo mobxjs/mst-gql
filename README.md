@@ -207,7 +207,7 @@ export const Home = observer(() => {
   if (loading) return <Loading />
   return (
     <ul>
-      {data.map(message => (
+      {data.messages.map(message => (
         <Message key={message.id} message={message} />
       ))}
     </ul>
