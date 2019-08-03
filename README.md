@@ -674,9 +674,8 @@ This project contains usage exampels in the `examples` directory showcasing vari
 
 ### Running the examples
 
-1. Make sure to run `yarn` at least once in the root directory of this project
-2. within the example you want to run make sure to also run `yarn`
-3. run `yarn start` to start the example. All examples can be viewed at [http://localhost:3000/](http://localhost:3000/) once running.
+1. Make sure to run `yarn` in the root directory of this project before running an example.
+2. instructuoins for each example can be found in the `README.md` within the example folder.
 
 ## Overview of the examples:
 
