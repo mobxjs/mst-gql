@@ -9,7 +9,7 @@ const Home = observer(() => {
     return (
       <>
         <ul>
-          {data.map(todo => (
+          {data.todos.map(todo => (
             <li key={todo.id}>{todo.text}</li>
           ))}
         </ul>

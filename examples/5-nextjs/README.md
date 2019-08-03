@@ -1,13 +1,23 @@
-# SSR example
+## About
 
 This example shows a minimal example of how to use SSR:
 
-`yarn install` install
+## Usage
 
-`yarn install-mst-gql` install mst-gql locally in this example package's node modules
+#### 0. install `mst-gql` dependencies (within the parent `mst-gql` directory)
 
-`yarn server:start` Runs the graphql server
+```bash
+yarn
+```
 
-`yarn scaffold` scaffold MST models
+#### 1. Install dependencies (within this example's folder)
 
-`yarn client:dev` start client
+```bash
+yarn
+```
+
+#### 2. Start server
+
+```bash
+yarn start
+```
