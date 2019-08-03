@@ -1,7 +1,9 @@
+import { Instance } from "mobx-state-tree"
 import { TodoModelBase } from "./TodoModel.base"
+import { Query } from "mst-gql"
 
 /* The TypeScript type of an instance of TodoModel */
-export type TodoModelType = typeof TodoModel.Type
+export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
 
 /* A graphql query fragment builders for TodoModel */
 export {
@@ -14,7 +16,9 @@ export {
  * TodoModel
  */
 export const TodoModel = TodoModelBase.actions(self => ({
-  toggle() {
+  toggle(): Query<{
+    toggleTodo: TodoModelType
+  }> {
     return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
       self.complete = !self.complete
     })

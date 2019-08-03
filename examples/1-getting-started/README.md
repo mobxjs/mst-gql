@@ -6,13 +6,13 @@ This example demonstrates a simple mst-gql project (without scaffolding set up)
 
 ## Usage
 
-#### 0. Build mst-gql
+#### 0. install `mst-gql` dependencies (within the parent `mst-gql` directory)
 
 ```bash
-yarn build-mst-gql
+yarn
 ```
 
-#### 1. Install dependencies
+#### 1. Install dependencies (within this example's folder)
 
 ```bash
 yarn

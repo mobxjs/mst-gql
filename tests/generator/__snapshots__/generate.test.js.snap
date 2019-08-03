@@ -10,7 +10,7 @@ Array [
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -27,7 +27,7 @@ export const UserModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -46,10 +46,11 @@ export const userModelPrimitives = selectFromUser().name.avatar
   ],
   Array [
     "UserModel",
-    "import { UserModelBase } from \\"./UserModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export type UserModelType = typeof UserModel.Type
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -69,9 +70,10 @@ export const UserModel = UserModelBase
   ],
   Array [
     "RootStore",
-    "import { RootStoreBase } from \\"./RootStore.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
 
-export type RootStoreType = typeof RootStore.Type
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
 export const RootStore = RootStoreBase
   .actions(self => ({
@@ -91,7 +93,7 @@ export const RootStore = RootStoreBase
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
-import { UserModel } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 
@@ -106,7 +108,7 @@ export const RootStoreBase = MSTGQLStore
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<typeof UserModel.Type>(\`query me { me {
+      return self.query<{ me: UserModelType}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -122,9 +124,9 @@ export const RootStoreBase = MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore } from \\"./RootStore\\"
+import { RootStore, RootStoreType } from \\"./RootStore\\"
 
-export const StoreContext = createStoreContext<typeof RootStore.Type>(React)
+export const StoreContext = createStoreContext<RootStoreType>(React)
 
 export const useQuery = createUseQueryHook(StoreContext, React)
 ",
@@ -158,7 +160,7 @@ import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 import { OrganizationModel } from \\"./OrganizationModel\\"
 import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
 import { UserModel } from \\"./UserModel\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -174,7 +176,7 @@ export const RepoModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -192,10 +194,11 @@ export const repoModelPrimitives = selectFromRepo()
   ],
   Array [
     "RepoModel",
-    "import { RepoModelBase } from \\"./RepoModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RepoModelBase } from \\"./RepoModel.base\\"
 
 /* The TypeScript type of an instance of RepoModel */
-export type RepoModelType = typeof RepoModel.Type
+export interface RepoModelType extends Instance<typeof RepoModel.Type> {}
 
 /* A graphql query fragment builders for RepoModel */
 export { selectFromRepo, repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
@@ -240,7 +243,7 @@ export const ownerModelPrimitives = selectFromOwner().name",
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -257,7 +260,7 @@ export const UserModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -276,10 +279,11 @@ export const userModelPrimitives = selectFromUser().name.avatar
   ],
   Array [
     "UserModel",
-    "import { UserModelBase } from \\"./UserModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export type UserModelType = typeof UserModel.Type
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -305,7 +309,7 @@ export const UserModel = UserModelBase
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -322,7 +326,7 @@ export const OrganizationModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -341,10 +345,11 @@ export const organizationModelPrimitives = selectFromOrganization().name.logo
   ],
   Array [
     "OrganizationModel",
-    "import { OrganizationModelBase } from \\"./OrganizationModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { OrganizationModelBase } from \\"./OrganizationModel.base\\"
 
 /* The TypeScript type of an instance of OrganizationModel */
-export type OrganizationModelType = typeof OrganizationModel.Type
+export interface OrganizationModelType extends Instance<typeof OrganizationModel.Type> {}
 
 /* A graphql query fragment builders for OrganizationModel */
 export { selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
@@ -364,9 +369,10 @@ export const OrganizationModel = OrganizationModelBase
   ],
   Array [
     "RootStore",
-    "import { RootStoreBase } from \\"./RootStore.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
 
-export type RootStoreType = typeof RootStore.Type
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
 export const RootStore = RootStoreBase
   .actions(self => ({
@@ -386,11 +392,11 @@ export const RootStore = RootStoreBase
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
-import { RepoModel } from \\"./RepoModel\\"
+import { RepoModel, RepoModelType } from \\"./RepoModel\\"
 import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
-import { UserModel } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
-import { OrganizationModel } from \\"./OrganizationModel\\"
+import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 
@@ -405,7 +411,7 @@ export const RootStoreBase = MSTGQLStore
   })
   .actions(self => ({
     queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<typeof RepoModel.Type>(\`query repo { repo {
+      return self.query<{ repo: RepoModelType}>(\`query repo { repo {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -421,9 +427,9 @@ export const RootStoreBase = MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore } from \\"./RootStore\\"
+import { RootStore, RootStoreType } from \\"./RootStore\\"
 
-export const StoreContext = createStoreContext<typeof RootStore.Type>(React)
+export const StoreContext = createStoreContext<RootStoreType>(React)
 
 export const useQuery = createUseQueryHook(StoreContext, React)
 ",
@@ -460,7 +466,7 @@ import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
 import { BookModel } from \\"./BookModel\\"
 import { MovieModel } from \\"./MovieModel\\"
 import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -476,7 +482,7 @@ export const SearchResultModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -494,10 +500,11 @@ export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
   ],
   Array [
     "SearchResultModel",
-    "import { SearchResultModelBase } from \\"./SearchResultModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { SearchResultModelBase } from \\"./SearchResultModel.base\\"
 
 /* The TypeScript type of an instance of SearchResultModel */
-export type SearchResultModelType = typeof SearchResultModel.Type
+export interface SearchResultModelType extends Instance<typeof SearchResultModel.Type> {}
 
 /* A graphql query fragment builders for SearchResultModel */
 export { selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
@@ -541,7 +548,7 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -557,7 +564,7 @@ export const MovieModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -575,10 +582,11 @@ export const movieModelPrimitives = selectFromMovie().description.director
   ],
   Array [
     "MovieModel",
-    "import { MovieModelBase } from \\"./MovieModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { MovieModelBase } from \\"./MovieModel.base\\"
 
 /* The TypeScript type of an instance of MovieModel */
-export type MovieModelType = typeof MovieModel.Type
+export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
 
 /* A graphql query fragment builders for MovieModel */
 export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
@@ -604,7 +612,7 @@ export const MovieModel = MovieModelBase
 
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
-import { RootStore } from \\"./index\\"
+import { RootStoreType } from \\"./index\\"
 
 
 /**
@@ -620,7 +628,7 @@ export const BookModelBase = MSTGQLObject
   })
   .views(self => ({
     get store() {
-      return self.__getStore<typeof RootStore.Type>()
+      return self.__getStore<RootStoreType>()
     }
   }))
 
@@ -638,10 +646,11 @@ export const bookModelPrimitives = selectFromBook().description.author
   ],
   Array [
     "BookModel",
-    "import { BookModelBase } from \\"./BookModel.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { BookModelBase } from \\"./BookModel.base\\"
 
 /* The TypeScript type of an instance of BookModel */
-export type BookModelType = typeof BookModel.Type
+export interface BookModelType extends Instance<typeof BookModel.Type> {}
 
 /* A graphql query fragment builders for BookModel */
 export { selectFromBook, bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
@@ -661,9 +670,10 @@ export const BookModel = BookModelBase
   ],
   Array [
     "RootStore",
-    "import { RootStoreBase } from \\"./RootStore.base\\"
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
 
-export type RootStoreType = typeof RootStore.Type
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
 export const RootStore = RootStoreBase
   .actions(self => ({
@@ -683,11 +693,11 @@ export const RootStore = RootStoreBase
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
-import { SearchResultModel } from \\"./SearchResultModel\\"
+import { SearchResultModel, SearchResultModelType } from \\"./SearchResultModel\\"
 import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
-import { MovieModel } from \\"./MovieModel\\"
+import { MovieModel, MovieModelType } from \\"./MovieModel\\"
 import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
-import { BookModel } from \\"./BookModel\\"
+import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
@@ -702,7 +712,7 @@ export const RootStoreBase = MSTGQLStore
   })
   .actions(self => ({
     querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<typeof SearchResultModel.Type>(\`query search($text: String!) { search(text: $text) {
+      return self.query<{ search: SearchResultModelType}>(\`query search($text: String!) { search(text: $text) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -718,9 +728,9 @@ export const RootStoreBase = MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore } from \\"./RootStore\\"
+import { RootStore, RootStoreType } from \\"./RootStore\\"
 
-export const StoreContext = createStoreContext<typeof RootStore.Type>(React)
+export const StoreContext = createStoreContext<RootStoreType>(React)
 
 export const useQuery = createUseQueryHook(StoreContext, React)
 ",

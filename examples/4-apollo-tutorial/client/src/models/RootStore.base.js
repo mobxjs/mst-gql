@@ -14,6 +14,7 @@ import { rocketModelPrimitives, RocketModelSelector } from "./RocketModel.base"
 import { UserModel } from "./UserModel"
 import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -40,5 +41,5 @@ export const RootStoreBase = MSTGQLStore
       return self.query(`query me { me {
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }`, variables, options)
-    },    
+    },
   }))

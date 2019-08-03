@@ -17,21 +17,13 @@ export const Profile = observer(() => {
       <h3>Edit profile</h3>
       <input
         disabled={!data || loading}
-        defaultValue={data && data.name}
+        defaultValue={data && data.me.name}
         ref={inputRef}
       />
       <button
         disabled={!data || loading}
         onClick={() => {
-          setQuery(
-            store.mutateChangeName(
-              {
-                id: data.id,
-                name: inputRef.current!.value
-              },
-              u => u.name
-            )
-          )
+          data.me.changeName(inputRef.current!.value)
         }}
       >
         Save

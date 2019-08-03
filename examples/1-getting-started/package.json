@@ -1,46 +1,46 @@
 {
-  "name": "@urql/example-getting-started",
+  "name": "@mst-gql/getting-started",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "scripts": {
     "start:server": "node ./src/server/index.js",
-    "start:client": "sleep 1 && yarn scaffold && webpack-dev-server --hot --inline",
+    "start:client": "sleep 1 && yarn scaffold && parcel serve -p 3000 public/index.html",
     "scaffold": "../../generator/mst-gql-scaffold.js --roots 'Todo' --excludes 'CacheControlScope,Query,Subscription' --outDir src/app/models/ --format ts http://localhost:3001/graphql",
     "postinstall": "../../node_modules/.bin/relative-deps",
-    "start": "run-p start:server start:client"
-  },
-  "devDependencies": {
-    "awesome-typescript-loader": "^5.2.1",
-    "css-loader": "^2.1.0",
-    "npm-run-all": "^4.1.5",
-    "source-map-loader": "^0.2.4",
-    "style-loader": "^0.23.1",
-    "typescript": "^3.4.3",
-    "webpack": "^4.29.2",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.1.14"
+    "start": "run-p start:server start:client",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "yarn type-check -- --watch"
   },
   "dependencies": {
-    "@types/graphql": "^14.2.0",
-    "@types/jest": "^24.0.12",
-    "@types/react": "^16.8.16",
-    "@types/react-dom": "^16.8.4",
-    "apollo-server-express": "^2.3.3",
-    "arg": "^4.1.0",
+    "@types/graphql": "^14.2.3",
+    "@types/jest": "^24.0.16",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.8.5",
+    "apollo-server-express": "^2.8.1",
+    "arg": "^4.1.1",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
-    "graphql": "^14.1.1",
-    "graphql-playground-middleware-express": "^1.7.11",
+    "express": "^4.17.1",
+    "graphql": "^14.3.0",
+    "graphql-playground-middleware-express": "^1.7.12",
     "graphql-tag": "^2.10.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.8.0",
-    "mobx": "^5.9.4",
-    "mobx-react": "^6.0.0-rc.4",
-    "mobx-state-tree": "^3.14.0",
+    "mobx": "^5.13.0",
+    "mobx-react": "^6.1.1",
+    "mobx-state-tree": "^3.14.1",
     "mst-gql": "^0.1.2",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "npm-run-all": "^4.1.5",
+    "parcel": "^1.12.3",
+    "typescript": "^3.4.5"
+  },
+  "resolutions": {
+    "graphql": "14.3.0"
   },
   "relativeDependencies": {
     "mst-gql": "../../"

@@ -1,4 +1,4 @@
-import React, { FC, createContext } from "react"
+import React from "react"
 import * as ReactDOM from "react-dom"
 import { createHttpClient } from "mst-gql"
 
@@ -12,7 +12,7 @@ const rootStore = RootStore.create(undefined, {
   gqlHttpClient: createHttpClient("http://localhost:3001/graphql")
 })
 
-export const App: FC = () => (
+export const App: React.FC = () => (
   <StoreContext.Provider value={rootStore}>
     <main>
       <h1>Todos</h1>

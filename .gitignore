@@ -68,3 +68,4 @@ tmp_schema.json
 .awcache
 
 .DS_Store
+.cache

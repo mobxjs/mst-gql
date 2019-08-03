@@ -207,7 +207,7 @@ export const Home = observer(() => {
   if (loading) return <Loading />
   return (
     <ul>
-      {data.map(message => (
+      {data.messages.map(message => (
         <Message key={message.id} message={message} />
       ))}
     </ul>
@@ -676,23 +676,18 @@ const RootStore = RootStoreBase.extend(
 
 # 🙈 Examples 🙈
 
+This project contains usage exampels in the `examples` directory showcasing various ways `mst-gql` can be used.
+
 ### Running the examples
 
-Run the following in the example directory
+1. Make sure to run `yarn` in the root directory of this project before running an example.
+2. instructuoins for each example can be found in the `README.md` within the example folder.
 
-```
-yarn global add realpath # not needed for Linux users
-yarn
-yarn start
-```
-
-All examples start on url http://localhost:3000/
-
-Overview of the examples:
+## Overview of the examples:
 
 ### 1. Getting started
 
-The [`1-getting-started](examples/1-getting-started) example is a very trivial project, that shows how to use `mst-gql` together with TypeScript and React. Features:
+The [`1-getting-started`](examples/1-getting-started) example is a very trivial project, that shows how to use `mst-gql` together with TypeScript and React. Features:
 
 - React
 - TypeScript
@@ -704,7 +699,7 @@ The [`1-getting-started](examples/1-getting-started) example is a very trivial p
 
 ### 2. Scaffolding
 
-The [`2-scaffolding1](examples/2-scaffolding) examples generates code for a non trivial projects and runs it through the compiler.
+The [`2-scaffolding`](examples/2-scaffolding) examples generates code for a non trivial projects and runs it through the compiler.
 
 ### 3. Twitter clone
 
@@ -731,6 +726,12 @@ The examples has a lot of similarities with example 3, and also has
 1. routing
 2. leverages the caching policies in several views, such as switching to specific views, responding initially with cached results until fresh data is fetched
 3. Uses the `localStorageMixin` so that the app can start without network requests
+
+### 5. Next.js
+
+[`5-nextjs`](examples/5-nextjs) an example using [next](https://nextjs.org). Highlights:
+
+1. Server Side Rendering
 
 # Tips & tricks
 

@@ -13,7 +13,7 @@ import { Profile } from "./components/Profile"
 
 const gqlHttpClient = createHttpClient("http://localhost:4000/graphql")
 
-const gqlWsClient = new SubscriptionClient("ws://localhost:4001/graphql", {
+const gqlWsClient = new SubscriptionClient("ws://localhost:4000/graphql", {
   reconnect: true
 })
 

@@ -1,5 +1,5 @@
 {
-  "name": "scaffold-test",
+  "name": "@mst-gql/scaffold-test",
   "scripts": {
     "download": "npx apollo schema:download --endpoint=https://graphql-pokemon.now.sh/ graphql-schema.json",
     "postinstall": "../../node_modules/.bin/relative-deps",

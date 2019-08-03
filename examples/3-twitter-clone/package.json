@@ -1,51 +1,47 @@
 {
-  "name": "@urql/example-getting-started",
+  "name": "@mst-gql/twitter-clone",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start:server": "yarn scaffold:server && ts-node-dev --project ./src/server/tsconfig.json ./src/server/index.ts",
-    "start:client": "yarn scaffold:client && webpack-dev-server --hot --inline",
+    "start:server": "yarn scaffold:server && ts-node-dev --transpileOnly --project ./src/server/tsconfig.json ./src/server/index.ts",
+    "start:client": "yarn scaffold:client && parcel serve -p 3000 public/index.html",
     "scaffold": "yarn scaffold:server && yarn scaffold:client",
     "scaffold:client": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --roots 'Message,User' --outDir src/app/models/ --format ts src/server/schema.graphql",
     "scaffold:server": "../../generator/mst-gql-scaffold.js --excludes 'Mutation,CacheControlScope,Query,Subscription' --roots 'Message,User' --outDir src/server/models/ --format ts --modelsOnly src/server/schema.graphql",
     "start": "run-p start:server start:client",
     "postinstall": "../../node_modules/.bin/relative-deps"
   },
-  "devDependencies": {
-    "awesome-typescript-loader": "^5.2.1",
-    "css-loader": "^2.1.0",
-    "mobx-react": "^6.0.0-rc.4",
-    "npm-run-all": "^4.1.5",
-    "source-map-loader": "^0.2.4",
-    "style-loader": "^0.23.1",
-    "ts-node-dev": "^1.0.0-pre.39",
-    "typescript": "^3.4.3",
-    "webpack": "^4.29.2",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.1.14"
-  },
   "dependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/node": "^7.2.2",
-    "@types/react": "^16.8.16",
-    "@types/react-dom": "^16.8.4",
-    "apollo-server-express": "^2.3.3",
-    "arg": "^4.1.0",
+    "@babel/node": "^7.5.5",
+    "@types/graphql": "^14.2.3",
+    "@types/jest": "^24.0.16",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.8.5",
+    "apollo-server-express": "^2.8.1",
+    "arg": "^4.1.1",
     "cors": "^2.8.5",
-    "esm": "^3.2.25",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "fakergem": "^1.0.3",
     "graphql-playground-middleware-express": "^1.7.11",
     "isomorphic-fetch": "^2.2.1",
-    "mobx": "5.9.4-special",
-    "mobx-react-lite": "^1.3.2",
-    "mobx-state-tree": "^3.14.0",
+    "mobx": "5.13.0",
+    "mobx-react-lite": "^1.4.1",
+    "mobx-state-tree": "^3.14.1",
     "mst-gql": "^0.1.2",
     "node-uuid": "^1.4.8",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
-    "ts-node": "^8.1.0"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "ts-node-dev": "^1.0.0-pre.40"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "npm-run-all": "^4.1.5",
+    "parcel": "^1.12.3",
+    "typescript": "^3.4.5"
+  },
+  "resolutions": {
+    "graphql": "14.3.0"
   },
   "relativeDependencies": {
     "mst-gql": "../../"
