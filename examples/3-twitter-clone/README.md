@@ -1,18 +1,16 @@
 ## About
 
-This example is "borrowed" from the awesome urql repository [here](https://github.com/FormidableLabs/urql/tree/master/examples/1-getting-started).
-
-This example demonstrates a simple mst-gql project (without scaffolding set up)
+This example is a twttier clone that uses mst-gql.
 
 ## Usage
 
-#### 0. Build mst-gql
+#### 0. install `mst-gql` dependencies (within the parent `mst-gql` directory)
 
 ```bash
-yarn build-mst-gql
+yarn
 ```
 
-#### 1. Install dependencies
+#### 1. Install dependencies (within this example's folder)
 
 ```bash
 yarn
