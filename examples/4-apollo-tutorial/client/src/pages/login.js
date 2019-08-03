@@ -11,7 +11,7 @@ export default function Login() {
       return <Loading />
     case "loggedOut":
       return <LoginForm login={email => store.login(email)} />
-    case "error":
+    default:
       return <p>An error occurred</p>
   }
 }
