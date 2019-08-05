@@ -1,10 +1,15 @@
+import { Instance } from "mobx-state-tree"
 import { MessageModelBase } from "./MessageModel.base"
 
 /* The TypeScript type of an instance of MessageModel */
-export type MessageModelType = typeof MessageModel.Type
+export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
 
-/* A graphql query fragment containing all the primitive fields of MessageModel */
-export { messageModelPrimitives } from "./MessageModel.base"
+/* A graphql query fragment builders for MessageModel */
+export {
+  selectFromMessage,
+  messageModelPrimitives,
+  MessageModelSelector
+} from "./MessageModel.base"
 
 /**
  * MessageModel
