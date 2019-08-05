@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.4.0
+
+- update example 1, 2, 3, and 5 so they run [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate) / [chrisdrackett](https://github.com/chrisdrackett)
+- Fixed generated types for all queries and helpers [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate)
+- Fixed generation of input types [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate)
+- Fixed generation for recursive types [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate)
+
+**Note**
+
+This release has changed how the user editable model files are generated when using typescript.
+
+See https://github.com/mobxjs/mst-gql/pull/76/commits/6d98650f82934fdd47a6cf998119560ca306823c for an example of migrating these files to the new version.
+
 ## 0.3.3
 
 - update `localStorageMixin` to support being used with react native see [#64](https://github.com/mobxjs/mst-gql/pull/64) by [chrisdrackett](https://github.com/chrisdrackett)
@@ -10,7 +23,6 @@
 - add better support for enums in typescript [#56](https://github.com/mobxjs/mst-gql/pull/56), [#58](https://github.com/mobxjs/mst-gql/pull/58) by [chrisdrackett](https://github.com/chrisdrackett)
 - support for outputting into folders vs. flat [#60](https://github.com/mobxjs/mst-gql/pull/60) by [Zyc0017](https://github.com/Zyc0017)
 - added support for using a config file [#14](https://github.com/mobxjs/mst-gql/pull/14) by [JoviDeCroock](https://github.com/JoviDeCroock)
-
 
 ## 0.2.0
 
