@@ -1,6 +1,6 @@
 {
   "name": "mst-gql",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "author": "Michel Weststrate",
   "keywords": [
