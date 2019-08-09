@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.4
+
+- fix `promise.finally` issue that caused an error when used in react-native. See [#79](https://github.com/mobxjs/mst-gql/pull/79) by [chrisdrackett](https://github.com/chrisdrackett)
+
 ## 0.3.3
 
 - update `localStorageMixin` to support being used with react native see [#64](https://github.com/mobxjs/mst-gql/pull/64) by [chrisdrackett](https://github.com/chrisdrackett)
@@ -10,7 +14,6 @@
 - add better support for enums in typescript [#56](https://github.com/mobxjs/mst-gql/pull/56), [#58](https://github.com/mobxjs/mst-gql/pull/58) by [chrisdrackett](https://github.com/chrisdrackett)
 - support for outputting into folders vs. flat [#60](https://github.com/mobxjs/mst-gql/pull/60) by [Zyc0017](https://github.com/Zyc0017)
 - added support for using a config file [#14](https://github.com/mobxjs/mst-gql/pull/14) by [JoviDeCroock](https://github.com/JoviDeCroock)
-
 
 ## 0.2.0
 
