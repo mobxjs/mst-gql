@@ -60,9 +60,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
         if (!inCache)
           this.onFailure(
             new Error(
-              `No results for query ${
-                this.query
-              } found in cache, and policy is cache-only`
+              `No results for query ${this.query} found in cache, and policy is cache-only`
             )
           )
         else this.onSuccess(this.store.__queryCache.get(this.cacheKey))
@@ -83,14 +81,20 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   private initPromise() {
-    this.promise = new Promise<T>((resolve, reject) => {
+    const promise = new Promise<T>((resolve, reject) => {
       this.onResolve = resolve
       this.onReject = reject
-    }).finally(() => {
-      this.store.ssr && this.store.unpushPromise(this.promise)
     })
 
-    this.store.ssr && this.store.pushPromise(this.promise)
+    if (this.store.ssr) {
+      this.promise = promise.finally(() => {
+        this.store.unpushPromise(this.promise)
+      })
+
+      this.store.pushPromise(this.promise)
+    } else {
+      this.promise = promise
+    }
   }
 
   @action private onSuccess = (data: any) => {
