@@ -81,14 +81,20 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   private initPromise() {
-    this.promise = new Promise<{ [key: string]: T }>((resolve, reject) => {
+    const promise = new Promise<{ [key: string]: T }>((resolve, reject) => {
       this.onResolve = resolve
       this.onReject = reject
-    }).finally(() => {
-      this.store.ssr && this.store.unpushPromise(this.promise)
     })
 
-    this.store.ssr && this.store.pushPromise(this.promise)
+    if (this.store.ssr) {
+      this.promise = promise.finally(() => {
+        this.store.unpushPromise(this.promise)
+      })
+
+      this.store.pushPromise(this.promise)
+    } else {
+      this.promise = promise
+    }
   }
 
   @action private onSuccess = (data: any) => {
