@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.5
+
+- fix types on `data` returned from `userQuery` to match the shape of data. Thanks [mattiasewers](https://github.com/mattiasewers) for [#77](https://github.com/mobxjs/mst-gql/pull/77) and [#81](https://github.com/mobxjs/mst-gql/pull/81)
+
 ## 0.3.4
 
 - fix `promise.finally` issue that caused an error when used in react-native, see [#79](https://github.com/mobxjs/mst-gql/pull/79) by [chrisdrackett](https://github.com/chrisdrackett)
