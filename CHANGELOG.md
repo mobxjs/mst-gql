@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.4.0
+
+- update example 1, 2, 3, and 5 so they run [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate) / [chrisdrackett](https://github.com/chrisdrackett)
+- Fixed generated types for all queries and helpers [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate)
+- Fixed generation of input types [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate)
+- Fixed generation for recursive types [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate)
+
+**Note**
+
+This release has changed how the user editable model files are generated when using typescript.
+
+See https://github.com/mobxjs/mst-gql/pull/76/commits/6d98650f82934fdd47a6cf998119560ca306823c for an example of migrating these files to the new version.
+
 ## 0.3.5
 
 - fix types on `data` returned from `userQuery` to match the shape of data. Thanks [mattiasewers](https://github.com/mattiasewers) for [#77](https://github.com/mobxjs/mst-gql/pull/77) and [#81](https://github.com/mobxjs/mst-gql/pull/81)

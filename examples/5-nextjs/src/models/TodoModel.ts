@@ -1,7 +1,8 @@
+import { Instance } from "mobx-state-tree"
 import { TodoModelBase } from "./TodoModel.base"
 
 /* The TypeScript type of an instance of TodoModel */
-export type TodoModelType = typeof TodoModel.Type
+export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
 
 /* A graphql query fragment builders for TodoModel */
 export {

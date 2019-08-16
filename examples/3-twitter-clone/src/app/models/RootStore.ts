@@ -1,8 +1,10 @@
+import { Instance } from "mobx-state-tree"
 import { RootStoreBase } from "./RootStore.base"
 import { types } from "mobx-state-tree"
 import { MessageModel } from "./MessageModel"
 import { selectFromMessage } from "./MessageModel.base"
-import { localStorageMixin } from "mst-gql"
+
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
 // prettier-ignore
 export const MESSAGE_FRAGMENT = selectFromMessage()
@@ -11,8 +13,6 @@ export const MESSAGE_FRAGMENT = selectFromMessage()
   .user(user => user.name.avatar)
   .likes()
   .toString()
-
-export type RootStoreType = typeof RootStore.Type
 
 export const RootStore = RootStoreBase.props({
   // The store itself does store Messages in loading order,
@@ -31,19 +31,19 @@ export const RootStore = RootStoreBase.props({
         self.sortedMessages.unshift(message)
       })
     },
-    loadMessages(offset, count, replyTo = undefined) {
+    loadMessages(offset: string, count: number, replyTo = undefined) {
       const query = self.queryMessages(
         { offset, count, replyTo },
         MESSAGE_FRAGMENT
       )
       query.then(data => {
-        self.sortedMessages.push(...data)
+        self.sortedMessages.push(...data.messages)
       })
       return query
     }
   }))
   .actions(self => ({
-    sendTweet(text, replyTo = undefined) {
+    sendTweet(text: string, replyTo = undefined) {
       return self.mutatePostTweet({ text, user: self.me.id, replyTo })
     },
     loadInitialMessages() {
