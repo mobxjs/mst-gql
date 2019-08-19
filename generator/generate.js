@@ -244,7 +244,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     if (modelsOnly) return
 
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
-    const isUnion = interfaceOrUnionType.kind === "UNION"
+    const isUnion =
+      interfaceOrUnionType && interfaceOrUnionType.kind === "UNION"
     const fileName = type.name + "ModelSelector"
     const {
       primitiveFields,
@@ -252,11 +253,17 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       imports
     } = resolveFieldsAndImports(type, fileName)
 
-    interfaceOrUnionType.ofTypes.forEach(t => {
-      const toBeImported = [`${t.name}ModelSelector`]
-      if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
-      addImportToMap(imports, fileName, `${t.name}Model.base`, ...toBeImported)
-    })
+    interfaceOrUnionType &&
+      interfaceOrUnionType.ofTypes.forEach(t => {
+        const toBeImported = [`${t.name}ModelSelector`]
+        if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
+        addImportToMap(
+          imports,
+          fileName,
+          `${t.name}Model.base`,
+          ...toBeImported
+        )
+      })
 
     let contents = header + "\n\n"
     contents = 'import { QueryBuilder } from "mst-gql"\n'
