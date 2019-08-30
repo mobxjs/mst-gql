@@ -23,7 +23,8 @@ function generate(
   excludes = [],
   generationDate = "a long long time ago...",
   modelsOnly = false,
-  noReact = false
+  noReact = false,
+  allowFieldArgs = false
 ) {
   excludes.push(...buildInExcludes)
 
@@ -294,7 +295,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     let modelProperties = ""
     if (type.fields) {
       modelProperties = type.fields
-        .filter(field => field.args.length === 0)
+        .filter(field => (allowFieldArgs ? true : field.args.length === 0))
         .map(field => handleField(field))
         .join("\n")
     }
