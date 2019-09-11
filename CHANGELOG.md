@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.4.1
+
+- stop removing related fields with args. [#86](https://github.com/mobxjs/mst-gql/pull/86) by [beepsoft](https://github.com/beepsoft)
+- further updates on type for `data` from `userQuery` [#89](https://github.com/mobxjs/mst-gql/pull/89) by [mattiasewers](https://github.com/mattiasewers)
+
 ## 0.4.0
 
 - update example 1, 2, 3, and 5 so they run [#69](https://github.com/mobxjs/mst-gql/pull/64) by [mweststrate](https://github.com/mweststrate) / [chrisdrackett](https://github.com/chrisdrackett)

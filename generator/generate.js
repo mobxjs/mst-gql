@@ -293,10 +293,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     let modelProperties = ""
     if (type.fields) {
-      modelProperties = type.fields
-        .filter(field => field.args.length === 0)
-        .map(field => handleField(field))
-        .join("\n")
+      modelProperties = type.fields.map(field => handleField(field)).join("\n")
     }
 
     return {
