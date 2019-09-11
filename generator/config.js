@@ -1,8 +1,8 @@
-const { existsSync } = require("fs");
-const { resolve } = require("path");
-const cosmiconfig = require('cosmiconfig');
+const { existsSync } = require("fs")
+const { resolve } = require("path")
+const cosmiconfig = require("cosmiconfig")
 
-const explorer = cosmiconfig('mst-gql');
+const explorer = cosmiconfig("mst-gql")
 
 const defaultConfig = {
   excludes: [],
@@ -12,16 +12,16 @@ const defaultConfig = {
   modelsOnly: false,
   outDir: "src/models",
   roots: [],
-  noReact: false,
+  noReact: false
 }
 
 exports.getConfig = function getConfig() {
   try {
-    const result = explorer.searchSync();
-    return result ? result.config : defaultConfig;
+    const result = explorer.searchSync()
+    return result ? result.config : defaultConfig
   } catch (e) {
-    console.error(e.message);
-    return defaultConfig;
+    console.error(e.message)
+    return defaultConfig
   }
 }
 
@@ -35,7 +35,7 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
   const excludes = args["--excludes"]
     ? args["--excludes"].split(",").map(s => s.trim())
     : config.excludes
-  const modelsOnly =!!args["--modelsOnly"] || config.modelsOnly
+  const modelsOnly = !!args["--modelsOnly"] || config.modelsOnly
   const forceAll = !!args["--force"] || config.force
   const noReact = !!args["--noReact"] || config.noReact
 

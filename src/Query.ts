@@ -8,7 +8,7 @@ import { observable, action } from "mobx"
 export type CaseHandlers<T, R> = {
   loading(): R
   error(error: any): R
-  data(data: { [key: string]: T }): R
+  data(data: T): R
 }
 
 export type FetchPolicy =
@@ -25,14 +25,14 @@ export interface QueryOptions {
 
 export class Query<T = unknown> implements PromiseLike<T> {
   @observable loading = false
-  @observable.ref data: { [key: string]: T } | undefined = undefined
+  @observable.ref data: T | undefined = undefined
   @observable error: any = undefined
 
   public query: string
-  public promise!: Promise<{ [key: string]: T }>
+  public promise!: Promise<T>
   private fetchPolicy: FetchPolicy
   private cacheKey: string
-  private onResolve!: (data: { [key: string]: T }) => void
+  private onResolve!: (data: T) => void
   private onReject!: (error: any) => void
 
   constructor(
@@ -81,7 +81,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   private initPromise() {
-    const promise = new Promise<{ [key: string]: T }>((resolve, reject) => {
+    const promise = new Promise<T>((resolve, reject) => {
       this.onResolve = resolve
       this.onReject = reject
     })
@@ -110,7 +110,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     } else {
       try {
         this.loading = false
-        const normalized: { [key: string]: T } = {}
+        let normalized: any = {}
         Object.keys(data).forEach(key => {
           normalized[key] = this.store.merge(data[key])
         })
@@ -128,7 +128,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     if (this.onReject) this.onReject(error)
   }
 
-  refetch = (): Promise<{ [key: string]: T }> => {
+  refetch = (): Promise<T> => {
     return Promise.resolve().then(() => {
       if (this.loading) return this.currentPromise()
       this.initPromise()
