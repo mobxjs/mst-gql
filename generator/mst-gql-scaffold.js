@@ -5,7 +5,7 @@ const fs = require("fs")
 const child_process = require("child_process")
 const graphql = require("graphql")
 
-const { getConfig, mergeConfigs } = require('./config');
+const { getConfig, mergeConfigs } = require("./config")
 const { generate, writeFiles } = require("./generate")
 
 const definition = {
@@ -33,7 +33,16 @@ function main() {
     throw e
   }
 
-  const { format, outDir, input, roots, excludes, modelsOnly, forceAll, noReact } = mergeConfigs(args, config);
+  const {
+    format,
+    outDir,
+    input,
+    roots,
+    excludes,
+    modelsOnly,
+    forceAll,
+    noReact
+  } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
 
   console.log(
