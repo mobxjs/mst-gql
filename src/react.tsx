@@ -62,7 +62,7 @@ export type UseQueryHookResult<STORE, DATA> = {
   store: STORE
   loading: boolean
   error: any
-  data: { [key: string]: DATA } | undefined
+  data: { [key in keyof DATA]: DATA[key] } | undefined
   // prevData: DATA | undefined // set of previously fetched values, in case the query was replaced
   query: Query<DATA> | undefined
   setQuery: (query: QueryLike<STORE, DATA>) => void

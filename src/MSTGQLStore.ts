@@ -16,19 +16,17 @@ export const MSTGQLStore = types
   .model("MSTGQLStore", {
     __queryCache: types.optional(types.map(types.frozen()), {})
   })
-  .volatile(
-    (self): { ssr: boolean; __promises: Set<Promise<unknown>> } => {
-      const {
-        ssr = false
-      }: {
-        ssr: boolean
-      } = getEnv(self)
-      return {
-        __promises: new Set(),
-        ssr
-      }
+  .volatile((self): { ssr: boolean; __promises: Set<Promise<unknown>> } => {
+    const {
+      ssr = false
+    }: {
+      ssr: boolean
+    } = getEnv(self)
+    return {
+      __promises: new Set(),
+      ssr
     }
-  )
+  })
   .actions(self => {
     const {
       gqlHttpClient, // TODO: rename to requestHandler
