@@ -16,8 +16,7 @@ const definition = {
   "--modelsOnly": Boolean,
   "--force": Boolean,
   "--noReact": Boolean,
-  "--separate": Boolean,
-  "--allowFieldArgs": Boolean
+  "--separate": Boolean
 }
 
 function main() {
@@ -42,8 +41,7 @@ function main() {
     excludes,
     modelsOnly,
     forceAll,
-    noReact,
-    allowFieldArgs
+    noReact
   } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
 
@@ -104,8 +102,7 @@ function main() {
     excludes,
     new Date().toUTCString(),
     modelsOnly,
-    noReact,
-    allowFieldArgs
+    noReact
   )
   writeFiles(outDir, files, format, forceAll, true, separate)
 }
