@@ -15,15 +15,11 @@
     "mobx": "^5.9.4",
     "mobx-react": "^6.0.3",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "^0.3.3",
-    "next": "^8.1.0",
+    "mst-gql": "latest",
+    "next": "^9.0.5",
     "npm-run-all": "^4.1.5"
   },
   "devDependencies": {
-    "@types/next": "^8.0.5",
-    "@types/react": "^16.8.18",
-    "@types/react-dom": "^16.8.4",
-    "@zeit/next-typescript": "^1.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "typescript": "^3.4.5"

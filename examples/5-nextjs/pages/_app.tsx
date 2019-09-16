@@ -1,7 +1,7 @@
 import React from "react"
 import { getSnapshot, ModelCreationType } from "mobx-state-tree"
 import { getDataFromTree } from "mst-gql"
-import App, { Container } from "next/app"
+import App from "next/app"
 import { initializeStore } from "../utils/initModels"
 import { RootStoreType, StoreContext } from "../src/models"
 
@@ -38,11 +38,9 @@ export default class MyApp extends App<any, any> {
   render() {
     const { Component, pageProps } = this.props
     return (
-      <Container>
-        <StoreContext.Provider value={this.store}>
-          <Component {...pageProps} />
-        </StoreContext.Provider>
-      </Container>
+      <StoreContext.Provider value={this.store}>
+        <Component {...pageProps} />
+      </StoreContext.Provider>
     )
   }
 }
