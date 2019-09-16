@@ -3,7 +3,6 @@
   "scripts": {
     "download": "npx apollo schema:download --endpoint=https://graphql-pokemon.now.sh/ graphql-schema.json",
     "postinstall": "../../node_modules/.bin/relative-deps",
-    "install-mst-gql": "bash ../../scripts/install-mst-gql.sh",
     "scaffold-config": "node ../../generator/mst-gql-scaffold.js",
     "scaffold": "../../generator/mst-gql-scaffold.js --force --roots 'Pokemon, Attack' --format ts --outDir src/models graphql-schema.json",
     "build": "tsc",
