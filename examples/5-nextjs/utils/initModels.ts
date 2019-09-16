@@ -10,13 +10,13 @@ export function initializeStore(
 ): ModelCreationType<RootStoreType> {
   if (isServer) {
     store = RootStore.create(undefined, {
-      gqlHttpClient: createHttpClient("http://localhost:4000/graphql"),
+      gqlHttpClient: createHttpClient("http://localhost:3000/api/graphql"),
       ssr: true
     })
   }
   if (store === null) {
     store = RootStore.create(undefined, {
-      gqlHttpClient: createHttpClient("http://localhost:4000/graphql")
+      gqlHttpClient: createHttpClient("http://localhost:3000/api/graphql")
     })
   }
   if (snapshot) {

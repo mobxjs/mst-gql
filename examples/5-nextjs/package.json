@@ -2,24 +2,24 @@
   "name": "ssr-example",
   "scripts": {
     "postinstall": "../../node_modules/.bin/relative-deps",
+    "dev": "nodemon --watch server server/index.js",
     "scaffold": "../../generator/mst-gql-scaffold.js",
-    "client:build": "next build",
-    "client:dev": "yarn scaffold && next",
-    "start:client": " next start",
-    "start:server": "node server",
-    "start": "run-p start:server client:dev"
+    "build": "next build",
+    "start": "cross-env NODE_ENV=production node server/index.js"
   },
   "dependencies": {
-    "apollo-server": "^2.6.2",
+    "apollo-server-express": "^2.9.3",
+    "cross-env": "^5.2.1",
+    "express": "^4.17.1",
     "isomorphic-fetch": "^2.2.1",
     "mobx": "^5.9.4",
     "mobx-react": "^6.0.3",
     "mobx-state-tree": "^3.14.0",
     "mst-gql": "latest",
-    "next": "^9.0.5",
-    "npm-run-all": "^4.1.5"
+    "next": "^9.0.5"
   },
   "devDependencies": {
+    "nodemon": "^1.19.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "typescript": "^3.4.5"
