@@ -1,4 +1,4 @@
-const fetch = require("isomorphic-fetch")
+const {store} = require('./store')
 
 const store = {
   todos: [
