@@ -1,26 +1,19 @@
-import React from "react"
-import { observer } from "mobx-react"
-import { useQuery } from "../src/models/reactUtils"
+import { useState } from "react"
+import { AllTodosView, DoneTodosView } from "../components/todos"
 
-const Home = observer(() => {
-  const { loading, error, data, query } = useQuery(store => store.queryTodos())
-  if (error) return error.message
-  if (data)
-    return (
-      <>
-        <ul>
-          {data.todos.map(todo => (
-            <li key={todo.id}>{todo.text}</li>
-          ))}
-        </ul>
-        {loading ? (
-          "Loading..."
-        ) : (
-          <button onClick={query!.refetch}>Refetch</button>
-        )}
-      </>
-    )
-  return "Loading"
-})
+export default function Index() {
+  const [showDoneTodos, setShowDoneTodos] = useState(false)
+  return (
+    <>
+      <h3>All Todos</h3>
+      <AllTodosView/>
+      <hr/>
+      <h3>Done Todos</h3>
+      <button onClick={() => setShowDoneTodos(!showDoneTodos)}>
+        {showDoneTodos ? "Hide" : "Show"}
+      </button>
+      {showDoneTodos && <DoneTodosView/>}
+    </>
+  )
+}
 
-export default Home
