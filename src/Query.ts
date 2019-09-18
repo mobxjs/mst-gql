@@ -21,6 +21,7 @@ export type FetchPolicy =
 export interface QueryOptions {
   raw?: boolean // If set, the response data is returned verbatim, rather than parsing them into the relevant MST models
   fetchPolicy?: FetchPolicy
+  noSsr?: boolean
 }
 
 const isServer: boolean = typeof window === "undefined"
@@ -44,12 +45,15 @@ export class Query<T = unknown> implements PromiseLike<T> {
     this.query = typeof query === "string" ? query : print(query)
     // possible optimization: merge double in-flight requests
     let fetchPolicy = options.fetchPolicy || "cache-and-network"
-    const isSsrConditions = this.store.ssr && (isServer || !store.__afterInit)
-    if (isSsrConditions) {
+    if (this.store.ssr && !this.options.noSsr && (isServer || !store.__afterInit)) {
       fetchPolicy = "cache-first"
     }
     this.fetchPolicy = fetchPolicy
     this.cacheKey = this.query + stringify(variables)
+    if (this.store.ssr && this.options.noSsr && isServer) {
+      this.promise = Promise.resolve() as any
+      return
+    }
     const inCache = this.store.__queryCache.has(this.cacheKey)
     switch (this.fetchPolicy) {
       case "no-cache":
