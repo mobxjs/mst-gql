@@ -5,6 +5,7 @@ import { DocumentNode } from "graphql"
 import { mergeHelper } from "./mergeHelper"
 import { getFirstValue } from "./utils"
 import { QueryOptions, Query } from "./Query"
+import { deflateHelper } from "./deflateHelper"
 
 export interface RequestHandler<T = any> {
   request(query: string, variables: any): Promise<T>
@@ -42,6 +43,10 @@ export const MSTGQLStore = types
 
     function merge(data: unknown) {
       return mergeHelper(self, data)
+    }
+
+    function deflate(data: unknown) {
+      return deflateHelper(self, data)
     }
 
     function rawRequest(query: string, variables: any): Promise<any> {
@@ -130,6 +135,7 @@ export const MSTGQLStore = types
     // exposed actions
     return {
       merge,
+      deflate,
       mutate,
       query,
       subscribe,

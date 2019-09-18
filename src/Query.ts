@@ -3,7 +3,7 @@ import stringify from "fast-json-stable-stringify"
 import { DocumentNode, print } from "graphql"
 
 import { StoreType } from "./MSTGQLStore"
-import { observable, action } from "mobx"
+import { action, observable } from "mobx"
 
 export type CaseHandlers<T, R> = {
   loading(): R
@@ -32,8 +32,6 @@ export class Query<T = unknown> implements PromiseLike<T> {
   public promise!: Promise<T>
   private fetchPolicy: FetchPolicy
   private cacheKey: string
-  private onResolve!: (data: T) => void
-  private onReject!: (error: any) => void
 
   constructor(
     public store: StoreType,
@@ -45,104 +43,87 @@ export class Query<T = unknown> implements PromiseLike<T> {
     // possible optimization: merge double in-flight requests
     this.fetchPolicy = options.fetchPolicy || "cache-and-network"
     this.cacheKey = this.query + stringify(variables)
-    this.initPromise()
-    this.start()
-  }
-
-  private start() {
     const inCache = this.store.__queryCache.has(this.cacheKey)
     switch (this.fetchPolicy) {
       case "no-cache":
       case "network-only":
-        this.fetchForCurrentPromise()
+        this.fetchResults()
         break
       case "cache-only":
-        if (!inCache)
-          this.onFailure(
-            new Error(
-              `No results for query ${this.query} found in cache, and policy is cache-only`
-            )
+        if (!inCache) {
+          this.error = new Error(
+            `No results for query ${this.query} found in cache, and policy is cache-only`
           )
-        else this.onSuccess(this.store.__queryCache.get(this.cacheKey))
+          this.promise = Promise.reject(this.error)
+        } else {
+          this.useCachedResults()
+        }
         break
       case "cache-and-network":
         if (inCache) {
-          this.onSuccess(this.store.__queryCache.get(this.cacheKey))
+          this.useCachedResults()
           this.refetch() // refetch async, so that callers chaining to the initial promise should resovle immediately!
         } else {
-          this.fetchForCurrentPromise()
+          this.fetchResults()
         }
         break
       case "cache-first":
-        if (inCache) this.onSuccess(this.store.__queryCache.get(this.cacheKey))
-        else this.fetchForCurrentPromise()
+        if (inCache) {
+          this.useCachedResults()
+        } else {
+          this.fetchResults()
+        }
         break
     }
   }
 
-  private initPromise() {
-    const promise = new Promise<T>((resolve, reject) => {
-      this.onResolve = resolve
-      this.onReject = reject
-    })
+  refetch = action(
+    (): Promise<T> => {
+      return Promise.resolve().then(() => {
+        if (!this.loading) {
+          this.fetchResults()
+        }
+        return this.promise
+      })
+    }
+  )
 
+  private fetchResults() {
+    this.loading = true
+    this.promise = this.store
+      .rawRequest(this.query, this.variables)
+      .then(
+        action((data: any) => {
+          // cache query and response
+          if (this.fetchPolicy !== "no-cache") {
+            this.store.__cacheResponse(this.cacheKey, data)
+          }
+          this.data = this.options.raw ? data : this.store.merge(data)
+          this.loading = false
+          return this.data!
+        })
+      )
+      .catch(
+        action(error => {
+          this.error = error
+          this.loading = false
+          return Promise.reject(error)
+        })
+      )
     if (this.store.ssr) {
-      this.promise = promise.finally(() => {
+      this.promise = this.promise.finally(() => {
         this.store.unpushPromise(this.promise)
       })
-
       this.store.pushPromise(this.promise)
-    } else {
-      this.promise = promise
     }
   }
 
-  @action private onSuccess = (data: any) => {
-    // cache query and response
-    if (this.fetchPolicy !== "no-cache") {
-      this.store.__cacheResponse(this.cacheKey, data)
-    }
-
-    if (this.options.raw) {
-      this.loading = false
-      this.data = data
-      this.onResolve(this.data!)
-    } else {
-      try {
-        this.loading = false
-        let normalized: any = {}
-        Object.keys(data).forEach(key => {
-          normalized[key] = this.store.merge(data[key])
-        })
-        this.data = normalized
-        this.onResolve(this.data!)
-      } catch (e) {
-        this.onFailure(e)
-      }
-    }
-  }
-
-  @action private onFailure = (error: any) => {
-    this.loading = false
-    this.error = error
-    if (this.onReject) this.onReject(error)
-  }
-
-  refetch = (): Promise<T> => {
-    return Promise.resolve().then(() => {
-      if (this.loading) return this.currentPromise()
-      this.initPromise()
-      this.fetchForCurrentPromise()
-      return this.promise
-    })
-  }
-
-  private fetchForCurrentPromise() {
-    this.loading = true
-
-    this.store
-      .rawRequest(this.query, this.variables)
-      .then(this.onSuccess, this.onFailure)
+  private useCachedResults() {
+    const cached = this.store.__queryCache.get(this.cacheKey)
+    this.data = this.options.raw
+      ? cached
+      : this.store.merge(this.store.deflate(cached))
+    this.promise = Promise.resolve(this.data!)
   }
 
   case<R>(handlers: CaseHandlers<T, R>): R {
