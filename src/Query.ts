@@ -23,6 +23,8 @@ export interface QueryOptions {
   fetchPolicy?: FetchPolicy
 }
 
+const isServer: boolean = typeof window === "undefined"
+
 export class Query<T = unknown> implements PromiseLike<T> {
   @observable loading = false
   @observable.ref data: T | undefined = undefined
@@ -41,7 +43,12 @@ export class Query<T = unknown> implements PromiseLike<T> {
   ) {
     this.query = typeof query === "string" ? query : print(query)
     // possible optimization: merge double in-flight requests
-    this.fetchPolicy = options.fetchPolicy || "cache-and-network"
+    let fetchPolicy = options.fetchPolicy || "cache-and-network"
+    const isSsrConditions = this.store.ssr && (isServer || !store.__afterInit)
+    if (isSsrConditions) {
+      fetchPolicy = "cache-first"
+    }
+    this.fetchPolicy = fetchPolicy
     this.cacheKey = this.query + stringify(variables)
     const inCache = this.store.__queryCache.has(this.cacheKey)
     switch (this.fetchPolicy) {

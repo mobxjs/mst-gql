@@ -17,18 +17,25 @@ export const MSTGQLStore = types
   .model("MSTGQLStore", {
     __queryCache: types.optional(types.map(types.frozen()), {})
   })
-  .volatile((self): { ssr: boolean; __promises: Set<Promise<unknown>> } => {
+  .volatile((self): {
+    ssr: boolean
+    __promises: Set<Promise<unknown>>
+    __afterInit: boolean
+  } => {
     const {
       ssr = false
     }: {
       ssr: boolean
     } = getEnv(self)
     return {
+      ssr,
       __promises: new Set(),
-      ssr
+      __afterInit: false
     }
   })
   .actions(self => {
+    Promise.resolve().then(() => (self as any).__onAfterInit())
+
     const {
       gqlHttpClient, // TODO: rename to requestHandler
       gqlWsClient // TODO: rename to streamHandler
@@ -147,6 +154,9 @@ export const MSTGQLStore = types
       },
       __cacheResponse(key: string, response: any) {
         self.__queryCache.set(key, response)
+      },
+      __onAfterInit() {
+        self.__afterInit = true
       }
     }
   })

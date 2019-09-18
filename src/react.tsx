@@ -25,9 +25,13 @@ export async function getDataFromTree<STORE extends typeof MSTGQLStore.Type>(
     tree: React.ReactElement<any>
   ) => string = require("react-dom/server").renderToStaticMarkup
 ): Promise<string> {
-  const html = renderFunction(tree)
-  await Promise.all(client.__promises)
-  return html
+  while (true) {
+    const html = renderFunction(tree)
+    if (client.__promises.size === 0) {
+      return html
+    }
+    await Promise.all(client.__promises)
+  }
 }
 
 function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
