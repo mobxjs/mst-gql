@@ -5,6 +5,7 @@ const typeDefs = `
     todos: [Todo],
     doneTodos: [Todo],
     user(id: ID!): User,
+    users: [User],
   }
   type Mutation {
     toggleTodo(id: ID!): Todo,
@@ -33,6 +34,9 @@ const resolvers = {
     user: (root, args) => {
       return store.users.find(user => user.id === args.id)
     },
+    users: () => {
+      return store.users
+    }
   },
   Mutation: {
     toggleTodo: (root, args) => {
