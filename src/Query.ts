@@ -45,7 +45,11 @@ export class Query<T = unknown> implements PromiseLike<T> {
     this.query = typeof query === "string" ? query : print(query)
     // possible optimization: merge double in-flight requests
     let fetchPolicy = options.fetchPolicy || "cache-and-network"
-    if (this.store.ssr && !this.options.noSsr && (isServer || !store.__afterInit)) {
+    if (
+      this.store.ssr &&
+      !this.options.noSsr &&
+      (isServer || !store.__afterInit)
+    ) {
       fetchPolicy = "cache-first"
     }
     this.fetchPolicy = fetchPolicy
