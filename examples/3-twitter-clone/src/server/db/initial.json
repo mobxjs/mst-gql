@@ -112,13 +112,13 @@
       "__typename": "User",
       "id": "mweststrate",
       "name": "Michel Weststrate",
-      "avatar": "michel.jpg"
+      "avatar": "michel"
     },
     "chucknorris": {
       "__typename": "User",
       "id": "chucknorris",
       "name": "Chuck Norris",
-      "avatar": "chuck.jpg"
+      "avatar": "chuck"
     }
   }
 }
