@@ -107,30 +107,29 @@ export class Query<T = unknown> implements PromiseLike<T> {
     this.loading = true
     this.promise = this.store
       .rawRequest(this.query, this.variables)
-      .then(
-        action((data: any) => {
-          // cache query and response
-          if (this.fetchPolicy !== "no-cache") {
-            this.store.__cacheResponse(this.cacheKey, data)
-          }
-          this.data = this.options.raw ? data : this.store.merge(data)
-          this.loading = false
-          return this.data!
-        })
-      )
-      .catch(
-        action(error => {
-          this.error = error
-          this.loading = false
-          return Promise.reject(error)
-        })
-      )
+      .then((data: any) => {
+        // cache query and response
+        if (this.fetchPolicy !== "no-cache") {
+          this.store.__cacheResponse(this.cacheKey, data)
+        }
+        return this.options.raw ? data : this.store.merge(data)
+      })
     if (this.store.ssr) {
       this.promise = this.promise.finally(() => {
         this.store.unpushPromise(this.promise)
       })
       this.store.pushPromise(this.promise)
     }
+    this.promise.then(
+      action((data: any) => {
+        this.loading = false
+        this.data = data
+      }),
+      action(error => {
+        this.loading = false
+        this.error = error
+      })
+    )
   }
 
   private useCachedResults() {
