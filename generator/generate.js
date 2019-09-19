@@ -528,14 +528,16 @@ ${objectTypes
 ${enumTypes
   .map(t => `\nimport { ${t} } from "./${t}Enum${importPostFix}"`)
   .join("")}
-${inputTypes
-  .map(
-    t =>
-      `\nexport type ${t.name} = {\n${t.inputFields
-        .map(field => `  ${field.name}: ${printTsType(field.type)}`)
-        .join("\n")}\n}`
-  )
-  .join("")}
+${ifTS(
+  inputTypes
+    .map(
+      t =>
+        `\nexport type ${t.name} = {\n${t.inputFields
+          .map(field => `  ${field.name}: ${printTsType(field.type)}`)
+          .join("\n")}\n}`
+    )
+    .join("")
+)}
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
