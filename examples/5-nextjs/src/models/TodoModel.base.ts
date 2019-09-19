@@ -3,7 +3,9 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, QueryBuilder } from "mst-gql"
+import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { UserModel } from "./UserModel"
+import { UserModelSelector } from "./UserModel.base"
 import { RootStoreType } from "./index"
 
 
@@ -17,7 +19,8 @@ export const TodoModelBase = MSTGQLObject
     __typename: types.optional(types.literal("Todo"), "Todo"),
     id: types.identifier,
     text: types.maybeNull(types.string),
-    complete: types.maybeNull(types.boolean),
+    done: types.maybeNull(types.boolean),
+    assignee: types.maybeNull(MSTGQLRef(types.late(() => UserModel))),
   })
   .views(self => ({
     get store() {
@@ -28,10 +31,11 @@ export const TodoModelBase = MSTGQLObject
 export class TodoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get text() { return this.__attr(`text`) }
-  get complete() { return this.__attr(`complete`) }
+  get done() { return this.__attr(`done`) }
+  assignee(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__child(`assignee`, UserModelSelector, builder) }
 }
 export function selectFromTodo() {
   return new TodoModelSelector()
 }
 
-export const todoModelPrimitives = selectFromTodo().text.complete
+export const todoModelPrimitives = selectFromTodo().text.done

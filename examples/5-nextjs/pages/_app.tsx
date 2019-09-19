@@ -1,48 +1,56 @@
 import React from "react"
-import { getSnapshot, ModelCreationType } from "mobx-state-tree"
-import { getDataFromTree } from "mst-gql"
-import App, { Container } from "next/app"
-import { initializeStore } from "../utils/initModels"
-import { RootStoreType, StoreContext } from "../src/models"
+import { applySnapshot, getSnapshot, ModelCreationType } from "mobx-state-tree"
+import { createHttpClient, getDataFromTree } from "mst-gql"
+import App from "next/app"
+import { RootStore, RootStoreType, StoreContext } from "../src/models"
+
+const isServer: boolean = !process.browser
+
+let store: ModelCreationType<RootStoreType>
+
+export function getStore(snapshot = null): ModelCreationType<RootStoreType> {
+  if (isServer || !store) {
+    store = RootStore.create(undefined, {
+      gqlHttpClient: createHttpClient("http://localhost:3000/api/graphql"),
+      ssr: true
+    })
+  }
+  if (snapshot) {
+    applySnapshot(store, snapshot)
+  }
+  return store
+}
 
 export default class MyApp extends App<any, any> {
   store: ModelCreationType<RootStoreType>
 
   static async getInitialProps({ Component, ctx, router }) {
-    const isServer = typeof window === "undefined"
-    const store = initializeStore(isServer)
+    const store = getStore()
+
+    const pageProps = (Component.getInitialProps && await Component.getInitialProps({...ctx, store})) || {}
+
+    let storeSnapshot
     if (isServer) {
-      await getDataFromTree(
-        <MyApp Component={Component} router={router} store={store} />,
-        store
-      )
+      const tree = <MyApp {...({Component, router, pageProps, store})}/>
+      await getDataFromTree(tree, store)
+      storeSnapshot = getSnapshot<RootStoreType>(store)
     }
 
-    let pageProps = {}
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
-    return {
-      initialState: getSnapshot<RootStoreType>(store),
-      isServer,
-      pageProps
-    }
+    return {pageProps, storeSnapshot}
   }
 
   constructor(props) {
     super(props)
-    this.store =
-      props.store || initializeStore(props.isServer, props.initialState)
+    this.store = props.store || getStore(props.storeSnapshot)
+    Object.assign(global, {store: this.store}) // for debugging
   }
 
   render() {
     const { Component, pageProps } = this.props
     return (
-      <Container>
-        <StoreContext.Provider value={this.store}>
-          <Component {...pageProps} />
-        </StoreContext.Provider>
-      </Container>
+      <StoreContext.Provider value={this.store}>
+        <Component {...pageProps} />
+      </StoreContext.Provider>
     )
   }
 }

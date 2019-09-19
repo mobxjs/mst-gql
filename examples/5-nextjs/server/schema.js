@@ -1,61 +1,54 @@
-const fetch = require("isomorphic-fetch")
-
-const store = {
-  todos: [
-    {
-      id: 0,
-      text: "Go to the shops",
-      complete: false
-    },
-    {
-      id: 1,
-      text: "Pick up the kids",
-      complete: true
-    },
-    {
-      id: 2,
-      text: "Install mst-gql",
-      complete: false
-    }
-  ]
-}
+const {store} = require('./store')
 
 const typeDefs = `
   type Query {
-    todos: [Todo]
+    todos: [Todo],
+    doneTodos: [Todo],
+    user(id: ID!): User,
   }
   type Mutation {
-    toggleTodo(id: ID!): Todo
+    toggleTodo(id: ID!): Todo,
   }
   type Todo {
     id: ID,
     text: String,
-    complete: Boolean,
+    done: Boolean,
+    assignee: User,
+  }
+  type User {
+    id: ID,
+    name: String,
+    likes: [String],
   }
 `
 
 const resolvers = {
   Query: {
-    todos: (root, args, context) => {
+    todos: () => {
       return store.todos
-    }
+    },
+    doneTodos: () => {
+      return store.todos.filter(todo => todo.done)
+    },
+    user: (root, args) => {
+      return store.users.find(user => user.id === args.id)
+    },
   },
   Mutation: {
-    toggleTodo: (root, args, context) => {
-      const { id } = args
-      store.todos[args.id].complete = !store.todos[args.id].complete
-      return store.todos[args.id]
+    toggleTodo: (root, args) => {
+      const todo = store.todos.find(todo => todo.id === args.id)
+      todo.done = !todo.done
+      return todo
     }
-  }
+  },
+  Todo: {
+    assignee: (todo) => {
+      return store.users.find(user => user.id === todo.assignee)
+    }
+  },
 }
 
 module.exports = {
   typeDefs,
   resolvers,
-  context: (headers, secrets) => {
-    return {
-      headers,
-      secrets
-    }
-  }
 }
