@@ -5,12 +5,15 @@ import { observer } from "mobx-react-lite"
 import { MessageModelType } from "../models/"
 import { Replies } from "./Replies"
 
+// @ts-ignore
+import images from "../avatars/*.jpg"
+
 export const Message = observer(
   ({ message, asChild }: { message: MessageModelType; asChild?: boolean }) => {
     const [collapsed, setCollapsed] = useState(true)
     return (
       <li className="message">
-        <img src={message.user.avatar} width={200} height={200} />
+        <img src={images[message.user.avatar]} width={200} height={200} />
         <div className="content">
           <h4>{message.user.name}</h4>
           <p>{message.text}</p>
