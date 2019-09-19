@@ -88,16 +88,16 @@ export class Query<T = unknown> implements PromiseLike<T> {
     }
   }
 
-  refetch = action(
-    (): Promise<T> => {
-      return Promise.resolve().then(() => {
+  refetch = (): Promise<T> => {
+    return Promise.resolve().then(
+      action(() => {
         if (!this.loading) {
           this.fetchResults()
         }
         return this.promise
       })
-    }
-  )
+    )
+  }
 
   private fetchResults() {
     this.loading = true
