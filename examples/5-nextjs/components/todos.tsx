@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import { selectFromTodo, useQuery } from "../src/models"
-import { UserView } from "./users"
+import { UserPreview } from "./users"
 
 const todoSelector = selectFromTodo()
   .text
@@ -21,7 +21,7 @@ const TodosList = observer(({ todos }) => {
             toggle
           </button>
           &emsp;
-          Assignee: <UserView userId={todo.assignee.id}/>
+          Assignee: <UserPreview userId={todo.assignee.id}/>
         </li>
       ))}
     </ul>

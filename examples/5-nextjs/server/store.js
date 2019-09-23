@@ -33,4 +33,11 @@ const store = {
   ]
 }
 
+// Force frequently changing data in user
+/* setInterval(() => {
+  store.users.forEach(user => {
+    user.name = user.name.split(' ').reverse().join(' ')
+  })
+}, 500) */
+
 module.exports = { store }

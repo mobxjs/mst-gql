@@ -5,6 +5,7 @@ import { DocumentNode } from "graphql"
 import { mergeHelper } from "./mergeHelper"
 import { getFirstValue } from "./utils"
 import { QueryOptions, Query } from "./Query"
+import { deflateHelper } from "./deflateHelper"
 
 export interface RequestHandler<T = any> {
   request(query: string, variables: any): Promise<T>
@@ -16,18 +17,25 @@ export const MSTGQLStore = types
   .model("MSTGQLStore", {
     __queryCache: types.optional(types.map(types.frozen()), {})
   })
-  .volatile((self): { ssr: boolean; __promises: Set<Promise<unknown>> } => {
+  .volatile((self): {
+    ssr: boolean
+    __promises: Set<Promise<unknown>>
+    __afterInit: boolean
+  } => {
     const {
       ssr = false
     }: {
       ssr: boolean
     } = getEnv(self)
     return {
+      ssr,
       __promises: new Set(),
-      ssr
+      __afterInit: false
     }
   })
   .actions(self => {
+    Promise.resolve().then(() => (self as any).__onAfterInit())
+
     const {
       gqlHttpClient, // TODO: rename to requestHandler
       gqlWsClient // TODO: rename to streamHandler
@@ -42,6 +50,10 @@ export const MSTGQLStore = types
 
     function merge(data: unknown) {
       return mergeHelper(self, data)
+    }
+
+    function deflate(data: unknown) {
+      return deflateHelper(self, data)
     }
 
     function rawRequest(query: string, variables: any): Promise<any> {
@@ -130,6 +142,7 @@ export const MSTGQLStore = types
     // exposed actions
     return {
       merge,
+      deflate,
       mutate,
       query,
       subscribe,
@@ -141,6 +154,9 @@ export const MSTGQLStore = types
       },
       __cacheResponse(key: string, response: any) {
         self.__queryCache.set(key, response)
+      },
+      __onAfterInit() {
+        self.__afterInit = true
       }
     }
   })
