@@ -13,8 +13,8 @@ export const MovieModelBase = MSTGQLObject
   .named('Movie')
   .props({
     __typename: types.optional(types.literal("Movie"), "Movie"),
-    description: types.maybeNull(types.string),
-    director: types.maybeNull(types.string),
+    description: types.maybe(types.string),
+    director: types.maybe(types.string),
   })
   .views(self => ({
     get store() {

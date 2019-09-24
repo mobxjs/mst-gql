@@ -18,9 +18,9 @@ export const PokemonEvolutionRequirementModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("PokemonEvolutionRequirement"), "PokemonEvolutionRequirement"),
     /** The amount of candy to evolve */
-    amount: types.maybeNull(types.integer),
+    amount: types.maybeNull(types.maybe(types.integer)),
     /** The name of the candy to evolve */
-    name: types.maybeNull(types.string),
+    name: types.maybeNull(types.maybe(types.string)),
   })
   .views(self => ({
     get store() {
