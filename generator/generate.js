@@ -328,10 +328,11 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         isNullable = false
       }
       function result(thing, isRequired = false) {
-        let result = thing
-        result = wrap(result, !isNested && !isRequired, "types.maybe(", ")")
-        result = wrap(result, !isNested && !isRequired && isNullable, "types.maybeNull(", ")")
-        return result
+        const canBeUndef = !isRequired && !isNested
+        const canBeNull = !isRequired && isNullable
+        return (canBeNull || canBeUndef)
+          ? `types.union(${canBeUndef ? 'types.undefined, ' : ''}${canBeNull ? 'types.null, ' : ''}${thing})`
+          : thing
       }
       switch (fieldType.kind) {
         case "SCALAR":

@@ -17,9 +17,9 @@ export const UserModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("User"), "User"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    likes: types.maybe(types.array(types.string)),
-    unobservedProp: types.maybeNull(types.maybe(types.string)),
+    name: types.union(types.undefined, types.string),
+    likes: types.union(types.undefined, types.array(types.union(types.null, types.string))),
+    unobservedProp: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {

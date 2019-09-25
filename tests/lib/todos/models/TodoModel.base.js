@@ -15,8 +15,8 @@ export const TodoModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),
     id: types.identifier,
-    text: types.maybe(types.string),
-    complete: types.maybe(types.boolean),
+    text: types.union(types.undefined, types.string),
+    complete: types.union(types.undefined, types.boolean),
   })
   .views(self => ({
     get store() {

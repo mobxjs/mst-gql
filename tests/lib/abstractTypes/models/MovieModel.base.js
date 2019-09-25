@@ -14,8 +14,8 @@ export const MovieModelBase = ModelBase
   .named('Movie')
   .props({
     __typename: types.optional(types.literal("Movie"), "Movie"),
-    description: types.maybe(types.string),
-    director: types.maybe(types.string),
+    description: types.union(types.undefined, types.string),
+    director: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
