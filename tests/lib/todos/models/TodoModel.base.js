@@ -2,14 +2,15 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, QueryBuilder } from "mst-gql"
+import { QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 
 
 /**
  * TodoBase
  * auto generated base class for the model TodoModel.
  */
-export const TodoModelBase = MSTGQLObject
+export const TodoModelBase = ModelBase
   .named('Todo')
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),

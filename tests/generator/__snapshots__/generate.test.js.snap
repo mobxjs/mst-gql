@@ -3,13 +3,22 @@
 exports[`basic scaffolding to work 1`] = `
 Array [
   Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
     "UserModel.base",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -17,7 +26,7 @@ import { RootStoreType } from \\"./index\\"
  * UserBase
  * auto generated base class for the model UserModel.
  */
-export const UserModelBase = MSTGQLObject
+export const UserModelBase = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
@@ -150,13 +159,22 @@ export * from \\"./reactUtils\\"
 exports[`interface field type to work 1`] = `
 Array [
   Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
     "RepoModel.base",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { OrganizationModel } from \\"./OrganizationModel\\"
 import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
 import { UserModel } from \\"./UserModel\\"
@@ -167,7 +185,7 @@ import { RootStoreType } from \\"./index\\"
  * RepoBase
  * auto generated base class for the model RepoModel.
  */
-export const RepoModelBase = MSTGQLObject
+export const RepoModelBase = ModelBase
   .named('Repo')
   .props({
     __typename: types.optional(types.literal(\\"Repo\\"), \\"Repo\\"),
@@ -242,7 +260,8 @@ export const ownerModelPrimitives = selectFromOwner().name",
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -250,7 +269,7 @@ import { RootStoreType } from \\"./index\\"
  * UserBase
  * auto generated base class for the model UserModel.
  */
-export const UserModelBase = MSTGQLObject
+export const UserModelBase = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
@@ -308,7 +327,8 @@ export const UserModel = UserModelBase
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -316,7 +336,7 @@ import { RootStoreType } from \\"./index\\"
  * OrganizationBase
  * auto generated base class for the model OrganizationModel.
  */
-export const OrganizationModelBase = MSTGQLObject
+export const OrganizationModelBase = ModelBase
   .named('Organization')
   .props({
     __typename: types.optional(types.literal(\\"Organization\\"), \\"Organization\\"),
@@ -456,13 +476,22 @@ export * from \\"./reactUtils\\"
 exports[`union field type to work 1`] = `
 Array [
   Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
     "SearchResultModel.base",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { BookModel } from \\"./BookModel\\"
 import { MovieModel } from \\"./MovieModel\\"
 import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
@@ -473,7 +502,7 @@ import { RootStoreType } from \\"./index\\"
  * SearchResultBase
  * auto generated base class for the model SearchResultModel.
  */
-export const SearchResultModelBase = MSTGQLObject
+export const SearchResultModelBase = ModelBase
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
@@ -547,7 +576,8 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -555,7 +585,7 @@ import { RootStoreType } from \\"./index\\"
  * MovieBase
  * auto generated base class for the model MovieModel.
  */
-export const MovieModelBase = MSTGQLObject
+export const MovieModelBase = ModelBase
   .named('Movie')
   .props({
     __typename: types.optional(types.literal(\\"Movie\\"), \\"Movie\\"),
@@ -611,7 +641,8 @@ export const MovieModel = MovieModelBase
 /* tslint:disable */
 
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLObject, QueryBuilder } from \\"mst-gql\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -619,7 +650,7 @@ import { RootStoreType } from \\"./index\\"
  * BookBase
  * auto generated base class for the model BookModel.
  */
-export const BookModelBase = MSTGQLObject
+export const BookModelBase = ModelBase
   .named('Book')
   .props({
     __typename: types.optional(types.literal(\\"Book\\"), \\"Book\\"),

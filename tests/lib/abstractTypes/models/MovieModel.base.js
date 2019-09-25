@@ -2,14 +2,15 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, QueryBuilder } from "mst-gql"
+import { QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 
 
 /**
  * MovieBase
  * auto generated base class for the model MovieModel.
  */
-export const MovieModelBase = MSTGQLObject
+export const MovieModelBase = ModelBase
   .named('Movie')
   .props({
     __typename: types.optional(types.literal("Movie"), "Movie"),
