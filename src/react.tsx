@@ -40,18 +40,15 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
   {
     variables,
     fetchPolicy = "cache-and-network",
-    raw = false
   }: {
     variables?: any
     fetchPolicy?: FetchPolicy
-    raw?: boolean
   }
 ): Query<DATA> {
   if (typeof query === "function") return query(store)
   if (query instanceof Query) return query
   return store.query(query, variables, {
     fetchPolicy: fetchPolicy,
-    raw: raw
   })
 }
 
@@ -59,7 +56,6 @@ export type UseQueryHookOptions<STORE> = {
   store?: STORE
   variables?: any
   fetchPolicy?: FetchPolicy
-  raw?: boolean
 }
 
 export type UseQueryHookResult<STORE, DATA> = {
@@ -105,7 +101,7 @@ export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
     React.useEffect(() => {
       if (!queryIn || typeof queryIn === "function") return // ignore changes to initializer func
       setQueryHelper(queryIn)
-    }, [queryIn, opts.raw, opts.fetchPolicy, JSON.stringify(opts.variables)]) // TODO: use a decent deep equal
+    }, [queryIn, opts.fetchPolicy, JSON.stringify(opts.variables)]) // TODO: use a decent deep equal
 
     return {
       store,

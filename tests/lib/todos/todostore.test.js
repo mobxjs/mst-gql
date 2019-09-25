@@ -101,6 +101,7 @@ describe("todos.graphql tests", () => {
     expect(store.__promises.size).toBe(0)
     expect(store.todos.size).toBe(2)
     expect(store.todos.get("a").text).toBe("Initially loaded todo, now updated")
+    expect(store.toJSON()).toMatchSnapshot()
 
     const todoB = store.todos.get("b")
     expect(todoB.text).toBe("Another todo")

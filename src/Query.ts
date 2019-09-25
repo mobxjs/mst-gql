@@ -19,7 +19,6 @@ export type FetchPolicy =
   | "no-cache" // Skip cache, and don't cache the response either
 
 export interface QueryOptions {
-  raw?: boolean // If set, the response data is returned verbatim, rather than parsing them into the relevant MST models
   fetchPolicy?: FetchPolicy
   noSsr?: boolean
 }
@@ -118,9 +117,9 @@ export class Query<T = unknown> implements PromiseLike<T> {
     promise = promise.then((data: any) => {
       // cache query and response
       if (this.fetchPolicy !== "no-cache") {
-        this.store.__cacheResponse(this.queryKey, data)
+        this.store.__cacheResponse(this.queryKey, this.store.deflate(data))
       }
-      return this.options.raw ? data : this.store.merge(data)
+      return this.store.merge(data)
     })
     this.promise = promise
     promise.then(
@@ -136,10 +135,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   private useCachedResults() {
-    const cached = this.store.__queryCache.get(this.queryKey)
-    this.data = this.options.raw
-      ? cached
-      : this.store.merge(this.store.deflate(cached))
+    this.data = this.store.merge(this.store.__queryCache.get(this.queryKey))
     this.promise = Promise.resolve(this.data!)
   }
 
