@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.4.2 (not yet released)
+## 0.5.0
 
 - Update example 5. [#93](https://github.com/mobxjs/mst-gql/pull/93) thanks [zenflow](https://github.com/zenflow)!
 - Stop generating input types when format is `js`. [#96](https://github.com/mobxjs/mst-gql/pull/96)
