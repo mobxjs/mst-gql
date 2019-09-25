@@ -2,6 +2,5 @@ module.exports = {
   format: 'ts',
   input: 'http://localhost:3000/api/graphql',
   outDir: 'src/models',
-  roots: ['Todo', 'User'],
-  excludes: ['CacheControlScope', 'Query', 'Subscription']
+  roots: ['Todo', 'User']
 }
