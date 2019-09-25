@@ -30,7 +30,7 @@ export async function getDataFromTree<STORE extends typeof MSTGQLStore.Type>(
     if (client.__promises.size === 0) {
       return html
     }
-    await Promise.all(client.__promises)
+    await Promise.all(client.__promises.values())
   }
 }
 
