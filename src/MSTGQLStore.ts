@@ -19,7 +19,7 @@ export const MSTGQLStore = types
   })
   .volatile((self): {
     ssr: boolean
-    __promises: Set<Promise<unknown>>
+    __promises: Map<string, Promise<unknown>>
     __afterInit: boolean
   } => {
     const {
@@ -29,7 +29,7 @@ export const MSTGQLStore = types
     } = getEnv(self)
     return {
       ssr,
-      __promises: new Set(),
+      __promises: new Map(),
       __afterInit: false
     }
   })
@@ -131,14 +131,6 @@ export const MSTGQLStore = types
       return () => sub.unsubscribe()
     }
 
-    function pushPromise(promise: Promise<{}>) {
-      self.__promises.add(promise)
-    }
-
-    function unpushPromise(promise: Promise<{}>) {
-      self.__promises.delete(promise)
-    }
-
     // exposed actions
     return {
       merge,
@@ -147,8 +139,12 @@ export const MSTGQLStore = types
       query,
       subscribe,
       rawRequest,
-      pushPromise,
-      unpushPromise,
+      __pushPromise(promise: Promise<{}>, queryKey: string) {
+        self.__promises.set(queryKey, promise)
+        promise.finally(() => {
+          self.__promises.delete(queryKey)
+        })
+      },
       __runInStoreContext<T>(fn: () => T) {
         return fn()
       },
