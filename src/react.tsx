@@ -39,7 +39,7 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
   query: QueryLike<STORE, DATA>,
   {
     variables,
-    fetchPolicy = "cache-and-network",
+    fetchPolicy = "cache-and-network"
   }: {
     variables?: any
     fetchPolicy?: FetchPolicy
@@ -48,7 +48,7 @@ function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
   if (typeof query === "function") return query(store)
   if (query instanceof Query) return query
   return store.query(query, variables, {
-    fetchPolicy: fetchPolicy,
+    fetchPolicy: fetchPolicy
   })
 }
 
