@@ -428,7 +428,7 @@ Makes a graphQL request to the backend. The result of the query is by default au
 
 - The `query` parameter can be a string, or a `graphql-tag` based query.
 - Variables are the raw JSON data structures that should be send as variable substitutions to the backend. This parameter is optional.
-- Options is an optional [QueryOptions](#queryoptions) object. The defaults are fetchPolicy: "cache-and-network"`
+- Options is an optional [QueryOptions](#queryoptions) object. The defaults are `fetchPolicy: "cache-and-network"` and `noSsr: false`
 - The method returns a [`Query`](#query-object) that can be inspected to keep track of the request progress.
 
 Be sure to at least select `__typename` and `id` in the result selector, so that mst-gql can normalize the data.
@@ -509,10 +509,13 @@ Beyond that, the the following top-level exports are exposed from each model fil
 ```
 export interface QueryOptions {
   fetchPolicy?: FetchPolicy
+  noSsr?: boolean
 }
 ```
 
 See [Query caching](#query-caching) for more details on `fetchPolicy`. Default: `"cache-and-network"`
+
+The `noSsr` field indicates whether the query should be executed during [Server Side Rendering](#server-side-rendering-with-react), or skipped there and only executed once the page is loaded in the browser. Default: `false`
 
 ## `createHttpClient(url: string, options: HttpClientOptions = {})`
 
@@ -608,6 +611,7 @@ It accepts zero, one or 2 arguments:
 - `options`, an object which can specify further options, such as
   - `variables`: The variables to be substituted into the graphQL query (only used if the query is specified as graphql tag or string!)
   - `fetchPolicy`: See fetch policy
+  - `noSsr`: See the noSsr option of queries
   - `store`: This can be used to customize which store should be used. This can be pretty convenient for testing, as it means that no Provider needs to be used.
 
 The query component takes a render callback, that is rendered based on the current status of the `Query` objects that is created based on the `query` property. The callback is also automatically wrapped in MobX-reacts' `observer` HoC.
