@@ -27,22 +27,25 @@ export default class MyApp extends App<any, any> {
   static async getInitialProps({ Component, ctx, router }) {
     const store = getStore()
 
-    const pageProps = (Component.getInitialProps && await Component.getInitialProps({...ctx, store})) || {}
+    const pageProps =
+      (Component.getInitialProps &&
+        (await Component.getInitialProps({ ...ctx, store }))) ||
+      {}
 
     let storeSnapshot
     if (isServer) {
-      const tree = <MyApp {...({Component, router, pageProps, store})}/>
+      const tree = <MyApp {...{ Component, router, pageProps, store }} />
       await getDataFromTree(tree, store)
       storeSnapshot = getSnapshot<RootStoreType>(store)
     }
 
-    return {pageProps, storeSnapshot}
+    return { pageProps, storeSnapshot }
   }
 
   constructor(props) {
     super(props)
     this.store = props.store || getStore(props.storeSnapshot)
-    Object.assign(global, {store: this.store}) // for debugging
+    Object.assign(global, { store: this.store }) // for debugging
   }
 
   render() {

@@ -5,10 +5,13 @@ import { UserModelBase } from "./UserModel.base"
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
-export { selectFromUser, userModelPrimitives, UserModelSelector } from "./UserModel.base"
+export {
+  selectFromUser,
+  userModelPrimitives,
+  UserModelSelector
+} from "./UserModel.base"
 
 /**
  * UserModel
  */
-export const UserModel = UserModelBase
-  .actions(self => ({}))
+export const UserModel = UserModelBase.actions(self => ({}))
