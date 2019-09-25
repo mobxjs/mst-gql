@@ -33,7 +33,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   public query: string
   public promise!: Promise<T>
   private fetchPolicy: FetchPolicy
-  private cacheKey: string
+  private queryKey: string
 
   constructor(
     public store: StoreType,
@@ -42,7 +42,8 @@ export class Query<T = unknown> implements PromiseLike<T> {
     public options: QueryOptions = {}
   ) {
     this.query = typeof query === "string" ? query : print(query)
-    // possible optimization: merge double in-flight requests
+    this.queryKey = this.query + stringify(variables)
+
     let fetchPolicy = options.fetchPolicy || "cache-and-network"
     if (
       this.store.ssr &&
@@ -52,12 +53,13 @@ export class Query<T = unknown> implements PromiseLike<T> {
       fetchPolicy = "cache-first"
     }
     this.fetchPolicy = fetchPolicy
-    this.cacheKey = this.query + stringify(variables)
+
     if (this.store.ssr && this.options.noSsr && isServer) {
       this.promise = Promise.resolve() as any
       return
     }
-    const inCache = this.store.__queryCache.has(this.cacheKey)
+
+    const inCache = this.store.__queryCache.has(this.queryKey)
     switch (this.fetchPolicy) {
       case "no-cache":
       case "network-only":
@@ -104,22 +106,23 @@ export class Query<T = unknown> implements PromiseLike<T> {
 
   private fetchResults() {
     this.loading = true
-    this.promise = this.store
-      .rawRequest(this.query, this.variables)
-      .then((data: any) => {
-        // cache query and response
-        if (this.fetchPolicy !== "no-cache") {
-          this.store.__cacheResponse(this.cacheKey, this.store.deflate(data))
-        }
-        return this.store.merge(data)
-      })
-    if (this.store.ssr) {
-      this.promise = this.promise.finally(() => {
-        this.store.unpushPromise(this.promise)
-      })
-      this.store.pushPromise(this.promise)
+    let promise: Promise<T>
+    const existingPromise = this.store.__promises.get(this.queryKey)
+    if (existingPromise) {
+      promise = existingPromise as Promise<T>
+    } else {
+      promise = this.store.rawRequest(this.query, this.variables)
+      this.store.__pushPromise(promise, this.queryKey)
     }
-    this.promise.then(
+    promise = promise.then((data: any) => {
+      // cache query and response
+      if (this.fetchPolicy !== "no-cache") {
+        this.store.__cacheResponse(this.queryKey, this.store.deflate(data))
+      }
+      return this.store.merge(data)
+    })
+    this.promise = promise
+    promise.then(
       action((data: any) => {
         this.loading = false
         this.data = data
@@ -132,7 +135,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   }
 
   private useCachedResults() {
-    this.data = this.store.merge(this.store.__queryCache.get(this.cacheKey))
+    this.data = this.store.merge(this.store.__queryCache.get(this.queryKey))
     this.promise = Promise.resolve(this.data!)
   }
 
