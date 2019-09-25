@@ -47,14 +47,14 @@ export const MSTGQLObject = types.model("MSTGQLObject").extend(self => {
     actions: {
       __setStore(s: StoreType) {
         store = s
-      },
+      }
     },
     views: {
       __getStore<T>() {
         return (getStore() as any) as T
       },
       hasLoaded(key: string): boolean {
-        return typeof (self as any)[key] !== 'undefined'
+        return typeof (self as any)[key] !== "undefined"
       }
     }
   }

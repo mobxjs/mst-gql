@@ -321,24 +321,25 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       function result(thing, isRequired = false) {
         const canBeUndef = !isRequired && !isNested
         const canBeNull = !isRequired && isNullable
-        return (canBeNull || canBeUndef)
-          ? `types.union(${canBeUndef ? 'types.undefined, ' : ''}${canBeNull ? 'types.null, ' : ''}${thing})`
+        return canBeNull || canBeUndef
+          ? `types.union(${canBeUndef ? "types.undefined, " : ""}${
+              canBeNull ? "types.null, " : ""
+            }${thing})`
           : thing
       }
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
           const primitiveType = primitiveToMstType(fieldType.name)
-          return result(`types.${primitiveType}`, primitiveType === "identifier")
+          return result(
+            `types.${primitiveType}`,
+            primitiveType === "identifier"
+          )
         case "OBJECT":
           return result(handleObjectFieldType(fieldName, fieldType))
         case "LIST":
           return result(
-            `types.array(${handleFieldType(
-              fieldName,
-              fieldType.ofType,
-              true
-            )})`
+            `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
           )
         case "ENUM":
           primitiveFields.push(fieldName)

@@ -47,15 +47,15 @@ const resolvers = {
     }
   },
   Todo: {
-    assignee: (todo) => {
+    assignee: todo => {
       return store.users.find(user => user.id === todo.assignee)
     }
   },
   User: {
-    unobservedProp: (user) => {
-      return 'foo'
+    unobservedProp: user => {
+      return "foo"
     }
-  },
+  }
 }
 
 module.exports = {

@@ -15,15 +15,15 @@ const TodosList = observer(({ todos }) => {
             {todo.text}
           </span>
           &emsp;
-          <button onClick={todo.toggle}>
-            toggle
-          </button>
+          <button onClick={todo.toggle}>toggle</button>
           &emsp;
-          {
-            todo.assignee
-              ? <>Assignee: <UserPreview userId={todo.assignee.id}/></>
-              : <>Unassigned</>
-          }
+          {todo.assignee ? (
+            <>
+              Assignee: <UserPreview userId={todo.assignee.id} />
+            </>
+          ) : (
+            <>Unassigned</>
+          )}
         </li>
       ))}
     </ul>

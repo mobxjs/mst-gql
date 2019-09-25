@@ -34,7 +34,7 @@
     "test": "jest test && cd examples/2-scaffolding && yarn && yarn start",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
-    "format": "prettier --write '**/*'"
+    "format": "prettier --write **/*"
   },
   "husky": {
     "hooks": {
