@@ -355,7 +355,7 @@ async function preload() {
 
 # 🍿 In-depth store semantics 🍿
 
-mst-gql generates model types for every object type in your graphql definition. (Except for those excluded using the `excludes` flag). For any query or mutation that is executed by the store, the returned data will be automatically, and recursively parsed into those generated MST models (unless the `raw` flag is set). This means that for any query, you get a 'rich' object back. Finding the right model type is done based on the GraphQL meta field `__typename`, so make sure to include it in your graphql queries!
+mst-gql generates model types for every object type in your graphql definition. (Except for those excluded using the `excludes` flag). For any query or mutation that is executed by the store, the returned data will be automatically, and recursively parsed into those generated MST models. This means that for any query, you get a 'rich' object back. Finding the right model type is done based on the GraphQL meta field `__typename`, so make sure to include it in your graphql queries!
 
 The philosophy behind MST / mst-gql is that every 'business concept' should exist only once in the client state, so that there is only one source of truth for every message, usage, order, product etc. that you are holding in memory. To achieve this, it is recommended that every uniquely identifyable concept in your application, does have an `id` field of the graphQL `ID` type. By default, any object types for which this is true, is considered to be a "root type".
 
@@ -428,10 +428,8 @@ Makes a graphQL request to the backend. The result of the query is by default au
 
 - The `query` parameter can be a string, or a `graphql-tag` based query.
 - Variables are the raw JSON data structures that should be send as variable substitutions to the backend. This parameter is optional.
-- Options is an optional [QueryOptions](#queryoptions) object. The defaults are `raw: false` and `fetchPolicy: "cache-and-network"`
+- Options is an optional [QueryOptions](#queryoptions) object. The defaults are `fetchPolicy: "cache-and-network"` and `noSsr: false`
 - The method returns a [`Query`](#query-object) that can be inspected to keep track of the request progress.
-
-Use `raw: true` and `fetchPolicy: no-cache` if you want to make a completely side effect free one time request to the backend that gives raw data back.
 
 Be sure to at least select `__typename` and `id` in the result selector, so that mst-gql can normalize the data.
 
@@ -510,14 +508,14 @@ Beyond that, the the following top-level exports are exposed from each model fil
 
 ```
 export interface QueryOptions {
-  raw?: boolean
   fetchPolicy?: FetchPolicy
+  noSsr?: boolean
 }
 ```
 
 See [Query caching](#query-caching) for more details on `fetchPolicy`. Default: `"cache-and-network"`
 
-The `raw` field indicates whether the result set should parsed into model instances, or returned as raw JSOn
+The `noSsr` field indicates whether the query should be executed during [Server Side Rendering](#server-side-rendering-with-react), or skipped there and only executed once the page is loaded in the browser. Default: `false`
 
 ## `createHttpClient(url: string, options: HttpClientOptions = {})`
 
@@ -612,8 +610,8 @@ It accepts zero, one or 2 arguments:
   - A callback, that will receive as first argument the `store`, and should return a `Query` object. The callback will be invoked when the component is rendered for the first time, and is a great way to delegate the query logic itself to the store. This is the recommend approach. For example `store => store.queryAllMessages()`
 - `options`, an object which can specify further options, such as
   - `variables`: The variables to be substituted into the graphQL query (only used if the query is specified as graphql tag or string!)
-  - `raw`: See the raw option of queries
   - `fetchPolicy`: See fetch policy
+  - `noSsr`: See the noSsr option of queries
   - `store`: This can be used to customize which store should be used. This can be pretty convenient for testing, as it means that no Provider needs to be used.
 
 The query component takes a render callback, that is rendered based on the current status of the `Query` objects that is created based on the `query` property. The callback is also automatically wrapped in MobX-reacts' `observer` HoC.

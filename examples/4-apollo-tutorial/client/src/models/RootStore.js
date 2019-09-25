@@ -95,7 +95,7 @@ export const RootStore = RootStoreBase.props({
     },
     login: flow(function* login(email) {
       try {
-        const login = yield self.mutate(
+        const data = yield self.mutate(
           gql`
             mutation login($email: String) {
               login(email: $email)
@@ -105,7 +105,7 @@ export const RootStore = RootStoreBase.props({
             email
           }
         )
-        localStorage.setItem("token", login)
+        localStorage.setItem("token", data.login)
         self.loginStatus = "loggedIn"
       } catch {
         self.loginStatus = "error"
