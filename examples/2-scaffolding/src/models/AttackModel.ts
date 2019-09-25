@@ -5,20 +5,17 @@ import { AttackModelBase } from "./AttackModel.base"
 export interface AttackModelType extends Instance<typeof AttackModel.Type> {}
 
 /* A graphql query fragment builders for AttackModel */
-export {
-  selectFromAttack,
-  attackModelPrimitives,
-  AttackModelSelector
-} from "./AttackModel.base"
+export { selectFromAttack, attackModelPrimitives, AttackModelSelector } from "./AttackModel.base"
 
 /**
  * AttackModel
  *
  * Represents a Pokémon's attack types
  */
-export const AttackModel = AttackModelBase.actions(self => ({
-  // This is an auto-generated example action.
-  log() {
-    console.log(JSON.stringify(self))
-  }
-}))
+export const AttackModel = AttackModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))

@@ -3,15 +3,14 @@
   "scripts": {
     "download": "npx apollo schema:download --endpoint=https://graphql-pokemon.now.sh/ graphql-schema.json",
     "postinstall": "../../node_modules/.bin/relative-deps",
-    "scaffold-config": "node ../../generator/mst-gql-scaffold.js",
-    "scaffold": "../../generator/mst-gql-scaffold.js --force --roots 'Pokemon, Attack' --format ts --outDir src/models graphql-schema.json",
+    "scaffold": "../../generator/mst-gql-scaffold.js",
     "build": "tsc",
     "start": "yarn scaffold && yarn build"
   },
   "dependencies": {
     "mobx": "^5.9.4",
     "mobx-state-tree": "^3.14.0",
-    "mst-gql": "^0.1.2"
+    "mst-gql": "latest"
   },
   "devDependencies": {
     "@types/react": "^16.8.18",
