@@ -1,4 +1,4 @@
-const {store} = require('./store')
+const { store } = require("./store")
 
 const typeDefs = `
   type Query {
@@ -46,13 +46,13 @@ const resolvers = {
     }
   },
   Todo: {
-    assignee: (todo) => {
+    assignee: todo => {
       return store.users.find(user => user.id === todo.assignee)
     }
-  },
+  }
 }
 
 module.exports = {
   typeDefs,
-  resolvers,
+  resolvers
 }

@@ -25,6 +25,7 @@ yarn dev
 #### 3. Run scaffold task
 
 (with development server running from previous step)
+
 ```bash
 yarn scaffold
 ```
