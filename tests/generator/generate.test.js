@@ -98,7 +98,7 @@ type Query {
   expect(
     hasFileContent(
       searchResultBase,
-      "items: types.maybe(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel)))),"
+      "items: types.maybe(types.array(types.maybeNull(types.union(types.late(() => MovieModel), types.late(() => BookModel))))),"
     )
   ).toBeTruthy()
 })

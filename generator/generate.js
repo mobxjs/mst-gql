@@ -321,7 +321,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       function result(thing, isRequired = false) {
         let result = thing
         result = wrap(result, !isNested && !isRequired, "types.maybe(", ")")
-        result = wrap(result, !isNested && !isRequired && isNullable, "types.maybeNull(", ")")
+        result = wrap(result, !isRequired && isNullable, "types.maybeNull(", ")")
         return result
       }
       switch (fieldType.kind) {

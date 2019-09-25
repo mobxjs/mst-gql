@@ -37,18 +37,18 @@ export const PokemonModelBase = MSTGQLObject
     /** The classification of this Pokémon */
     classification: types.maybeNull(types.maybe(types.string)),
     /** The type(s) of this Pokémon */
-    types: types.maybeNull(types.maybe(types.array(types.string))),
+    types: types.maybeNull(types.maybe(types.array(types.maybeNull(types.string)))),
     /** The type(s) of Pokémons that this Pokémon is resistant to */
-    resistant: types.maybeNull(types.maybe(types.array(types.string))),
+    resistant: types.maybeNull(types.maybe(types.array(types.maybeNull(types.string)))),
     /** The attacks of this Pokémon */
     attacks: types.maybeNull(types.maybe(types.late(() => PokemonAttackModel))),
     /** The type(s) of Pokémons that this Pokémon weak to */
-    weaknesses: types.maybeNull(types.maybe(types.array(types.string))),
+    weaknesses: types.maybeNull(types.maybe(types.array(types.maybeNull(types.string)))),
     fleeRate: types.maybeNull(types.maybe(types.number)),
     /** The maximum CP of this Pokémon */
     maxCP: types.maybeNull(types.maybe(types.integer)),
     /** The evolutions of this Pokémon */
-    evolutions: types.maybeNull(types.maybe(types.array(MSTGQLRef(types.late((): any => PokemonModel))))),
+    evolutions: types.maybeNull(types.maybe(types.array(types.maybeNull(MSTGQLRef(types.late((): any => PokemonModel)))))),
     /** The evolution requirements of this Pokémon */
     evolutionRequirements: types.maybeNull(types.maybe(types.late(() => PokemonEvolutionRequirementModel))),
     /** The maximum HP of this Pokémon */
