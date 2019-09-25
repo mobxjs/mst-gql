@@ -1,4 +1,4 @@
-const {store} = require('./store')
+const { store } = require("./store")
 
 const typeDefs = `
   type Query {
@@ -60,5 +60,5 @@ const resolvers = {
 
 module.exports = {
   typeDefs,
-  resolvers,
+  resolvers
 }

@@ -3,9 +3,7 @@ import { selectFromTodo, useQuery } from "../src/models"
 import { UserPreview } from "./users"
 
 const todoSelector = selectFromTodo()
-  .text
-  .done
-  .assignee()
+  .text.done.assignee()
   .toString()
 
 const TodosList = observer(({ todos }) => {
@@ -40,8 +38,12 @@ export const AllTodosView = observer(() => {
   if (!data) return "Loading..."
   return (
     <>
-      {data && <TodosList todos={data.todos}/>}
-      {loading ? "Loading..." : <button onClick={query!.refetch}>Refetch</button>}
+      {data && <TodosList todos={data.todos} />}
+      {loading ? (
+        "Loading..."
+      ) : (
+        <button onClick={query!.refetch}>Refetch</button>
+      )}
     </>
   )
 })
@@ -54,8 +56,12 @@ export const DoneTodosView = observer(() => {
   if (!data) return "Loading..."
   return (
     <>
-      {data && <TodosList todos={data.doneTodos}/>}
-      {loading ? "Loading..." : <button onClick={query!.refetch}>Refetch</button>}
+      {data && <TodosList todos={data.doneTodos} />}
+      {loading ? (
+        "Loading..."
+      ) : (
+        <button onClick={query!.refetch}>Refetch</button>
+      )}
     </>
   )
 })

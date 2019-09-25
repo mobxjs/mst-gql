@@ -5,7 +5,7 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "emotion": "^10.0.6",
-    "mst-gql": "^0.1.2",
+    "mst-gql": "latest",
     "polished": "^2.3.3",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "scaffold": "../../../generator/mst-gql-scaffold.js --excludes 'CacheControlScope,Mutation,PatchSize,Query,TripUpdateResponse' --format js demo_schema.json",
+    "scaffold": "node ../../../generator/mst-gql-scaffold.js --excludes PatchSize,TripUpdateResponse --format js demo_schema.json",
     "postinstall": "../../../node_modules/.bin/relative-deps"
   },
   "eslintConfig": {

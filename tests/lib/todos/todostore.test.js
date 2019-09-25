@@ -96,10 +96,12 @@ describe("todos.graphql tests", () => {
 
     // Then, the 2 todos mocked above should be loaded and merged
     const promise = store.queryTodos()
-    expect(store.__promises.size).toBe(0)
+    expect(store.__promises.size).toBe(1)
     await promise
+    expect(store.__promises.size).toBe(0)
     expect(store.todos.size).toBe(2)
     expect(store.todos.get("a").text).toBe("Initially loaded todo, now updated")
+    expect(store.toJSON()).toMatchSnapshot()
 
     const todoB = store.todos.get("b")
     expect(todoB.text).toBe("Another todo")
@@ -139,7 +141,7 @@ describe("todos.graphql tests", () => {
     store.queryTodos()
     expect(store.__promises.size).toBe(1)
     expect(store.todos.size).toBe(1)
-    await Promise.all(store.__promises)
+    await Promise.all(store.__promises.values())
     expect(store.todos.size).toBe(2)
     const todoB = store.todos.get("b")
     expect(todoB.text).toBe("Another todo")

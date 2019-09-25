@@ -1,34 +1,34 @@
 const store = {
   todos: [
     {
-      id: '0',
-      text: 'Go to the shops',
+      id: "0",
+      text: "Go to the shops",
       done: false,
-      assignee: 'rsanchez'
+      assignee: "rsanchez"
     },
     {
-      id: '1',
-      text: 'Pick up the kids',
+      id: "1",
+      text: "Pick up the kids",
       done: true,
       assignee: null
     },
     {
-      id: '2',
-      text: 'Install mst-gql',
+      id: "2",
+      text: "Install mst-gql",
       done: true,
-      assignee: 'msmith'
+      assignee: "msmith"
     }
   ],
   users: [
     {
-      id: 'rsanchez',
-      name: 'Rick Sanchez',
-      likes: ['computers', 'Kalaxian Crystals']
+      id: "rsanchez",
+      name: "Rick Sanchez",
+      likes: ["computers", "Kalaxian Crystals"]
     },
     {
-      id: 'msmith',
-      name: 'Morty Smith',
-      likes: ['Jessica']
+      id: "msmith",
+      name: "Morty Smith",
+      likes: ["Jessica"]
     }
   ]
 }

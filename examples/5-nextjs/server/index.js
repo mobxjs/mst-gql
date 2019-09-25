@@ -1,13 +1,13 @@
-const {promisify} = require('util')
+const { promisify } = require("util")
 const express = require("express")
 const { ApolloServer } = require("apollo-server-express")
 const next = require("next")
 const { resolvers, typeDefs } = require("./schema")
 
-const dev = process.env.NODE_ENV !== 'production'
+const dev = process.env.NODE_ENV !== "production"
 const port = parseInt(process.env.PORT, 10) || 3000
 
-async function main () {
+async function main() {
   const expressServer = express()
 
   const apolloServer = new ApolloServer({ typeDefs, resolvers })
