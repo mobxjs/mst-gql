@@ -27,33 +27,33 @@ export const PokemonModelBase = MSTGQLObject
     /** The ID of an object */
     id: types.identifier,
     /** The identifier of this Pokémon */
-    number: types.maybeNull(types.maybe(types.string)),
+    number: types.union(types.undefined, types.null, types.string),
     /** The name of this Pokémon */
-    name: types.maybeNull(types.maybe(types.string)),
+    name: types.union(types.undefined, types.null, types.string),
     /** The minimum and maximum weight of this Pokémon */
-    weight: types.maybeNull(types.maybe(types.late(() => PokemonDimensionModel))),
+    weight: types.union(types.undefined, types.null, types.late(() => PokemonDimensionModel)),
     /** The minimum and maximum weight of this Pokémon */
-    height: types.maybeNull(types.maybe(types.late(() => PokemonDimensionModel))),
+    height: types.union(types.undefined, types.null, types.late(() => PokemonDimensionModel)),
     /** The classification of this Pokémon */
-    classification: types.maybeNull(types.maybe(types.string)),
+    classification: types.union(types.undefined, types.null, types.string),
     /** The type(s) of this Pokémon */
-    types: types.maybeNull(types.maybe(types.array(types.maybeNull(types.string)))),
+    types: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     /** The type(s) of Pokémons that this Pokémon is resistant to */
-    resistant: types.maybeNull(types.maybe(types.array(types.maybeNull(types.string)))),
+    resistant: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     /** The attacks of this Pokémon */
-    attacks: types.maybeNull(types.maybe(types.late(() => PokemonAttackModel))),
+    attacks: types.union(types.undefined, types.null, types.late(() => PokemonAttackModel)),
     /** The type(s) of Pokémons that this Pokémon weak to */
-    weaknesses: types.maybeNull(types.maybe(types.array(types.maybeNull(types.string)))),
-    fleeRate: types.maybeNull(types.maybe(types.number)),
+    weaknesses: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
+    fleeRate: types.union(types.undefined, types.null, types.number),
     /** The maximum CP of this Pokémon */
-    maxCP: types.maybeNull(types.maybe(types.integer)),
+    maxCP: types.union(types.undefined, types.null, types.integer),
     /** The evolutions of this Pokémon */
-    evolutions: types.maybeNull(types.maybe(types.array(types.maybeNull(MSTGQLRef(types.late((): any => PokemonModel)))))),
+    evolutions: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PokemonModel))))),
     /** The evolution requirements of this Pokémon */
-    evolutionRequirements: types.maybeNull(types.maybe(types.late(() => PokemonEvolutionRequirementModel))),
+    evolutionRequirements: types.union(types.undefined, types.null, types.late(() => PokemonEvolutionRequirementModel)),
     /** The maximum HP of this Pokémon */
-    maxHP: types.maybeNull(types.maybe(types.integer)),
-    image: types.maybeNull(types.maybe(types.string)),
+    maxHP: types.union(types.undefined, types.null, types.integer),
+    image: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {

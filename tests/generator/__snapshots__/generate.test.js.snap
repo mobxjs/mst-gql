@@ -22,8 +22,8 @@ export const UserModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    avatar: types.maybe(types.string),
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -172,7 +172,7 @@ export const RepoModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal(\\"Repo\\"), \\"Repo\\"),
     id: types.identifier,
-    owner: types.maybeNull(types.maybe(types.union(types.late(() => UserModel), types.late(() => OrganizationModel)))),
+    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
   })
   .views(self => ({
     get store() {
@@ -255,8 +255,8 @@ export const UserModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    avatar: types.maybe(types.string),
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -321,8 +321,8 @@ export const OrganizationModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal(\\"Organization\\"), \\"Organization\\"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    logo: types.maybe(types.string),
+    name: types.union(types.undefined, types.string),
+    logo: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -477,8 +477,8 @@ export const SearchResultModelBase = MSTGQLObject
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
-    inputQuery: types.maybe(types.string),
-    items: types.maybe(types.array(types.maybeNull(types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
+    inputQuery: types.union(types.undefined, types.string),
+    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
   })
   .views(self => ({
     get store() {
@@ -559,8 +559,8 @@ export const MovieModelBase = MSTGQLObject
   .named('Movie')
   .props({
     __typename: types.optional(types.literal(\\"Movie\\"), \\"Movie\\"),
-    description: types.maybe(types.string),
-    director: types.maybe(types.string),
+    description: types.union(types.undefined, types.string),
+    director: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -623,8 +623,8 @@ export const BookModelBase = MSTGQLObject
   .named('Book')
   .props({
     __typename: types.optional(types.literal(\\"Book\\"), \\"Book\\"),
-    description: types.maybe(types.string),
-    author: types.maybe(types.string),
+    description: types.union(types.undefined, types.string),
+    author: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {

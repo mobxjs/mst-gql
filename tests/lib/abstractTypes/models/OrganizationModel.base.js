@@ -14,8 +14,8 @@ export const OrganizationModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("Organization"), "Organization"),
     id: types.identifier,
-    name: types.maybe(types.string),
-    logo: types.maybe(types.string),
+    name: types.union(types.undefined, types.string),
+    logo: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {

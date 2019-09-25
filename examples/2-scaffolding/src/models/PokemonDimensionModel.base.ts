@@ -18,9 +18,9 @@ export const PokemonDimensionModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
     /** The minimum value of this dimension */
-    minimum: types.maybeNull(types.maybe(types.string)),
+    minimum: types.union(types.undefined, types.null, types.string),
     /** The maximum value of this dimension */
-    maximum: types.maybeNull(types.maybe(types.string)),
+    maximum: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
