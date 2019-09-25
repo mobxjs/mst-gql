@@ -4,6 +4,8 @@
 
 - Update example 5. [#93](https://github.com/mobxjs/mst-gql/pull/93) thanks [zenflow](https://github.com/zenflow)!
 - Stop generating input types when format is `js`. [#96](https://github.com/mobxjs/mst-gql/pull/96)
+- Drop the `raw` option for queries [#103](https://github.com/mobxjs/mst-gql/pull/103) - [zenflow](https://github.com/zenflow)
+- Deduplicate identical concurrent query requests [#100](https://github.com/mobxjs/mst-gql/pull/100) - [zenflow](https://github.com/zenflow)
 
 ## 0.4.1
 
