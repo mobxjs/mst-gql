@@ -21,7 +21,11 @@ const TodosList = observer(({ todos }) => {
             toggle
           </button>
           &emsp;
-          Assignee: <UserPreview userId={todo.assignee.id}/>
+          {
+            todo.assignee
+              ? <>Assignee: <UserPreview userId={todo.assignee.id}/></>
+              : <>Unassigned</>
+          }
         </li>
       ))}
     </ul>

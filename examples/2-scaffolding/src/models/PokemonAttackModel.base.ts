@@ -20,9 +20,9 @@ export const PokemonAttackModelBase = MSTGQLObject
   .props({
     __typename: types.optional(types.literal("PokemonAttack"), "PokemonAttack"),
     /** The fast attacks of this Pokémon */
-    fast: types.optional(types.array(MSTGQLRef(types.late(() => AttackModel))), []),
+    fast: types.maybeNull(types.maybe(types.array(MSTGQLRef(types.late(() => AttackModel))))),
     /** The special attacks of this Pokémon */
-    special: types.optional(types.array(MSTGQLRef(types.late(() => AttackModel))), []),
+    special: types.maybeNull(types.maybe(types.array(MSTGQLRef(types.late(() => AttackModel))))),
   })
   .views(self => ({
     get store() {

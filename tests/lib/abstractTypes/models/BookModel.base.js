@@ -14,8 +14,8 @@ export const BookModelBase = ModelBase
   .named('Book')
   .props({
     __typename: types.optional(types.literal("Book"), "Book"),
-    description: types.maybeNull(types.string),
-    author: types.maybeNull(types.string),
+    description: types.maybe(types.string),
+    author: types.maybe(types.string),
   })
   .views(self => ({
     get store() {

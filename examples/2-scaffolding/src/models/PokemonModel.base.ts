@@ -27,33 +27,33 @@ export const PokemonModelBase = MSTGQLObject
     /** The ID of an object */
     id: types.identifier,
     /** The identifier of this Pokémon */
-    number: types.maybeNull(types.string),
+    number: types.maybeNull(types.maybe(types.string)),
     /** The name of this Pokémon */
-    name: types.maybeNull(types.string),
+    name: types.maybeNull(types.maybe(types.string)),
     /** The minimum and maximum weight of this Pokémon */
-    weight: types.maybeNull(types.late(() => PokemonDimensionModel)),
+    weight: types.maybeNull(types.maybe(types.late(() => PokemonDimensionModel))),
     /** The minimum and maximum weight of this Pokémon */
-    height: types.maybeNull(types.late(() => PokemonDimensionModel)),
+    height: types.maybeNull(types.maybe(types.late(() => PokemonDimensionModel))),
     /** The classification of this Pokémon */
-    classification: types.maybeNull(types.string),
+    classification: types.maybeNull(types.maybe(types.string)),
     /** The type(s) of this Pokémon */
-    types: types.optional(types.array(types.string), []),
+    types: types.maybeNull(types.maybe(types.array(types.string))),
     /** The type(s) of Pokémons that this Pokémon is resistant to */
-    resistant: types.optional(types.array(types.string), []),
+    resistant: types.maybeNull(types.maybe(types.array(types.string))),
     /** The attacks of this Pokémon */
-    attacks: types.maybeNull(types.late(() => PokemonAttackModel)),
+    attacks: types.maybeNull(types.maybe(types.late(() => PokemonAttackModel))),
     /** The type(s) of Pokémons that this Pokémon weak to */
-    weaknesses: types.optional(types.array(types.string), []),
-    fleeRate: types.maybeNull(types.number),
+    weaknesses: types.maybeNull(types.maybe(types.array(types.string))),
+    fleeRate: types.maybeNull(types.maybe(types.number)),
     /** The maximum CP of this Pokémon */
-    maxCP: types.maybeNull(types.integer),
+    maxCP: types.maybeNull(types.maybe(types.integer)),
     /** The evolutions of this Pokémon */
-    evolutions: types.optional(types.array(MSTGQLRef(types.late((): any => PokemonModel))), []),
+    evolutions: types.maybeNull(types.maybe(types.array(MSTGQLRef(types.late((): any => PokemonModel))))),
     /** The evolution requirements of this Pokémon */
-    evolutionRequirements: types.maybeNull(types.late(() => PokemonEvolutionRequirementModel)),
+    evolutionRequirements: types.maybeNull(types.maybe(types.late(() => PokemonEvolutionRequirementModel))),
     /** The maximum HP of this Pokémon */
-    maxHP: types.maybeNull(types.integer),
-    image: types.maybeNull(types.string),
+    maxHP: types.maybeNull(types.maybe(types.integer)),
+    image: types.maybeNull(types.maybe(types.string)),
   })
   .views(self => ({
     get store() {

@@ -15,8 +15,8 @@ export const OrganizationModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Organization"), "Organization"),
     id: types.identifier,
-    name: types.maybeNull(types.string),
-    logo: types.maybeNull(types.string),
+    name: types.maybe(types.string),
+    logo: types.maybe(types.string),
   })
   .views(self => ({
     get store() {
