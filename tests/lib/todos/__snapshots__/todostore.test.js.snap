@@ -28,15 +28,11 @@ complete
         "todos": Array [
           Object {
             "__typename": "Todo",
-            "complete": true,
             "id": "a",
-            "text": "Initially loaded todo, now updated",
           },
           Object {
             "__typename": "Todo",
-            "complete": false,
             "id": "b",
-            "text": "Another todo",
           },
         ],
       },
