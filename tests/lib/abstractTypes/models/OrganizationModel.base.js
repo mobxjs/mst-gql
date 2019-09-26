@@ -2,14 +2,15 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, QueryBuilder } from "mst-gql"
+import { QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 
 
 /**
  * OrganizationBase
  * auto generated base class for the model OrganizationModel.
  */
-export const OrganizationModelBase = MSTGQLObject
+export const OrganizationModelBase = ModelBase
   .named('Organization')
   .props({
     __typename: types.optional(types.literal("Organization"), "Organization"),

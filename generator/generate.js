@@ -41,12 +41,22 @@ function generate(
 
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
 
+  generateModelBase()
   generateTypes()
   generateRootStore()
   if (!modelsOnly && !noReact) {
     generateReactUtils()
   }
   generateBarrelFile(files)
+
+  function generateModelBase() {
+    const entryFile = `\
+import { MSTGQLObject } from "mst-gql"
+
+export const ModelBase = MSTGQLObject
+`
+    generateFile("ModelBase", entryFile)
+  }
 
   function generateTypes() {
     types
@@ -207,9 +217,8 @@ ${exampleAction}
 ${header}
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject,${
-      refs.length > 0 ? " MSTGQLRef," : ""
-    } QueryBuilder } from "mst-gql"
+import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase${importPostFix}"
 ${printRelativeImports(imports)}
 /**
  * ${name}Base
@@ -218,7 +227,7 @@ ${printRelativeImports(imports)}
       sanitizeComment(type.description)
     )}
  */
-export const ${name}ModelBase = MSTGQLObject
+export const ${name}ModelBase = ModelBase
   .named('${name}')
   .props({
     __typename: types.optional(types.literal("${name}"), "${name}"),
