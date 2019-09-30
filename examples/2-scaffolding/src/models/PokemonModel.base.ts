@@ -3,7 +3,8 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLRef, QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 import { PokemonAttackModel } from "./PokemonAttackModel"
 import { PokemonAttackModelSelector } from "./PokemonAttackModel.base"
 import { PokemonDimensionModel } from "./PokemonDimensionModel"
@@ -20,7 +21,7 @@ import { RootStoreType } from "./index"
  *
  * Represents a Pokémon
  */
-export const PokemonModelBase = MSTGQLObject
+export const PokemonModelBase = ModelBase
   .named('Pokemon')
   .props({
     __typename: types.optional(types.literal("Pokemon"), "Pokemon"),
