@@ -2,7 +2,8 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLRef, QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 import { LaunchModel } from "./LaunchModel"
 import { LaunchModelSelector } from "./LaunchModel.base"
 
@@ -13,7 +14,7 @@ import { LaunchModelSelector } from "./LaunchModel.base"
  *
  * Simple wrapper around our list of launches that contains a cursor to the last item in the list. Pass this cursor to the launches query to fetch results after these.
  */
-export const LaunchConnectionModelBase = MSTGQLObject
+export const LaunchConnectionModelBase = ModelBase
   .named('LaunchConnection')
   .props({
     __typename: types.optional(types.literal("LaunchConnection"), "LaunchConnection"),
