@@ -638,12 +638,16 @@ ${rootTypes
         if (returnType.kind === "OBJECT" && excludes.includes(returnType.name))
           return ""
         // TODO: probably we will need to support input object types soon
-        if (returnType.kind !== "OBJECT") {
+        const isReturnTypeAnObject =
+          returnType.kind === "OBJECT" ||
+          returnType.kind === "UNION" ||
+          returnType.kind === "INTERFACE"
+        // TODO: for now, we only generate queries for those queries that return objects
+        if (!isReturnTypeAnObject) {
           console.warn(
             `Skipping generation of query '${name}', its return type is not yet understood. PR is welcome`
           )
-          // log(returnType)
-          return "" // TODO: for now, we only generate queries for those queries that return objects
+          return ""
         }
 
         const tsType =
