@@ -28,7 +28,7 @@ describe("Abstract types tests", () => {
   beforeAll(() => {
     const files = scaffold(schemaContents, {
       format: "js",
-      roots: ["SearchResult", "Repo"]
+      roots: ["Repo"]
     })
     writeFiles(__dirname + "/models", files, "js", false)
     models = require("./models")
@@ -74,12 +74,11 @@ describe("Abstract types tests", () => {
     mockResponses = [mockSearchQuery]
 
     const { searchResultModelPrimitives, searchItemModelPrimitives } = models
-    await store.querySearch(
+    const { search: searchResults } = await store.querySearch(
       { text: "noot" },
       searchResultModelPrimitives.items(searchItemModelPrimitives)
     )
 
-    const searchResults = store.searchresults.get()
     expect(searchResults.inputQuery).toBe("noot")
     const items = searchResults.items
     expect(items).toHaveLength(2)
