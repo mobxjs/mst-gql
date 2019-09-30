@@ -377,7 +377,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       const isSelf = fieldType.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
-      if (!knownTypes.includes(fieldType.name)) return `types.frozen()`
+      if (!knownTypes.includes(fieldType.name)) {
+        return `types.frozen()`
+      }
 
       // import the type
       const modelType = fieldType.name + "Model"
@@ -410,6 +412,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
       const interfaceOrUnionType = interfaceAndUnionTypes.get(fieldType.name)
       const mstUnionArgs = interfaceOrUnionType.ofTypes.map(t => {
+        if (!knownTypes.includes(t.name)) {
+          return `types.frozen()`
+        }
+
         // Note that members of a union type need to be concrete object types;
         // you can't create a union type out of interfaces or other unions.
         const subTypeClassName = t.name + "Model"
