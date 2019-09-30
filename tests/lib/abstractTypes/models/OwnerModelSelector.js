@@ -1,3 +1,6 @@
+/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+
 import { QueryBuilder } from "mst-gql"
 import { OrganizationModelSelector } from "./OrganizationModel.base"
 import { UserModelSelector } from "./UserModel.base"

@@ -275,8 +275,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       })
 
     let contents = header + "\n\n"
-    contents = 'import { QueryBuilder } from "mst-gql"\n'
-
+    contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
     contents += generateFragments(
       type.name,
