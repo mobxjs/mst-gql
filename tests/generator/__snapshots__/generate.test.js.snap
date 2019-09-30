@@ -236,7 +236,11 @@ export const RepoModel = RepoModelBase
   ],
   Array [
     "OwnerModelSelector",
-    "import { QueryBuilder } from \\"mst-gql\\"
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { QueryBuilder } from \\"mst-gql\\"
 import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 import { UserModelSelector } from \\"./UserModel.base\\"
 
@@ -553,7 +557,11 @@ export const SearchResultModel = SearchResultModelBase
   ],
   Array [
     "SearchItemModelSelector",
-    "import { QueryBuilder } from \\"mst-gql\\"
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { QueryBuilder } from \\"mst-gql\\"
 import { BookModelSelector, bookModelPrimitives } from \\"./BookModel.base\\"
 import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
 

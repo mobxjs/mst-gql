@@ -12,6 +12,7 @@ __snapshots__
 **/models/reactUtils.*
 **/models/*.base.*
 **/models/*Enum.*
+**/models/*ModelSelector.*
 
 # yarn
 yarn.lock
