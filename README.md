@@ -63,7 +63,7 @@ Tip: Note that API descriptions found in the graphQL endpoint will generally end
 
 After running the scaffolder, a bunch of files will be generated in the `src/models/` directory of your project (or whatever path your provided):
 
-*(Files marked ✏ can and should be edited. They won't be overwritten when you scaffold unless you use the `force` option.)*
+_(Files marked ✏ can and should be edited. They won't be overwritten when you scaffold unless you use the `force` option.)_
 
 - `index` - A barrel file that exposes all interesting things generated
 - `RootStore.base` - A mobx-state-tree store that acts as a graphql client. Provides the following:
