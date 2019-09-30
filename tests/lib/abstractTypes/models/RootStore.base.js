@@ -22,9 +22,11 @@ import { organizationModelPrimitives, OrganizationModelSelector } from "./Organi
 */
 export const RootStoreBase = MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel], ['Repo', () => RepoModel], ['User', () => UserModel], ['Organization', () => OrganizationModel]], ['Repo']))
+  .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel], ['Repo', () => RepoModel], ['User', () => UserModel], ['Organization', () => OrganizationModel]], ['Repo', 'User', 'Organization']))
   .props({
-    repos: types.optional(types.map(types.late(() => RepoModel)), {})
+    repos: types.optional(types.map(types.late(() => RepoModel)), {}),
+    users: types.optional(types.map(types.late(() => UserModel)), {}),
+    organizations: types.optional(types.map(types.late(() => OrganizationModel)), {})
   })
   .actions(self => ({
     querySearch(variables, resultSelector = searchResultModelPrimitives.toString(), options = {}) {
