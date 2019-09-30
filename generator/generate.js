@@ -41,22 +41,12 @@ function generate(
 
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
 
-  generateModelBase()
   generateTypes()
   generateRootStore()
   if (!modelsOnly && !noReact) {
     generateReactUtils()
   }
   generateBarrelFile(files)
-
-  function generateModelBase() {
-    const entryFile = `\
-import { MSTGQLObject } from "mst-gql"
-
-export const ModelBase = MSTGQLObject
-`
-    generateFile("ModelBase", entryFile)
-  }
 
   function generateTypes() {
     types
@@ -217,8 +207,9 @@ ${exampleAction}
 ${header}
 
 import { types } from "mobx-state-tree"
-import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder } from "mst-gql"
-import { ModelBase } from "./ModelBase${importPostFix}"
+import { MSTGQLObject,${
+      refs.length > 0 ? " MSTGQLRef," : ""
+    } QueryBuilder } from "mst-gql"
 ${printRelativeImports(imports)}
 /**
  * ${name}Base
@@ -227,7 +218,7 @@ ${printRelativeImports(imports)}
       sanitizeComment(type.description)
     )}
  */
-export const ${name}ModelBase = ModelBase
+export const ${name}ModelBase = MSTGQLObject
   .named('${name}')
   .props({
     __typename: types.optional(types.literal("${name}"), "${name}"),
@@ -520,23 +511,19 @@ import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
       format === "ts" ? ", QueryOptions" : ""
     } } from "mst-gql"
-${objectTypes
-  .map(
-    t =>
-      `\nimport { ${t}Model${ifTS(
-        `, ${t}ModelType`
-      )} } from "./${t}Model${importPostFix}"${
-        modelsOnly
-          ? ""
-          : `\nimport { ${toFirstLower(
-              t
-            )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
-      }`
-  )
-  .join("")}
-${enumTypes
-  .map(t => `\nimport { ${t} } from "./${t}Enum${importPostFix}"`)
-  .join("")}
+import {${objectTypes
+      .map(
+        t =>
+          `${t}Model${ifTS(`, ${t}ModelType`)}${
+            modelsOnly
+              ? ""
+              : `, ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector`
+          }`
+      )
+      .join(", ")}
+  ${enumTypes.length > 0 ? ", " : ""}${enumTypes.join(", ")}
+} from "./internal";
+
 ${ifTS(
   inputTypes
     .map(
@@ -547,6 +534,7 @@ ${ifTS(
     )
     .join("")
 )}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -791,14 +779,16 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
   function printRelativeImports(imports) {
     const moduleNames = [...imports.keys()].sort()
     return (
-      moduleNames
+      `import {${moduleNames
         .map(moduleName => {
           const toBeImported = [...imports.get(moduleName)].sort()
-          return `import { ${[...toBeImported].join(
-            ", "
-          )} } from "./${moduleName}${importPostFix}"`
+          return [...toBeImported].join(", ")
+          // return `import { ${[...toBeImported].join(
+          //   ", ",
+          // )} } from "./${moduleName}${importPostFix}"`;
         })
-        .join("\n") + (moduleNames.length > 0 ? "\n\n" : "\n")
+        .join(", ")}} from "./internal"` +
+      (moduleNames.length > 0 ? "\n\n" : "\n")
     )
   }
 
