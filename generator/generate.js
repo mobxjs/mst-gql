@@ -392,7 +392,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       } => ${fieldType.name}Model)`
 
       // this object is not a root type, so assume composition relationship
-      if (!isSelf && !rootTypes.includes(fieldType.name)) return realType
+      if (!rootTypes.includes(fieldType.name)) return realType
 
       // the target is a root type, store a reference
       refs.push([fieldName, fieldType.name])
