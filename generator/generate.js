@@ -392,7 +392,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       } => ${fieldType.name}Model)`
 
       // this object is not a root type, so assume composition relationship
-      if (!rootTypes.includes(fieldType.name)) return realType
+      if (!rootTypes.includes(fieldType.name)) {
+        return realType
+      }
 
       // the target is a root type, store a reference
       refs.push([fieldName, fieldType.name])
@@ -416,10 +418,20 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           addImport(subTypeClassName, subTypeClassName)
         }
         const isSelf = fieldType.name === currentType
+
         // always using late prevents potential circular dependency issues between files
-        return `types.late(()${
+        const realType = `types.late(()${
           isSelf && format === "ts" ? ": any" : ""
         } => ${subTypeClassName})`
+
+        // this object is not a root type, so assume composition relationship
+        if (!rootTypes.includes(t.name)) {
+          return realType
+        }
+
+        // the target is a root type, store a reference
+        refs.push([fieldName, fieldType.name, t.name])
+        return `MSTGQLRef(${realType})`
       })
       return `types.union(${mstUnionArgs.join(", ")})`
     }
