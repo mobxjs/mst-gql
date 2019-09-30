@@ -207,4 +207,49 @@ describe("Abstract types tests", () => {
     const mobxRepo = repos.get("b")
     expect(mobxRepo.owner.name).toBe("Mobx")
   })
+
+  test("as a lib user i want to use methods for queries that have abstract return types", async () => {
+    const mockRepoQuery = query => {
+      validateQuery(query.toString())
+
+      return {
+        getAllOwners: [
+          {
+            __typename: "User",
+            id: "chuck",
+            name: "Chuck Norris",
+            avatar: "chuck-norris.png"
+          },
+          {
+            __typename: "Organization",
+            id: "mobx",
+            name: "Mobx",
+            logo: "mobx.png"
+          }
+        ]
+      }
+    }
+    mockResponses = [mockRepoQuery]
+
+    const {
+      ownerModelPrimitives,
+      userModelPrimitives,
+      organizationModelPrimitives
+    } = models
+    const { getAllOwners } = await store.queryGetAllOwners(
+      {},
+      ownerModelPrimitives
+        .user(userModelPrimitives)
+        .organization(organizationModelPrimitives)
+    )
+    const [chuckNorrisUser, mobxOrganization] = getAllOwners
+
+    expect(chuckNorrisUser).toBe(store.users.get("chuck"))
+    expect(chuckNorrisUser.name).toBe("Chuck Norris")
+    expect(chuckNorrisUser.avatar).toBe("chuck-norris.png")
+
+    expect(mobxOrganization).toBe(store.organizations.get("mobx"))
+    expect(mobxOrganization.name).toBe("Mobx")
+    expect(mobxOrganization.logo).toBe("mobx.png")
+  })
 })

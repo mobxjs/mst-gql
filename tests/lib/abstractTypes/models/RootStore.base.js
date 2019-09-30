@@ -39,6 +39,11 @@ export const RootStoreBase = MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
+    queryGetAllOwners(variables, resultSelector = ownerModelPrimitives.toString(), options = {}) {
+      return self.query(`query getAllOwners { getAllOwners {
+        ${typeof resultSelector === "function" ? resultSelector(new OwnerModelSelector()).toString() : resultSelector}
+      } }`, variables, options)
+    },
     mutateAddRepo(variables, resultSelector = repoModelPrimitives.toString(), optimisticUpdate) {
       return self.mutate(`mutation addRepo($name: String!, $ownerName: String!, $avatar: String, $logo: String) { addRepo(name: $name, ownerName: $ownerName, avatar: $avatar, logo: $logo) {
         ${typeof resultSelector === "function" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
