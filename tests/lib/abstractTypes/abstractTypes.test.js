@@ -53,23 +53,21 @@ describe("Abstract types tests", () => {
       validateQuery(query.toString())
 
       return {
-        data: {
-          search: {
-            __typename: "SearchResult",
-            inputQuery: "noot",
-            items: [
-              {
-                __typename: "Movie",
-                searchPreviewText: "Aap noot mies",
-                director: "Steven Spielberg"
-              },
-              {
-                __typename: "Book",
-                searchPreviewText: "Blub noot",
-                author: "Ernest Hemingway"
-              }
-            ]
-          }
+        search: {
+          __typename: "SearchResult",
+          inputQuery: "noot",
+          items: [
+            {
+              __typename: "Movie",
+              searchPreviewText: "Aap noot mies",
+              director: "Steven Spielberg"
+            },
+            {
+              __typename: "Book",
+              searchPreviewText: "Blub noot",
+              author: "Ernest Hemingway"
+            }
+          ]
         }
       }
     }
@@ -98,28 +96,26 @@ describe("Abstract types tests", () => {
       validateQuery(query.toString())
 
       return {
-        data: {
-          getAllRepos: [
-            {
-              __typename: "Repo",
-              id: "a",
-              owner: {
-                __typename: "User",
-                id: "y",
-                name: "Chuck Norris"
-              }
-            },
-            {
-              __typename: "Repo",
-              id: "b",
-              owner: {
-                __typename: "Organization",
-                id: "z",
-                name: "Mobx"
-              }
+        getAllRepos: [
+          {
+            __typename: "Repo",
+            id: "a",
+            owner: {
+              __typename: "User",
+              id: "y",
+              name: "Chuck Norris"
             }
-          ]
-        }
+          },
+          {
+            __typename: "Repo",
+            id: "b",
+            owner: {
+              __typename: "Organization",
+              id: "z",
+              name: "Mobx"
+            }
+          }
+        ]
       }
     }
     mockResponses = [mockRepoQuery]
@@ -166,10 +162,8 @@ describe("Abstract types tests", () => {
       addedRepos.push(repo)
 
       return {
-        data: {
-          addRepo: {
-            ...repo
-          }
+        addRepo: {
+          ...repo
         }
       }
     }
@@ -178,9 +172,7 @@ describe("Abstract types tests", () => {
       validateQuery(query.toString())
 
       return {
-        data: {
-          getAllRepos: addedRepos
-        }
+        getAllRepos: addedRepos
       }
     }
 
