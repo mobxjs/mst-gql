@@ -6,7 +6,7 @@ const child_process = require("child_process")
 const graphql = require("graphql")
 
 const { getConfig, mergeConfigs } = require("./config")
-const { generate, writeFiles } = require("./generate")
+const { generate, writeFiles, logUnexpectedFiles } = require("./generate")
 
 const definition = {
   "--format": String,
@@ -105,6 +105,7 @@ function main() {
     noReact
   )
   writeFiles(outDir, files, format, forceAll, true, separate)
+  logUnexpectedFiles(outDir, files)
 }
 
 main()
