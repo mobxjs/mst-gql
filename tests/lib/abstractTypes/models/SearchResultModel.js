@@ -1,8 +1,7 @@
-import { SearchResultModelBase } from "./SearchResultModel.base"
+
+import { SearchResultModelBase } from "./internal"
 
 
-/* A graphql query fragment builders for SearchResultModel */
-export { selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector } from "./SearchResultModel.base"
 
 /**
  * SearchResultModel

@@ -1,8 +1,7 @@
-import { RepoModelBase } from "./RepoModel.base"
+
+import { RepoModelBase } from "./internal"
 
 
-/* A graphql query fragment builders for RepoModel */
-export { selectFromRepo, repoModelPrimitives, RepoModelSelector } from "./RepoModel.base"
 
 /**
  * RepoModel

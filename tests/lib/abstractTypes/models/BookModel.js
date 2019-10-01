@@ -1,8 +1,7 @@
-import { BookModelBase } from "./BookModel.base"
+
+import { BookModelBase } from "./internal"
 
 
-/* A graphql query fragment builders for BookModel */
-export { selectFromBook, bookModelPrimitives, BookModelSelector } from "./BookModel.base"
 
 /**
  * BookModel

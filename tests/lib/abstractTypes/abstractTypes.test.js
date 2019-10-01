@@ -4,7 +4,11 @@ import fs from "fs"
 import path from "path"
 import { buildSchema, parse } from "graphql"
 import { validate } from "graphql/validation"
-import { scaffold, writeFiles } from "../../../generator/generate"
+import {
+  scaffold,
+  writeFiles,
+  readModuleLoadingOrder
+} from "../../../generator/generate"
 
 const schemaContents = fs
   .readFileSync(path.resolve(__dirname, "schema.graphql"))
@@ -26,9 +30,14 @@ describe("Abstract types tests", () => {
   let store
 
   beforeAll(() => {
+    const moduleLoadingOrder = readModuleLoadingOrder(
+      __dirname + "/models",
+      "js"
+    )
     const files = scaffold(schemaContents, {
       format: "js",
-      roots: ["SearchResult", "Repo"]
+      roots: ["SearchResult", "Repo"],
+      moduleLoadingOrder
     })
     writeFiles(__dirname + "/models", files, "js", false)
     models = require("./models")
@@ -45,13 +54,13 @@ describe("Abstract types tests", () => {
     store = models.RootStore.create(undefined, {
       gqlHttpClient: mockClient
     })
+    console.log(store)
   })
 
   test("as a lib user i want to query union field types", async () => {
     const mockSearchQuery = (query, variables) => {
       expect(variables).toEqual({ text: "noot" })
       validateQuery(query.toString())
-
       return {
         data: {
           search: {

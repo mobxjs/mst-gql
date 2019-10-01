@@ -1,8 +1,7 @@
-import { MovieModelBase } from "./MovieModel.base"
+
+import { MovieModelBase } from "./internal"
 
 
-/* A graphql query fragment builders for MovieModel */
-export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from "./MovieModel.base"
 
 /**
  * MovieModel

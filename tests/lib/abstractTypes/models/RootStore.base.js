@@ -2,9 +2,7 @@
 /* eslint-disable */
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
-import SearchResultModel, searchResultModelPrimitives, SearchResultModelSelector, MovieModel, movieModelPrimitives, MovieModelSelector, BookModel, bookModelPrimitives, BookModelSelector, RepoModel, repoModelPrimitives, RepoModelSelector, UserModel, userModelPrimitives, UserModelSelector, OrganizationModel, organizationModelPrimitives, OrganizationModelSelector
-  
-} from "./internal";
+import { SearchResultModel, searchResultModelPrimitives, SearchResultModelSelector, MovieModel, movieModelPrimitives, MovieModelSelector, BookModel, bookModelPrimitives, BookModelSelector, RepoModel, repoModelPrimitives, RepoModelSelector, UserModel, userModelPrimitives, UserModelSelector, OrganizationModel, organizationModelPrimitives, OrganizationModelSelector } from "./internal";
 
 
 /**

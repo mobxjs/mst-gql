@@ -7,6 +7,7 @@ const explorer = cosmiconfig("mst-gql")
 const defaultConfig = {
   excludes: [],
   force: false,
+  keepInternalOrder: false,
   format: "js",
   input: "graphql-schema.json",
   modelsOnly: false,
@@ -38,6 +39,8 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
       : config.excludes,
     modelsOnly: !!args["--modelsOnly"] || config.modelsOnly,
     forceAll: !!args["--force"] || config.force,
+    keepInternalOrder:
+      !!args["--keepInternalOrder"] || config.keepInternalOrder,
     noReact: !!args["--noReact"] || config.noReact
   }
 }

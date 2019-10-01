@@ -18,8 +18,8 @@ export const ModelBase = MSTGQLObject
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -56,13 +56,12 @@ export const userModelPrimitives = selectFromUser().name.avatar
   Array [
     "UserModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { UserModelBase } from \\"./UserModel.base\\"
+
+import { UserModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
-/* A graphql query fragment builders for UserModel */
-export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 /**
  * UserModel
@@ -101,9 +100,7 @@ export const RootStore = RootStoreBase
 /* tslint:disable */
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
-
-import { UserModel, UserModelType } from \\"./UserModel\\"
-import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+import { UserModel, UserModelType, userModelPrimitives, UserModelSelector } from \\"./internal\\";
 
 
 /**
@@ -142,14 +139,27 @@ export const useQuery = createUseQueryHook(StoreContext, React)
     true,
   ],
   Array [
+    "internal",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./ModelBase\\"
+export * from \\"./UserModel.base\\"
+export * from \\"./UserModel\\"
+export * from \\"./RootStore\\"
+export * from \\"./RootStore.base\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+  Array [
     "index",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
-export * from \\"./UserModel\\"
-export * from \\"./RootStore\\"
-export * from \\"./reactUtils\\"
+export {UserModel, UserModelType, selectFromUser, userModelPrimitives, UserModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
 ",
     true,
   ],
@@ -174,11 +184,8 @@ export const ModelBase = MSTGQLObject
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { OrganizationModel } from \\"./OrganizationModel\\"
-import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
-import { UserModel } from \\"./UserModel\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {OrganizationModel, OwnerModelSelector, UserModel, RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -213,13 +220,12 @@ export const repoModelPrimitives = selectFromRepo()
   Array [
     "RepoModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { RepoModelBase } from \\"./RepoModel.base\\"
+
+import { RepoModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of RepoModel */
 export interface RepoModelType extends Instance<typeof RepoModel.Type> {}
 
-/* A graphql query fragment builders for RepoModel */
-export { selectFromRepo, repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
 
 /**
  * RepoModel
@@ -241,8 +247,7 @@ export const RepoModel = RepoModelBase
 /* tslint:disable */
 
 import { QueryBuilder } from \\"mst-gql\\"
-import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
-import { UserModelSelector } from \\"./UserModel.base\\"
+import {OrganizationModelSelector, UserModelSelector} from \\"./internal\\"
 
 export class OwnerModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -265,8 +270,8 @@ export const ownerModelPrimitives = selectFromOwner().name",
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -303,13 +308,12 @@ export const userModelPrimitives = selectFromUser().name.avatar
   Array [
     "UserModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { UserModelBase } from \\"./UserModel.base\\"
+
+import { UserModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of UserModel */
 export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
-/* A graphql query fragment builders for UserModel */
-export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 /**
  * UserModel
@@ -332,8 +336,8 @@ export const UserModel = UserModelBase
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -370,13 +374,12 @@ export const organizationModelPrimitives = selectFromOrganization().name.logo
   Array [
     "OrganizationModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { OrganizationModelBase } from \\"./OrganizationModel.base\\"
+
+import { OrganizationModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of OrganizationModel */
 export interface OrganizationModelType extends Instance<typeof OrganizationModel.Type> {}
 
-/* A graphql query fragment builders for OrganizationModel */
-export { selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 /**
  * OrganizationModel
@@ -415,13 +418,7 @@ export const RootStore = RootStoreBase
 /* tslint:disable */
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
-
-import { RepoModel, RepoModelType } from \\"./RepoModel\\"
-import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
-import { UserModel, UserModelType } from \\"./UserModel\\"
-import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
-import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
-import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+import { RepoModel, RepoModelType, repoModelPrimitives, RepoModelSelector, UserModel, UserModelType, userModelPrimitives, UserModelSelector, OrganizationModel, OrganizationModelType, organizationModelPrimitives, OrganizationModelSelector } from \\"./internal\\";
 
 
 /**
@@ -460,17 +457,32 @@ export const useQuery = createUseQueryHook(StoreContext, React)
     true,
   ],
   Array [
+    "internal",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./ModelBase\\"
+export * from \\"./RepoModel.base\\"
+export * from \\"./RepoModel\\"
+export * from \\"./OwnerModelSelector\\"
+export * from \\"./UserModel.base\\"
+export * from \\"./UserModel\\"
+export * from \\"./OrganizationModel.base\\"
+export * from \\"./OrganizationModel\\"
+export * from \\"./RootStore\\"
+export * from \\"./RootStore.base\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+  Array [
     "index",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
-export * from \\"./RepoModel\\"
-export * from \\"./OwnerModelSelector\\"
-export * from \\"./UserModel\\"
-export * from \\"./OrganizationModel\\"
-export * from \\"./RootStore\\"
-export * from \\"./reactUtils\\"
+export {RepoModel, RepoModelType, selectFromRepo, repoModelPrimitives, RepoModelSelector, UserModel, UserModelType, selectFromUser, userModelPrimitives, UserModelSelector, OrganizationModel, OrganizationModelType, selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
 ",
     true,
   ],
@@ -495,11 +507,8 @@ export const ModelBase = MSTGQLObject
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { BookModel } from \\"./BookModel\\"
-import { MovieModel } from \\"./MovieModel\\"
-import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {BookModel, MovieModel, SearchItemModelSelector, RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -534,13 +543,12 @@ export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
   Array [
     "SearchResultModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { SearchResultModelBase } from \\"./SearchResultModel.base\\"
+
+import { SearchResultModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of SearchResultModel */
 export interface SearchResultModelType extends Instance<typeof SearchResultModel.Type> {}
 
-/* A graphql query fragment builders for SearchResultModel */
-export { selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
 
 /**
  * SearchResultModel
@@ -562,8 +570,7 @@ export const SearchResultModel = SearchResultModelBase
 /* tslint:disable */
 
 import { QueryBuilder } from \\"mst-gql\\"
-import { BookModelSelector, bookModelPrimitives } from \\"./BookModel.base\\"
-import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
+import {BookModelSelector, bookModelPrimitives, MovieModelSelector, movieModelPrimitives} from \\"./internal\\"
 
 export class SearchItemModelSelector extends QueryBuilder {
   movie(builder?: string | MovieModelSelector | ((selector: MovieModelSelector) => MovieModelSelector)) { return this.__inlineFragment(\`Movie\`, MovieModelSelector, builder) }
@@ -585,8 +592,8 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -621,13 +628,12 @@ export const movieModelPrimitives = selectFromMovie().description.director
   Array [
     "MovieModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { MovieModelBase } from \\"./MovieModel.base\\"
+
+import { MovieModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of MovieModel */
 export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
 
-/* A graphql query fragment builders for MovieModel */
-export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
 
 /**
  * MovieModel
@@ -650,8 +656,8 @@ export const MovieModel = MovieModelBase
 
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { RootStoreType } from \\"./index\\"
+import { ModelBase } from \\"./internal\\"
+import {RootStoreType} from \\"./internal\\"
 
 
 /**
@@ -686,13 +692,12 @@ export const bookModelPrimitives = selectFromBook().description.author
   Array [
     "BookModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { BookModelBase } from \\"./BookModel.base\\"
+
+import { BookModelBase } from \\"./internal\\"
 
 /* The TypeScript type of an instance of BookModel */
 export interface BookModelType extends Instance<typeof BookModel.Type> {}
 
-/* A graphql query fragment builders for BookModel */
-export { selectFromBook, bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 /**
  * BookModel
@@ -731,13 +736,7 @@ export const RootStore = RootStoreBase
 /* tslint:disable */
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
-
-import { SearchResultModel, SearchResultModelType } from \\"./SearchResultModel\\"
-import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
-import { MovieModel, MovieModelType } from \\"./MovieModel\\"
-import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
-import { BookModel, BookModelType } from \\"./BookModel\\"
-import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+import { SearchResultModel, SearchResultModelType, searchResultModelPrimitives, SearchResultModelSelector, MovieModel, MovieModelType, movieModelPrimitives, MovieModelSelector, BookModel, BookModelType, bookModelPrimitives, BookModelSelector } from \\"./internal\\";
 
 
 /**
@@ -776,17 +775,32 @@ export const useQuery = createUseQueryHook(StoreContext, React)
     true,
   ],
   Array [
+    "internal",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./ModelBase\\"
+export * from \\"./SearchResultModel.base\\"
+export * from \\"./SearchResultModel\\"
+export * from \\"./SearchItemModelSelector\\"
+export * from \\"./MovieModel.base\\"
+export * from \\"./MovieModel\\"
+export * from \\"./BookModel.base\\"
+export * from \\"./BookModel\\"
+export * from \\"./RootStore\\"
+export * from \\"./RootStore.base\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+  Array [
     "index",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
 
-export * from \\"./SearchResultModel\\"
-export * from \\"./SearchItemModelSelector\\"
-export * from \\"./MovieModel\\"
-export * from \\"./BookModel\\"
-export * from \\"./RootStore\\"
-export * from \\"./reactUtils\\"
+export {SearchResultModel, SearchResultModelType, selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector, MovieModel, MovieModelType, selectFromMovie, movieModelPrimitives, MovieModelSelector, BookModel, BookModelType, selectFromBook, bookModelPrimitives, BookModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
 ",
     true,
   ],

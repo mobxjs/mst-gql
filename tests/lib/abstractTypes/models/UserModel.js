@@ -1,8 +1,7 @@
-import { UserModelBase } from "./UserModel.base"
+
+import { UserModelBase } from "./internal"
 
 
-/* A graphql query fragment builders for UserModel */
-export { selectFromUser, userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
 /**
  * UserModel

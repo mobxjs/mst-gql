@@ -6,7 +6,7 @@ const child_process = require("child_process")
 const graphql = require("graphql")
 
 const { getConfig, mergeConfigs } = require("./config")
-const { generate, writeFiles } = require("./generate")
+const { generate, writeFiles, readModuleLoadingOrder } = require("./generate")
 
 const definition = {
   "--format": String,
@@ -15,6 +15,7 @@ const definition = {
   "--excludes": String,
   "--modelsOnly": Boolean,
   "--force": Boolean,
+  "--keepInternalOrder": Boolean,
   "--noReact": Boolean,
   "--separate": Boolean
 }
@@ -41,6 +42,7 @@ function main() {
     excludes,
     modelsOnly,
     forceAll,
+    keepInternalOrder,
     noReact
   } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
@@ -93,7 +95,9 @@ function main() {
     "Detected types: \n" +
       json.__schema.types.map(t => `  - [${t.kind}] ${t.name}`).join("\n")
   )
-
+  if (keepInternalOrder) {
+    moduleLoadingOrder = readModuleLoadingOrder(outDir)
+  }
   // console.log(JSON.stringify(json, null, 2))
   const files = generate(
     json.__schema.types,

@@ -1,12 +1,5 @@
 import { TodoModelBase } from "./TodoModel.base"
 
-/* A graphql query fragment builders for TodoModel */
-export {
-  selectFromTodo,
-  todoModelPrimitives,
-  TodoModelSelector
-} from "./TodoModel.base"
-
 /**
  * TodoModel
  */

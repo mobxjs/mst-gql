@@ -1,8 +1,7 @@
-import { OrganizationModelBase } from "./OrganizationModel.base"
+
+import { OrganizationModelBase } from "./internal"
 
 
-/* A graphql query fragment builders for OrganizationModel */
-export { selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector } from "./OrganizationModel.base"
 
 /**
  * OrganizationModel

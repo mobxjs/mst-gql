@@ -2,9 +2,7 @@
 /* eslint-disable */
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
-import TodoModel, todoModelPrimitives, TodoModelSelector
-  
-} from "./internal";
+import { TodoModel, todoModelPrimitives, TodoModelSelector } from "./internal";
 
 
 /**

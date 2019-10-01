@@ -23,7 +23,8 @@ function generate(
   excludes = [],
   generationDate = "a long long time ago...",
   modelsOnly = false,
-  noReact = false
+  noReact = false,
+  moduleLoadingOrder = {}
 ) {
   excludes.push(...buildInExcludes)
 
@@ -32,7 +33,7 @@ function generate(
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
   const enumTypes = [] // enum types to be imported when using typescript
-  const toExport = [] // files to be exported from barrel file
+  const toExport = [] // modules to be exported from barrel file
   let currentType = "<none>"
 
   const header = `/* This is a mst-gql generated file, don't modify it manually */
@@ -47,7 +48,7 @@ function generate(
   if (!modelsOnly && !noReact) {
     generateReactUtils()
   }
-  generateInternalBarrelFile(files)
+  generateInternalBarrelFile(files, moduleLoadingOrder)
   generateBarrelFile(files)
 
   function generateModelBase() {
@@ -131,7 +132,6 @@ export const ModelBase = MSTGQLObject
 
   function handleEnumType(type) {
     const name = type.name
-    toExport.push(name + "Enum")
 
     const tsType =
       format === "ts"
@@ -156,8 +156,10 @@ ${tsType}
 */
 export const ${name}Enum = ${handleEnumTypeCore(type)}
 `
+    toExport.push(name + "Enum")
     if (format === "ts") {
       enumTypes.push(type.name)
+      toExport.push(name)
     }
     generateFile(name + "Enum", contents, true)
   }
@@ -188,19 +190,13 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     const { name } = type
     const flowerName = toFirstLower(name)
 
-    const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
-import { ${name}ModelBase } from "./${name}Model.base${importPostFix}"
+    const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}
+import { ${name}ModelBase } from "./internal${importPostFix}"
 
 ${
   format === "ts"
     ? `/* The TypeScript type of an instance of ${name}Model */\nexport interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}\n`
     : ""
-}
-${
-  modelsOnly
-    ? ""
-    : `/* A graphql query fragment builders for ${name}Model */
-export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector } from "./${name}Model.base${importPostFix}"`
 }
 
 /**
@@ -209,9 +205,17 @@ export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector }
 export const ${name}Model = ${name}ModelBase
 ${exampleAction}
 `
-
+    toExport.push(name + "Model")
     if (format === "ts") {
+      toExport.push(name + "ModelType")
       addImportToMap(imports, name + "Model.base", "index", "RootStoreType")
+    }
+    if (!modelsOnly) {
+      toExport.push(
+        "selectFrom" + name,
+        flowerName + "ModelPrimitives",
+        name + "ModelSelector"
+      )
     }
 
     const modelFile = `\
@@ -219,7 +223,7 @@ ${header}
 
 import { types } from "mobx-state-tree"
 import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder } from "mst-gql"
-import { ModelBase } from "./ModelBase${importPostFix}"
+import { ModelBase } from "./internal${importPostFix}"
 ${printRelativeImports(imports)}
 /**
  * ${name}Base
@@ -243,7 +247,6 @@ ${modelProperties}
 ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 `
 
-    toExport.push(name + "Model")
     generateFile(name + "Model.base", modelFile, true)
     generateFile(name + "Model", entryFile)
   }
@@ -285,7 +288,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       interfaceOrUnionType
     )
 
-    toExport.push(fileName)
+    // toExport.push(fileName)
     generateFile(fileName, contents, true)
   }
 
@@ -500,8 +503,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
   }
 
   function generateRootStore() {
-    toExport.push("RootStore")
-
     const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
 import { RootStoreBase } from "./RootStore.base${importPostFix}"
 
@@ -513,6 +514,7 @@ ${
 export const RootStore = RootStoreBase
 ${exampleAction}
 `
+    toExport.push("RootStore")
 
     const modelFile = `\
 ${header}
@@ -520,7 +522,7 @@ import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
       format === "ts" ? ", QueryOptions" : ""
     } } from "mst-gql"
-import ${objectTypes
+import { ${objectTypes
       .map(
         t =>
           `${t}Model${ifTS(`, ${t}ModelType`)}${
@@ -529,9 +531,9 @@ import ${objectTypes
               : `, ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector`
           }`
       )
-      .join(", ")}
-  ${enumTypes.length > 0 ? ", " : ""}${enumTypes.join(", ")}
-} from "./internal";
+      .join(", ")} ${enumTypes.length > 0 ? ", " : ""}${enumTypes.join(
+      ", "
+    )}} from "./internal${importPostFix}";
 
 ${ifTS(
   inputTypes
@@ -732,7 +734,6 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
   }
 
   function generateReactUtils() {
-    toExport.push("reactUtils")
     const contents = `\
 ${header}
 
@@ -752,15 +753,24 @@ export const StoreContext = createStoreContext${
 
 export const useQuery = createUseQueryHook(StoreContext, React)
 `
-
+    toExport.push("useQuery", "StoreContext")
     generateFile("reactUtils", contents, true)
   }
 
   function generateInternalBarrelFile() {
+    const sortedFiles =
+      Object.keys(moduleLoadingOrder).length === 0
+        ? files
+        : files
+            .slice()
+            .sort(
+              ([a], [b]) =>
+                (moduleLoadingOrder[a] || 0) - (moduleLoadingOrder[b] || 0)
+            )
     const contents = `\
 ${header}
 
-${files.map(([f]) => `export * from "./${f}${importPostFix}"`).join("\n")}
+${sortedFiles.map(([f]) => `export * from "./${f}${importPostFix}"`).join("\n")}
 `
     generateFile("internal", contents, true)
   }
@@ -769,7 +779,7 @@ ${files.map(([f]) => `export * from "./${f}${importPostFix}"`).join("\n")}
     const contents = `\
 ${header}
 
-${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
+export {${toExport.join(", ")} } from "./internal${importPostFix}"
 `
     generateFile("index", contents, true)
   }
@@ -801,7 +811,7 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
           const toBeImported = [...imports.get(moduleName)].sort()
           return [...toBeImported].join(", ")
         })
-        .join(", ")}} from "./internal"` +
+        .join(", ")}} from "./internal${importPostFix}"` +
       (moduleNames.length > 0 ? "\n\n" : "\n")
     )
   }
@@ -977,6 +987,38 @@ function writeFile(name, contents, force, format, outDir, log) {
   }
 }
 
+function readModuleLoadingOrder(outDir, format) {
+  const fnName = path.resolve(outDir, "internal." + format)
+  const matches = {}
+  if (!fs.existsSync(fnName)) {
+    log &&
+      console.log(
+        `Could not find existing internal.${format} file to load module loading order from`
+      )
+    return matches
+  }
+
+  const content = fs.readFileSync(fnName, "utf8").toString()
+  const regex = /export \* from ["']\.\/(.*)["']/g
+  let m
+  let i = 1
+  while ((m = regex.exec(content)) !== null) {
+    // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === regex.lastIndex) {
+      regex.lastIndex++
+    }
+
+    // The result can be accessed through the `m`-variable.
+    m.forEach((match, groupIndex) => {
+      if (groupIndex === 1) {
+        matches[match] = i++
+      }
+    })
+  }
+
+  return matches
+}
+
 // used by tests
 function scaffold(
   definition,
@@ -984,7 +1026,8 @@ function scaffold(
     format: "ts",
     roots: [],
     excludes: [],
-    modelsOnly: false
+    modelsOnly: false,
+    moduleLoadingOrder: {}
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -997,8 +1040,10 @@ function scaffold(
     options.roots || [],
     options.excludes || [],
     "<during unit test run>",
-    options.modelsOnly || false
+    options.modelsOnly || false,
+    false,
+    options.moduleLoadingOrder || {}
   )
 }
 
-module.exports = { generate, writeFiles, scaffold }
+module.exports = { generate, writeFiles, readModuleLoadingOrder, scaffold }
