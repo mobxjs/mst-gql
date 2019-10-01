@@ -4,9 +4,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { BookModel } from "./BookModel"
-import { MovieModel } from "./MovieModel"
-import { SearchItemModelSelector } from "./SearchItemModelSelector"
+import {BookModel, MovieModel, SearchItemModelSelector} from "./internal"
 
 
 /**

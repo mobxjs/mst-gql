@@ -47,6 +47,7 @@ function generate(
   if (!modelsOnly && !noReact) {
     generateReactUtils()
   }
+  generateInternalBarrelFile(files)
   generateBarrelFile(files)
 
   function generateModelBase() {
@@ -519,23 +520,19 @@ import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
       format === "ts" ? ", QueryOptions" : ""
     } } from "mst-gql"
-${objectTypes
-  .map(
-    t =>
-      `\nimport { ${t}Model${ifTS(
-        `, ${t}ModelType`
-      )} } from "./${t}Model${importPostFix}"${
-        modelsOnly
-          ? ""
-          : `\nimport { ${toFirstLower(
-              t
-            )}ModelPrimitives, ${t}ModelSelector } from "./${t}Model.base${importPostFix}"`
-      }`
-  )
-  .join("")}
-${enumTypes
-  .map(t => `\nimport { ${t} } from "./${t}Enum${importPostFix}"`)
-  .join("")}
+import ${objectTypes
+      .map(
+        t =>
+          `${t}Model${ifTS(`, ${t}ModelType`)}${
+            modelsOnly
+              ? ""
+              : `, ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector`
+          }`
+      )
+      .join(", ")}
+  ${enumTypes.length > 0 ? ", " : ""}${enumTypes.join(", ")}
+} from "./internal";
+
 ${ifTS(
   inputTypes
     .map(
@@ -759,6 +756,15 @@ export const useQuery = createUseQueryHook(StoreContext, React)
     generateFile("reactUtils", contents, true)
   }
 
+  function generateInternalBarrelFile() {
+    const contents = `\
+${header}
+
+${files.map(([f]) => `export * from "./${f}${importPostFix}"`).join("\n")}
+`
+    generateFile("internal", contents, true)
+  }
+
   function generateBarrelFile() {
     const contents = `\
 ${header}
@@ -790,14 +796,13 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
   function printRelativeImports(imports) {
     const moduleNames = [...imports.keys()].sort()
     return (
-      moduleNames
+      `import {${moduleNames
         .map(moduleName => {
           const toBeImported = [...imports.get(moduleName)].sort()
-          return `import { ${[...toBeImported].join(
-            ", "
-          )} } from "./${moduleName}${importPostFix}"`
+          return [...toBeImported].join(", ")
         })
-        .join("\n") + (moduleNames.length > 0 ? "\n\n" : "\n")
+        .join(", ")}} from "./internal"` +
+      (moduleNames.length > 0 ? "\n\n" : "\n")
     )
   }
 
@@ -942,7 +947,6 @@ function writeFiles(
   files.forEach(([name, contents, force]) => {
     const splits = name.split(".")
     const isModelOrStore = /(Model|Store)$/.test(splits[0])
-
     if (!separate || !isModelOrStore) {
       writeFile(name, contents, force || forceAll, format, outDir, log)
     } else {

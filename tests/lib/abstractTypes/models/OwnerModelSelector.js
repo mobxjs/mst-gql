@@ -2,8 +2,7 @@
 /* eslint-disable */
 
 import { QueryBuilder } from "mst-gql"
-import { OrganizationModelSelector } from "./OrganizationModel.base"
-import { UserModelSelector } from "./UserModel.base"
+import {OrganizationModelSelector, UserModelSelector} from "./internal"
 
 export class OwnerModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

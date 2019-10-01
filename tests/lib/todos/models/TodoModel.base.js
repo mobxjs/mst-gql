@@ -4,7 +4,7 @@
 import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-
+import {} from "./internal"
 
 /**
  * TodoBase

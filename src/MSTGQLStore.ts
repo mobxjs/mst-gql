@@ -12,7 +12,6 @@ export interface RequestHandler<T = any> {
 }
 
 // TODO: also provide an interface for stream handler
-
 export const MSTGQLStore = types
   .model("MSTGQLStore", {
     __queryCache: types.optional(types.map(types.frozen()), {})

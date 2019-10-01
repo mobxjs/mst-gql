@@ -2,8 +2,7 @@
 /* eslint-disable */
 
 import { QueryBuilder } from "mst-gql"
-import { BookModelSelector, bookModelPrimitives } from "./BookModel.base"
-import { MovieModelSelector, movieModelPrimitives } from "./MovieModel.base"
+import {BookModelSelector, bookModelPrimitives, MovieModelSelector, movieModelPrimitives} from "./internal"
 
 export class SearchItemModelSelector extends QueryBuilder {
   movie(builder) { return this.__inlineFragment(`Movie`, MovieModelSelector, builder) }
