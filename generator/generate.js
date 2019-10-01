@@ -776,10 +776,16 @@ ${sortedFiles.map(([f]) => `export * from "./${f}${importPostFix}"`).join("\n")}
   }
 
   function generateBarrelFile() {
+    const typeModules = toExport.filter(f => f.endsWith("Type"))
+    const otherModules = toExport.filter(f => !f.endsWith("Type"))
+
     const contents = `\
 ${header}
 
-export {${toExport.join(", ")} } from "./internal${importPostFix}"
+export {${otherModules.join(", ")} } from "./internal${importPostFix}"
+import {${typeModules.join(", ")} } from "./internal${importPostFix}"
+
+${typeModules.map(m => `export type ${m} = ${m};`).join("\n")}
 `
     generateFile("index", contents, true)
   }

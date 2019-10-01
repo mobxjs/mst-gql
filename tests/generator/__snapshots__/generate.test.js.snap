@@ -159,7 +159,10 @@ export * from \\"./reactUtils\\"
 /* eslint-disable */
 /* tslint:disable */
 
-export {UserModel, UserModelType, selectFromUser, userModelPrimitives, UserModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
+export {UserModel, selectFromUser, userModelPrimitives, UserModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
+import {UserModelType } from \\"./internal\\"
+
+export type UserModelType = UserModelType;
 ",
     true,
   ],
@@ -482,7 +485,12 @@ export * from \\"./reactUtils\\"
 /* eslint-disable */
 /* tslint:disable */
 
-export {RepoModel, RepoModelType, selectFromRepo, repoModelPrimitives, RepoModelSelector, UserModel, UserModelType, selectFromUser, userModelPrimitives, UserModelSelector, OrganizationModel, OrganizationModelType, selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
+export {RepoModel, selectFromRepo, repoModelPrimitives, RepoModelSelector, UserModel, selectFromUser, userModelPrimitives, UserModelSelector, OrganizationModel, selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
+import {RepoModelType, UserModelType, OrganizationModelType } from \\"./internal\\"
+
+export type RepoModelType = RepoModelType;
+export type UserModelType = UserModelType;
+export type OrganizationModelType = OrganizationModelType;
 ",
     true,
   ],
@@ -800,7 +808,12 @@ export * from \\"./reactUtils\\"
 /* eslint-disable */
 /* tslint:disable */
 
-export {SearchResultModel, SearchResultModelType, selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector, MovieModel, MovieModelType, selectFromMovie, movieModelPrimitives, MovieModelSelector, BookModel, BookModelType, selectFromBook, bookModelPrimitives, BookModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
+export {SearchResultModel, selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector, MovieModel, selectFromMovie, movieModelPrimitives, MovieModelSelector, BookModel, selectFromBook, bookModelPrimitives, BookModelSelector, RootStore, useQuery, StoreContext } from \\"./internal\\"
+import {SearchResultModelType, MovieModelType, BookModelType } from \\"./internal\\"
+
+export type SearchResultModelType = SearchResultModelType;
+export type MovieModelType = MovieModelType;
+export type BookModelType = BookModelType;
 ",
     true,
   ],
