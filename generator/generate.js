@@ -553,6 +553,14 @@ ${objectTypes
   .join("")}
 ${enumTypes
   .map(t => `\nimport { ${t} } from "./${t}Enum${importPostFix}"`)
+  .join("")}\
+${[...interfaceAndUnionTypes.keys()]
+  .map(
+    t =>
+      `\nimport { ${toFirstLower(
+        t
+      )}ModelPrimitives, ${t}ModelSelector } from "./${t}ModelSelector${importPostFix}"`
+  )
   .join("")}
 ${ifTS(
   inputTypes

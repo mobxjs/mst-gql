@@ -423,6 +423,7 @@ import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
+import { ownerModelPrimitives, OwnerModelSelector } from \\"./OwnerModelSelector\\"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -739,6 +740,7 @@ import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
+import { searchItemModelPrimitives, SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
 
 /**
 * Store, managing, among others, all the objects received through graphQL
