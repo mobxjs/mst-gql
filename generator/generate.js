@@ -1052,4 +1052,15 @@ function scaffold(
   )
 }
 
-module.exports = { generate, writeFiles, readModuleLoadingOrder, scaffold }
+function logUnexpectedFiles(outDir, files) {
+  const expectedFiles = new Set(files.map(([name]) => name))
+  fs.readdirSync(outDir).forEach(file => {
+    if (!expectedFiles.has(path.parse(file).name)) {
+      console.log(
+        `Unexpected file "${file}". This could be a type that is no longer needed.`
+      )
+    }
+  })
+}
+
+module.exports = { generate, writeFiles, readModuleLoadingOrder, scaffold, logUnexpectedFiles }
