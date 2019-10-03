@@ -141,9 +141,8 @@ export const MSTGQLStore = types
       rawRequest,
       __pushPromise(promise: Promise<{}>, queryKey: string) {
         self.__promises.set(queryKey, promise)
-        promise.finally(() => {
-          self.__promises.delete(queryKey)
-        })
+        const onSettled = () => self.__promises.delete(queryKey)
+        promise.then(onSettled, onSettled)
       },
       __runInStoreContext<T>(fn: () => T) {
         return fn()
