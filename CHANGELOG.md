@@ -4,6 +4,7 @@
 
 - add a new `ModelBase` file that all models extend that can be edited. [#106](https://github.com/mobxjs/mst-gql/pull/106) - [zenflow](https://github.com/zenflow)
 - CLI alert on unexpected files in `models` folder. [#113](https://github.com/mobxjs/mst-gql/pull/113) - [RXminuS](https://github.com/RXminuS)
+- Use undefined to mean not loaded, use null to mean gql null [#102](https://github.com/mobxjs/mst-gql/pull/102) - [zenflow](https://github.com/zenflow)
 
 ## 0.5.0
 
