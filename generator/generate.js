@@ -275,8 +275,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       })
 
     let contents = header + "\n\n"
-    contents = 'import { QueryBuilder } from "mst-gql"\n'
-
+    contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
     contents += generateFragments(
       type.name,
@@ -994,4 +993,15 @@ function scaffold(
   )
 }
 
-module.exports = { generate, writeFiles, scaffold }
+function logUnexpectedFiles(outDir, files) {
+  const expectedFiles = new Set(files.map(([name]) => name))
+  fs.readdirSync(outDir).forEach(file => {
+    if (!expectedFiles.has(path.parse(file).name)) {
+      console.log(
+        `Unexpected file "${file}". This could be a type that is no longer needed.`
+      )
+    }
+  })
+}
+
+module.exports = { generate, writeFiles, scaffold, logUnexpectedFiles }

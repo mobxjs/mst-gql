@@ -2,7 +2,8 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLRef, QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 import { LaunchModel } from "./LaunchModel"
 import { LaunchModelSelector } from "./LaunchModel.base"
 
@@ -11,7 +12,7 @@ import { LaunchModelSelector } from "./LaunchModel.base"
  * UserBase
  * auto generated base class for the model UserModel.
  */
-export const UserModelBase = MSTGQLObject
+export const UserModelBase = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal("User"), "User"),

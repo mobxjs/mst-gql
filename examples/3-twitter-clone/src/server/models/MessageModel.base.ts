@@ -3,7 +3,8 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
+import { MSTGQLRef, QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 import { MessageModel } from "./MessageModel"
 import { UserModel } from "./UserModel"
 import { RootStoreType } from "./index"
@@ -13,7 +14,7 @@ import { RootStoreType } from "./index"
  * MessageBase
  * auto generated base class for the model MessageModel.
  */
-export const MessageModelBase = MSTGQLObject
+export const MessageModelBase = ModelBase
   .named('Message')
   .props({
     __typename: types.optional(types.literal("Message"), "Message"),

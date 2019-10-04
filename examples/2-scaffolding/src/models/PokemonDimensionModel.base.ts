@@ -3,7 +3,8 @@
 /* tslint:disable */
 
 import { types } from "mobx-state-tree"
-import { MSTGQLObject, QueryBuilder } from "mst-gql"
+import { QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
 import { RootStoreType } from "./index"
 
 
@@ -13,7 +14,7 @@ import { RootStoreType } from "./index"
  *
  * Represents a Pokémon's dimensions
  */
-export const PokemonDimensionModelBase = MSTGQLObject
+export const PokemonDimensionModelBase = ModelBase
   .named('PokemonDimension')
   .props({
     __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
