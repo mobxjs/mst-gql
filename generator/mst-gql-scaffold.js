@@ -6,7 +6,12 @@ const child_process = require("child_process")
 const graphql = require("graphql")
 
 const { getConfig, mergeConfigs } = require("./config")
-const { generate, writeFiles, readModuleLoadingOrder, logUnexpectedFiles } = require("./generate")
+const {
+  generate,
+  writeFiles,
+  readModuleLoadingOrder,
+  logUnexpectedFiles
+} = require("./generate")
 
 const definition = {
   "--format": String,
@@ -96,7 +101,7 @@ function main() {
       json.__schema.types.map(t => `  - [${t.kind}] ${t.name}`).join("\n")
   )
   if (keepInternalOrder) {
-    moduleLoadingOrder = readModuleLoadingOrder(outDir)
+    moduleLoadingOrder = readModuleLoadingOrder(outDir, format)
   }
   // console.log(JSON.stringify(json, null, 2))
   const files = generate(
