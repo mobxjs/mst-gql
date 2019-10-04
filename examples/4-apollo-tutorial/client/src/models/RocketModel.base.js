@@ -15,8 +15,8 @@ export const RocketModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Rocket"), "Rocket"),
     id: types.identifier,
-    name: types.maybeNull(types.string),
-    type: types.maybeNull(types.string),
+    name: types.union(types.undefined, types.null, types.string),
+    type: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {

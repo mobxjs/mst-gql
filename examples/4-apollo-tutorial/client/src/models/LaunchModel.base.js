@@ -19,10 +19,10 @@ export const LaunchModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Launch"), "Launch"),
     id: types.identifier,
-    site: types.maybeNull(types.string),
-    mission: types.maybeNull(types.late(() => MissionModel)),
-    rocket: types.maybeNull(MSTGQLRef(types.late(() => RocketModel))),
-    isBooked: types.maybeNull(types.boolean),
+    site: types.union(types.undefined, types.null, types.string),
+    mission: types.union(types.undefined, types.null, types.late(() => MissionModel)),
+    rocket: types.union(types.undefined, types.null, MSTGQLRef(types.late(() => RocketModel))),
+    isBooked: types.union(types.undefined, types.boolean),
   })
   .views(self => ({
     get store() {

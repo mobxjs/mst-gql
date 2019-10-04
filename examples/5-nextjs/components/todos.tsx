@@ -16,7 +16,14 @@ const TodosList = observer(({ todos }) => {
           </span>
           &emsp;
           <button onClick={todo.toggle}>toggle</button>
-          &emsp; Assignee: <UserPreview userId={todo.assignee.id} />
+          &emsp;
+          {todo.assignee ? (
+            <>
+              Assignee: <UserPreview userId={todo.assignee.id} />
+            </>
+          ) : (
+            <>Unassigned</>
+          )}
         </li>
       ))}
     </ul>

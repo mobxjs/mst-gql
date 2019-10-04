@@ -19,9 +19,9 @@ export const TodoModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),
     id: types.identifier,
-    text: types.maybeNull(types.string),
-    done: types.maybeNull(types.boolean),
-    assignee: types.maybeNull(MSTGQLRef(types.late(() => UserModel))),
+    text: types.union(types.undefined, types.string),
+    done: types.union(types.undefined, types.boolean),
+    assignee: types.union(types.undefined, types.null, MSTGQLRef(types.late(() => UserModel))),
   })
   .views(self => ({
     get store() {

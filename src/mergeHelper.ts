@@ -32,8 +32,6 @@ export function mergeHelper(store: any, data: any) {
         }
         instance.__setStore(store)
       }
-      // Mark the fields as available
-      Object.keys(snapshot).forEach(instance.__markFieldLoaded)
       return instance
     } else {
       // GQL object with unknown type, return verbatim

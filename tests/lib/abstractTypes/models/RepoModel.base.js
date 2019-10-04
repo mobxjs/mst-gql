@@ -18,7 +18,7 @@ export const RepoModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Repo"), "Repo"),
     id: types.identifier,
-    owner: types.maybeNull(types.union(MSTGQLRef(types.late(() => UserModel)), MSTGQLRef(types.late(() => OrganizationModel)))),
+    owner: types.union(types.undefined, types.null, types.union(MSTGQLRef(types.late(() => UserModel)), MSTGQLRef(types.late(() => OrganizationModel)))),
   })
   .views(self => ({
     get store() {

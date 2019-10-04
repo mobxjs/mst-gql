@@ -14,7 +14,7 @@ export const UsersView = observer(({}) => {
         {data.users.map(user => (
           <li key={user.id}>
             <strong>{user.name}</strong>
-            <em> (likes: {user.likes.join(" + ")})</em>
+            <em> (likes: {user.likes!.join(" + ")})</em>
           </li>
         ))}
       </ul>
