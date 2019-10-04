@@ -37,7 +37,6 @@ export function MSTGQLRef<T extends IAnyModelType>(
 }
 
 export const MSTGQLObject = types.model("MSTGQLObject").extend(self => {
-  const loadedFields = observable.set<string>([])
   let store: StoreType
 
   function getStore(): StoreType {
@@ -48,9 +47,6 @@ export const MSTGQLObject = types.model("MSTGQLObject").extend(self => {
     actions: {
       __setStore(s: StoreType) {
         store = s
-      },
-      __markFieldLoaded(key: string) {
-        loadedFields.add(key)
       }
     },
     views: {
@@ -58,7 +54,7 @@ export const MSTGQLObject = types.model("MSTGQLObject").extend(self => {
         return (getStore() as any) as T
       },
       hasLoaded(key: string): boolean {
-        return loadedFields.has(key)
+        return typeof (self as any)[key] !== "undefined"
       }
     }
   }

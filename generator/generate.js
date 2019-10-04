@@ -316,38 +316,39 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       let r = ""
       if (field.description)
         r += `    /** ${sanitizeComment(field.description)} */\n`
-      r += `    ${field.name}: ${handleFieldType(
-        field.name,
-        skipNonNull(field.type),
-        true
-      )},`
+      r += `    ${field.name}: ${handleFieldType(field.name, field.type)},`
       return r
     }
 
-    function handleFieldType(fieldName, fieldType, useMaybe) {
+    function handleFieldType(fieldName, fieldType, isNested = false) {
+      let isNullable = true
+      if (fieldType.kind === "NON_NULL") {
+        fieldType = fieldType.ofType
+        isNullable = false
+      }
+      function result(thing, isRequired = false) {
+        const canBeUndef = !isRequired && !isNested
+        const canBeNull = !isRequired && isNullable
+        return canBeNull || canBeUndef
+          ? `types.union(${canBeUndef ? "types.undefined, " : ""}${
+              canBeNull ? "types.null, " : ""
+            }${thing})`
+          : thing
+      }
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
           const primitiveType = primitiveToMstType(fieldType.name)
-          return wrap(
+          return result(
             `types.${primitiveType}`,
-            useMaybe && primitiveType !== "identifier",
-            "types.maybeNull(",
-            ")"
+            primitiveType === "identifier"
           )
         case "OBJECT":
-          return wrap(
-            handleObjectFieldType(fieldName, fieldType),
-            useMaybe,
-            "types.maybeNull(",
-            ")"
-          )
+          return result(handleObjectFieldType(fieldName, fieldType))
         case "LIST":
-          return `types.optional(types.array(${handleFieldType(
-            fieldName,
-            skipNonNull(fieldType.ofType),
-            false // dont wrap contents in maybe
-          )}), [])`
+          return result(
+            `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
+          )
         case "ENUM":
           primitiveFields.push(fieldName)
           const enumType = fieldType.name + "Enum"
@@ -355,15 +356,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             // TODO: import again when enums in query builders are supported
             addImport(enumType, enumType)
           }
-          return wrap(enumType, useMaybe, "types.maybeNull(", ")")
+          return result(enumType)
         case "INTERFACE":
         case "UNION":
-          return wrap(
-            handleInterfaceOrUnionFieldType(fieldName, fieldType),
-            useMaybe,
-            "types.maybeNull(",
-            ")"
-          )
+          return result(handleInterfaceOrUnionFieldType(fieldName, fieldType))
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(fieldType)}. PR Welcome!`

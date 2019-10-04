@@ -14,8 +14,8 @@ export const MissionModelBase = ModelBase
   .named('Mission')
   .props({
     __typename: types.optional(types.literal("Mission"), "Mission"),
-    name: types.maybeNull(types.string),
-    missionPatch: types.maybeNull(types.string),
+    name: types.union(types.undefined, types.null, types.string),
+    missionPatch: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {

@@ -20,11 +20,11 @@ export const MessageModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Message"), "Message"),
     id: types.identifier,
-    timestamp: types.maybeNull(types.number),
-    user: types.maybeNull(MSTGQLRef(types.late(() => UserModel))),
-    text: types.maybeNull(types.string),
-    likes: types.optional(types.array(MSTGQLRef(types.late(() => UserModel))), []),
-    replyTo: types.maybeNull(MSTGQLRef(types.late((): any => MessageModel))),
+    timestamp: types.union(types.undefined, types.number),
+    user: types.union(types.undefined, MSTGQLRef(types.late(() => UserModel))),
+    text: types.union(types.undefined, types.string),
+    likes: types.union(types.undefined, types.null, types.array(MSTGQLRef(types.late(() => UserModel)))),
+    replyTo: types.union(types.undefined, types.null, MSTGQLRef(types.late((): any => MessageModel))),
   })
   .views(self => ({
     get store() {

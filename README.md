@@ -113,8 +113,8 @@ type Mutation {
 export const MessageModelBase = ModelBase.named("Message").props({
   __typename: types.optional(types.literal("Message"), "Message"),
   id: types.identifier,
-  user: MSTGQLRef(types.late(() => User)),
-  text: types.string
+  user: types.union(types.undefined, MSTGQLRef(types.late(() => User))),
+  text: types.union(types.undefined, types.string)
 })
 ```
 

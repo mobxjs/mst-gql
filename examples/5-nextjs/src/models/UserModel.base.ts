@@ -17,8 +17,9 @@ export const UserModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("User"), "User"),
     id: types.identifier,
-    name: types.maybeNull(types.string),
-    likes: types.optional(types.array(types.string), []),
+    name: types.union(types.undefined, types.string),
+    likes: types.union(types.undefined, types.array(types.union(types.null, types.string))),
+    unobservedProp: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
@@ -30,9 +31,10 @@ export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get name() { return this.__attr(`name`) }
   get likes() { return this.__attr(`likes`) }
+  get unobservedProp() { return this.__attr(`unobservedProp`) }
 }
 export function selectFromUser() {
   return new UserModelSelector()
 }
 
-export const userModelPrimitives = selectFromUser().name.likes
+export const userModelPrimitives = selectFromUser().name.likes.unobservedProp

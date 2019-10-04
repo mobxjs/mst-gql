@@ -17,8 +17,8 @@ export const UserModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("User"), "User"),
     id: types.identifier,
-    email: types.maybeNull(types.string),
-    trips: types.optional(types.array(MSTGQLRef(types.late(() => LaunchModel))), []),
+    email: types.union(types.undefined, types.string),
+    trips: types.union(types.undefined, types.array(types.union(types.null, MSTGQLRef(types.late(() => LaunchModel))))),
   })
   .views(self => ({
     get store() {

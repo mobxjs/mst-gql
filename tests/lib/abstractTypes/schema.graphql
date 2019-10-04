@@ -1,6 +1,6 @@
 type Query {
   search(text: String!): SearchResult!
-  getAllRepos: [Repo]
+  getAllRepos: [Repo]!
 }
 type Mutation {
   addRepo(name: String!, ownerName: String!, avatar: String, logo: String): Repo

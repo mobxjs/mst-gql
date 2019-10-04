@@ -1,11 +1,11 @@
 type Query {
-  todos: [Todo]
+  todos: [Todo]!
 }
 type Mutation {
   toggleTodo(id: ID!): Todo
 }
 type Todo {
   id: ID
-  text: String
-  complete: Boolean
+  text: String!
+  complete: Boolean!
 }

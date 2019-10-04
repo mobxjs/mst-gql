@@ -10,7 +10,7 @@ const store = {
       id: "1",
       text: "Pick up the kids",
       done: true,
-      assignee: "msmith"
+      assignee: null
     },
     {
       id: "2",

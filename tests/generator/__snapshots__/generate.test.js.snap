@@ -31,8 +31,8 @@ export const UserModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
     id: types.identifier,
-    name: types.maybeNull(types.string),
-    avatar: types.maybeNull(types.string),
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -190,7 +190,7 @@ export const RepoModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"Repo\\"), \\"Repo\\"),
     id: types.identifier,
-    owner: types.maybeNull(types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
+    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
   })
   .views(self => ({
     get store() {
@@ -278,8 +278,8 @@ export const UserModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
     id: types.identifier,
-    name: types.maybeNull(types.string),
-    avatar: types.maybeNull(types.string),
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -345,8 +345,8 @@ export const OrganizationModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"Organization\\"), \\"Organization\\"),
     id: types.identifier,
-    name: types.maybeNull(types.string),
-    logo: types.maybeNull(types.string),
+    name: types.union(types.undefined, types.string),
+    logo: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -510,8 +510,8 @@ export const SearchResultModelBase = ModelBase
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
-    inputQuery: types.maybeNull(types.string),
-    items: types.optional(types.array(types.union(types.late(() => MovieModel), types.late(() => BookModel))), []),
+    inputQuery: types.union(types.undefined, types.string),
+    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
   })
   .views(self => ({
     get store() {
@@ -597,8 +597,8 @@ export const MovieModelBase = ModelBase
   .named('Movie')
   .props({
     __typename: types.optional(types.literal(\\"Movie\\"), \\"Movie\\"),
-    description: types.maybeNull(types.string),
-    director: types.maybeNull(types.string),
+    description: types.union(types.undefined, types.string),
+    director: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
@@ -662,8 +662,8 @@ export const BookModelBase = ModelBase
   .named('Book')
   .props({
     __typename: types.optional(types.literal(\\"Book\\"), \\"Book\\"),
-    description: types.maybeNull(types.string),
-    author: types.maybeNull(types.string),
+    description: types.union(types.undefined, types.string),
+    author: types.union(types.undefined, types.string),
   })
   .views(self => ({
     get store() {
