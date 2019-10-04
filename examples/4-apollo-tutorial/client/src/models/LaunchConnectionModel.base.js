@@ -18,9 +18,9 @@ export const LaunchConnectionModelBase = ModelBase
   .named('LaunchConnection')
   .props({
     __typename: types.optional(types.literal("LaunchConnection"), "LaunchConnection"),
-    cursor: types.maybeNull(types.string),
-    hasMore: types.maybeNull(types.boolean),
-    launches: types.optional(types.array(MSTGQLRef(types.late(() => LaunchModel))), []),
+    cursor: types.union(types.undefined, types.string),
+    hasMore: types.union(types.undefined, types.boolean),
+    launches: types.union(types.undefined, types.array(types.union(types.null, MSTGQLRef(types.late(() => LaunchModel))))),
   })
   .views(self => ({
     get store() {
