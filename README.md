@@ -35,7 +35,7 @@ Benefits:
 - Model oriented
 - Type reuse between GraphQL and MobX-state-tree
 - Generates types, queries, mutations and subscription code
-- Strongly typed queries, mutations, result selectors, hooks! Auto complete all the things!
+- Strongly typed queries, mutations, result selectors, and hooks! Auto complete all the things!
 - Local views, actions, state and model life-cycles
 - Automatic instance reuse
 - Built-in support for local storage, caching, query caching, subscriptions (over websockets), optimistic updates
