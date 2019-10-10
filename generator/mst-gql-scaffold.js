@@ -111,7 +111,8 @@ function main() {
     excludes,
     new Date().toUTCString(),
     modelsOnly,
-    noReact
+    noReact,
+    moduleLoadingOrder
   )
   writeFiles(outDir, files, format, forceAll, true, separate)
   logUnexpectedFiles(outDir, files)

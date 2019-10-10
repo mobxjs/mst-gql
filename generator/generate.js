@@ -776,8 +776,16 @@ ${sortedFiles.map(([f]) => `export * from "./${f}${importPostFix}"`).join("\n")}
   }
 
   function generateBarrelFile() {
-    const typeModules = toExport.filter(f => f.endsWith("Type"))
-    const otherModules = toExport.filter(f => !f.endsWith("Type"))
+    //we don't want to re-export the enums as types because otherwise you can't use them properly as enums in typescript.
+    const ignoreTypes = new Set(enumTypes)
+
+    const typeModules = toExport.filter(
+      f => f.endsWith("Type") && !ignoreTypes.has(f)
+    )
+    console.log("THESE ARE MY TYPED MODULES", ignoreTypes, typeModules)
+    const otherModules = toExport.filter(
+      f => !f.endsWith("Type") || ignoreTypes.has(f)
+    )
 
     const contents = `\
 ${header}
@@ -1063,4 +1071,10 @@ function logUnexpectedFiles(outDir, files) {
   })
 }
 
-module.exports = { generate, writeFiles, readModuleLoadingOrder, scaffold, logUnexpectedFiles }
+module.exports = {
+  generate,
+  writeFiles,
+  readModuleLoadingOrder,
+  scaffold,
+  logUnexpectedFiles
+}
