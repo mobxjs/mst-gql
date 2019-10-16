@@ -2,7 +2,7 @@ const path = require("path")
 const fs = require("fs")
 const graphql = require("graphql")
 
-const exampleAction = `  .actions(self => ({
+const exampleAction = modelType => `  .actions((self: ${modelType}) => ({
     // This is an auto-generated example action.
     log() {
       console.log(JSON.stringify(self))
@@ -181,6 +181,9 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
       nonPrimitiveFields,
       imports,
       modelProperties,
+      modelNonPrimitiveProperties,
+      modelPrimitiveProperties,
+      modelTypeRefFields,
       refs
     } = resolveFieldsAndImports(type)
 
@@ -188,13 +191,10 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
     const flowerName = toFirstLower(name)
 
     const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
-import { ${name}ModelBase } from "./${name}Model.base${importPostFix}"
+import { ${name}ModelBase ${ifTS(
+      `, ${name}ModelBaseType `
+    )}} from "./${name}Model.base${importPostFix}"
 
-${
-  format === "ts"
-    ? `/* The TypeScript type of an instance of ${name}Model */\nexport interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}\n`
-    : ""
-}
 ${
   modelsOnly
     ? ""
@@ -206,7 +206,16 @@ export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector }
  * ${name}Model${optPrefix("\n *\n * ", sanitizeComment(type.description))}
  */
 export const ${name}Model = ${name}ModelBase
-${exampleAction}
+${exampleAction(name + "ModelType")}
+
+${
+  format === "ts"
+    ? `/* The TypeScript type of an instance of ${name}ModelBase */
+export interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}
+export interface ${name}ModelType extends ${name}ModelBaseType {}
+`
+    : ""
+}
 `
 
     if (format === "ts") {
@@ -216,10 +225,32 @@ ${exampleAction}
     const modelFile = `\
 ${header}
 
-import { types } from "mobx-state-tree"
+${ifTS(
+  'import { types, Instance } from "mobx-state-tree"',
+  'import { types } from "mobx-state-tree"'
+)}
 import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase${importPostFix}"
 ${printRelativeImports(imports)}
+/**
+ * ${name}BaseNoRefs
+ * auto generated base class for the model ${name}Model without refs.${optPrefix(
+      "\n *\n * ",
+      sanitizeComment(type.description)
+    )}
+ */
+const ${name}ModelBaseNoRefs = ModelBase
+  .named('${name}')
+  .props({
+    __typename: types.optional(types.literal("${name}"), "${name}"),
+${modelPrimitiveProperties}
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore${format === "ts" ? `<RootStoreType>` : ""}()
+    }
+  }))
+
 /**
  * ${name}Base
  * auto generated base class for the model ${name}Model.${optPrefix(
@@ -227,17 +258,23 @@ ${printRelativeImports(imports)}
       sanitizeComment(type.description)
     )}
  */
-export const ${name}ModelBase = ModelBase
-  .named('${name}')
+export const ${name}ModelBase: typeof ${name}ModelBaseNoRefs = ${name}ModelBaseNoRefs
   .props({
-    __typename: types.optional(types.literal("${name}"), "${name}"),
-${modelProperties}
+${modelNonPrimitiveProperties}
   })
-  .views(self => ({
-    get store() {
-      return self.__getStore${format === "ts" ? `<RootStoreType>` : ""}()
-    }
-  }))
+  
+${
+  format === "ts"
+    ? `type ${name}ModelBaseWithRefs = {
+${modelTypeRefFields}
+}
+
+/* The TypeScript type of an instance of ${name}ModelBase */
+export interface ${name}ModelBaseType extends Instance<typeof ${name}ModelBaseNoRefs.Type> {}
+export interface ${name}ModelBaseType extends ${name}ModelBaseWithRefs {}
+`
+    : ""
+}
 
 ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 `
@@ -300,8 +337,28 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const refs = []
 
     let modelProperties = ""
+    let modelPrimitiveProperties = ""
+    let modelNonPrimitiveProperties = ""
+    let modelTypeRefFields = ""
+
     if (type.fields) {
-      modelProperties = type.fields.map(field => handleField(field)).join("\n")
+      let modelPropertiesMap = new Map(
+        type.fields.map(field => [field.name, handleField(field)])
+      )
+      modelProperties = type.fields
+        .map(field => modelPropertiesMap.get(field.name))
+        .join("\n")
+      modelPrimitiveProperties = primitiveFields
+        .map(fieldName => modelPropertiesMap.get(fieldName))
+        .join("\n")
+      modelNonPrimitiveProperties = nonPrimitiveFields
+        .map(([fieldName]) => modelPropertiesMap.get(fieldName))
+        .join("\n")
+      modelTypeRefFields = nonPrimitiveFields
+        .map(([fieldName, fieldType, isNested]) =>
+          handleRef(fieldName, fieldType, isNested)
+        )
+        .join("\n")
     }
 
     return {
@@ -309,7 +366,22 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       nonPrimitiveFields,
       imports,
       modelProperties,
+      modelNonPrimitiveProperties,
+      modelPrimitiveProperties,
+      modelTypeRefFields,
       refs
+    }
+
+    function handleRef(fieldName, fieldType, isNested) {
+      const modelType = fieldType + "Model"
+      const modelInstanceType = modelType + "Type"
+      addImport(modelType, modelInstanceType)
+
+      if (isNested) {
+        return `  ${fieldName}: ${modelInstanceType}[],`
+      } else {
+        return `  ${fieldName}: ${modelInstanceType},`
+      }
     }
 
     function handleField(field) {
@@ -344,7 +416,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             primitiveType === "identifier"
           )
         case "OBJECT":
-          return result(handleObjectFieldType(fieldName, fieldType))
+          return result(handleObjectFieldType(fieldName, fieldType, isNested))
         case "LIST":
           return result(
             `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
@@ -367,8 +439,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       }
     }
 
-    function handleObjectFieldType(fieldName, fieldType) {
-      nonPrimitiveFields.push([fieldName, fieldType.name])
+    function handleObjectFieldType(fieldName, fieldType, isNested = false) {
+      nonPrimitiveFields.push([fieldName, fieldType.name, isNested])
       const isSelf = fieldType.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
@@ -390,7 +462,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       if (!isSelf && !rootTypes.includes(fieldType.name)) return realType
 
       // the target is a root type, store a reference
-      refs.push([fieldName, fieldType.name])
+      refs.push([fieldName, fieldType.name, fieldType.kind])
       return `MSTGQLRef(${realType})`
     }
 
@@ -506,7 +578,7 @@ ${
     : ""
 }\
 export const RootStore = RootStoreBase
-${exampleAction}
+${exampleAction("RootStoreType")}
 `
 
     const modelFile = `\
