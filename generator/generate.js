@@ -2,12 +2,14 @@ const path = require("path")
 const fs = require("fs")
 const graphql = require("graphql")
 
-const exampleAction = modelType => `  .actions((self: ${modelType}) => ({
+const exampleAction = ({ wrapSelf }) => `  .actions(${
+  wrapSelf ? `${wrapSelf}(` : ""
+}self => ({
     // This is an auto-generated example action.
     log() {
       console.log(JSON.stringify(self))
     }
-  }))`
+  }))${wrapSelf ? ")" : ""}`
 
 const buildInExcludes = [
   "Mutation",
@@ -192,7 +194,7 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
 
     const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
 import { ${name}ModelBase ${ifTS(
-      `, ${name}ModelBaseType `
+      `, ${name}ModelBaseRefsType, createSelfWrapper `
     )}} from "./${name}Model.base${importPostFix}"
 
 ${
@@ -202,17 +204,19 @@ ${
 export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector } from "./${name}Model.base${importPostFix}"`
 }
 
+${format == "ts" ? `const as = createSelfWrapper<${name}ModelType>()\n` : ""}
+
 /**
  * ${name}Model${optPrefix("\n *\n * ", sanitizeComment(type.description))}
  */
 export const ${name}Model = ${name}ModelBase
-${exampleAction(name + "ModelType")}
+${exampleAction({ wrapSelf: "as" })}
 
 ${
   format === "ts"
     ? `/* The TypeScript type of an instance of ${name}ModelBase */
 export interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}
-export interface ${name}ModelType extends ${name}ModelBaseType {}
+export interface ${name}ModelType extends ${name}ModelBaseRefsType {}
 `
     : ""
 }
@@ -262,17 +266,21 @@ export const ${name}ModelBase: typeof ${name}ModelBaseNoRefs = ${name}ModelBaseN
   .props({
 ${modelNonPrimitiveProperties}
   })
-  
+
 ${
   format === "ts"
-    ? `type ${name}ModelBaseWithRefs = {
+    ? `export type ${name}ModelBaseRefsType = {
 ${modelTypeRefFields}
 }
 
-/* The TypeScript type of an instance of ${name}ModelBase */
-export interface ${name}ModelBaseType extends Instance<typeof ${name}ModelBaseNoRefs.Type> {}
-export interface ${name}ModelBaseType extends ${name}ModelBaseWithRefs {}
-`
+export function createSelfWrapper<T>() {
+  return function <S, O>(fn: (self: T) => O) {
+    return (self: S) => {
+      const castedSelf = self as unknown as T
+      return fn(castedSelf)
+    }
+  }
+}`
     : ""
 }
 
