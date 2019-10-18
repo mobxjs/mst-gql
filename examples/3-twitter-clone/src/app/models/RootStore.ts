@@ -1,7 +1,7 @@
 import { Instance } from "mobx-state-tree"
 import { RootStoreBase } from "./RootStore.base"
 import { types } from "mobx-state-tree"
-import { MessageModel } from "./MessageModel"
+import { MessageModel, MessageModelType } from "./MessageModel"
 import { selectFromMessage } from "./MessageModel.base"
 
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
@@ -43,27 +43,30 @@ export const RootStore = RootStoreBase.props({
     }
   }))
   .actions(self => ({
-    sendTweet(text: string, replyTo = undefined) {
-      const query = self.mutatePostTweet(
-        { text, user: self.me.id, replyTo },
-        undefined,
-        () => {
-          const tempMessage = MessageModel.create({
-            id: "tempid",
-            __typename: "Message",
-            text,
-            user: self.me.id,
-            replyTo
-          })
-        },
-        { skipMerge: true }
-      )
+    async sendTweet(text: string, replyTo = undefined) {
+      let tempMessage: MessageModelType
 
-      // query.case({
-      //   error: error => console.log(error),
-      //   loading: () => console.log("loading"),
-      //   data: data => console.log(data)
-      // })
+      const query = self
+        .mutatePostTweet(
+          { text, user: self.me.id, replyTo },
+          undefined,
+          () => {
+            tempMessage = self.merge({
+              id: "tmp" + Date.now(),
+              __typename: "Message",
+              user: self.me.id,
+              replyTo,
+              likes: [],
+              text
+            })
+            self.sortedMessages.unshift(tempMessage.id)
+          },
+          { skipMerge: true }
+        )
+        .then(data => {
+          // this won't work as we can't mutate id's
+          tempMessage.id = data.postTweet.id
+        })
 
       return query
     },
