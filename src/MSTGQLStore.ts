@@ -93,22 +93,22 @@ export const MSTGQLStore = types
       optimisticUpdate?: () => void,
       options: MutationOptions = {}
     ): Query<T> {
+      const mergedOptions = {
+        fetchPolicy: "network-only",
+        ...options
+      } as const
+
       if (optimisticUpdate) {
         const recorder = recordPatches(self)
         optimisticUpdate()
         recorder.stop()
-        const q = query<T>(mutation, variables, {
-          fetchPolicy: "network-only"
-        })
+        const q = query<T>(mutation, variables, mergedOptions)
         q.currentPromise().catch(() => {
           recorder.undo()
         })
         return q
       } else {
-        return query(mutation, variables, {
-          fetchPolicy: "network-only",
-          ...options
-        })
+        return query(mutation, variables, mergedOptions)
       }
     }
 
