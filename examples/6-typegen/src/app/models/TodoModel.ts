@@ -1,12 +1,9 @@
 import { Instance } from "mobx-state-tree"
-import { TodoModelBase } from "./TodoModel.base"
-import { Query } from "mst-gql"
-
-import { UserType } from "./UserModel"
-import { RootStoreType } from "./RootStore"
-
-/* The TypeScript type of an instance of TodoModel */
-export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
+import {
+  TodoModelBase,
+  TodoModelBaseRefsType,
+  createSelfWrapper
+} from "./TodoModel.base"
 
 /* A graphql query fragment builders for TodoModel */
 export {
@@ -15,25 +12,21 @@ export {
   TodoModelSelector
 } from "./TodoModel.base"
 
-export interface TodoType {
-  __typename: "Todo"
-  id: string
-  text: string | null
-  complete: boolean | null
-  owner: UserType | null
-  toggle: () => Query<{ toggleTodo: TodoType }>
-  store: RootStoreType
-}
+const as = createSelfWrapper<TodoModelType>()
 
 /**
  * TodoModel
  */
-export const TodoModel = TodoModelBase.actions(self => ({
-  toggle(): Query<{
-    toggleTodo: TodoType
-  }> {
-    return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
-      self.complete = !self.complete
-    })
-  }
-}))
+export const TodoModel = TodoModelBase.actions(
+  as(self => ({
+    toggle() {
+      return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
+        self.complete = !self.complete
+      })
+    }
+  }))
+)
+
+/* The TypeScript type of an instance of TodoModelBase */
+export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
+export interface TodoModelType extends TodoModelBaseRefsType {}

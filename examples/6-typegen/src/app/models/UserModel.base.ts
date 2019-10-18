@@ -2,30 +2,52 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
-import { MSTGQLObject, MSTGQLRef, QueryBuilder } from "mst-gql"
-import { TodoModel } from "./TodoModel"
+import { types, Instance } from "mobx-state-tree"
+import { MSTGQLRef, QueryBuilder } from "mst-gql"
+import { ModelBase } from "./ModelBase"
+import { TodoModel, TodoModelType } from "./TodoModel"
 import { TodoModelSelector } from "./TodoModel.base"
 import { RootStoreType } from "./index"
 
 
 /**
- * UserBase
- * auto generated base class for the model UserModel.
+ * UserBaseNoRefs
+ * auto generated base class for the model UserModel without refs.
  */
-export const UserModelBase = MSTGQLObject
+const UserModelBaseNoRefs = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal("User"), "User"),
     id: types.identifier,
-    email: types.maybeNull(types.string),
-    todos: types.optional(types.array(MSTGQLRef(types.late(() => TodoModel))), []),
+    email: types.union(types.undefined, types.null, types.string),
   })
   .views(self => ({
     get store() {
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase: typeof UserModelBaseNoRefs = UserModelBaseNoRefs
+  .props({
+    todos: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late(() => TodoModel))))),
+  })
+
+export type UserModelBaseRefsType = {
+  todos: TodoModelType[],
+}
+
+export function createSelfWrapper<T>() {
+  return function <S, O>(fn: (self: T) => O) {
+    return (self: S) => {
+      const castedSelf = self as unknown as T
+      return fn(castedSelf)
+    }
+  }
+}
 
 export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

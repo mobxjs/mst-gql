@@ -1,10 +1,9 @@
-import { Instance, IAnyType } from "mobx-state-tree"
-import { UserModelBase } from "./UserModel.base"
-import { TodoType } from "./TodoModel"
-import { RootStoreType } from "./RootStore"
-
-/* The TypeScript type of an instance of UserModel */
-export interface UserModelType extends Instance<typeof UserModel.Type> {}
+import { Instance } from "mobx-state-tree"
+import {
+  UserModelBase,
+  UserModelBaseRefsType,
+  createSelfWrapper
+} from "./UserModel.base"
 
 /* A graphql query fragment builders for UserModel */
 export {
@@ -13,20 +12,20 @@ export {
   UserModelSelector
 } from "./UserModel.base"
 
-export interface UserType {
-  __typename: "User"
-  id: string
-  email: string | null
-  todos: [TodoType]
-  store: RootStoreType
-}
+const as = createSelfWrapper<UserModelType>()
 
 /**
  * UserModel
  */
-export const UserModel = UserModelBase.actions(self => ({
-  // This is an auto-generated example action.
-  log() {
-    console.log(JSON.stringify(self))
-  }
-}))
+export const UserModel = UserModelBase.actions(
+  as(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+)
+
+/* The TypeScript type of an instance of UserModelBase */
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends UserModelBaseRefsType {}
