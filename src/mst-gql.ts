@@ -1,4 +1,8 @@
-export { MSTGQLStore, configureStoreMixin } from "./MSTGQLStore"
+export {
+  MSTGQLStore,
+  configureStoreMixin,
+  MutationOptions
+} from "./MSTGQLStore"
 export { Query, CaseHandlers, QueryOptions, FetchPolicy } from "./Query"
 export { MSTGQLObject, MSTGQLRef } from "./MSTGQLObject"
 export { createHttpClient, HttpClientOptions } from "./createHttpClient"

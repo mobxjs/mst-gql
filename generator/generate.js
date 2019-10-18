@@ -513,7 +513,7 @@ ${exampleAction}
 ${header}
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
-      format === "ts" ? ", QueryOptions" : ""
+      format === "ts" ? ", QueryOptions, MutationOptions" : ""
     } } from "mst-gql"
 ${objectTypes
   .map(
@@ -580,9 +580,9 @@ ${rootTypes
         "mutation",
         "mutate",
         format === "ts"
-          ? ", optimisticUpdate?: () => void"
+          ? ", optimisticUpdate?: () => void, options: MutationOptions = {}"
           : ", optimisticUpdate",
-        ", optimisticUpdate"
+        ", optimisticUpdate, options"
       ) +
       generateQueryHelper(
         findObjectByName("Subscription"),

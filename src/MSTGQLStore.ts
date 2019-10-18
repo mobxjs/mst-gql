@@ -11,6 +11,10 @@ export interface RequestHandler<T = any> {
   request(query: string, variables: any): Promise<T>
 }
 
+export interface MutationOptions {
+  skipMerge?: boolean
+}
+
 // TODO: also provide an interface for stream handler
 
 export const MSTGQLStore = types
@@ -86,7 +90,8 @@ export const MSTGQLStore = types
     function mutate<T>(
       mutation: string | DocumentNode,
       variables?: any,
-      optimisticUpdate?: () => void
+      optimisticUpdate?: () => void,
+      options: MutationOptions = {}
     ): Query<T> {
       if (optimisticUpdate) {
         const recorder = recordPatches(self)
@@ -101,7 +106,8 @@ export const MSTGQLStore = types
         return q
       } else {
         return query(mutation, variables, {
-          fetchPolicy: "network-only"
+          fetchPolicy: "network-only",
+          ...options
         })
       }
     }

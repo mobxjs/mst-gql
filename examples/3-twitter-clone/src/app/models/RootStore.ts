@@ -44,7 +44,28 @@ export const RootStore = RootStoreBase.props({
   }))
   .actions(self => ({
     sendTweet(text: string, replyTo = undefined) {
-      return self.mutatePostTweet({ text, user: self.me.id, replyTo })
+      const query = self.mutatePostTweet(
+        { text, user: self.me.id, replyTo },
+        undefined,
+        () => {
+          const tempMessage = MessageModel.create({
+            id: "tempid",
+            __typename: "Message",
+            text,
+            user: self.me.id,
+            replyTo
+          })
+        },
+        { skipMerge: true }
+      )
+
+      // query.case({
+      //   error: error => console.log(error),
+      //   loading: () => console.log("loading"),
+      //   data: data => console.log(data)
+      // })
+
+      return query
     },
     loadInitialMessages() {
       return self.loadMessages("", 3)

@@ -2,7 +2,7 @@
 /* eslint-disable */
 /* tslint:disable */
 import { types } from "mobx-state-tree"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, MutationOptions } from "mst-gql"
 
 import { MessageModel, MessageModelType } from "./MessageModel"
 import { UserModel, UserModelType } from "./UserModel"

@@ -21,6 +21,7 @@ export type FetchPolicy =
 export interface QueryOptions {
   fetchPolicy?: FetchPolicy
   noSsr?: boolean
+  skipMerge?: boolean
 }
 
 const isServer: boolean = typeof window === "undefined"
@@ -34,6 +35,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
   public promise!: Promise<T>
   private fetchPolicy: FetchPolicy
   private queryKey: string
+  private skipMerge?: boolean
 
   constructor(
     public store: StoreType,
@@ -53,6 +55,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
       fetchPolicy = "cache-first"
     }
     this.fetchPolicy = fetchPolicy
+    this.skipMerge = options.skipMerge
 
     if (this.store.ssr && this.options.noSsr && isServer) {
       this.promise = Promise.resolve() as any
@@ -119,7 +122,8 @@ export class Query<T = unknown> implements PromiseLike<T> {
       if (this.fetchPolicy !== "no-cache") {
         this.store.__cacheResponse(this.queryKey, this.store.deflate(data))
       }
-      return this.store.merge(data)
+
+      return this.skipMerge ? data : this.store.merge(data)
     })
     this.promise = promise
     promise.then(

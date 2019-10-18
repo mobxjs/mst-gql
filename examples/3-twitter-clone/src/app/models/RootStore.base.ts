@@ -2,7 +2,7 @@
 /* eslint-disable */
 /* tslint:disable */
 import { types } from "mobx-state-tree"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, MutationOptions } from "mst-gql"
 
 import { MessageModel, MessageModelType } from "./MessageModel"
 import { messageModelPrimitives, MessageModelSelector } from "./MessageModel.base"
@@ -36,20 +36,20 @@ export const RootStoreBase = MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    mutateChangeName(variables: { id: string, name: string }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutateChangeName(variables: { id: string, name: string }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), optimisticUpdate?: () => void, options: MutationOptions = {}) {
       return self.mutate<{ changeName: UserModelType}>(`mutation changeName($id: ID!, $name: String!) { changeName(id: $id, name: $name) {
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
-      } }`, variables, optimisticUpdate)
+      } }`, variables, optimisticUpdate, options)
     },
-    mutateLike(variables: { msg: string, user: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutateLike(variables: { msg: string, user: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void, options: MutationOptions = {}) {
       return self.mutate<{ like: MessageModelType}>(`mutation like($msg: ID!, $user: ID!) { like(msg: $msg, user: $user) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
-      } }`, variables, optimisticUpdate)
+      } }`, variables, optimisticUpdate, options)
     },
-    mutatePostTweet(variables: { text: string, user: string, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutatePostTweet(variables: { text: string, user: string, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void, options: MutationOptions = {}) {
       return self.mutate<{ postTweet: MessageModelType}>(`mutation postTweet($text: String!, $user: ID!, $replyTo: ID) { postTweet(text: $text, user: $user, replyTo: $replyTo) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
-      } }`, variables, optimisticUpdate)
+      } }`, variables, optimisticUpdate, options)
     },
     subscribeNewMessages(variables?: {  }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), onData?: (item: any) => void) {
       return self.subscribe<{ newMessages: MessageModelType}>(`subscription newMessages { newMessages {
