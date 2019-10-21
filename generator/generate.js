@@ -2,14 +2,12 @@ const path = require("path")
 const fs = require("fs")
 const graphql = require("graphql")
 
-const exampleAction = ({ wrapSelf }) => `  .actions(${
-  wrapSelf ? `${wrapSelf}(` : ""
-}self => ({
+const exampleAction = ({ wrapSelf } = {}) => `  .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(${wrapSelf ? `${wrapSelf}(self)` : "self"}))
     }
-  }))${wrapSelf ? ")" : ""}`
+  }))`
 
 const buildInExcludes = [
   "Mutation",
@@ -194,7 +192,7 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
 
     const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
 import { ${name}ModelBase ${ifTS(
-      `, ${name}ModelBaseRefsType, createSelfWrapper `
+      `, ${name}ModelBaseRefsType `
     )}} from "./${name}Model.base${importPostFix}"
 
 ${
@@ -204,22 +202,25 @@ ${
 export { selectFrom${name}, ${flowerName}ModelPrimitives, ${name}ModelSelector } from "./${name}Model.base${importPostFix}"`
 }
 
-${format == "ts" ? `const as = createSelfWrapper<${name}ModelType>()\n` : ""}
+${
+  format === "ts"
+    ? `/* The TypeScript type of an instance of ${name}ModelBase */
+export interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}
+export interface ${name}ModelType extends ${name}ModelBaseRefsType {}`
+    : ""
+}
+
+${
+  format == "ts"
+    ? `/* Helper function to cast self argument to a ${name}Model instance */\nconst as = (self: any) => self as unknown as ${name}ModelType`
+    : ""
+}
 
 /**
  * ${name}Model${optPrefix("\n *\n * ", sanitizeComment(type.description))}
  */
 export const ${name}Model = ${name}ModelBase
-${exampleAction({ wrapSelf: "as" })}
-
-${
-  format === "ts"
-    ? `/* The TypeScript type of an instance of ${name}ModelBase */
-export interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}
-export interface ${name}ModelType extends ${name}ModelBaseRefsType {}
-`
-    : ""
-}
+${exampleAction({ wrapSelf: ifTS("as") })}
 `
 
     if (format === "ts") {
@@ -272,15 +273,7 @@ ${
     ? `export type ${name}ModelBaseRefsType = {
 ${modelTypeRefFields}
 }
-
-export function createSelfWrapper<T>() {
-  return function <S, O>(fn: (self: T) => O) {
-    return (self: S) => {
-      const castedSelf = self as unknown as T
-      return fn(castedSelf)
-    }
-  }
-}`
+`
     : ""
 }
 
@@ -586,7 +579,7 @@ ${
     : ""
 }\
 export const RootStore = RootStoreBase
-${exampleAction("RootStoreType")}
+${exampleAction()}
 `
 
     const modelFile = `\
