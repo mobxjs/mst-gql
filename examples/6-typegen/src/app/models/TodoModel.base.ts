@@ -41,14 +41,6 @@ export type TodoModelBaseRefsType = {
   owner: UserModelType,
 }
 
-export function createSelfWrapper<T>() {
-  return function <S, O>(fn: (self: T) => O) {
-    return (self: S) => {
-      const castedSelf = self as unknown as T
-      return fn(castedSelf)
-    }
-  }
-}
 
 export class TodoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

@@ -2,6 +2,7 @@
 /* eslint-disable */
 /* tslint:disable */
 
+import { IObservableArray } from "mobx"
 import { types, Instance } from "mobx-state-tree"
 import { MSTGQLRef, QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
@@ -37,17 +38,9 @@ export const UserModelBase: typeof UserModelBaseNoRefs = UserModelBaseNoRefs
   })
 
 export type UserModelBaseRefsType = {
-  todos: TodoModelType[],
+  todos: IObservableArray<TodoModelType>,
 }
 
-export function createSelfWrapper<T>() {
-  return function <S, O>(fn: (self: T) => O) {
-    return (self: S) => {
-      const castedSelf = self as unknown as T
-      return fn(castedSelf)
-    }
-  }
-}
 
 export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

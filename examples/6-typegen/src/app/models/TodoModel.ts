@@ -1,9 +1,5 @@
 import { Instance } from "mobx-state-tree"
-import {
-  TodoModelBase,
-  TodoModelBaseRefsType,
-  createSelfWrapper
-} from "./TodoModel.base"
+import { TodoModelBase, TodoModelBaseRefsType } from "./TodoModel.base"
 
 /* A graphql query fragment builders for TodoModel */
 export {
@@ -12,21 +8,20 @@ export {
   TodoModelSelector
 } from "./TodoModel.base"
 
-const as = createSelfWrapper<TodoModelType>()
+/* The TypeScript type of an instance of TodoModelBase */
+export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
+export interface TodoModelType extends TodoModelBaseRefsType {}
+
+/* Helper function to cast self argument to a TodoModel instance */
+const as = (self: any) => (self as unknown) as TodoModelType
 
 /**
  * TodoModel
  */
-export const TodoModel = TodoModelBase.actions(
-  as(self => ({
-    toggle() {
-      return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
-        self.complete = !self.complete
-      })
-    }
-  }))
-)
-
-/* The TypeScript type of an instance of TodoModelBase */
-export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
-export interface TodoModelType extends TodoModelBaseRefsType {}
+export const TodoModel = TodoModelBase.actions(self => ({
+  toggle() {
+    return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
+      self.complete = !self.complete
+    })
+  }
+}))
