@@ -227,9 +227,18 @@ ${exampleAction({ wrapSelf: ifTS("as") })}
       addImportToMap(imports, name + "Model.base", "index", "RootStoreType")
     }
 
+    const hasNestedNonPrimitiveFields = nonPrimitiveFields.some(
+      ([fieldName, fieldType, isNested]) => isNested
+    )
+
     const modelFile = `\
 ${header}
 
+${
+  hasNestedNonPrimitiveFields
+    ? ifTS('import { IObservableArray } from "mobx"\n')
+    : ""
+}\
 ${ifTS(
   'import { types, Instance } from "mobx-state-tree"',
   'import { types } from "mobx-state-tree"'
@@ -379,7 +388,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       addImport(modelType, modelInstanceType)
 
       if (isNested) {
-        return `  ${fieldName}: ${modelInstanceType}[],`
+        return `  ${fieldName}: IObservableArray<${modelInstanceType}>,`
       } else {
         return `  ${fieldName}: ${modelInstanceType},`
       }
