@@ -580,19 +580,27 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     toExport.push("RootStore")
 
     const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
-import { RootStoreBase } from "./RootStore.base${importPostFix}"
+import { RootStoreBase${ifTS(
+      ", RootStoreBaseRefsType "
+    )}} from "./RootStore.base${importPostFix}"
 
 ${
   format == "ts"
-    ? "export interface RootStoreType extends Instance<typeof RootStore.Type> {}\n\n"
+    ? `/* The TypeScript type of an instance of RootStore */
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+export interface RootStoreType extends RootStoreBaseRefsType {}
+
+/* Helper function to cast self argument to a RootStore instance */
+const as = (self: any) => self as unknown as RootStoreType\n\n`
     : ""
 }\
 export const RootStore = RootStoreBase
-${exampleAction()}
+${exampleAction({ wrapSelf: ifTS("as") })}
 `
 
     const modelFile = `\
 ${header}
+${ifTS('import { ObservableMap } from "mobx"\n')}\
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
       format === "ts" ? ", QueryOptions" : ""
@@ -627,11 +635,15 @@ ${ifTS(
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = ${modelsOnly ? "types.model()" : "MSTGQLStore"}
+const RootStoreBaseNoRefs = ${modelsOnly ? "types.model()" : "MSTGQLStore"}
   .named("RootStore")
   .extend(configureStoreMixin([${objectTypes
     .map(s => `['${s}', () => ${s}Model]`)
     .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
+  .actions(self => ({${generateQueries()}
+  }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
   .props({
 ${rootTypes
   .map(
@@ -640,8 +652,17 @@ ${rootTypes
   ) // optional should not be needed here..
   .join(",\n")}
   })
-  .actions(self => ({${generateQueries()}
-  }))
+
+${
+  format === "ts"
+    ? `export type RootStoreBaseRefsType = {
+${rootTypes
+  .map(t => `  ${t.toLowerCase()}s: ObservableMap<string, ${t}ModelType>`)
+  .join(",\n")}
+}
+`
+    : ""
+}\
 `
     generateFile("RootStore", entryFile)
     generateFile("RootStore.base", modelFile, true)
