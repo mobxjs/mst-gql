@@ -1,10 +1,10 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
 
-import { TodoType } from "../models"
+import { TodoModelType } from "../models"
 import { useQuery } from "../models/reactUtils"
 
-export const Todo = observer(({ todo }: { todo: TodoType }) => {
+export const Todo = observer(({ todo }: { todo: TodoModelType }) => {
   const { setQuery, loading, error } = useQuery(undefined)
 
   return (
