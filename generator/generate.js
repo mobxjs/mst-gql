@@ -272,7 +272,9 @@ ${modelPrimitiveProperties}
       sanitizeComment(type.description)
     )}
  */
-export const ${name}ModelBase: typeof ${name}ModelBaseNoRefs = ${name}ModelBaseNoRefs
+export const ${name}ModelBase${ifTS(
+      `: typeof ${name}ModelBaseNoRefs`
+    )} = ${name}ModelBaseNoRefs
   .props({
 ${modelNonPrimitiveProperties}
   })
@@ -385,7 +387,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     function handleRef(fieldName, fieldType, isNested) {
       const modelType = fieldType + "Model"
       const modelInstanceType = modelType + "Type"
-      addImport(modelType, modelInstanceType)
+
+      if (format === "ts") {
+        addImport(modelType, modelInstanceType)
+      }
 
       if (isNested) {
         return `  ${fieldName}: IObservableArray<${modelInstanceType}>,`
@@ -643,7 +648,9 @@ const RootStoreBaseNoRefs = ${modelsOnly ? "types.model()" : "MSTGQLStore"}
   .actions(self => ({${generateQueries()}
   }))
 
-export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+export const RootStoreBase${ifTS(
+      ": typeof RootStoreBaseNoRefs"
+    )} = RootStoreBaseNoRefs
   .props({
 ${rootTypes
   .map(
