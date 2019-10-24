@@ -356,6 +356,10 @@ async function preload() {
 }
 ```
 
+### null vs. undefined
+
+Because you can control what data is fetched for a model in graphql and mst-gql it is possible for a model to have some fields that have not yet been fetched from the server. This can complicate things when we're talking about a field that can also be "empty". To help with this a field in mst-gql will be `undefined` when it has not been fetched from the server and, following graphql conventions, will be `null` if the field has been fetched but is in fact empty.
+
 ---
 
 # 🍿 In-depth store semantics 🍿
