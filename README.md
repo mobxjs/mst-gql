@@ -337,6 +337,21 @@ export const TodoModel = TodoModelBase.actions(self => ({
 }))
 ```
 
+If you are using typescript each model will offer a function `as()`. This can be used to wrap `self` in pieces added to a model. Using the `as()` wrapper will give you access to a models refs and also help you avoid needing to worry about the order that things are defined on the model as mentioned [here](https://github.com/mobxjs/mobx-state-tree#typing-self-in-actions-and-views):
+
+```javascript
+// src/models/TodoModel.js
+import { TodoModelBase } from "./TodoModel.base"
+
+const as = (self: any) => (self as unknown) as TodoModelType
+
+export const TodoModel = TodoModelBase.views(self => ({
+  get ownerId() {
+    return as(self).owner.id
+  }
+}))
+```
+
 That's it for the introduction! For the many different ways in which the above can applied in practice, check out the [examples](#-examples-)
 
 ### Server side rendering with react
