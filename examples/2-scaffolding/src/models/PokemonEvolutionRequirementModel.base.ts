@@ -2,19 +2,19 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
+import { types, Instance } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { RootStoreType } from "./index"
 
 
 /**
- * PokemonEvolutionRequirementBase
- * auto generated base class for the model PokemonEvolutionRequirementModel.
+ * PokemonEvolutionRequirementBaseNoRefs
+ * auto generated base class for the model PokemonEvolutionRequirementModel without refs.
  *
  * Represents a Pokémon's requirement to evolve
  */
-export const PokemonEvolutionRequirementModelBase = ModelBase
+const PokemonEvolutionRequirementModelBaseNoRefs = ModelBase
   .named('PokemonEvolutionRequirement')
   .props({
     __typename: types.optional(types.literal("PokemonEvolutionRequirement"), "PokemonEvolutionRequirement"),
@@ -28,6 +28,22 @@ export const PokemonEvolutionRequirementModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * PokemonEvolutionRequirementBase
+ * auto generated base class for the model PokemonEvolutionRequirementModel.
+ *
+ * Represents a Pokémon's requirement to evolve
+ */
+export const PokemonEvolutionRequirementModelBase: typeof PokemonEvolutionRequirementModelBaseNoRefs = PokemonEvolutionRequirementModelBaseNoRefs
+  .props({
+
+  })
+
+export type PokemonEvolutionRequirementModelBaseRefsType = {
+
+}
+
 
 export class PokemonEvolutionRequirementModelSelector extends QueryBuilder {
   get amount() { return this.__attr(`amount`) }

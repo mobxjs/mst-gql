@@ -2,19 +2,19 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
+import { types, Instance } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { RootStoreType } from "./index"
 
 
 /**
- * AttackBase
- * auto generated base class for the model AttackModel.
+ * AttackBaseNoRefs
+ * auto generated base class for the model AttackModel without refs.
  *
  * Represents a Pokémon's attack types
  */
-export const AttackModelBase = ModelBase
+const AttackModelBaseNoRefs = ModelBase
   .named('Attack')
   .props({
     __typename: types.optional(types.literal("Attack"), "Attack"),
@@ -30,6 +30,22 @@ export const AttackModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * AttackBase
+ * auto generated base class for the model AttackModel.
+ *
+ * Represents a Pokémon's attack types
+ */
+export const AttackModelBase: typeof AttackModelBaseNoRefs = AttackModelBaseNoRefs
+  .props({
+
+  })
+
+export type AttackModelBaseRefsType = {
+
+}
+
 
 export class AttackModelSelector extends QueryBuilder {
   get name() { return this.__attr(`name`) }

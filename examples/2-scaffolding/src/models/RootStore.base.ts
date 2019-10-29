@@ -1,6 +1,7 @@
 /* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
@@ -19,13 +20,9 @@ import { pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirement
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['Pokemon', () => PokemonModel], ['PokemonDimension', () => PokemonDimensionModel], ['PokemonAttack', () => PokemonAttackModel], ['Attack', () => AttackModel], ['PokemonEvolutionRequirement', () => PokemonEvolutionRequirementModel]], ['Pokemon', 'Attack']))
-  .props({
-    pokemons: types.optional(types.map(types.late(() => PokemonModel)), {}),
-    attacks: types.optional(types.map(types.late(() => AttackModel)), {})
-  })
   .actions(self => ({
     queryPokemons(variables: { first: number }, resultSelector: string | ((qb: PokemonModelSelector) => PokemonModelSelector) = pokemonModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ pokemons: PokemonModelType[]}>(`query pokemons($first: Int!) { pokemons(first: $first) {
@@ -38,3 +35,14 @@ export const RootStoreBase = MSTGQLStore
       } }`, variables, options)
     },
   }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+  .props({
+    pokemons: types.optional(types.map(types.late(() => PokemonModel)), {}),
+    attacks: types.optional(types.map(types.late(() => AttackModel)), {})
+  })
+
+export type RootStoreBaseRefsType = {
+  pokemons: ObservableMap<string, PokemonModelType>,
+  attacks: ObservableMap<string, AttackModelType>
+}

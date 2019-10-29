@@ -2,26 +2,27 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
+import { IObservableArray } from "mobx"
+import { types, Instance } from "mobx-state-tree"
 import { MSTGQLRef, QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { PokemonAttackModel } from "./PokemonAttackModel"
+import { PokemonAttackModel, PokemonAttackModelType } from "./PokemonAttackModel"
 import { PokemonAttackModelSelector } from "./PokemonAttackModel.base"
-import { PokemonDimensionModel } from "./PokemonDimensionModel"
+import { PokemonDimensionModel, PokemonDimensionModelType } from "./PokemonDimensionModel"
 import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
-import { PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
+import { PokemonEvolutionRequirementModel, PokemonEvolutionRequirementModelType } from "./PokemonEvolutionRequirementModel"
 import { PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
-import { PokemonModel } from "./PokemonModel"
+import { PokemonModel, PokemonModelType } from "./PokemonModel"
 import { RootStoreType } from "./index"
 
 
 /**
- * PokemonBase
- * auto generated base class for the model PokemonModel.
+ * PokemonBaseNoRefs
+ * auto generated base class for the model PokemonModel without refs.
  *
  * Represents a Pokémon
  */
-export const PokemonModelBase = ModelBase
+const PokemonModelBaseNoRefs = ModelBase
   .named('Pokemon')
   .props({
     __typename: types.optional(types.literal("Pokemon"), "Pokemon"),
@@ -31,27 +32,17 @@ export const PokemonModelBase = ModelBase
     number: types.union(types.undefined, types.null, types.string),
     /** The name of this Pokémon */
     name: types.union(types.undefined, types.null, types.string),
-    /** The minimum and maximum weight of this Pokémon */
-    weight: types.union(types.undefined, types.null, types.late(() => PokemonDimensionModel)),
-    /** The minimum and maximum weight of this Pokémon */
-    height: types.union(types.undefined, types.null, types.late(() => PokemonDimensionModel)),
     /** The classification of this Pokémon */
     classification: types.union(types.undefined, types.null, types.string),
     /** The type(s) of this Pokémon */
     types: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     /** The type(s) of Pokémons that this Pokémon is resistant to */
     resistant: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
-    /** The attacks of this Pokémon */
-    attacks: types.union(types.undefined, types.null, types.late(() => PokemonAttackModel)),
     /** The type(s) of Pokémons that this Pokémon weak to */
     weaknesses: types.union(types.undefined, types.null, types.array(types.union(types.null, types.string))),
     fleeRate: types.union(types.undefined, types.null, types.number),
     /** The maximum CP of this Pokémon */
     maxCP: types.union(types.undefined, types.null, types.integer),
-    /** The evolutions of this Pokémon */
-    evolutions: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PokemonModel))))),
-    /** The evolution requirements of this Pokémon */
-    evolutionRequirements: types.union(types.undefined, types.null, types.late(() => PokemonEvolutionRequirementModel)),
     /** The maximum HP of this Pokémon */
     maxHP: types.union(types.undefined, types.null, types.integer),
     image: types.union(types.undefined, types.null, types.string),
@@ -61,6 +52,35 @@ export const PokemonModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * PokemonBase
+ * auto generated base class for the model PokemonModel.
+ *
+ * Represents a Pokémon
+ */
+export const PokemonModelBase: typeof PokemonModelBaseNoRefs = PokemonModelBaseNoRefs
+  .props({
+    /** The minimum and maximum weight of this Pokémon */
+    weight: types.union(types.undefined, types.null, types.late(() => PokemonDimensionModel)),
+    /** The minimum and maximum weight of this Pokémon */
+    height: types.union(types.undefined, types.null, types.late(() => PokemonDimensionModel)),
+    /** The attacks of this Pokémon */
+    attacks: types.union(types.undefined, types.null, types.late(() => PokemonAttackModel)),
+    /** The evolutions of this Pokémon */
+    evolutions: types.union(types.undefined, types.null, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PokemonModel))))),
+    /** The evolution requirements of this Pokémon */
+    evolutionRequirements: types.union(types.undefined, types.null, types.late(() => PokemonEvolutionRequirementModel)),
+  })
+
+export type PokemonModelBaseRefsType = {
+  weight: PokemonDimensionModelType,
+  height: PokemonDimensionModelType,
+  attacks: PokemonAttackModelType,
+  evolutions: IObservableArray<PokemonModelType>,
+  evolutionRequirements: PokemonEvolutionRequirementModelType,
+}
+
 
 export class PokemonModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

@@ -2,19 +2,19 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
+import { types, Instance } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { RootStoreType } from "./index"
 
 
 /**
- * PokemonDimensionBase
- * auto generated base class for the model PokemonDimensionModel.
+ * PokemonDimensionBaseNoRefs
+ * auto generated base class for the model PokemonDimensionModel without refs.
  *
  * Represents a Pokémon's dimensions
  */
-export const PokemonDimensionModelBase = ModelBase
+const PokemonDimensionModelBaseNoRefs = ModelBase
   .named('PokemonDimension')
   .props({
     __typename: types.optional(types.literal("PokemonDimension"), "PokemonDimension"),
@@ -28,6 +28,22 @@ export const PokemonDimensionModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * PokemonDimensionBase
+ * auto generated base class for the model PokemonDimensionModel.
+ *
+ * Represents a Pokémon's dimensions
+ */
+export const PokemonDimensionModelBase: typeof PokemonDimensionModelBaseNoRefs = PokemonDimensionModelBaseNoRefs
+  .props({
+
+  })
+
+export type PokemonDimensionModelBaseRefsType = {
+
+}
+
 
 export class PokemonDimensionModelSelector extends QueryBuilder {
   get minimum() { return this.__attr(`minimum`) }

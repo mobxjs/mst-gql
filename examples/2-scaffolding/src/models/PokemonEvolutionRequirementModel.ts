@@ -1,9 +1,8 @@
 import { Instance } from "mobx-state-tree"
-import { PokemonEvolutionRequirementModelBase } from "./PokemonEvolutionRequirementModel.base"
-
-/* The TypeScript type of an instance of PokemonEvolutionRequirementModel */
-export interface PokemonEvolutionRequirementModelType
-  extends Instance<typeof PokemonEvolutionRequirementModel.Type> {}
+import {
+  PokemonEvolutionRequirementModelBase,
+  PokemonEvolutionRequirementModelBaseRefsType
+} from "./PokemonEvolutionRequirementModel.base"
 
 /* A graphql query fragment builders for PokemonEvolutionRequirementModel */
 export {
@@ -11,6 +10,16 @@ export {
   pokemonEvolutionRequirementModelPrimitives,
   PokemonEvolutionRequirementModelSelector
 } from "./PokemonEvolutionRequirementModel.base"
+
+/* The TypeScript type of an instance of PokemonEvolutionRequirementModelBase */
+export interface PokemonEvolutionRequirementModelType
+  extends Instance<typeof PokemonEvolutionRequirementModel.Type> {}
+export interface PokemonEvolutionRequirementModelType
+  extends PokemonEvolutionRequirementModelBaseRefsType {}
+
+/* Helper function to cast self argument to a PokemonEvolutionRequirementModel instance */
+const as = (self: any) =>
+  (self as unknown) as PokemonEvolutionRequirementModelType
 
 /**
  * PokemonEvolutionRequirementModel
@@ -21,7 +30,7 @@ export const PokemonEvolutionRequirementModel = PokemonEvolutionRequirementModel
   self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   })
 )
