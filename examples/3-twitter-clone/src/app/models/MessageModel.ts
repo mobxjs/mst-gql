@@ -1,8 +1,5 @@
 import { Instance } from "mobx-state-tree"
-import { MessageModelBase } from "./MessageModel.base"
-
-/* The TypeScript type of an instance of MessageModel */
-export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
+import { MessageModelBase, MessageModelBaseRefsType } from "./MessageModel.base"
 
 /* A graphql query fragment builders for MessageModel */
 export {
@@ -11,12 +8,19 @@ export {
   MessageModelSelector
 } from "./MessageModel.base"
 
+/* The TypeScript type of an instance of MessageModelBase */
+export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
+export interface MessageModelType extends MessageModelBaseRefsType {}
+
+/* Helper function to cast self argument to a MessageModel instance */
+const as = (self: any) => (self as unknown) as MessageModelType
+
 /**
  * MessageModel
  */
 export const MessageModel = MessageModelBase.views(self => ({
   get isLikedByMe() {
-    return self.likes.includes(self.store.me)
+    return as(self).likes.includes(self.store.me)
   }
 })).actions(self => {
   let loadReplyQuery: ReturnType<typeof self.store.loadMessages>
@@ -30,9 +34,9 @@ export const MessageModel = MessageModelBase.views(self => ({
         },
         `__typename id likes { __typename id }`,
         () => {
-          if (self.likes.includes(self.store.me))
-            self.likes.remove(self.store.me)
-          else self.likes.push(self.store.me)
+          if (as(self).likes.includes(self.store.me))
+            as(self).likes.remove(self.store.me)
+          else as(self).likes.push(self.store.me)
         }
       )
     },

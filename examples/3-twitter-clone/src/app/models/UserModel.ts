@@ -1,8 +1,5 @@
 import { Instance } from "mobx-state-tree"
-import { UserModelBase } from "./UserModel.base"
-
-/* The TypeScript type of an instance of UserModel */
-export interface UserModelType extends Instance<typeof UserModel.Type> {}
+import { UserModelBase, UserModelBaseRefsType } from "./UserModel.base"
 
 /* A graphql query fragment builders for UserModel */
 export {
@@ -10,6 +7,13 @@ export {
   userModelPrimitives,
   UserModelSelector
 } from "./UserModel.base"
+
+/* The TypeScript type of an instance of UserModelBase */
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends UserModelBaseRefsType {}
+
+/* Helper function to cast self argument to a UserModel instance */
+const as = (self: any) => (self as unknown) as UserModelType
 
 /**
  * UserModel

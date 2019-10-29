@@ -1,6 +1,7 @@
 /* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
@@ -13,13 +14,9 @@ import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['Message', () => MessageModel], ['User', () => UserModel]], ['Message', 'User']))
-  .props({
-    messages: types.optional(types.map(types.late(() => MessageModel)), {}),
-    users: types.optional(types.map(types.late(() => UserModel)), {})
-  })
   .actions(self => ({
     queryMessages(variables: { offset: string | undefined, count: number | undefined, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ messages: MessageModelType[]}>(`query messages($offset: ID, $count: Int, $replyTo: ID) { messages(offset: $offset, count: $count, replyTo: $replyTo) {
@@ -57,3 +54,14 @@ export const RootStoreBase = MSTGQLStore
       } }`, variables, onData)
     },
   }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+  .props({
+    messages: types.optional(types.map(types.late(() => MessageModel)), {}),
+    users: types.optional(types.map(types.late(() => UserModel)), {})
+  })
+
+export type RootStoreBaseRefsType = {
+  messages: ObservableMap<string, MessageModelType>,
+  users: ObservableMap<string, UserModelType>
+}

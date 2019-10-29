@@ -1,10 +1,14 @@
-import { Instance } from "mobx-state-tree"
-import { RootStoreBase } from "./RootStore.base"
-import { types } from "mobx-state-tree"
+import { Instance, types } from "mobx-state-tree"
+import { RootStoreBase, RootStoreBaseRefsType } from "./RootStore.base"
 import { MessageModel } from "./MessageModel"
 import { selectFromMessage } from "./MessageModel.base"
 
+/* The TypeScript type of an instance of RootStore */
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+export interface RootStoreType extends RootStoreBaseRefsType {}
+
+/* Helper function to cast self argument to a RootStore instance */
+const as = (self: any) => (self as unknown) as RootStoreType
 
 // prettier-ignore
 export const MESSAGE_FRAGMENT = selectFromMessage()
@@ -22,13 +26,13 @@ export const RootStore = RootStoreBase.props({
 })
   .views(self => ({
     get me() {
-      return self.users.get("mweststrate")
+      return as(self).users.get("mweststrate")
     }
   }))
   .actions(self => ({
     afterCreate() {
       self.subscribeNewMessages({}, MESSAGE_FRAGMENT, message => {
-        self.sortedMessages.unshift(message)
+        as(self).sortedMessages.unshift(message)
       })
     },
     loadMessages(offset: string, count: number, replyTo = undefined) {
