@@ -10,21 +10,31 @@ import { UserModel } from "./UserModel"
 
 
 /**
- * RepoBase
- * auto generated base class for the model RepoModel.
+ * RepoBaseNoRefs
+ * auto generated base class for the model RepoModel without refs.
  */
-export const RepoModelBase = ModelBase
+const RepoModelBaseNoRefs = ModelBase
   .named('Repo')
   .props({
     __typename: types.optional(types.literal("Repo"), "Repo"),
     id: types.identifier,
-    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
   })
   .views(self => ({
     get store() {
       return self.__getStore()
     }
   }))
+
+/**
+ * RepoBase
+ * auto generated base class for the model RepoModel.
+ */
+export const RepoModelBase = RepoModelBaseNoRefs
+  .props({
+    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
+  })
+
+
 
 export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

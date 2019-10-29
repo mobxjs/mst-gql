@@ -7,10 +7,10 @@ import { ModelBase } from "./ModelBase"
 
 
 /**
- * UserBase
- * auto generated base class for the model UserModel.
+ * UserBaseNoRefs
+ * auto generated base class for the model UserModel without refs.
  */
-export const UserModelBase = ModelBase
+const UserModelBaseNoRefs = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal("User"), "User"),
@@ -23,6 +23,17 @@ export const UserModelBase = ModelBase
       return self.__getStore()
     }
   }))
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase = UserModelBaseNoRefs
+  .props({
+
+  })
+
+
 
 export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

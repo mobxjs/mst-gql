@@ -7,10 +7,10 @@ import { ModelBase } from "./ModelBase"
 
 
 /**
- * OrganizationBase
- * auto generated base class for the model OrganizationModel.
+ * OrganizationBaseNoRefs
+ * auto generated base class for the model OrganizationModel without refs.
  */
-export const OrganizationModelBase = ModelBase
+const OrganizationModelBaseNoRefs = ModelBase
   .named('Organization')
   .props({
     __typename: types.optional(types.literal("Organization"), "Organization"),
@@ -23,6 +23,17 @@ export const OrganizationModelBase = ModelBase
       return self.__getStore()
     }
   }))
+
+/**
+ * OrganizationBase
+ * auto generated base class for the model OrganizationModel.
+ */
+export const OrganizationModelBase = OrganizationModelBaseNoRefs
+  .props({
+
+  })
+
+
 
 export class OrganizationModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

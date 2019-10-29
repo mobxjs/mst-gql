@@ -7,10 +7,10 @@ import { ModelBase } from "./ModelBase"
 
 
 /**
- * BookBase
- * auto generated base class for the model BookModel.
+ * BookBaseNoRefs
+ * auto generated base class for the model BookModel without refs.
  */
-export const BookModelBase = ModelBase
+const BookModelBaseNoRefs = ModelBase
   .named('Book')
   .props({
     __typename: types.optional(types.literal("Book"), "Book"),
@@ -22,6 +22,17 @@ export const BookModelBase = ModelBase
       return self.__getStore()
     }
   }))
+
+/**
+ * BookBase
+ * auto generated base class for the model BookModel.
+ */
+export const BookModelBase = BookModelBaseNoRefs
+  .props({
+
+  })
+
+
 
 export class BookModelSelector extends QueryBuilder {
   get description() { return this.__attr(`description`) }

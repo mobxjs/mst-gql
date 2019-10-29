@@ -10,12 +10,9 @@ import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['Todo', () => TodoModel]], ['Todo']))
-  .props({
-    todos: types.optional(types.map(types.late(() => TodoModel)), {})
-  })
   .actions(self => ({
     queryTodos(variables, resultSelector = todoModelPrimitives.toString(), options = {}) {
       return self.query(`query todos { todos {
@@ -28,3 +25,9 @@ export const RootStoreBase = MSTGQLStore
       } }`, variables, optimisticUpdate)
     },
   }))
+
+export const RootStoreBase = RootStoreBaseNoRefs
+  .props({
+    todos: types.optional(types.map(types.late(() => TodoModel)), {})
+  })
+

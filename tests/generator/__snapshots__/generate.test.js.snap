@@ -16,17 +16,17 @@ export const ModelBase = MSTGQLObject
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * UserBase
- * auto generated base class for the model UserModel.
+ * UserBaseNoRefs
+ * auto generated base class for the model UserModel without refs.
  */
-export const UserModelBase = ModelBase
+const UserModelBaseNoRefs = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
@@ -39,6 +39,20 @@ export const UserModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase: typeof UserModelBaseNoRefs = UserModelBaseNoRefs
+  .props({
+
+  })
+
+export type UserModelBaseRefsType = {
+
+}
+
 
 export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -56,13 +70,17 @@ export const userModelPrimitives = selectFromUser().name.avatar
   Array [
     "UserModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { UserModelBase } from \\"./UserModel.base\\"
-
-/* The TypeScript type of an instance of UserModel */
-export interface UserModelType extends Instance<typeof UserModel.Type> {}
+import { UserModelBase , UserModelBaseRefsType } from \\"./UserModel.base\\"
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
+/* The TypeScript type of an instance of UserModelBase */
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends UserModelBaseRefsType {}
+
+/* Helper function to cast self argument to a UserModel instance */
+const as = (self: any) => self as unknown as UserModelType
 
 /**
  * UserModel
@@ -71,7 +89,7 @@ export const UserModel = UserModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -80,15 +98,20 @@ export const UserModel = UserModelBase
   Array [
     "RootStore",
     "import { Instance } from \\"mobx-state-tree\\"
-import { RootStoreBase } from \\"./RootStore.base\\"
+import { RootStoreBase, RootStoreBaseRefsType } from \\"./RootStore.base\\"
 
+/* The TypeScript type of an instance of RootStore */
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+export interface RootStoreType extends RootStoreBaseRefsType {}
+
+/* Helper function to cast self argument to a RootStore instance */
+const as = (self: any) => self as unknown as RootStoreType
 
 export const RootStore = RootStoreBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -99,6 +122,7 @@ export const RootStore = RootStoreBase
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
@@ -109,12 +133,9 @@ import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named(\\"RootStore\\")
   .extend(configureStoreMixin([['User', () => UserModel]], ['User']))
-  .props({
-    users: types.optional(types.map(types.late(() => UserModel)), {})
-  })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ me: UserModelType}>(\`query me { me {
@@ -122,6 +143,15 @@ export const RootStoreBase = MSTGQLStore
       } }\`, variables, options)
     },
   }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+  .props({
+    users: types.optional(types.map(types.late(() => UserModel)), {})
+  })
+
+export type RootStoreBaseRefsType = {
+  users: ObservableMap<string, UserModelType>
+}
 ",
     true,
   ],
@@ -172,31 +202,45 @@ export const ModelBase = MSTGQLObject
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { OrganizationModel } from \\"./OrganizationModel\\"
+import { OwnerModelType } from \\"./OwnerModel\\"
 import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
 import { UserModel } from \\"./UserModel\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * RepoBase
- * auto generated base class for the model RepoModel.
+ * RepoBaseNoRefs
+ * auto generated base class for the model RepoModel without refs.
  */
-export const RepoModelBase = ModelBase
+const RepoModelBaseNoRefs = ModelBase
   .named('Repo')
   .props({
     __typename: types.optional(types.literal(\\"Repo\\"), \\"Repo\\"),
     id: types.identifier,
-    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
   })
   .views(self => ({
     get store() {
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * RepoBase
+ * auto generated base class for the model RepoModel.
+ */
+export const RepoModelBase: typeof RepoModelBaseNoRefs = RepoModelBaseNoRefs
+  .props({
+    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
+  })
+
+export type RepoModelBaseRefsType = {
+  owner: OwnerModelType,
+}
+
 
 export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -213,13 +257,17 @@ export const repoModelPrimitives = selectFromRepo()
   Array [
     "RepoModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { RepoModelBase } from \\"./RepoModel.base\\"
-
-/* The TypeScript type of an instance of RepoModel */
-export interface RepoModelType extends Instance<typeof RepoModel.Type> {}
+import { RepoModelBase , RepoModelBaseRefsType } from \\"./RepoModel.base\\"
 
 /* A graphql query fragment builders for RepoModel */
 export { selectFromRepo, repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
+
+/* The TypeScript type of an instance of RepoModelBase */
+export interface RepoModelType extends Instance<typeof RepoModel.Type> {}
+export interface RepoModelType extends RepoModelBaseRefsType {}
+
+/* Helper function to cast self argument to a RepoModel instance */
+const as = (self: any) => self as unknown as RepoModelType
 
 /**
  * RepoModel
@@ -228,7 +276,7 @@ export const RepoModel = RepoModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -263,17 +311,17 @@ export const ownerModelPrimitives = selectFromOwner().name",
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * UserBase
- * auto generated base class for the model UserModel.
+ * UserBaseNoRefs
+ * auto generated base class for the model UserModel without refs.
  */
-export const UserModelBase = ModelBase
+const UserModelBaseNoRefs = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
@@ -286,6 +334,20 @@ export const UserModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase: typeof UserModelBaseNoRefs = UserModelBaseNoRefs
+  .props({
+
+  })
+
+export type UserModelBaseRefsType = {
+
+}
+
 
 export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -303,13 +365,17 @@ export const userModelPrimitives = selectFromUser().name.avatar
   Array [
     "UserModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { UserModelBase } from \\"./UserModel.base\\"
-
-/* The TypeScript type of an instance of UserModel */
-export interface UserModelType extends Instance<typeof UserModel.Type> {}
+import { UserModelBase , UserModelBaseRefsType } from \\"./UserModel.base\\"
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
+/* The TypeScript type of an instance of UserModelBase */
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends UserModelBaseRefsType {}
+
+/* Helper function to cast self argument to a UserModel instance */
+const as = (self: any) => self as unknown as UserModelType
 
 /**
  * UserModel
@@ -318,7 +384,7 @@ export const UserModel = UserModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -330,17 +396,17 @@ export const UserModel = UserModelBase
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * OrganizationBase
- * auto generated base class for the model OrganizationModel.
+ * OrganizationBaseNoRefs
+ * auto generated base class for the model OrganizationModel without refs.
  */
-export const OrganizationModelBase = ModelBase
+const OrganizationModelBaseNoRefs = ModelBase
   .named('Organization')
   .props({
     __typename: types.optional(types.literal(\\"Organization\\"), \\"Organization\\"),
@@ -353,6 +419,20 @@ export const OrganizationModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * OrganizationBase
+ * auto generated base class for the model OrganizationModel.
+ */
+export const OrganizationModelBase: typeof OrganizationModelBaseNoRefs = OrganizationModelBaseNoRefs
+  .props({
+
+  })
+
+export type OrganizationModelBaseRefsType = {
+
+}
+
 
 export class OrganizationModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -370,13 +450,17 @@ export const organizationModelPrimitives = selectFromOrganization().name.logo
   Array [
     "OrganizationModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { OrganizationModelBase } from \\"./OrganizationModel.base\\"
-
-/* The TypeScript type of an instance of OrganizationModel */
-export interface OrganizationModelType extends Instance<typeof OrganizationModel.Type> {}
+import { OrganizationModelBase , OrganizationModelBaseRefsType } from \\"./OrganizationModel.base\\"
 
 /* A graphql query fragment builders for OrganizationModel */
 export { selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+
+/* The TypeScript type of an instance of OrganizationModelBase */
+export interface OrganizationModelType extends Instance<typeof OrganizationModel.Type> {}
+export interface OrganizationModelType extends OrganizationModelBaseRefsType {}
+
+/* Helper function to cast self argument to a OrganizationModel instance */
+const as = (self: any) => self as unknown as OrganizationModelType
 
 /**
  * OrganizationModel
@@ -385,7 +469,7 @@ export const OrganizationModel = OrganizationModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -394,15 +478,20 @@ export const OrganizationModel = OrganizationModelBase
   Array [
     "RootStore",
     "import { Instance } from \\"mobx-state-tree\\"
-import { RootStoreBase } from \\"./RootStore.base\\"
+import { RootStoreBase, RootStoreBaseRefsType } from \\"./RootStore.base\\"
 
+/* The TypeScript type of an instance of RootStore */
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+export interface RootStoreType extends RootStoreBaseRefsType {}
+
+/* Helper function to cast self argument to a RootStore instance */
+const as = (self: any) => self as unknown as RootStoreType
 
 export const RootStore = RootStoreBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -413,6 +502,7 @@ export const RootStore = RootStoreBase
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
@@ -427,12 +517,9 @@ import { organizationModelPrimitives, OrganizationModelSelector } from \\"./Orga
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named(\\"RootStore\\")
   .extend(configureStoreMixin([['Repo', () => RepoModel], ['User', () => UserModel], ['Organization', () => OrganizationModel]], ['Repo']))
-  .props({
-    repos: types.optional(types.map(types.late(() => RepoModel)), {})
-  })
   .actions(self => ({
     queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ repo: RepoModelType}>(\`query repo { repo {
@@ -440,6 +527,15 @@ export const RootStoreBase = MSTGQLStore
       } }\`, variables, options)
     },
   }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+  .props({
+    repos: types.optional(types.map(types.late(() => RepoModel)), {})
+  })
+
+export type RootStoreBaseRefsType = {
+  repos: ObservableMap<string, RepoModelType>
+}
 ",
     true,
   ],
@@ -493,31 +589,45 @@ export const ModelBase = MSTGQLObject
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { BookModel } from \\"./BookModel\\"
 import { MovieModel } from \\"./MovieModel\\"
+import { SearchItemModelType } from \\"./SearchItemModel\\"
 import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * SearchResultBase
- * auto generated base class for the model SearchResultModel.
+ * SearchResultBaseNoRefs
+ * auto generated base class for the model SearchResultModel without refs.
  */
-export const SearchResultModelBase = ModelBase
+const SearchResultModelBaseNoRefs = ModelBase
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
     inputQuery: types.union(types.undefined, types.string),
-    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
   })
   .views(self => ({
     get store() {
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * SearchResultBase
+ * auto generated base class for the model SearchResultModel.
+ */
+export const SearchResultModelBase: typeof SearchResultModelBaseNoRefs = SearchResultModelBaseNoRefs
+  .props({
+    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
+  })
+
+export type SearchResultModelBaseRefsType = {
+  items: SearchItemModelType,
+}
+
 
 export class SearchResultModelSelector extends QueryBuilder {
   get inputQuery() { return this.__attr(\`inputQuery\`) }
@@ -534,13 +644,17 @@ export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
   Array [
     "SearchResultModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { SearchResultModelBase } from \\"./SearchResultModel.base\\"
-
-/* The TypeScript type of an instance of SearchResultModel */
-export interface SearchResultModelType extends Instance<typeof SearchResultModel.Type> {}
+import { SearchResultModelBase , SearchResultModelBaseRefsType } from \\"./SearchResultModel.base\\"
 
 /* A graphql query fragment builders for SearchResultModel */
 export { selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
+
+/* The TypeScript type of an instance of SearchResultModelBase */
+export interface SearchResultModelType extends Instance<typeof SearchResultModel.Type> {}
+export interface SearchResultModelType extends SearchResultModelBaseRefsType {}
+
+/* Helper function to cast self argument to a SearchResultModel instance */
+const as = (self: any) => self as unknown as SearchResultModelType
 
 /**
  * SearchResultModel
@@ -549,7 +663,7 @@ export const SearchResultModel = SearchResultModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -583,17 +697,17 @@ export const searchItemModelPrimitives = selectFromSearchItem().movie(movieModel
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * MovieBase
- * auto generated base class for the model MovieModel.
+ * MovieBaseNoRefs
+ * auto generated base class for the model MovieModel without refs.
  */
-export const MovieModelBase = ModelBase
+const MovieModelBaseNoRefs = ModelBase
   .named('Movie')
   .props({
     __typename: types.optional(types.literal(\\"Movie\\"), \\"Movie\\"),
@@ -605,6 +719,20 @@ export const MovieModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * MovieBase
+ * auto generated base class for the model MovieModel.
+ */
+export const MovieModelBase: typeof MovieModelBaseNoRefs = MovieModelBaseNoRefs
+  .props({
+
+  })
+
+export type MovieModelBaseRefsType = {
+
+}
+
 
 export class MovieModelSelector extends QueryBuilder {
   get description() { return this.__attr(\`description\`) }
@@ -621,13 +749,17 @@ export const movieModelPrimitives = selectFromMovie().description.director
   Array [
     "MovieModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { MovieModelBase } from \\"./MovieModel.base\\"
-
-/* The TypeScript type of an instance of MovieModel */
-export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
+import { MovieModelBase , MovieModelBaseRefsType } from \\"./MovieModel.base\\"
 
 /* A graphql query fragment builders for MovieModel */
 export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
+
+/* The TypeScript type of an instance of MovieModelBase */
+export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
+export interface MovieModelType extends MovieModelBaseRefsType {}
+
+/* Helper function to cast self argument to a MovieModel instance */
+const as = (self: any) => self as unknown as MovieModelType
 
 /**
  * MovieModel
@@ -636,7 +768,7 @@ export const MovieModel = MovieModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -648,17 +780,17 @@ export const MovieModel = MovieModelBase
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from \\"mobx-state-tree\\"
+import { types, Instance } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /**
- * BookBase
- * auto generated base class for the model BookModel.
+ * BookBaseNoRefs
+ * auto generated base class for the model BookModel without refs.
  */
-export const BookModelBase = ModelBase
+const BookModelBaseNoRefs = ModelBase
   .named('Book')
   .props({
     __typename: types.optional(types.literal(\\"Book\\"), \\"Book\\"),
@@ -670,6 +802,20 @@ export const BookModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * BookBase
+ * auto generated base class for the model BookModel.
+ */
+export const BookModelBase: typeof BookModelBaseNoRefs = BookModelBaseNoRefs
+  .props({
+
+  })
+
+export type BookModelBaseRefsType = {
+
+}
+
 
 export class BookModelSelector extends QueryBuilder {
   get description() { return this.__attr(\`description\`) }
@@ -686,13 +832,17 @@ export const bookModelPrimitives = selectFromBook().description.author
   Array [
     "BookModel",
     "import { Instance } from \\"mobx-state-tree\\"
-import { BookModelBase } from \\"./BookModel.base\\"
-
-/* The TypeScript type of an instance of BookModel */
-export interface BookModelType extends Instance<typeof BookModel.Type> {}
+import { BookModelBase , BookModelBaseRefsType } from \\"./BookModel.base\\"
 
 /* A graphql query fragment builders for BookModel */
 export { selectFromBook, bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+
+/* The TypeScript type of an instance of BookModelBase */
+export interface BookModelType extends Instance<typeof BookModel.Type> {}
+export interface BookModelType extends BookModelBaseRefsType {}
+
+/* Helper function to cast self argument to a BookModel instance */
+const as = (self: any) => self as unknown as BookModelType
 
 /**
  * BookModel
@@ -701,7 +851,7 @@ export const BookModel = BookModelBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -710,15 +860,20 @@ export const BookModel = BookModelBase
   Array [
     "RootStore",
     "import { Instance } from \\"mobx-state-tree\\"
-import { RootStoreBase } from \\"./RootStore.base\\"
+import { RootStoreBase, RootStoreBaseRefsType } from \\"./RootStore.base\\"
 
+/* The TypeScript type of an instance of RootStore */
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+export interface RootStoreType extends RootStoreBaseRefsType {}
+
+/* Helper function to cast self argument to a RootStore instance */
+const as = (self: any) => self as unknown as RootStoreType
 
 export const RootStore = RootStoreBase
   .actions(self => ({
     // This is an auto-generated example action.
     log() {
-      console.log(JSON.stringify(self))
+      console.log(JSON.stringify(as(self)))
     }
   }))
 ",
@@ -729,6 +884,7 @@ export const RootStore = RootStoreBase
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
 
@@ -743,12 +899,9 @@ import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named(\\"RootStore\\")
   .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel]], ['SearchResult']))
-  .props({
-    searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {})
-  })
   .actions(self => ({
     querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ search: SearchResultModelType}>(\`query search($text: String!) { search(text: $text) {
@@ -756,6 +909,15 @@ export const RootStoreBase = MSTGQLStore
       } }\`, variables, options)
     },
   }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+  .props({
+    searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {})
+  })
+
+export type RootStoreBaseRefsType = {
+  searchresults: ObservableMap<string, SearchResultModelType>
+}
 ",
     true,
   ],

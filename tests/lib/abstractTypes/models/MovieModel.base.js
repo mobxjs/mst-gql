@@ -7,10 +7,10 @@ import { ModelBase } from "./ModelBase"
 
 
 /**
- * MovieBase
- * auto generated base class for the model MovieModel.
+ * MovieBaseNoRefs
+ * auto generated base class for the model MovieModel without refs.
  */
-export const MovieModelBase = ModelBase
+const MovieModelBaseNoRefs = ModelBase
   .named('Movie')
   .props({
     __typename: types.optional(types.literal("Movie"), "Movie"),
@@ -22,6 +22,17 @@ export const MovieModelBase = ModelBase
       return self.__getStore()
     }
   }))
+
+/**
+ * MovieBase
+ * auto generated base class for the model MovieModel.
+ */
+export const MovieModelBase = MovieModelBaseNoRefs
+  .props({
+
+  })
+
+
 
 export class MovieModelSelector extends QueryBuilder {
   get description() { return this.__attr(`description`) }

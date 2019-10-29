@@ -7,10 +7,10 @@ import { ModelBase } from "./ModelBase"
 
 
 /**
- * TodoBase
- * auto generated base class for the model TodoModel.
+ * TodoBaseNoRefs
+ * auto generated base class for the model TodoModel without refs.
  */
-export const TodoModelBase = ModelBase
+const TodoModelBaseNoRefs = ModelBase
   .named('Todo')
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),
@@ -23,6 +23,17 @@ export const TodoModelBase = ModelBase
       return self.__getStore()
     }
   }))
+
+/**
+ * TodoBase
+ * auto generated base class for the model TodoModel.
+ */
+export const TodoModelBase = TodoModelBaseNoRefs
+  .props({
+
+  })
+
+
 
 export class TodoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

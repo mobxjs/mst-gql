@@ -20,13 +20,9 @@ import { organizationModelPrimitives, OrganizationModelSelector } from "./Organi
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel], ['Repo', () => RepoModel], ['User', () => UserModel], ['Organization', () => OrganizationModel]], ['SearchResult', 'Repo']))
-  .props({
-    searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {}),
-    repos: types.optional(types.map(types.late(() => RepoModel)), {})
-  })
   .actions(self => ({
     querySearch(variables, resultSelector = searchResultModelPrimitives.toString(), options = {}) {
       return self.query(`query search($text: String!) { search(text: $text) {
@@ -44,3 +40,10 @@ export const RootStoreBase = MSTGQLStore
       } }`, variables, optimisticUpdate)
     },
   }))
+
+export const RootStoreBase = RootStoreBaseNoRefs
+  .props({
+    searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {}),
+    repos: types.optional(types.map(types.late(() => RepoModel)), {})
+  })
+

@@ -10,21 +10,31 @@ import { SearchItemModelSelector } from "./SearchItemModelSelector"
 
 
 /**
- * SearchResultBase
- * auto generated base class for the model SearchResultModel.
+ * SearchResultBaseNoRefs
+ * auto generated base class for the model SearchResultModel without refs.
  */
-export const SearchResultModelBase = ModelBase
+const SearchResultModelBaseNoRefs = ModelBase
   .named('SearchResult')
   .props({
     __typename: types.optional(types.literal("SearchResult"), "SearchResult"),
     inputQuery: types.union(types.undefined, types.string),
-    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
   })
   .views(self => ({
     get store() {
       return self.__getStore()
     }
   }))
+
+/**
+ * SearchResultBase
+ * auto generated base class for the model SearchResultModel.
+ */
+export const SearchResultModelBase = SearchResultModelBaseNoRefs
+  .props({
+    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
+  })
+
+
 
 export class SearchResultModelSelector extends QueryBuilder {
   get inputQuery() { return this.__attr(`inputQuery`) }
