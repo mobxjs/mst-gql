@@ -2,17 +2,17 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
+import { types, Instance } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { RootStoreType } from "./index"
 
 
 /**
- * UserBase
- * auto generated base class for the model UserModel.
+ * UserBaseNoRefs
+ * auto generated base class for the model UserModel without refs.
  */
-export const UserModelBase = ModelBase
+const UserModelBaseNoRefs = ModelBase
   .named('User')
   .props({
     __typename: types.optional(types.literal("User"), "User"),
@@ -26,6 +26,20 @@ export const UserModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase: typeof UserModelBaseNoRefs = UserModelBaseNoRefs
+  .props({
+
+  })
+
+export type UserModelBaseRefsType = {
+
+}
+
 
 export class UserModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
