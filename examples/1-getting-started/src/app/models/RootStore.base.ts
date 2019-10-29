@@ -1,6 +1,7 @@
 /* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
 
@@ -16,12 +17,9 @@ export type CreateTodoInput = {
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+const RootStoreBaseNoRefs = MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['Todo', () => TodoModel]], ['Todo']))
-  .props({
-    todos: types.optional(types.map(types.late(() => TodoModel)), {})
-  })
   .actions(self => ({
     queryTodos(variables?: {  }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ todos: TodoModelType[]}>(`query todos { todos {
@@ -39,3 +37,12 @@ export const RootStoreBase = MSTGQLStore
       } }`, variables, optimisticUpdate)
     },
   }))
+
+export const RootStoreBase: typeof RootStoreBaseNoRefs = RootStoreBaseNoRefs
+  .props({
+    todos: types.optional(types.map(types.late(() => TodoModel)), {})
+  })
+
+export type RootStoreBaseRefsType = {
+  todos: ObservableMap<string, TodoModelType>
+}

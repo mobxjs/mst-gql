@@ -2,17 +2,17 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import { types } from "mobx-state-tree"
+import { types, Instance } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { RootStoreType } from "./index"
 
 
 /**
- * TodoBase
- * auto generated base class for the model TodoModel.
+ * TodoBaseNoRefs
+ * auto generated base class for the model TodoModel without refs.
  */
-export const TodoModelBase = ModelBase
+const TodoModelBaseNoRefs = ModelBase
   .named('Todo')
   .props({
     __typename: types.optional(types.literal("Todo"), "Todo"),
@@ -25,6 +25,20 @@ export const TodoModelBase = ModelBase
       return self.__getStore<RootStoreType>()
     }
   }))
+
+/**
+ * TodoBase
+ * auto generated base class for the model TodoModel.
+ */
+export const TodoModelBase: typeof TodoModelBaseNoRefs = TodoModelBaseNoRefs
+  .props({
+
+  })
+
+export type TodoModelBaseRefsType = {
+
+}
+
 
 export class TodoModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

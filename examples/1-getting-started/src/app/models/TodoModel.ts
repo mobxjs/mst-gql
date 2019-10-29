@@ -1,9 +1,6 @@
 import { Instance } from "mobx-state-tree"
-import { TodoModelBase } from "./TodoModel.base"
+import { TodoModelBase, TodoModelBaseRefsType } from "./TodoModel.base"
 import { Query } from "mst-gql"
-
-/* The TypeScript type of an instance of TodoModel */
-export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
 
 /* A graphql query fragment builders for TodoModel */
 export {
@@ -11,6 +8,13 @@ export {
   todoModelPrimitives,
   TodoModelSelector
 } from "./TodoModel.base"
+
+/* The TypeScript type of an instance of TodoModelBase */
+export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
+export interface TodoModelType extends TodoModelBaseRefsType {}
+
+/* Helper function to cast self argument to a TodoModel instance */
+const as = (self: any) => (self as unknown) as TodoModelType
 
 /**
  * TodoModel
