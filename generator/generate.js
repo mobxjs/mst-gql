@@ -213,13 +213,38 @@ ${exampleAction}
       addImportToMap(imports, name + "Model.base", "index", "RootStoreType")
     }
 
+    const useSafeRefs = refs.length > 0 && format === "ts"
+    const hasNestedRefs = refs.some(([, , isNested]) => isNested)
+
     const modelFile = `\
 ${header}
 
+${
+  useSafeRefs && hasNestedRefs
+    ? `import { IObservableArray } from "mobx"\n`
+    : ""
+}\
 import { types } from "mobx-state-tree"
-import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder } from "mst-gql"
+import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder${
+      useSafeRefs ? ", safeRefs" : ""
+    } } from "mst-gql"
 import { ModelBase } from "./ModelBase${importPostFix}"
 ${printRelativeImports(imports)}
+${
+  useSafeRefs
+    ? `/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+${refs
+  .map(([fieldName, fieldTypeName, isNested]) =>
+    isNested
+      ? `  ${fieldName}: IObservableArray<${fieldTypeName}ModelType>;`
+      : `  ${fieldName}: ${fieldTypeName}ModelType;`
+  )
+  .join("\n")}
+}\n
+`
+    : ""
+}\
 /**
  * ${name}Base
  * auto generated base class for the model ${name}Model.${optPrefix(
@@ -227,7 +252,9 @@ ${printRelativeImports(imports)}
       sanitizeComment(type.description)
     )}
  */
-export const ${name}ModelBase = ModelBase
+export const ${name}ModelBase = ${
+      useSafeRefs ? `safeRefs<Refs>()(` : ""
+    }ModelBase
   .named('${name}')
   .props({
     __typename: types.optional(types.literal("${name}"), "${name}"),
@@ -237,7 +264,7 @@ ${modelProperties}
     get store() {
       return self.__getStore${format === "ts" ? `<RootStoreType>` : ""}()
     }
-  }))
+  }))${useSafeRefs ? ")" : ""}
 
 ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 `
@@ -344,7 +371,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             primitiveType === "identifier"
           )
         case "OBJECT":
-          return result(handleObjectFieldType(fieldName, fieldType))
+          return result(handleObjectFieldType(fieldName, fieldType, isNested))
         case "LIST":
           return result(
             `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
@@ -367,7 +394,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       }
     }
 
-    function handleObjectFieldType(fieldName, fieldType) {
+    function handleObjectFieldType(fieldName, fieldType, isNested) {
       nonPrimitiveFields.push([fieldName, fieldType.name])
       const isSelf = fieldType.name === currentType
 
@@ -377,20 +404,23 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       // import the type
       const modelType = fieldType.name + "Model"
       addImport(modelType, modelType)
+      if (format === "ts") {
+        addImport(modelType, `${modelType}Type`)
+      }
       if (!modelsOnly) {
         addImport(`${modelType}.base`, `${modelType}Selector`)
       }
 
       // always using late prevents potential circular dependency issues between files
-      const realType = `types.late(()${
-        isSelf && format === "ts" ? ": any" : ""
-      } => ${fieldType.name}Model)`
+      const realType = `types.late(()${format === "ts" ? ": any" : ""} => ${
+        fieldType.name
+      }Model)`
 
       // this object is not a root type, so assume composition relationship
       if (!isSelf && !rootTypes.includes(fieldType.name)) return realType
 
       // the target is a root type, store a reference
-      refs.push([fieldName, fieldType.name])
+      refs.push([fieldName, fieldType.name, isNested])
       return `MSTGQLRef(${realType})`
     }
 
@@ -511,9 +541,10 @@ ${exampleAction}
 
     const modelFile = `\
 ${header}
+${ifTS(`import { ObservableMap } from "mobx"\n`)}\
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
-      format === "ts" ? ", QueryOptions" : ""
+      format === "ts" ? ", QueryOptions, safeRefs" : ""
     } } from "mst-gql"
 ${objectTypes
   .map(
@@ -542,10 +573,18 @@ ${ifTS(
     )
     .join("")
 )}
+${ifTS(`/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+${rootTypes
+  .map(t => `  ${t.toLowerCase()}s: ObservableMap<string, ${t}ModelType>`)
+  .join(",\n")}
+}\n\n`)}\
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = ${modelsOnly ? "types.model()" : "MSTGQLStore"}
+export const RootStoreBase = ${ifTS("safeRefs<Refs>()(")}${
+      modelsOnly ? "types.model()" : "MSTGQLStore"
+    }
   .named("RootStore")
   .extend(configureStoreMixin([${objectTypes
     .map(s => `['${s}', () => ${s}Model]`)
@@ -554,12 +593,14 @@ export const RootStoreBase = ${modelsOnly ? "types.model()" : "MSTGQLStore"}
 ${rootTypes
   .map(
     t =>
-      `    ${t.toLowerCase()}s: types.optional(types.map(types.late(() => ${t}Model)), {})`
+      `    ${t.toLowerCase()}s: types.optional(types.map(types.late(()${ifTS(
+        ": any"
+      )} => ${t}Model)), {})`
   ) // optional should not be needed here..
   .join(",\n")}
   })
   .actions(self => ({${generateQueries()}
-  }))
+  }))${ifTS(")")}
 `
     generateFile("RootStore", entryFile)
     generateFile("RootStore.base", modelFile, true)
