@@ -213,25 +213,25 @@ ${exampleAction}
       addImportToMap(imports, name + "Model.base", "index", "RootStoreType")
     }
 
-    const useSafeRefs = refs.length > 0 && format === "ts"
+    const useTypedRefs = refs.length > 0 && format === "ts"
     const hasNestedRefs = refs.some(([, , isNested]) => isNested)
 
     const modelFile = `\
 ${header}
 
 ${
-  useSafeRefs && hasNestedRefs
+  useTypedRefs && hasNestedRefs
     ? `import { IObservableArray } from "mobx"\n`
     : ""
 }\
 import { types } from "mobx-state-tree"
 import {${refs.length > 0 ? " MSTGQLRef," : ""} QueryBuilder${
-      useSafeRefs ? ", safeRefs" : ""
+      useTypedRefs ? ", withTypedRefs" : ""
     } } from "mst-gql"
 import { ModelBase } from "./ModelBase${importPostFix}"
 ${printRelativeImports(imports)}
 ${
-  useSafeRefs
+  useTypedRefs
     ? `/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
 ${refs
@@ -253,7 +253,7 @@ ${refs
     )}
  */
 export const ${name}ModelBase = ${
-      useSafeRefs ? `safeRefs<Refs>()(` : ""
+      useTypedRefs ? `withTypedRefs<Refs>()(` : ""
     }ModelBase
   .named('${name}')
   .props({
@@ -264,7 +264,7 @@ ${modelProperties}
     get store() {
       return self.__getStore${format === "ts" ? `<RootStoreType>` : ""}()
     }
-  }))${useSafeRefs ? ")" : ""}
+  }))${useTypedRefs ? ")" : ""}
 
 ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 `
@@ -544,7 +544,7 @@ ${header}
 ${ifTS(`import { ObservableMap } from "mobx"\n`)}\
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin${
-      format === "ts" ? ", QueryOptions, safeRefs" : ""
+      format === "ts" ? ", QueryOptions, withTypedRefs" : ""
     } } from "mst-gql"
 ${objectTypes
   .map(
@@ -582,7 +582,7 @@ ${rootTypes
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = ${ifTS("safeRefs<Refs>()(")}${
+export const RootStoreBase = ${ifTS("withTypedRefs<Refs>()(")}${
       modelsOnly ? "types.model()" : "MSTGQLStore"
     }
   .named("RootStore")
