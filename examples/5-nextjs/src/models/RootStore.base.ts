@@ -1,8 +1,9 @@
 /* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
 import { TodoModel, TodoModelType } from "./TodoModel"
 import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
@@ -10,15 +11,21 @@ import { UserModel, UserModelType } from "./UserModel"
 import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
 
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  todos: ObservableMap<string, TodoModelType>,
+  users: ObservableMap<string, UserModelType>
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['Todo', () => TodoModel], ['User', () => UserModel]], ['Todo', 'User']))
   .props({
-    todos: types.optional(types.map(types.late(() => TodoModel)), {}),
-    users: types.optional(types.map(types.late(() => UserModel)), {})
+    todos: types.optional(types.map(types.late((): any => TodoModel)), {}),
+    users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
   .actions(self => ({
     queryTodos(variables?: {  }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -46,4 +53,4 @@ export const RootStoreBase = MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-  }))
+  })))
