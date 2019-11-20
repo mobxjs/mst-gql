@@ -1,8 +1,9 @@
 /* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from "mst-gql"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
 import { TodoModel, TodoModelType } from "./TodoModel"
 import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
@@ -13,14 +14,19 @@ export type CreateTodoInput = {
   text: string
   complete: boolean | undefined
 }
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  todos: ObservableMap<string, TodoModelType>
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
   .extend(configureStoreMixin([['Todo', () => TodoModel]], ['Todo']))
   .props({
-    todos: types.optional(types.map(types.late(() => TodoModel)), {})
+    todos: types.optional(types.map(types.late((): any => TodoModel)), {})
   })
   .actions(self => ({
     queryTodos(variables?: {  }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -38,4 +44,4 @@ export const RootStoreBase = MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-  }))
+  })))

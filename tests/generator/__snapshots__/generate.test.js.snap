@@ -99,21 +99,27 @@ export const RootStore = RootStoreBase
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  users: ObservableMap<string, UserModelType>
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
   .extend(configureStoreMixin([['User', () => UserModel]], ['User']))
   .props({
-    users: types.optional(types.map(types.late(() => UserModel)), {})
+    users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -121,7 +127,7 @@ export const RootStoreBase = MSTGQLStore
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
-  }))
+  })))
 ",
     true,
   ],
@@ -413,8 +419,9 @@ export const RootStore = RootStoreBase
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
 import { RepoModel, RepoModelType } from \\"./RepoModel\\"
 import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
@@ -424,14 +431,19 @@ import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  repos: ObservableMap<string, RepoModelType>
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
   .extend(configureStoreMixin([['Repo', () => RepoModel], ['User', () => UserModel], ['Organization', () => OrganizationModel]], ['Repo']))
   .props({
-    repos: types.optional(types.map(types.late(() => RepoModel)), {})
+    repos: types.optional(types.map(types.late((): any => RepoModel)), {})
   })
   .actions(self => ({
     queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -439,7 +451,7 @@ export const RootStoreBase = MSTGQLStore
         \${typeof resultSelector === \\"function\\" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
-  }))
+  })))
 ",
     true,
   ],
@@ -729,8 +741,9 @@ export const RootStore = RootStoreBase
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
-import { MSTGQLStore, configureStoreMixin, QueryOptions } from \\"mst-gql\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
 import { SearchResultModel, SearchResultModelType } from \\"./SearchResultModel\\"
 import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
@@ -740,14 +753,19 @@ import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  searchresults: ObservableMap<string, SearchResultModelType>
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
-export const RootStoreBase = MSTGQLStore
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
   .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel]], ['SearchResult']))
   .props({
-    searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {})
+    searchresults: types.optional(types.map(types.late((): any => SearchResultModel)), {})
   })
   .actions(self => ({
     querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
@@ -755,7 +773,7 @@ export const RootStoreBase = MSTGQLStore
         \${typeof resultSelector === \\"function\\" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
-  }))
+  })))
 ",
     true,
   ],
