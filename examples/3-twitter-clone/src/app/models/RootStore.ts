@@ -3,6 +3,7 @@ import { RootStoreBase } from "./RootStore.base"
 import { types } from "mobx-state-tree"
 import { MessageModel } from "./MessageModel"
 import { selectFromMessage } from "./MessageModel.base"
+import { UserModelType } from "./UserModel"
 
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
@@ -18,10 +19,13 @@ export const RootStore = RootStoreBase.props({
   // The store itself does store Messages in loading order,
   // so we use an additional collection of references, to preserve the order as
   // it should be, regardless whether we are loading new or old messages.
-  sortedMessages: types.optional(types.array(types.reference(MessageModel)), [])
+  sortedMessages: types.optional(
+    types.array(types.reference(MessageModel as any)),
+    []
+  )
 })
   .views(self => ({
-    get me() {
+    get me(): UserModelType {
       return self.users.get("mweststrate")
     }
   }))
