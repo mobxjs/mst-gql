@@ -12,7 +12,7 @@ import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 export type CreateTodoInput = {
   id: string
   text: string
-  complete: boolean | undefined
+  complete?: boolean
 }
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {

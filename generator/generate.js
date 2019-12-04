@@ -568,7 +568,7 @@ ${ifTS(
     .map(
       t =>
         `\nexport type ${t.name} = {\n${t.inputFields
-          .map(field => `  ${field.name}: ${printTsType(field.type)}`)
+          .map(field => `  ${printTsType(field)}`)
           .join("\n")}\n}`
     )
     .join("")
@@ -689,9 +689,7 @@ ${rootTypes
 
         const tsVariablesType =
           format === "ts"
-            ? `: { ${args
-                .map(arg => `${arg.name}: ${printTsType(arg.type)}`)
-                .join(", ")} }`
+            ? `: { ${args.map(arg => `${printTsType(arg)}`).join(", ")} }`
             : ""
         return `\
 ${optPrefix("\n    // ", sanitizeComment(description))}
@@ -733,26 +731,39 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     }
   }
 
-  function printTsType(type, isRoot = true) {
+  function printTsType(field, name, canBeUndefined = true) {
+    let typeValue
+    let type
+
+    if (!name) {
+      name = field.name
+      type = field.type
+    } else {
+      type = field
+    }
+
     switch (type.kind) {
       case "NON_NULL":
-        return printTsType(type.ofType, false)
+        return printTsType(type.ofType, name, false)
       case "LIST":
-        return `${printTsType(type.ofType, true)}[]`
+        return `${printTsType(type.ofType, name, true)}[]`
       case "OBJECT":
       case "INPUT_OBJECT":
-        return type.name + (isRoot ? " | undefined" : "")
-      case "SCALAR":
-        return printTsPrimitiveType(type.name) + (isRoot ? " | undefined" : "")
       case "ENUM":
-        return type.name
+        typeValue = type.name
+        break
+      case "SCALAR":
+        typeValue = printTsPrimitiveType(type.name)
+        break
       default:
         console.warn(
           "Not implemented printTsType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
-        return "any"
+        typeValue = "any"
     }
+
+    return `${name}${canBeUndefined ? "?" : ""}: ${typeValue}`
   }
 
   function printTsPrimitiveType(primitiveType) {

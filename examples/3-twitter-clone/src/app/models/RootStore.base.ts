@@ -28,7 +28,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
   .actions(self => ({
-    queryMessages(variables: { offset: string | undefined, count: number | undefined, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryMessages(variables: { offset?: string, count?: number, replyTo?: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ messages: MessageModelType[]}>(`query messages($offset: ID, $count: Int, $replyTo: ID) { messages(offset: $offset, count: $count, replyTo: $replyTo) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, options)
@@ -53,7 +53,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutatePostTweet(variables: { text: string, user: string, replyTo: string | undefined }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutatePostTweet(variables: { text: string, user: string, replyTo?: string }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ postTweet: MessageModelType}>(`mutation postTweet($text: String!, $user: ID!, $replyTo: ID) { postTweet(text: $text, user: $user, replyTo: $replyTo) {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)

@@ -39,7 +39,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new PokemonModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryPokemon(variables: { id: string | undefined, name: string | undefined }, resultSelector: string | ((qb: PokemonModelSelector) => PokemonModelSelector) = pokemonModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryPokemon(variables: { id?: string, name?: string }, resultSelector: string | ((qb: PokemonModelSelector) => PokemonModelSelector) = pokemonModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ pokemon: PokemonModelType}>(`query pokemon($id: String, $name: String) { pokemon(id: $id, name: $name) {
         ${typeof resultSelector === "function" ? resultSelector(new PokemonModelSelector()).toString() : resultSelector}
       } }`, variables, options)
