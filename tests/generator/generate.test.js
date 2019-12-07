@@ -26,6 +26,61 @@ type Query {
   ).toMatchSnapshot()
 })
 
+test("basic scaffolding with js naming convention to work", () => {
+  const output = scaffold(
+    `
+type my_user {
+  id: ID
+  name: String!
+  avatar: String!
+  emptyBoxes: [possibly_empty_box]!
+}
+
+type possibly_empty_box {
+  id: ID
+  label: String!
+  isEmpty: Boolean!
+}
+
+type Query {
+  me: my_user
+}
+`,
+    {
+      roots: ["my_user", "possibly_empty_box"],
+      namingConvention: "js"
+    }
+  )
+
+  expect(output).toMatchSnapshot()
+
+  expect(findFile(output, "MyUserModel.base")).toBeTruthy()
+  expect(
+    hasFileContent(
+      findFile(output, "MyUserModel.base"),
+      "emptyBoxes: types.union(types.undefined, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel))))),"
+    )
+  ).toBeTruthy()
+
+  expect(findFile(output, "PossiblyEmptyBoxModel.base")).toBeTruthy()
+  // root collection name shoudl be properly prularized
+  expect(
+    hasFileContent(
+      findFile(output, "RootStore.base"),
+      "possiblyEmptyBoxes: types.optional(types.map(types.late((): any => PossiblyEmptyBoxModel)), {})"
+    )
+  ).toBeTruthy()
+
+  // configureStoreMixin should contain original __typenames as keys, and should have a 3rd parameter for naming
+  // convention "js"
+  expect(
+    hasFileContent(
+      findFile(output, "RootStore.base"),
+      `.extend(configureStoreMixin([['my_user', () => MyUserModel], ['possibly_empty_box', () => PossiblyEmptyBoxModel]], ['my_user', 'possibly_empty_box'], "js"))`
+    )
+  ).toBeTruthy()
+})
+
 test("interface field type to work", () => {
   const output = scaffold(
     `

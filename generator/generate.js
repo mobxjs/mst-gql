@@ -1,6 +1,8 @@
 const path = require("path")
 const fs = require("fs")
 const graphql = require("graphql")
+const camelcase = require("camelcase")
+const pluralize = require("pluralize")
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -23,17 +25,20 @@ function generate(
   excludes = [],
   generationDate = "a long long time ago...",
   modelsOnly = false,
-  noReact = false
+  noReact = false,
+  namingConvention = "asis"
 ) {
   excludes.push(...buildInExcludes)
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
+  const origObjectTypes = [] // all known OBJECT types for which MST classes are generated
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
   const enumTypes = [] // enum types to be imported when using typescript
   const toExport = [] // files to be exported from barrel file
   let currentType = "<none>"
+  let origRootTypes = []
 
   const header = `/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
@@ -64,9 +69,11 @@ export const ModelBase = MSTGQLObject
       .filter(type => !type.name.startsWith("__"))
       .filter(type => type.kind !== "SCALAR")
       .forEach(type => {
-        knownTypes.push(type.name)
-        if (type.kind === "OBJECT") objectTypes.push(type.name)
-        else if (type.kind === "INPUT_OBJECT") inputTypes.push(type)
+        knownTypes.push(transformTypeName(type.name, namingConvention))
+        if (type.kind === "OBJECT") {
+          origObjectTypes.push(type.name)
+          objectTypes.push(transformTypeName(type.name, namingConvention))
+        } else if (type.kind === "INPUT_OBJECT") inputTypes.push(type)
       })
 
     if (!rootTypes.length) {
@@ -78,13 +85,24 @@ export const ModelBase = MSTGQLObject
     }
 
     rootTypes.forEach(type => {
-      if (!objectTypes.includes(type))
+      if (!origObjectTypes.includes(type))
         throw new Error(
           `The root type specified: '${type}' is unknown, excluded or not an OBJECT type!`
         )
     })
 
+    // Keep the orig type names for mixin configuration
+    origRootTypes = [...rootTypes]
+    rootTypes = rootTypes.map(t => transformTypeName(t, namingConvention))
+
     types
+      .map(type => {
+        // Change name according to namingConvention and keep original in origName. We will need this in
+        // __typename definitions
+        type.origName = type.name
+        type.name = transformTypeName(type.name, namingConvention)
+        return type
+      })
       .filter(type => knownTypes.includes(type.name))
       .forEach(type => {
         currentType = type.name
@@ -117,7 +135,9 @@ export const ModelBase = MSTGQLObject
     return types
       .filter(
         type =>
-          objectTypes.includes(type.name) &&
+          objectTypes.includes(
+            transformTypeName(type.name, namingConvention)
+          ) &&
           type.fields.some(
             field =>
               field.name === "id" &&
@@ -184,7 +204,7 @@ export const ${name}Enum = ${handleEnumTypeCore(type)}
       refs
     } = resolveFieldsAndImports(type)
 
-    const { name } = type
+    const { name, origName } = type
     const flowerName = toFirstLower(name)
 
     const entryFile = `${ifTS('import { Instance } from "mobx-state-tree"\n')}\
@@ -257,7 +277,7 @@ export const ${name}ModelBase = ${
     }ModelBase
   .named('${name}')
   .props({
-    __typename: types.optional(types.literal("${name}"), "${name}"),
+    __typename: types.optional(types.literal("${origName}"), "${origName}"),
 ${modelProperties}
   })
   .views(self => ({
@@ -362,6 +382,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             }${thing})`
           : thing
       }
+
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
@@ -371,12 +392,21 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             primitiveType === "identifier"
           )
         case "OBJECT":
+          fieldType.origName = fieldType.name
+          fieldType.name = transformTypeName(fieldType.name, namingConvention)
           return result(handleObjectFieldType(fieldName, fieldType, isNested))
         case "LIST":
+          fieldType.ofType.origName = fieldType.ofType.name
+          fieldType.ofType.name = transformTypeName(
+            fieldType.ofType.name,
+            namingConvention
+          )
           return result(
             `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
           )
         case "ENUM":
+          fieldType.origName = fieldType.name
+          fieldType.name = transformTypeName(fieldType.name, namingConvention)
           primitiveFields.push(fieldName)
           const enumType = fieldType.name + "Enum"
           if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
@@ -576,7 +606,13 @@ ${ifTS(
 ${ifTS(`/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
 ${rootTypes
-  .map(t => `  ${t.toLowerCase()}s: ObservableMap<string, ${t}ModelType>`)
+  .map(
+    t =>
+      `  ${transformRootName(
+        t,
+        namingConvention
+      )}: ObservableMap<string, ${t}ModelType>`
+  )
   .join(",\n")}
 }\n\n`)}\
 /**
@@ -586,14 +622,19 @@ export const RootStoreBase = ${ifTS("withTypedRefs<Refs>()(")}${
       modelsOnly ? "types.model()" : "MSTGQLStore"
     }
   .named("RootStore")
-  .extend(configureStoreMixin([${objectTypes
-    .map(s => `['${s}', () => ${s}Model]`)
-    .join(", ")}], [${rootTypes.map(s => `'${s}'`).join(", ")}]))
+  .extend(configureStoreMixin([${origObjectTypes
+    .map(s => `['${s}', () => ${transformTypeName(s, namingConvention)}Model]`)
+    .join(", ")}], [${origRootTypes.map(s => `'${s}'`).join(", ")}]${
+      namingConvention == "asis" ? "" : `, "${namingConvention}"`
+    }))
   .props({
 ${rootTypes
   .map(
     t =>
-      `    ${t.toLowerCase()}s: types.optional(types.map(types.late(()${ifTS(
+      `    ${transformRootName(
+        t,
+        namingConvention
+      )}: types.optional(types.map(types.late(()${ifTS(
         ": any"
       )} => ${t}Model)), {})`
   ) // optional should not be needed here..
@@ -750,7 +791,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "OBJECT":
       case "INPUT_OBJECT":
       case "ENUM":
-        typeValue = type.name
+        typeValue = transformTypeName(type.name, namingConvention)
         break
       case "SCALAR":
         typeValue = printTsPrimitiveType(type.name)
@@ -1028,7 +1069,8 @@ function scaffold(
     format: "ts",
     roots: [],
     excludes: [],
-    modelsOnly: false
+    modelsOnly: false,
+    namingConvention: "asis"
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -1041,8 +1083,40 @@ function scaffold(
     options.roots || [],
     options.excludes || [],
     "<during unit test run>",
-    options.modelsOnly || false
+    options.modelsOnly || false,
+    options.noReact || false,
+    options.namingConvention || "asis"
   )
+}
+
+function transformTypeName(text, namingConvention) {
+  if (!text) {
+    return text
+  }
+  if (namingConvention === "js") {
+    return camelcase(text, { pascalCase: true })
+  }
+  return text
+}
+
+function transformName(text, namingConvention) {
+  if (!text) {
+    return text
+  }
+  if (namingConvention === "js") {
+    return camelcase(text)
+  }
+  return text
+}
+
+function transformRootName(text, namingConvention) {
+  if (!text) {
+    return text
+  }
+  if (namingConvention === "js") {
+    return pluralize(transformName(text, namingConvention))
+  }
+  return text.toLowerCase() + "s"
 }
 
 function logUnexpectedFiles(outDir, files) {

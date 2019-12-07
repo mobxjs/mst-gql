@@ -3,9 +3,11 @@ import { types, getEnv, recordPatches, IAnyModelType } from "mobx-state-tree"
 import { DocumentNode } from "graphql"
 
 import { mergeHelper } from "./mergeHelper"
-import { getFirstValue } from "./utils"
+import { getFirstValue, typenameToCollectionName } from "./utils"
 import { QueryOptions, Query } from "./Query"
 import { deflateHelper } from "./deflateHelper"
+import pluralize from "pluralize"
+import camelcase from "camelcase"
 
 export interface RequestHandler<T = any> {
   request(query: string, variables: any): Promise<T>
@@ -158,7 +160,8 @@ export const MSTGQLStore = types
 
 export function configureStoreMixin(
   knownTypes: [string, () => IAnyModelType][],
-  rootTypes: string[]
+  rootTypes: string[],
+  namingConvention?: string
 ) {
   const kt = new Map()
   const rt = new Set(rootTypes)
@@ -185,6 +188,12 @@ export function configureStoreMixin(
       },
       getTypeDef(typename: string): IAnyModelType {
         return kt.get(typename)!
+      },
+      getCollectionName(typename: string): string {
+        if (namingConvention == "js") {
+          return pluralize(camelcase(typename))
+        }
+        return typename.toLowerCase() + "s"
       }
     }
   })
