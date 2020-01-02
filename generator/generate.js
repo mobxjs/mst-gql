@@ -30,6 +30,10 @@ function generate(
 ) {
   excludes.push(...buildInExcludes)
 
+  // For each type converts 'name' according to namingConvention and copies
+  // original name to the 'origName' field of the type's object
+  transformTypes(types, namingConvention)
+
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
   const origObjectTypes = [] // all known OBJECT types for which MST classes are generated
@@ -69,10 +73,10 @@ export const ModelBase = MSTGQLObject
       .filter(type => !type.name.startsWith("__"))
       .filter(type => type.kind !== "SCALAR")
       .forEach(type => {
-        knownTypes.push(transformTypeName(type.name, namingConvention))
+        knownTypes.push(type.name)
         if (type.kind === "OBJECT") {
-          origObjectTypes.push(type.name)
-          objectTypes.push(transformTypeName(type.name, namingConvention))
+          origObjectTypes.push(type.origName)
+          objectTypes.push(type.name)
         } else if (type.kind === "INPUT_OBJECT") inputTypes.push(type)
       })
 
@@ -95,14 +99,9 @@ export const ModelBase = MSTGQLObject
     origRootTypes = [...rootTypes]
     rootTypes = rootTypes.map(t => transformTypeName(t, namingConvention))
 
+    console.log("rootTypes", JSON.stringify(rootTypes, null, 2))
+
     types
-      .map(type => {
-        // Change name according to namingConvention and keep original in origName. We will need this in
-        // __typename definitions
-        type.origName = type.name
-        type.name = transformTypeName(type.name, namingConvention)
-        return type
-      })
       .filter(type => knownTypes.includes(type.name))
       .forEach(type => {
         currentType = type.name
@@ -135,9 +134,7 @@ export const ModelBase = MSTGQLObject
     return types
       .filter(
         type =>
-          objectTypes.includes(
-            transformTypeName(type.name, namingConvention)
-          ) &&
+          objectTypes.includes(type.name) &&
           type.fields.some(
             field =>
               field.name === "id" &&
@@ -145,7 +142,7 @@ export const ModelBase = MSTGQLObject
               skipNonNull(field.type).name === "ID"
           )
       )
-      .map(t => t.name)
+      .map(t => t.origName)
   }
 
   function handleEnumType(type) {
@@ -382,7 +379,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             }${thing})`
           : thing
       }
-
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
@@ -392,21 +388,12 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             primitiveType === "identifier"
           )
         case "OBJECT":
-          fieldType.origName = fieldType.name
-          fieldType.name = transformTypeName(fieldType.name, namingConvention)
           return result(handleObjectFieldType(fieldName, fieldType, isNested))
         case "LIST":
-          fieldType.ofType.origName = fieldType.ofType.name
-          fieldType.ofType.name = transformTypeName(
-            fieldType.ofType.name,
-            namingConvention
-          )
           return result(
             `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
           )
         case "ENUM":
-          fieldType.origName = fieldType.name
-          fieldType.name = transformTypeName(fieldType.name, namingConvention)
           primitiveFields.push(fieldName)
           const enumType = fieldType.name + "Enum"
           if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
@@ -430,7 +417,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
       // this type is not going to be handled by mst-gql, store as frozen
       if (!knownTypes.includes(fieldType.name)) return `types.frozen()`
-
       // import the type
       const modelType = fieldType.name + "Model"
       addImport(modelType, modelType)
@@ -791,7 +777,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "OBJECT":
       case "INPUT_OBJECT":
       case "ENUM":
-        typeValue = transformTypeName(type.name, namingConvention)
+        typeValue = type.name
         break
       case "SCALAR":
         typeValue = printTsPrimitiveType(type.name)
@@ -1089,6 +1075,14 @@ function scaffold(
   )
 }
 
+/**
+ * Transforms {@code text} according to namingConvention.
+ * If namingConvention is {@code null} or {@code asis} the same text will be
+ * returned. If namingConvention is {@code js} text will be PascalCased
+ * @param text to be transformed
+ * @param namingConvention naming convention to be used for transformation
+ * @returns {string|*}
+ */
 function transformTypeName(text, namingConvention) {
   if (!text) {
     return text
@@ -1099,6 +1093,14 @@ function transformTypeName(text, namingConvention) {
   return text
 }
 
+/**
+ * Transforms {@code text} according to namingConvention.
+ * If namingConvention is {@code null} or {@code asis} the same text will be
+ * returned. If namingConvention is {@code js} text will be camelCased
+ * @param text to be transformed
+ * @param namingConvention naming convention to be used for transformation
+ * @returns {string|*}
+ */
 function transformName(text, namingConvention) {
   if (!text) {
     return text
@@ -1109,14 +1111,80 @@ function transformName(text, namingConvention) {
   return text
 }
 
+/**
+ * Transform {@code text} according to namingConvention.
+ * If namingConvention is {@code null} or {@code asis} the same text will be
+ * returned. If namingConvention is {@code js} text will be camelCased and
+ * pluralized
+ * @param text to be transformed
+ * @param namingConvention naming convention to be used for transformation
+ * @returns {string|*}
+ */
 function transformRootName(text, namingConvention) {
   if (!text) {
     return text
   }
   if (namingConvention === "js") {
-    return pluralize(transformName(text, namingConvention))
+    // Pluralize only last word (pluralize may fail with words that are
+    // not valid English words as is the case with LongCamelCaseTypeNames)
+    const newName = transformName(text, namingConvention)
+    const parts = newName.split(/(?=[A-Z])/)
+    parts[parts.length - 1] = pluralize(parts[parts.length - 1])
+    return parts.join("")
   }
   return text.toLowerCase() + "s"
+}
+
+/**
+ * Converts types names in the graphql schema {@code types} according to
+ * the {@code namingConvention}. If namingConvention is {@code null} or
+ * {@code asis} type names won't be transformed.
+ * If namingConvention is {@code js} type named will be PascalCased and the
+ * original type names will be stored in the {@code origName} field.
+ * @param types graphql schema types
+ * @param namingConvention
+ */
+function transformTypes(types, namingConvention) {
+  //console.log(JSON.stringify(types, null, 2));
+  types
+    .filter(type => !type.name.startsWith("__"))
+    .filter(type => type.kind !== "SCALAR")
+    .forEach(type => transformType(type, namingConvention))
+  //console.log(JSON.stringify(types, null, 2));
+}
+
+/**
+ * Transforms names of a graphql {@code type} object according to
+ * {@code namingConvention}. Name of types of kind OBJECT, INPUT_OBJECT,
+ * ENUM, LIST and NON_NULL and changed according to {@code namingConvention}
+ * recursively. If namingConvention is {@code js} type named will be
+ * PascalCased and the original type names will be stored in the
+ * {@code origName} field.
+ * @param type a graphql type definition object
+ * @param namingConvention
+ */
+function transformType(type, namingConvention) {
+  if (
+    type.kind === "OBJECT" ||
+    type.kind === "INPUT_OBJECT" ||
+    type.kind === "ENUM" ||
+    type.kind === "LIST" ||
+    type.kind === "NON_NULL"
+  ) {
+    type.origName = type.name
+    type.name = transformTypeName(type.name, namingConvention)
+
+    // process type names in fields, inputFields and ofType
+    if (type.fields) {
+      type.fields.forEach(f => transformType(f.type, namingConvention))
+    }
+    if (type.inputFields) {
+      type.inputFields.forEach(f => transformType(f.type, namingConvention))
+    }
+    if (type.ofType) {
+      transformType(type.ofType, namingConvention)
+    }
+  }
 }
 
 function logUnexpectedFiles(outDir, files) {

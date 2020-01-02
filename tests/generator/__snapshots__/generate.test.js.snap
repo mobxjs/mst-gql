@@ -365,9 +365,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     possiblyEmptyBoxes: types.optional(types.map(types.late((): any => PossiblyEmptyBoxModel)), {})
   })
   .actions(self => ({
-    queryMe(variables?: {  }, resultSelector: string | ((qb: my_userModelSelector) => my_userModelSelector) = my_userModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: my_userModelType}>(\`query me { me {
-        \${typeof resultSelector === \\"function\\" ? resultSelector(new my_userModelSelector()).toString() : resultSelector}
+    queryMe(variables?: {  }, resultSelector: string | ((qb: MyUserModelSelector) => MyUserModelSelector) = myUserModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ me: MyUserModelType}>(\`query me { me {
+        \${typeof resultSelector === \\"function\\" ? resultSelector(new MyUserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
   })))
