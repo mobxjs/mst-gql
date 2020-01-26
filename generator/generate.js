@@ -19,7 +19,7 @@ const buildInExcludes = [
 ]
 
 function generate(
-  types,
+  schema,
   format = "js",
   rootTypes = [],
   excludes = [],
@@ -28,6 +28,8 @@ function generate(
   noReact = false,
   namingConvention = "asis"
 ) {
+  const types = schema.types
+
   excludes.push(...buildInExcludes)
 
   // For each type converts 'name' according to namingConvention and copies
@@ -637,14 +639,16 @@ ${rootTypes
     if (modelsOnly) return ""
     return (
       generateQueryHelper(
-        findObjectByName("Query"),
+        findObjectByName(schema.queryType ? schema.queryType.name : "Query"),
         "query",
         "query",
         format === "ts" ? ", options: QueryOptions = {}" : ", options = {}",
         ", options"
       ) +
       generateQueryHelper(
-        findObjectByName("Mutation"),
+        findObjectByName(
+          schema.mutationType ? schema.mutationType.name : "Mutation"
+        ),
         "mutation",
         "mutate",
         format === "ts"
@@ -653,7 +657,11 @@ ${rootTypes
         ", optimisticUpdate"
       ) +
       generateQueryHelper(
-        findObjectByName("Subscription"),
+        findObjectByName(
+          schema.subscriptionType
+            ? schema.subscriptionType.name
+            : "Subscription"
+        ),
         "subscription",
         "subscribe",
         format === "ts"
@@ -674,7 +682,7 @@ ${rootTypes
     if (!query) return ""
     return query.fields
       .map(field => {
-        let { name, args, type, description } = field
+        let { name, origName, args, type, description } = field
 
         if (type.kind === "NON_NULL") type = type.ofType
         const returnsList = type.kind === "LIST"
@@ -711,7 +719,7 @@ ${rootTypes
           args.length === 0
             ? ""
             : "(" +
-              args.map(arg => `${arg.name}: \$${arg.name}`).join(", ") +
+              args.map(arg => `${arg.origName}: \$${arg.name}`).join(", ") +
               ")"
 
         const tsVariablesType =
@@ -749,7 +757,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "OBJECT":
       case "INPUT_OBJECT":
       case "SCALAR":
-        return type.name
+        return type.origName ? type.origName : type.name
       default:
         throw new Error(
           "Not implemented printGraphQLType yet, PR welcome for " +
@@ -806,7 +814,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
   }
 
   function findObjectByName(name) {
-    return types.find(type => type.name === name && type.kind === "OBJECT")
+    return types.find(type => type.origName === name && type.kind === "OBJECT")
   }
 
   function generateReactUtils() {
@@ -1064,7 +1072,7 @@ function scaffold(
   if (!res.data)
     throw new Error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
   return generate(
-    res.data.__schema.types,
+    res.data.__schema,
     options.format || "ts",
     options.roots || [],
     options.excludes || [],
@@ -1181,7 +1189,11 @@ function transformType(type, namingConvention) {
         transformType(f.type, namingConvention)
         // process types of args
         if (f.args) {
-          f.args.forEach(arg => transformType(arg.type, namingConvention))
+          f.args.forEach(arg => {
+            arg.origName = arg.name
+            arg.name = transformName(arg.name, namingConvention)
+            transformType(arg.type, namingConvention)
+          })
         }
       })
     }

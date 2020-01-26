@@ -98,7 +98,7 @@ function main() {
 
   // console.log(JSON.stringify(json, null, 2))
   const files = generate(
-    json.__schema.types,
+    json.__schema,
     format,
     roots,
     excludes,
