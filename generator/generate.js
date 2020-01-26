@@ -1176,7 +1176,14 @@ function transformType(type, namingConvention) {
 
     // process type names in fields, inputFields and ofType
     if (type.fields) {
-      type.fields.forEach(f => transformType(f.type, namingConvention))
+      type.fields.forEach(f => {
+        // process own type
+        transformType(f.type, namingConvention)
+        // process types of args
+        if (f.args) {
+          f.args.forEach(arg => transformType(arg.type, namingConvention))
+        }
+      })
     }
     if (type.inputFields) {
       type.inputFields.forEach(f => transformType(f.type, namingConvention))
