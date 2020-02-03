@@ -17,7 +17,7 @@ const definition = {
   "--force": Boolean,
   "--noReact": Boolean,
   "--separate": Boolean,
-  "--namingConvention": String
+  "--dontRenameModels": Boolean
 }
 
 function main() {

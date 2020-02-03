@@ -26,7 +26,7 @@ function generate(
   generationDate = "a long long time ago...",
   modelsOnly = false,
   noReact = false,
-  namingConvention = "asis"
+  namingConvention = "js"
 ) {
   const types = schema.types
 
@@ -1078,7 +1078,7 @@ function scaffold(
     roots: [],
     excludes: [],
     modelsOnly: false,
-    namingConvention: "asis"
+    namingConvention: "js"
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -1093,7 +1093,7 @@ function scaffold(
     "<during unit test run>",
     options.modelsOnly || false,
     options.noReact || false,
-    options.namingConvention || "asis"
+    options.namingConvention || "js"
   )
 }
 

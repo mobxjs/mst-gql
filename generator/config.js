@@ -13,7 +13,7 @@ const defaultConfig = {
   outDir: "src/models",
   roots: [],
   noReact: false,
-  namingConvention: "asis" // supported option: "js"
+  namingConvention: "js" // supported option: "js", "asis"
 }
 
 exports.getConfig = function getConfig() {
@@ -40,6 +40,8 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     modelsOnly: !!args["--modelsOnly"] || config.modelsOnly,
     forceAll: !!args["--force"] || config.force,
     noReact: !!args["--noReact"] || config.noReact,
-    namingConvention: args["--namingConvention"] || config.namingConvention
+    namingConvention: args["--dontRenameModels"]
+      ? "asis"
+      : config.namingConvention
   }
 }

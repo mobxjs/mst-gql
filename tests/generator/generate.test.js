@@ -22,7 +22,10 @@ type Query {
   me: User
 }
 `,
-      { roots: ["User"] }
+      {
+        roots: ["User"],
+        namingConvention: "asis"
+      }
     )
   ).toMatchSnapshot()
 })
@@ -53,8 +56,7 @@ type query_root {
 }
 `,
     {
-      roots: ["my_user", "possibly_empty_box"],
-      namingConvention: "js"
+      roots: ["my_user", "possibly_empty_box"]
     }
   )
 
@@ -128,7 +130,10 @@ type Query {
   repo: Repo
 }
 `,
-    { roots: ["Repo"] }
+    {
+      roots: ["Repo"],
+      namingConvention: "asis"
+    }
   )
   expect(output).toMatchSnapshot()
 
@@ -164,7 +169,10 @@ type Query {
   search(text: String!): SearchResult!
 }
 `,
-    { roots: ["SearchResult"] }
+    {
+      roots: ["SearchResult"],
+      namingConvention: "asis"
+    }
   )
   expect(output).toMatchSnapshot()
 
@@ -207,7 +215,10 @@ type Query {
   me: User
 }
 `,
-    { roots: ["User"] }
+    {
+      roots: ["User"],
+      namingConvention: "asis"
+    }
   )
   expect(output).toMatchSnapshot()
 
@@ -269,8 +280,7 @@ type Query {
 }
 `,
     {
-      roots: ["User"],
-      namingConvention: "js"
+      roots: ["User"]
     }
   )
   expect(output).toMatchSnapshot()
