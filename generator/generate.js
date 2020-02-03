@@ -404,9 +404,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "ENUM":
           primitiveFields.push(fieldName)
           const enumType =
-            fieldType.name + !fieldType.name.toLowerCase().endsWith("enum")
-              ? "Enum"
-              : ""
+            fieldType.name +
+            (!fieldType.name.toLowerCase().endsWith("enum") ? "Enum" : "")
           if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
             // TODO: import again when enums in query builders are supported
             addImport(enumType, enumType)
