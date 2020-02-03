@@ -7,6 +7,7 @@ const toRegex = snippet => new RegExp(`\\s+${escapeStringRegexp(snippet)}\\s+`)
 const findFile = (output, name) =>
   output.find(o => o.length && o.length > 1 && o[0] === name)
 const hasFileContent = (file, snippet) => file[1].match(toRegex(snippet))
+const hasFileContentExact = (file, snippet) => file[1].indexOf(snippet) != -1
 
 test("basic scaffolding to work", () => {
   expect(
@@ -26,9 +27,14 @@ type Query {
   ).toMatchSnapshot()
 })
 
-test("basic scaffolding with js naming convention to work", () => {
+test("basic scaffolding with js naming convention, specific query type to work", () => {
   const output = scaffold(
     `
+    
+schema {
+  query: query_root
+}
+    
 type my_user {
   id: ID
   name: String!
@@ -42,7 +48,7 @@ type possibly_empty_box {
   isEmpty: Boolean!
 }
 
-type Query {
+type query_root {
   me: my_user
 }
 `,
@@ -63,11 +69,27 @@ type Query {
   ).toBeTruthy()
 
   expect(findFile(output, "PossiblyEmptyBoxModel.base")).toBeTruthy()
-  // root collection name shoudl be properly prularized
+  expect(findFile(output, "PossiblyEmptyBoxModel")).toBeTruthy()
+  // TS type name should be just PossiblyEmptyBox and not PossiblyEmptyBoxModelType
+  expect(
+    hasFileContent(
+      findFile(output, "PossiblyEmptyBoxModel"),
+      "export interface PossiblyEmptyBox extends Instance<typeof PossiblyEmptyBoxModel.Type> {}"
+    )
+  ).toBeTruthy()
+
+  // root collection name should be properly prularized
   expect(
     hasFileContent(
       findFile(output, "RootStore.base"),
       "possiblyEmptyBoxes: types.optional(types.map(types.late((): any => PossiblyEmptyBoxModel)), {})"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "RootStore.base"),
+      "queryMe(variables?: {  }, resultSelector: string | ((qb: MyUserModelSelector) => MyUserModelSelector) = myUserModelPrimitives.toString(), options: QueryOptions = {}) {"
     )
   ).toBeTruthy()
 
@@ -76,7 +98,7 @@ type Query {
   expect(
     hasFileContent(
       findFile(output, "RootStore.base"),
-      `.extend(configureStoreMixin([['my_user', () => MyUserModel], ['possibly_empty_box', () => PossiblyEmptyBoxModel]], ['my_user', 'possibly_empty_box'], "js"))`
+      `.extend(configureStoreMixin([['query_root', () => QueryRootModel], ['my_user', () => MyUserModel], ['possibly_empty_box', () => PossiblyEmptyBoxModel]], ['my_user', 'possibly_empty_box'], "js"))`
     )
   ).toBeTruthy()
 })
@@ -154,6 +176,127 @@ type Query {
     hasFileContent(
       searchResultBase,
       "items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),"
+    )
+  ).toBeTruthy()
+})
+
+test("enums ending in Enum doesn't have an extra Enum postfix with namingConvention=asis", () => {
+  const output = scaffold(
+    `
+type User {
+  id: ID
+  name: String!
+  avatar: String!
+  role: Role!
+  interest: interest_enum!
+}
+
+enum Role {
+	USER
+	ADMIN
+	AUTHOR
+}
+
+enum interest_enum {
+	READING
+	SPORTS
+	COOKING
+}
+
+type Query {
+  me: User
+}
+`,
+    { roots: ["User"] }
+  )
+  expect(output).toMatchSnapshot()
+
+  expect(findFile(output, "UserModel")).toBeTruthy()
+
+  const roleEnumFile = findFile(output, "RoleEnum")
+  expect(roleEnumFile).toBeTruthy()
+
+  // TS type is plain Role
+  expect(hasFileContentExact(roleEnumFile, "export enum Role {")).toBeTruthy()
+  // MST model is +EnumModel
+  expect(
+    hasFileContentExact(
+      roleEnumFile,
+      'export const RoleEnumModel = types.enumeration("Role"'
+    )
+  ).toBeTruthy()
+
+  const interestEnumFile = findFile(output, "interest_enum")
+  expect(interestEnumFile).toBeTruthy()
+  // TS type is plain interest_enum
+  expect(
+    hasFileContentExact(interestEnumFile, "export enum interest_enum")
+  ).toBeTruthy()
+  // MST type is interest_enumModel (no extra Enum appended)
+  expect(
+    hasFileContentExact(
+      interestEnumFile,
+      'export const interest_enumModel = types.enumeration("interest_enum"'
+    )
+  ).toBeTruthy()
+})
+
+test("enums ending in Enum doesn't have an extra Enum postfix with namingConvention=js", () => {
+  const output = scaffold(
+    `
+type User {
+  id: ID
+  name: String!
+  avatar: String!
+  role: Role!
+  interest: interest_enum!
+}
+
+enum Role {
+	USER
+	ADMIN
+	AUTHOR
+}
+
+enum interest_enum {
+	READING
+	SPORTS
+	COOKING
+}
+
+type Query {
+  me: User
+}
+`,
+    {
+      roots: ["User"],
+      namingConvention: "js"
+    }
+  )
+  expect(output).toMatchSnapshot()
+
+  expect(findFile(output, "UserModel")).toBeTruthy()
+
+  const roleEnumFile = findFile(output, "RoleEnum")
+  expect(roleEnumFile).toBeTruthy()
+  expect(hasFileContentExact(roleEnumFile, "export enum Role {")).toBeTruthy()
+  expect(
+    hasFileContentExact(
+      roleEnumFile,
+      'export const RoleEnumModel = types.enumeration("Role"'
+    )
+  ).toBeTruthy()
+
+  const interestEnumFile = findFile(output, "InterestEnum")
+  console.log("interestEnumFile", interestEnumFile)
+  expect(interestEnumFile).toBeTruthy()
+  expect(
+    hasFileContentExact(interestEnumFile, "export enum InterestEnum {")
+  ).toBeTruthy()
+  expect(
+    hasFileContentExact(
+      interestEnumFile,
+      'export const InterestEnumModel = types.enumeration("InterestEnum"'
     )
   ).toBeTruthy()
 })

@@ -50,6 +50,11 @@ function generate(
 /* eslint-disable */${format === "ts" ? "\n/* tslint:disable */" : ""}`
   const importPostFix = format === "mjs" ? ".mjs" : ""
 
+  // For a model called TodoModel the TS type would originally be called TodoModelType.
+  // Now we make it just "Todo".  But I have this variable so that in case we want to
+  // make it configurable we can just set this back to "ModelType" or to something else.
+  const modelTypePostfix = ""
+
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
 
   generateModelBase()
@@ -149,7 +154,7 @@ export const ModelBase = MSTGQLObject
 
   function handleEnumType(type) {
     const name = type.name
-    const enumPostfix = !name.endsWith("Enum") ? "Enum" : ""
+    const enumPostfix = !name.toLowerCase().endsWith("enum") ? "Enum" : ""
     toExport.push(name + enumPostfix)
 
     const tsType =
@@ -173,7 +178,7 @@ ${tsType}
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-export const ${name}${enumPostfix} = ${handleEnumTypeCore(type)}
+export const ${name}${enumPostfix}Model = ${handleEnumTypeCore(type)}
 `
     if (format === "ts") {
       enumTypes.push(type.name)
@@ -212,7 +217,7 @@ import { ${name}ModelBase } from "./${name}Model.base${importPostFix}"
 
 ${
   format === "ts"
-    ? `/* The TypeScript type of an instance of ${name}Model */\nexport interface ${name}ModelType extends Instance<typeof ${name}Model.Type> {}\n`
+    ? `/* The TypeScript type of an instance of ${name}Model */\nexport interface ${name}${modelTypePostfix} extends Instance<typeof ${name}Model.Type> {}\n`
     : ""
 }
 ${
@@ -257,8 +262,8 @@ type Refs = {
 ${refs
   .map(([fieldName, fieldTypeName, isNested]) =>
     isNested
-      ? `  ${fieldName}: IObservableArray<${fieldTypeName}ModelType>;`
-      : `  ${fieldName}: ${fieldTypeName}ModelType;`
+      ? `  ${fieldName}: IObservableArray<${fieldTypeName}${modelTypePostfix}>;`
+      : `  ${fieldName}: ${fieldTypeName}${modelTypePostfix};`
   )
   .join("\n")}
 }\n
@@ -399,7 +404,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "ENUM":
           primitiveFields.push(fieldName)
           const enumType =
-            fieldType.name + !fieldType.name.endsWith("Enum") ? "Enum" : ""
+            fieldType.name + !fieldType.name.toLowerCase().endsWith("enum")
+              ? "Enum"
+              : ""
           if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
             // TODO: import again when enums in query builders are supported
             addImport(enumType, enumType)
@@ -425,7 +432,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       const modelType = fieldType.name + "Model"
       addImport(modelType, modelType)
       if (format === "ts") {
-        addImport(modelType, `${modelType}Type`)
+        addImport(modelType, `${fieldType.name}${modelTypePostfix}`)
       }
       if (!modelsOnly) {
         addImport(`${modelType}.base`, `${modelType}Selector`)
@@ -570,7 +577,7 @@ ${objectTypes
   .map(
     t =>
       `\nimport { ${t}Model${ifTS(
-        `, ${t}ModelType`
+        `, ${t}${modelTypePostfix}`
       )} } from "./${t}Model${importPostFix}"${
         modelsOnly
           ? ""
@@ -584,7 +591,7 @@ ${enumTypes
   .map(
     t =>
       `\nimport { ${t} } from "./${t}${
-        !t.endsWith("Enum") ? "Enum" : ""
+        !t.toLowerCase().endsWith("enum") ? "Enum" : ""
       }${importPostFix}"`
   )
   .join("")}
@@ -606,7 +613,7 @@ ${rootTypes
       `  ${transformRootName(
         t,
         namingConvention
-      )}: ObservableMap<string, ${t}ModelType>`
+      )}: ObservableMap<string, ${t}${modelTypePostfix}>`
   )
   .join(",\n")}
 }\n\n`)}\
@@ -710,7 +717,7 @@ ${rootTypes
         const tsType =
           format !== "ts"
             ? ""
-            : `<{ ${name}: ${returnType.name}ModelType${
+            : `<{ ${name}: ${returnType.name}${modelTypePostfix}${
                 returnsList ? "[]" : ""
               }}>`
 

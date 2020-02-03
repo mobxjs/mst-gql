@@ -59,7 +59,7 @@ export const userModelPrimitives = selectFromUser().name.avatar
 import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export interface UserModelType extends Instance<typeof UserModel.Type> {}
+export interface User extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -103,13 +103,13 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { UserModel, UserModelType } from \\"./UserModel\\"
+import { UserModel, User } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  users: ObservableMap<string, UserModelType>
+  users: ObservableMap<string, User>
 }
 
 /**
@@ -123,7 +123,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: UserModelType}>(\`query me { me {
+      return self.query<{ me: User}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -162,13 +162,83 @@ export * from \\"./reactUtils\\"
 ]
 `;
 
-exports[`basic scaffolding with js naming convention to work 1`] = `
+exports[`basic scaffolding with js naming convention, specific query type to work 1`] = `
 Array [
   Array [
     "ModelBase",
     "import { MSTGQLObject } from \\"mst-gql\\"
 
 export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
+    "QueryRootModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLRef, QueryBuilder, withTypedRefs } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { MyUser, MyUserModel } from \\"./MyUserModel\\"
+import { MyUserModelSelector } from \\"./MyUserModel.base\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  me: MyUser;
+}
+
+/**
+ * QueryRootBase
+ * auto generated base class for the model QueryRootModel.
+ */
+export const QueryRootModelBase = withTypedRefs<Refs>()(ModelBase
+  .named('QueryRoot')
+  .props({
+    __typename: types.optional(types.literal(\\"query_root\\"), \\"query_root\\"),
+    me: types.union(types.undefined, types.null, MSTGQLRef(types.late((): any => MyUserModel))),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  })))
+
+export class QueryRootModelSelector extends QueryBuilder {
+  me(builder?: string | MyUserModelSelector | ((selector: MyUserModelSelector) => MyUserModelSelector)) { return this.__child(\`me\`, MyUserModelSelector, builder) }
+}
+export function selectFromQueryRoot() {
+  return new QueryRootModelSelector()
+}
+
+export const queryRootModelPrimitives = selectFromQueryRoot()
+",
+    true,
+  ],
+  Array [
+    "QueryRootModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { QueryRootModelBase } from \\"./QueryRootModel.base\\"
+
+/* The TypeScript type of an instance of QueryRootModel */
+export interface QueryRoot extends Instance<typeof QueryRootModel.Type> {}
+
+/* A graphql query fragment builders for QueryRootModel */
+export { selectFromQueryRoot, queryRootModelPrimitives, QueryRootModelSelector } from \\"./QueryRootModel.base\\"
+
+/**
+ * QueryRootModel
+ */
+export const QueryRootModel = QueryRootModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
 ",
     false,
   ],
@@ -182,14 +252,14 @@ import { IObservableArray } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEmptyBoxModel\\"
+import { PossiblyEmptyBox, PossiblyEmptyBoxModel } from \\"./PossiblyEmptyBoxModel\\"
 import { PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  emptyBoxes: IObservableArray<PossiblyEmptyBoxModelType>;
+  emptyBoxes: IObservableArray<PossiblyEmptyBox>;
 }
 
 /**
@@ -231,7 +301,7 @@ export const myUserModelPrimitives = selectFromMyUser().name.avatar
 import { MyUserModelBase } from \\"./MyUserModel.base\\"
 
 /* The TypeScript type of an instance of MyUserModel */
-export interface MyUserModelType extends Instance<typeof MyUserModel.Type> {}
+export interface MyUser extends Instance<typeof MyUserModel.Type> {}
 
 /* A graphql query fragment builders for MyUserModel */
 export { selectFromMyUser, myUserModelPrimitives, MyUserModelSelector } from \\"./MyUserModel.base\\"
@@ -298,7 +368,7 @@ export const possiblyEmptyBoxModelPrimitives = selectFromPossiblyEmptyBox().labe
 import { PossiblyEmptyBoxModelBase } from \\"./PossiblyEmptyBoxModel.base\\"
 
 /* The TypeScript type of an instance of PossiblyEmptyBoxModel */
-export interface PossiblyEmptyBoxModelType extends Instance<typeof PossiblyEmptyBoxModel.Type> {}
+export interface PossiblyEmptyBox extends Instance<typeof PossiblyEmptyBoxModel.Type> {}
 
 /* A graphql query fragment builders for PossiblyEmptyBoxModel */
 export { selectFromPossiblyEmptyBox, possiblyEmptyBoxModelPrimitives, PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
@@ -342,16 +412,18 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { MyUserModel, MyUserModelType } from \\"./MyUserModel\\"
+import { QueryRootModel, QueryRoot } from \\"./QueryRootModel\\"
+import { queryRootModelPrimitives, QueryRootModelSelector } from \\"./QueryRootModel.base\\"
+import { MyUserModel, MyUser } from \\"./MyUserModel\\"
 import { myUserModelPrimitives, MyUserModelSelector } from \\"./MyUserModel.base\\"
-import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEmptyBoxModel\\"
+import { PossiblyEmptyBoxModel, PossiblyEmptyBox } from \\"./PossiblyEmptyBoxModel\\"
 import { possiblyEmptyBoxModelPrimitives, PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  myUsers: ObservableMap<string, MyUserModelType>,
-  possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBoxModelType>
+  myUsers: ObservableMap<string, MyUser>,
+  possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBox>
 }
 
 /**
@@ -359,14 +431,14 @@ type Refs = {
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['my_user', () => MyUserModel], ['possibly_empty_box', () => PossiblyEmptyBoxModel]], ['my_user', 'possibly_empty_box'], \\"js\\"))
+  .extend(configureStoreMixin([['query_root', () => QueryRootModel], ['my_user', () => MyUserModel], ['possibly_empty_box', () => PossiblyEmptyBoxModel]], ['my_user', 'possibly_empty_box'], \\"js\\"))
   .props({
     myUsers: types.optional(types.map(types.late((): any => MyUserModel)), {}),
     possiblyEmptyBoxes: types.optional(types.map(types.late((): any => PossiblyEmptyBoxModel)), {})
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: MyUserModelSelector) => MyUserModelSelector) = myUserModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: MyUserModelType}>(\`query me { me {
+      return self.query<{ me: MyUser}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new MyUserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -396,8 +468,463 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* eslint-disable */
 /* tslint:disable */
 
+export * from \\"./QueryRootModel\\"
 export * from \\"./MyUserModel\\"
 export * from \\"./PossiblyEmptyBoxModel\\"
+export * from \\"./RootStore\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+]
+`;
+
+exports[`enums ending in Enum don't have an extra Enum postfix with namingConvention=asis 1`] = `
+Array [
+  Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
+    "UserModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { Enum } from \\"./Enum\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase = ModelBase
+  .named('User')
+  .props({
+    __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
+    id: types.identifier,
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
+    role: types.union(types.undefined, Enum),
+    interest: types.union(types.undefined, Enum),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class UserModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get name() { return this.__attr(\`name\`) }
+  get avatar() { return this.__attr(\`avatar\`) }
+  get role() { return this.__attr(\`role\`) }
+  get interest() { return this.__attr(\`interest\`) }
+}
+export function selectFromUser() {
+  return new UserModelSelector()
+}
+
+export const userModelPrimitives = selectFromUser().name.avatar.role.interest
+",
+    true,
+  ],
+  Array [
+    "UserModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { UserModelBase } from \\"./UserModel.base\\"
+
+/* The TypeScript type of an instance of UserModel */
+export interface User extends Instance<typeof UserModel.Type> {}
+
+/* A graphql query fragment builders for UserModel */
+export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
+/**
+ * UserModel
+ */
+export const UserModel = UserModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RoleEnum",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { types } from \\"mobx-state-tree\\"
+
+/**
+ * Typescript enum
+ */
+
+export enum Role {
+  USER=\\"USER\\",
+ADMIN=\\"ADMIN\\",
+AUTHOR=\\"AUTHOR\\"
+}
+
+/**
+* Role
+*/
+export const RoleEnumModel = types.enumeration(\\"Role\\", [
+        \\"USER\\",
+  \\"ADMIN\\",
+  \\"AUTHOR\\",
+      ])
+",
+    true,
+  ],
+  Array [
+    "interest_enum",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { types } from \\"mobx-state-tree\\"
+
+/**
+ * Typescript enum
+ */
+
+export enum interest_enum {
+  READING=\\"READING\\",
+SPORTS=\\"SPORTS\\",
+COOKING=\\"COOKING\\"
+}
+
+/**
+* interest_enum
+*/
+export const interest_enumModel = types.enumeration(\\"interest_enum\\", [
+        \\"READING\\",
+  \\"SPORTS\\",
+  \\"COOKING\\",
+      ])
+",
+    true,
+  ],
+  Array [
+    "RootStore",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
+
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+
+export const RootStore = RootStoreBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
+
+import { UserModel, User } from \\"./UserModel\\"
+import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
+import { Role } from \\"./RoleEnum\\"
+import { interest_enum } from \\"./interest_enum\\"
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  users: ObservableMap<string, User>
+}
+
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
+  .named(\\"RootStore\\")
+  .extend(configureStoreMixin([['User', () => UserModel]], ['User']))
+  .props({
+    users: types.optional(types.map(types.late((): any => UserModel)), {})
+  })
+  .actions(self => ({
+    queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ me: User}>(\`query me { me {
+        \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
+      } }\`, variables, options)
+    },
+  })))
+",
+    true,
+  ],
+  Array [
+    "reactUtils",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
+import * as React from \\"react\\"
+import { RootStore, RootStoreType } from \\"./RootStore\\"
+
+export const StoreContext = createStoreContext<RootStoreType>(React)
+
+export const useQuery = createUseQueryHook(StoreContext, React)
+",
+    true,
+  ],
+  Array [
+    "index",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./UserModel\\"
+export * from \\"./RoleEnum\\"
+export * from \\"./interest_enum\\"
+export * from \\"./RootStore\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+]
+`;
+
+exports[`enums ending in Enum don't have an extra Enum postfix with namingConvention=js 1`] = `
+Array [
+  Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
+    "UserModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { Enum } from \\"./Enum\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * UserBase
+ * auto generated base class for the model UserModel.
+ */
+export const UserModelBase = ModelBase
+  .named('User')
+  .props({
+    __typename: types.optional(types.literal(\\"User\\"), \\"User\\"),
+    id: types.identifier,
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
+    role: types.union(types.undefined, Enum),
+    interest: types.union(types.undefined, Enum),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class UserModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get name() { return this.__attr(\`name\`) }
+  get avatar() { return this.__attr(\`avatar\`) }
+  get role() { return this.__attr(\`role\`) }
+  get interest() { return this.__attr(\`interest\`) }
+}
+export function selectFromUser() {
+  return new UserModelSelector()
+}
+
+export const userModelPrimitives = selectFromUser().name.avatar.role.interest
+",
+    true,
+  ],
+  Array [
+    "UserModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { UserModelBase } from \\"./UserModel.base\\"
+
+/* The TypeScript type of an instance of UserModel */
+export interface User extends Instance<typeof UserModel.Type> {}
+
+/* A graphql query fragment builders for UserModel */
+export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
+/**
+ * UserModel
+ */
+export const UserModel = UserModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RoleEnum",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { types } from \\"mobx-state-tree\\"
+
+/**
+ * Typescript enum
+ */
+
+export enum Role {
+  USER=\\"USER\\",
+ADMIN=\\"ADMIN\\",
+AUTHOR=\\"AUTHOR\\"
+}
+
+/**
+* Role
+*/
+export const RoleEnumModel = types.enumeration(\\"Role\\", [
+        \\"USER\\",
+  \\"ADMIN\\",
+  \\"AUTHOR\\",
+      ])
+",
+    true,
+  ],
+  Array [
+    "InterestEnum",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { types } from \\"mobx-state-tree\\"
+
+/**
+ * Typescript enum
+ */
+
+export enum InterestEnum {
+  READING=\\"READING\\",
+SPORTS=\\"SPORTS\\",
+COOKING=\\"COOKING\\"
+}
+
+/**
+* InterestEnum
+*/
+export const InterestEnumModel = types.enumeration(\\"InterestEnum\\", [
+        \\"READING\\",
+  \\"SPORTS\\",
+  \\"COOKING\\",
+      ])
+",
+    true,
+  ],
+  Array [
+    "RootStore",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
+
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+
+export const RootStore = RootStoreBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
+
+import { UserModel, User } from \\"./UserModel\\"
+import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
+import { Role } from \\"./RoleEnum\\"
+import { InterestEnum } from \\"./InterestEnum\\"
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  users: ObservableMap<string, User>
+}
+
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
+  .named(\\"RootStore\\")
+  .extend(configureStoreMixin([['User', () => UserModel]], ['User'], \\"js\\"))
+  .props({
+    users: types.optional(types.map(types.late((): any => UserModel)), {})
+  })
+  .actions(self => ({
+    queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ me: User}>(\`query me { me {
+        \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
+      } }\`, variables, options)
+    },
+  })))
+",
+    true,
+  ],
+  Array [
+    "reactUtils",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
+import * as React from \\"react\\"
+import { RootStore, RootStoreType } from \\"./RootStore\\"
+
+export const StoreContext = createStoreContext<RootStoreType>(React)
+
+export const useQuery = createUseQueryHook(StoreContext, React)
+",
+    true,
+  ],
+  Array [
+    "index",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./UserModel\\"
+export * from \\"./RoleEnum\\"
+export * from \\"./InterestEnum\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
@@ -466,7 +993,7 @@ export const repoModelPrimitives = selectFromRepo()
 import { RepoModelBase } from \\"./RepoModel.base\\"
 
 /* The TypeScript type of an instance of RepoModel */
-export interface RepoModelType extends Instance<typeof RepoModel.Type> {}
+export interface Repo extends Instance<typeof RepoModel.Type> {}
 
 /* A graphql query fragment builders for RepoModel */
 export { selectFromRepo, repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
@@ -556,7 +1083,7 @@ export const userModelPrimitives = selectFromUser().name.avatar
 import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export interface UserModelType extends Instance<typeof UserModel.Type> {}
+export interface User extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -623,7 +1150,7 @@ export const organizationModelPrimitives = selectFromOrganization().name.logo
 import { OrganizationModelBase } from \\"./OrganizationModel.base\\"
 
 /* The TypeScript type of an instance of OrganizationModel */
-export interface OrganizationModelType extends Instance<typeof OrganizationModel.Type> {}
+export interface Organization extends Instance<typeof OrganizationModel.Type> {}
 
 /* A graphql query fragment builders for OrganizationModel */
 export { selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
@@ -667,17 +1194,17 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { RepoModel, RepoModelType } from \\"./RepoModel\\"
+import { RepoModel, Repo } from \\"./RepoModel\\"
 import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
-import { UserModel, UserModelType } from \\"./UserModel\\"
+import { UserModel, User } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
-import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
+import { OrganizationModel, Organization } from \\"./OrganizationModel\\"
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  repos: ObservableMap<string, RepoModelType>
+  repos: ObservableMap<string, Repo>
 }
 
 /**
@@ -691,7 +1218,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ repo: RepoModelType}>(\`query repo { repo {
+      return self.query<{ repo: Repo}>(\`query repo { repo {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -793,7 +1320,7 @@ export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
 import { SearchResultModelBase } from \\"./SearchResultModel.base\\"
 
 /* The TypeScript type of an instance of SearchResultModel */
-export interface SearchResultModelType extends Instance<typeof SearchResultModel.Type> {}
+export interface SearchResult extends Instance<typeof SearchResultModel.Type> {}
 
 /* A graphql query fragment builders for SearchResultModel */
 export { selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
@@ -880,7 +1407,7 @@ export const movieModelPrimitives = selectFromMovie().description.director
 import { MovieModelBase } from \\"./MovieModel.base\\"
 
 /* The TypeScript type of an instance of MovieModel */
-export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
+export interface Movie extends Instance<typeof MovieModel.Type> {}
 
 /* A graphql query fragment builders for MovieModel */
 export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
@@ -945,7 +1472,7 @@ export const bookModelPrimitives = selectFromBook().description.author
 import { BookModelBase } from \\"./BookModel.base\\"
 
 /* The TypeScript type of an instance of BookModel */
-export interface BookModelType extends Instance<typeof BookModel.Type> {}
+export interface Book extends Instance<typeof BookModel.Type> {}
 
 /* A graphql query fragment builders for BookModel */
 export { selectFromBook, bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
@@ -989,17 +1516,17 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { SearchResultModel, SearchResultModelType } from \\"./SearchResultModel\\"
+import { SearchResultModel, SearchResult } from \\"./SearchResultModel\\"
 import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
-import { MovieModel, MovieModelType } from \\"./MovieModel\\"
+import { MovieModel, Movie } from \\"./MovieModel\\"
 import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
-import { BookModel, BookModelType } from \\"./BookModel\\"
+import { BookModel, Book } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  searchresults: ObservableMap<string, SearchResultModelType>
+  searchresults: ObservableMap<string, SearchResult>
 }
 
 /**
@@ -1013,7 +1540,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ search: SearchResultModelType}>(\`query search($text: String!) { search(text: $text) {
+      return self.query<{ search: SearchResult}>(\`query search($text: String!) { search(text: $text) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
