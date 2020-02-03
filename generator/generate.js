@@ -155,7 +155,7 @@ export const ModelBase = MSTGQLObject
   function handleEnumType(type) {
     const name = type.name
     const enumPostfix = !name.toLowerCase().endsWith("enum") ? "Enum" : ""
-    toExport.push(name + enumPostfix)
+    toExport.push(name + enumPostfix + "Model")
 
     const tsType =
       format === "ts"
@@ -183,7 +183,7 @@ export const ${name}${enumPostfix}Model = ${handleEnumTypeCore(type)}
     if (format === "ts") {
       enumTypes.push(type.name)
     }
-    generateFile(name + enumPostfix, contents, true)
+    generateFile(name + enumPostfix + "Model", contents, true)
   }
 
   function handleEnumTypeCore(type) {
@@ -405,7 +405,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           primitiveFields.push(fieldName)
           const enumType =
             fieldType.name +
-            (!fieldType.name.toLowerCase().endsWith("enum") ? "Enum" : "")
+            (!fieldType.name.toLowerCase().endsWith("enum") ? "Enum" : "") +
+            "Model"
           if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
             // TODO: import again when enums in query builders are supported
             addImport(enumType, enumType)
@@ -589,9 +590,9 @@ ${objectTypes
 ${enumTypes
   .map(
     t =>
-      `\nimport { ${t} } from "./${t}${
-        !t.toLowerCase().endsWith("enum") ? "Enum" : ""
-      }${importPostFix}"`
+      `\nimport { ${t} } from "./${t}${(!t.toLowerCase().endsWith("enum")
+        ? "Enum"
+        : "") + "Model"}${importPostFix}"`
   )
   .join("")}
 ${ifTS(
