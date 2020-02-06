@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.1
+
+- update how optional types are generated. [150](https://github.com/mobxjs/mst-gql/pull/150)
+
 ## 0.7.0
 
 - 🎉 add new code to fix circular ref issues in typescript code. [#140](https://github.com/mobxjs/mst-gql/pull/140) - [godness84](https://github.com/godness84)
