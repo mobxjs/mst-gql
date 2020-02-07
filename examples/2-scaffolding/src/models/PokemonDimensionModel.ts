@@ -2,7 +2,7 @@ import { Instance } from "mobx-state-tree"
 import { PokemonDimensionModelBase } from "./PokemonDimensionModel.base"
 
 /* The TypeScript type of an instance of PokemonDimensionModel */
-export interface PokemonDimensionModelType
+export interface PokemonDimension
   extends Instance<typeof PokemonDimensionModel.Type> {}
 
 /* A graphql query fragment builders for PokemonDimensionModel */

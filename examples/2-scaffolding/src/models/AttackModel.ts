@@ -2,7 +2,7 @@ import { Instance } from "mobx-state-tree"
 import { AttackModelBase } from "./AttackModel.base"
 
 /* The TypeScript type of an instance of AttackModel */
-export interface AttackModelType extends Instance<typeof AttackModel.Type> {}
+export interface Attack extends Instance<typeof AttackModel.Type> {}
 
 /* A graphql query fragment builders for AttackModel */
 export {

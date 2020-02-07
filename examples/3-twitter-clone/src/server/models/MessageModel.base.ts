@@ -6,16 +6,16 @@ import { IObservableArray } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { MessageModel, MessageModelType } from "./MessageModel"
-import { UserModel, UserModelType } from "./UserModel"
+import { Message, MessageModel } from "./MessageModel"
+import { User, UserModel } from "./UserModel"
 import { RootStoreType } from "./index"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  user: UserModelType;
-  likes: IObservableArray<UserModelType>;
-  replyTo: MessageModelType;
+  user: User;
+  likes: IObservableArray<User>;
+  replyTo: Message;
 }
 
 /**
