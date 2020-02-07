@@ -3,7 +3,7 @@ import { TodoModelBase } from "./TodoModel.base"
 import { Query } from "mst-gql"
 
 /* The TypeScript type of an instance of TodoModel */
-export interface TodoModelType extends Instance<typeof TodoModel.Type> {}
+export interface Todo extends Instance<typeof TodoModel.Type> {}
 
 /* A graphql query fragment builders for TodoModel */
 export {
@@ -17,7 +17,7 @@ export {
  */
 export const TodoModel = TodoModelBase.actions(self => ({
   toggle(): Query<{
-    toggleTodo: TodoModelType
+    toggleTodo: Todo
   }> {
     return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
       self.complete = !self.complete

@@ -2,14 +2,14 @@ import * as React from "react"
 import { useState } from "react"
 import { observer } from "mobx-react-lite"
 
-import { MessageModelType } from "../models/"
+import { Message } from "../models/"
 import { Replies } from "./Replies"
 
 // @ts-ignore
 import images from "../avatars/*.jpg"
 
 export const Message = observer(
-  ({ message, asChild }: { message: MessageModelType; asChild?: boolean }) => {
+  ({ message, asChild }: { message: Message; asChild?: boolean }) => {
     const [collapsed, setCollapsed] = useState(true)
     return (
       <li className="message">

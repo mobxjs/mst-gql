@@ -2,7 +2,7 @@ import { UserModelBase } from "./UserModel.base"
 import { getSnapshot } from "mobx-state-tree"
 
 /* The TypeScript type of an instance of UserModel */
-export type UserModelType = typeof UserModel.Type
+export type User = typeof UserModel.Type
 
 /**
  * UserModel

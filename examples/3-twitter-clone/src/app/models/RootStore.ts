@@ -3,7 +3,7 @@ import { RootStoreBase } from "./RootStore.base"
 import { types } from "mobx-state-tree"
 import { MessageModel } from "./MessageModel"
 import { selectFromMessage } from "./MessageModel.base"
-import { UserModelType } from "./UserModel"
+import { User } from "./UserModel"
 
 export interface RootStoreType extends Instance<typeof RootStore.Type> {}
 
@@ -25,7 +25,7 @@ export const RootStore = RootStoreBase.props({
   )
 })
   .views(self => ({
-    get me(): UserModelType {
+    get me(): User {
       return self.users.get("mweststrate")
     }
   }))

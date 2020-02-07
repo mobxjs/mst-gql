@@ -2,7 +2,7 @@ import { ReplyModelBase } from "./ReplyModel.base"
 import { getSnapshot } from "mobx-state-tree"
 
 /* The TypeScript type of an instance of ReplyModel */
-export type ReplyModelType = typeof ReplyModel.Type
+export type Reply = typeof ReplyModel.Type
 
 /**
  * ReplyModel
