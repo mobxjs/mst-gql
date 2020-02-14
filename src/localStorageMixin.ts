@@ -19,6 +19,7 @@ export function localStorageMixin(options: LocalStorageMixinOptions = {}) {
   const storage = options.storage || window.localStorage
   const throttleInterval = options.throttle || 5000
   const storageKey = options.storageKey || "mst-gql-rootstore"
+  let __canSave = true
   return (self: StoreType) => ({
     actions: {
       async afterCreate() {
@@ -39,10 +40,16 @@ export function localStorageMixin(options: LocalStorageMixinOptions = {}) {
           onSnapshot(
             self,
             throttle((data: any) => {
-              storage.setItem(storageKey, JSON.stringify(data))
+              if (__canSave) storage.setItem(storageKey, JSON.stringify(data))
             }, throttleInterval)
           )
         )
+      },
+      stopStorage() {
+        __canSave = false
+      },
+      startStorage() {
+        __canSave = true
       }
     }
   })
