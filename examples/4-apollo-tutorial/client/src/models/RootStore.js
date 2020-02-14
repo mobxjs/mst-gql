@@ -61,6 +61,7 @@ export const RootStore = RootStoreBase.props({
   loginStatus: loginStatus,
   cartItems: types.array(types.string)
 })
+  .extend(localStorageMixin())
   .views(self => ({
     get me() {
       return Array.from(self.users.values())[0]
@@ -107,12 +108,14 @@ export const RootStore = RootStoreBase.props({
         )
         localStorage.setItem("token", data.login)
         self.loginStatus = "loggedIn"
+        self.startStorage()
       } catch {
         self.loginStatus = "error"
       }
     }),
     logout() {
       self.loginStatus = "loggedOut"
+      self.stopStorage()
       localStorage.clear()
     },
     fetchLaunches(after) {
@@ -129,4 +132,3 @@ export const RootStore = RootStoreBase.props({
       )
     }
   }))
-  .extend(localStorageMixin())
