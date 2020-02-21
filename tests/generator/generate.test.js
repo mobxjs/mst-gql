@@ -121,7 +121,7 @@ type Query {
 `,
     {}
   )
-  // expect(output).toMatchSnapshot()
+  expect(output).toMatchSnapshot()
 
   const searchResultBase = findFile(output, "RootStore.base")
   expect(searchResultBase).toBeTruthy()
