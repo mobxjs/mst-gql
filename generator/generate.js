@@ -735,7 +735,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     field,
     name,
     canBeUndefined = true,
-    fromUndefineableArray = false
+    fromUndefineableList = false
   ) {
     let typeValue
     let type
@@ -749,7 +749,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 
     switch (type.kind) {
       case "NON_NULL":
-        return printTsType(type.ofType, name, false, fromUndefineableArray)
+        return printTsType(type.ofType, name, false, fromUndefineableList)
       case "LIST":
         return `${printTsType(type.ofType, name, true, canBeUndefined)}[]`
       case "OBJECT":
@@ -769,7 +769,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     }
 
     return `${name}${
-      canBeUndefined || fromUndefineableArray ? "?" : ""
+      canBeUndefined || fromUndefineableList ? "?" : ""
     }: ${typeValue}`
   }
 
