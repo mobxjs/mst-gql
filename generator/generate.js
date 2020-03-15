@@ -53,7 +53,7 @@ function generate(
   // For a model called TodoModel the TS type would originally be called TodoModelType.
   // Now we make it just "Todo".  But I have this variable so that in case we want to
   // make it configurable we can just set this back to "ModelType" or to something else.
-  const modelTypePostfix = ""
+  const modelTypePostfix = "ModelType"
 
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
 

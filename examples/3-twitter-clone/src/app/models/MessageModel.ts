@@ -2,7 +2,7 @@ import { Instance } from "mobx-state-tree"
 import { MessageModelBase } from "./MessageModel.base"
 
 /* The TypeScript type of an instance of MessageModel */
-export interface Message extends Instance<typeof MessageModel.Type> {}
+export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
 
 /* A graphql query fragment builders for MessageModel */
 export {

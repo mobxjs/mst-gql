@@ -5,22 +5,22 @@ import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
-import { PokemonModel, Pokemon } from "./PokemonModel"
+import { PokemonModel, PokemonModelType } from "./PokemonModel"
 import { pokemonModelPrimitives, PokemonModelSelector } from "./PokemonModel.base"
-import { PokemonDimensionModel, PokemonDimension } from "./PokemonDimensionModel"
+import { PokemonDimensionModel, PokemonDimensionModelType } from "./PokemonDimensionModel"
 import { pokemonDimensionModelPrimitives, PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
-import { PokemonAttackModel, PokemonAttack } from "./PokemonAttackModel"
+import { PokemonAttackModel, PokemonAttackModelType } from "./PokemonAttackModel"
 import { pokemonAttackModelPrimitives, PokemonAttackModelSelector } from "./PokemonAttackModel.base"
-import { AttackModel, Attack } from "./AttackModel"
+import { AttackModel, AttackModelType } from "./AttackModel"
 import { attackModelPrimitives, AttackModelSelector } from "./AttackModel.base"
-import { PokemonEvolutionRequirementModel, PokemonEvolutionRequirement } from "./PokemonEvolutionRequirementModel"
+import { PokemonEvolutionRequirementModel, PokemonEvolutionRequirementModelType } from "./PokemonEvolutionRequirementModel"
 import { pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  pokemon: ObservableMap<string, Pokemon>,
-  attacks: ObservableMap<string, Attack>
+  pokemon: ObservableMap<string, PokemonModelType>,
+  attacks: ObservableMap<string, AttackModelType>
 }
 
 /**
@@ -35,12 +35,12 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryPokemons(variables: { first: number }, resultSelector: string | ((qb: PokemonModelSelector) => PokemonModelSelector) = pokemonModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ pokemons: Pokemon[]}>(`query pokemons($first: Int!) { pokemons(first: $first) {
+      return self.query<{ pokemons: PokemonModelType[]}>(`query pokemons($first: Int!) { pokemons(first: $first) {
         ${typeof resultSelector === "function" ? resultSelector(new PokemonModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryPokemon(variables: { id?: string, name?: string }, resultSelector: string | ((qb: PokemonModelSelector) => PokemonModelSelector) = pokemonModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ pokemon: Pokemon}>(`query pokemon($id: String, $name: String) { pokemon(id: $id, name: $name) {
+      return self.query<{ pokemon: PokemonModelType}>(`query pokemon($id: String, $name: String) { pokemon(id: $id, name: $name) {
         ${typeof resultSelector === "function" ? resultSelector(new PokemonModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },

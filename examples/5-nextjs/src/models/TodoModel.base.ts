@@ -5,14 +5,14 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { UserModel, User } from "./UserModel"
+import { UserModel, UserModelType } from "./UserModel"
 import { UserModelSelector } from "./UserModel.base"
 import { RootStoreType } from "./index"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  assignee: User;
+  assignee: UserModelType;
 }
 
 /**

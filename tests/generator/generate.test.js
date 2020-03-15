@@ -76,7 +76,7 @@ type query_root {
   expect(
     hasFileContent(
       findFile(output, "PossiblyEmptyBoxModel"),
-      "export interface PossiblyEmptyBox extends Instance<typeof PossiblyEmptyBoxModel.Type> {}"
+      "export interface PossiblyEmptyBoxModelType extends Instance<typeof PossiblyEmptyBoxModel.Type> {}"
     )
   ).toBeTruthy()
 

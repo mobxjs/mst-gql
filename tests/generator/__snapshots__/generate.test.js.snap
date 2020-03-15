@@ -59,7 +59,7 @@ export const userModelPrimitives = selectFromUser().name.avatar
 import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export interface User extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -103,13 +103,13 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { UserModel, User } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  users: ObservableMap<string, User>
+  users: ObservableMap<string, UserModelType>
 }
 
 /**
@@ -123,7 +123,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: User}>(\`query me { me {
+      return self.query<{ me: UserModelType}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -181,14 +181,14 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { MyUser, MyUserModel } from \\"./MyUserModel\\"
+import { MyUserModel, MyUserModelType } from \\"./MyUserModel\\"
 import { MyUserModelSelector } from \\"./MyUserModel.base\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  me: MyUser;
+  me: MyUserModelType;
 }
 
 /**
@@ -224,7 +224,7 @@ export const queryRootModelPrimitives = selectFromQueryRoot()
 import { QueryRootModelBase } from \\"./QueryRootModel.base\\"
 
 /* The TypeScript type of an instance of QueryRootModel */
-export interface QueryRoot extends Instance<typeof QueryRootModel.Type> {}
+export interface QueryRootModelType extends Instance<typeof QueryRootModel.Type> {}
 
 /* A graphql query fragment builders for QueryRootModel */
 export { selectFromQueryRoot, queryRootModelPrimitives, QueryRootModelSelector } from \\"./QueryRootModel.base\\"
@@ -252,14 +252,14 @@ import { IObservableArray } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { PossiblyEmptyBox, PossiblyEmptyBoxModel } from \\"./PossiblyEmptyBoxModel\\"
+import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEmptyBoxModel\\"
 import { PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
 import { RootStoreType } from \\"./index\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  emptyBoxes: IObservableArray<PossiblyEmptyBox>;
+  emptyBoxes: IObservableArray<PossiblyEmptyBoxModelType>;
 }
 
 /**
@@ -301,7 +301,7 @@ export const myUserModelPrimitives = selectFromMyUser().name.avatar
 import { MyUserModelBase } from \\"./MyUserModel.base\\"
 
 /* The TypeScript type of an instance of MyUserModel */
-export interface MyUser extends Instance<typeof MyUserModel.Type> {}
+export interface MyUserModelType extends Instance<typeof MyUserModel.Type> {}
 
 /* A graphql query fragment builders for MyUserModel */
 export { selectFromMyUser, myUserModelPrimitives, MyUserModelSelector } from \\"./MyUserModel.base\\"
@@ -368,7 +368,7 @@ export const possiblyEmptyBoxModelPrimitives = selectFromPossiblyEmptyBox().labe
 import { PossiblyEmptyBoxModelBase } from \\"./PossiblyEmptyBoxModel.base\\"
 
 /* The TypeScript type of an instance of PossiblyEmptyBoxModel */
-export interface PossiblyEmptyBox extends Instance<typeof PossiblyEmptyBoxModel.Type> {}
+export interface PossiblyEmptyBoxModelType extends Instance<typeof PossiblyEmptyBoxModel.Type> {}
 
 /* A graphql query fragment builders for PossiblyEmptyBoxModel */
 export { selectFromPossiblyEmptyBox, possiblyEmptyBoxModelPrimitives, PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
@@ -412,18 +412,18 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { QueryRootModel, QueryRoot } from \\"./QueryRootModel\\"
+import { QueryRootModel, QueryRootModelType } from \\"./QueryRootModel\\"
 import { queryRootModelPrimitives, QueryRootModelSelector } from \\"./QueryRootModel.base\\"
-import { MyUserModel, MyUser } from \\"./MyUserModel\\"
+import { MyUserModel, MyUserModelType } from \\"./MyUserModel\\"
 import { myUserModelPrimitives, MyUserModelSelector } from \\"./MyUserModel.base\\"
-import { PossiblyEmptyBoxModel, PossiblyEmptyBox } from \\"./PossiblyEmptyBoxModel\\"
+import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEmptyBoxModel\\"
 import { possiblyEmptyBoxModelPrimitives, PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  myUsers: ObservableMap<string, MyUser>,
-  possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBox>
+  myUsers: ObservableMap<string, MyUserModelType>,
+  possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBoxModelType>
 }
 
 /**
@@ -438,7 +438,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: MyUserModelSelector) => MyUserModelSelector) = myUserModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: MyUser}>(\`query me { me {
+      return self.query<{ me: MyUserModelType}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new MyUserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -544,7 +544,7 @@ export const userModelPrimitives = selectFromUser().name.avatar.role.interest
 import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export interface User extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -644,7 +644,7 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { UserModel, User } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 import { Role } from \\"./RoleEnumModel\\"
@@ -652,7 +652,7 @@ import { interest_enum } from \\"./interest_enumModel\\"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  users: ObservableMap<string, User>
+  users: ObservableMap<string, UserModelType>
 }
 
 /**
@@ -666,7 +666,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: User}>(\`query me { me {
+      return self.query<{ me: UserModelType}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -772,7 +772,7 @@ export const userModelPrimitives = selectFromUser().name.avatar.role.interest
 import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export interface User extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -872,7 +872,7 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { UserModel, User } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 import { Role } from \\"./RoleEnumModel\\"
@@ -880,7 +880,7 @@ import { InterestEnum } from \\"./InterestEnumModel\\"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  users: ObservableMap<string, User>
+  users: ObservableMap<string, UserModelType>
 }
 
 /**
@@ -894,7 +894,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryMe(variables?: {  }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ me: User}>(\`query me { me {
+      return self.query<{ me: UserModelType}>(\`query me { me {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -995,7 +995,7 @@ export const repoModelPrimitives = selectFromRepo()
 import { RepoModelBase } from \\"./RepoModel.base\\"
 
 /* The TypeScript type of an instance of RepoModel */
-export interface Repo extends Instance<typeof RepoModel.Type> {}
+export interface RepoModelType extends Instance<typeof RepoModel.Type> {}
 
 /* A graphql query fragment builders for RepoModel */
 export { selectFromRepo, repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
@@ -1085,7 +1085,7 @@ export const userModelPrimitives = selectFromUser().name.avatar
 import { UserModelBase } from \\"./UserModel.base\\"
 
 /* The TypeScript type of an instance of UserModel */
-export interface User extends Instance<typeof UserModel.Type> {}
+export interface UserModelType extends Instance<typeof UserModel.Type> {}
 
 /* A graphql query fragment builders for UserModel */
 export { selectFromUser, userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
@@ -1152,7 +1152,7 @@ export const organizationModelPrimitives = selectFromOrganization().name.logo
 import { OrganizationModelBase } from \\"./OrganizationModel.base\\"
 
 /* The TypeScript type of an instance of OrganizationModel */
-export interface Organization extends Instance<typeof OrganizationModel.Type> {}
+export interface OrganizationModelType extends Instance<typeof OrganizationModel.Type> {}
 
 /* A graphql query fragment builders for OrganizationModel */
 export { selectFromOrganization, organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
@@ -1196,17 +1196,17 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { RepoModel, Repo } from \\"./RepoModel\\"
+import { RepoModel, RepoModelType } from \\"./RepoModel\\"
 import { repoModelPrimitives, RepoModelSelector } from \\"./RepoModel.base\\"
-import { UserModel, User } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
-import { OrganizationModel, Organization } from \\"./OrganizationModel\\"
+import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  repos: ObservableMap<string, Repo>
+  repos: ObservableMap<string, RepoModelType>
 }
 
 /**
@@ -1220,7 +1220,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     queryRepo(variables?: {  }, resultSelector: string | ((qb: RepoModelSelector) => RepoModelSelector) = repoModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ repo: Repo}>(\`query repo { repo {
+      return self.query<{ repo: RepoModelType}>(\`query repo { repo {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new RepoModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },
@@ -1322,7 +1322,7 @@ export const searchResultModelPrimitives = selectFromSearchResult().inputQuery
 import { SearchResultModelBase } from \\"./SearchResultModel.base\\"
 
 /* The TypeScript type of an instance of SearchResultModel */
-export interface SearchResult extends Instance<typeof SearchResultModel.Type> {}
+export interface SearchResultModelType extends Instance<typeof SearchResultModel.Type> {}
 
 /* A graphql query fragment builders for SearchResultModel */
 export { selectFromSearchResult, searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
@@ -1409,7 +1409,7 @@ export const movieModelPrimitives = selectFromMovie().description.director
 import { MovieModelBase } from \\"./MovieModel.base\\"
 
 /* The TypeScript type of an instance of MovieModel */
-export interface Movie extends Instance<typeof MovieModel.Type> {}
+export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
 
 /* A graphql query fragment builders for MovieModel */
 export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
@@ -1474,7 +1474,7 @@ export const bookModelPrimitives = selectFromBook().description.author
 import { BookModelBase } from \\"./BookModel.base\\"
 
 /* The TypeScript type of an instance of BookModel */
-export interface Book extends Instance<typeof BookModel.Type> {}
+export interface BookModelType extends Instance<typeof BookModel.Type> {}
 
 /* A graphql query fragment builders for BookModel */
 export { selectFromBook, bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
@@ -1518,17 +1518,17 @@ import { ObservableMap } from \\"mobx\\"
 import { types } from \\"mobx-state-tree\\"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
 
-import { SearchResultModel, SearchResult } from \\"./SearchResultModel\\"
+import { SearchResultModel, SearchResultModelType } from \\"./SearchResultModel\\"
 import { searchResultModelPrimitives, SearchResultModelSelector } from \\"./SearchResultModel.base\\"
-import { MovieModel, Movie } from \\"./MovieModel\\"
+import { MovieModel, MovieModelType } from \\"./MovieModel\\"
 import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
-import { BookModel, Book } from \\"./BookModel\\"
+import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  searchresults: ObservableMap<string, SearchResult>
+  searchresults: ObservableMap<string, SearchResultModelType>
 }
 
 /**
@@ -1542,7 +1542,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     querySearch(variables: { text: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ search: SearchResult}>(\`query search($text: String!) { search(text: $text) {
+      return self.query<{ search: SearchResultModelType}>(\`query search($text: String!) { search(text: $text) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
     },

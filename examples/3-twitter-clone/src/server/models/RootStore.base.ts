@@ -5,14 +5,14 @@ import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
-import { MessageModel, Message } from "./MessageModel"
-import { UserModel, User } from "./UserModel"
+import { MessageModel, MessageModelType } from "./MessageModel"
+import { UserModel, UserModelType } from "./UserModel"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  messages: ObservableMap<string, Message>,
-  users: ObservableMap<string, User>
+  messages: ObservableMap<string, MessageModelType>,
+  users: ObservableMap<string, UserModelType>
 }
 
 /**

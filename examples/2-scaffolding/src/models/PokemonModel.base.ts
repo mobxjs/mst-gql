@@ -6,19 +6,19 @@ import { IObservableArray } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLRef, QueryBuilder, withTypedRefs } from "mst-gql"
 import { ModelBase } from "./ModelBase"
-import { PokemonAttack, PokemonAttackModel } from "./PokemonAttackModel"
+import { PokemonAttackModel, PokemonAttackModelType } from "./PokemonAttackModel"
 import { PokemonAttackModelSelector } from "./PokemonAttackModel.base"
-import { PokemonDimension, PokemonDimensionModel } from "./PokemonDimensionModel"
+import { PokemonDimensionModel, PokemonDimensionModelType } from "./PokemonDimensionModel"
 import { PokemonDimensionModelSelector } from "./PokemonDimensionModel.base"
-import { PokemonEvolutionRequirement, PokemonEvolutionRequirementModel } from "./PokemonEvolutionRequirementModel"
+import { PokemonEvolutionRequirementModel, PokemonEvolutionRequirementModelType } from "./PokemonEvolutionRequirementModel"
 import { PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
-import { Pokemon, PokemonModel } from "./PokemonModel"
+import { PokemonModel, PokemonModelType } from "./PokemonModel"
 import { RootStoreType } from "./index"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
-  evolutions: IObservableArray<Pokemon>;
+  evolutions: IObservableArray<PokemonModelType>;
 }
 
 /**
