@@ -1,8 +1,8 @@
 const { existsSync } = require("fs")
 const { resolve } = require("path")
-const cosmiconfig = require("cosmiconfig")
+const { cosmiconfigSync } = require("cosmiconfig")
 
-const explorer = cosmiconfig("mst-gql")
+const explorer = cosmiconfigSync("mst-gql")
 
 const defaultConfig = {
   excludes: [],
@@ -18,7 +18,7 @@ const defaultConfig = {
 
 exports.getConfig = function getConfig() {
   try {
-    const result = explorer.searchSync()
+    const result = explorer.search()
     return result ? result.config : defaultConfig
   } catch (e) {
     console.error(e.message)

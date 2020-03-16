@@ -42,13 +42,12 @@
     }
   },
   "dependencies": {
-    "@types/pluralize": "^0.0.29",
-    "apollo": "^2.16.3",
+    "apollo": "^2.25.0",
     "arg": "^4.1.1",
     "camelcase": "^5.3.1",
-    "cosmiconfig": "^5.2.1",
-    "fast-json-stable-stringify": "^2.0.0",
-    "graphql": "14.3.0",
+    "cosmiconfig": "^6.0.0",
+    "fast-json-stable-stringify": "^2.1.0",
+    "graphql": "^14.6.0",
     "graphql-request": "^1.8.2",
     "pluralize": "^8.0.0"
   },
@@ -57,6 +56,7 @@
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/plugin-transform-modules-commonjs": "^7.4.4",
+    "@types/pluralize": "^0.0.29",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/register": "^7.4.4",
@@ -67,7 +67,7 @@
     "escape-string-regexp": "^2.0.0",
     "graphql-tag": "^2.10.1",
     "husky": "^3.0.0",
-    "jest": "^24.8.0",
+    "jest": "^25.1.0",
     "microbundle": "^0.11.0",
     "mobx": "^5.9.4",
     "mobx-react": "^6.1.1",
@@ -83,8 +83,5 @@
   "peerDependencies": {
     "mobx": "^4.0.0 || ^5.0.0",
     "mobx-state-tree": "^3.0.0"
-  },
-  "resolutions": {
-    "graphql": "14.3.0"
   }
 }

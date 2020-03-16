@@ -39,9 +39,6 @@
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
   },
-  "resolutions": {
-    "graphql": "14.3.0"
-  },
   "relativeDependencies": {
     "mst-gql": "../../"
   }
