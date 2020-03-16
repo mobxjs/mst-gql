@@ -28,7 +28,8 @@ describe("Abstract types tests", () => {
   beforeAll(() => {
     const files = scaffold(schemaContents, {
       format: "js",
-      roots: ["SearchResult", "Repo"]
+      roots: ["SearchResult", "Repo"],
+      namingConvention: "asis"
     })
     writeFiles(__dirname + "/models", files, "js", false)
     models = require("./models")
