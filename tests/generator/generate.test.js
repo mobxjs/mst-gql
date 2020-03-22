@@ -310,3 +310,23 @@ type Query {
     )
   ).toBeTruthy()
 })
+
+test("handle reserved graphql name", () => {
+  try {
+    const schema = `
+        type Subscription {
+          id: ID
+          channel: String
+        }
+        
+        type Query {
+          subscription: Subscription
+        }
+      `
+    scaffold(schema, { roots: ["Subscription"] })
+  } catch (error) {
+    expect(error.message).toMatch(
+      "Cannot generate SubscriptionModel, Subscription is a graphql reserved name"
+    )
+  }
+})
