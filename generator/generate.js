@@ -11,7 +11,7 @@ const exampleAction = `  .actions(self => ({
     }
   }))`
 
-const buildInExcludes = [
+const reservedGraphqlNames = [
   "Mutation",
   "CacheControlScope",
   "Query",
@@ -30,7 +30,7 @@ function generate(
 ) {
   const types = schema.types
 
-  excludes.push(...buildInExcludes)
+  excludes.push(...reservedGraphqlNames)
 
   // For each type converts 'name' according to namingConvention and copies
   // original name to the 'origName' field of the type's object
@@ -95,11 +95,17 @@ export const ModelBase = MSTGQLObject
       )
     }
 
-    rootTypes.forEach(type => {
-      if (!origObjectTypes.includes(type))
+    rootTypes.forEach(typeName => {
+      if (!objectTypes.includes(typeName)) {
+        if (isTypeReservedName(typeName)) {
+          throw new Error(
+            `Cannot generate ${typeName}Model, ${typeName} is a graphql reserved name`
+          )
+        }
         throw new Error(
-          `The root type specified: '${type}' is unknown, excluded or not an OBJECT type!`
+          `The root type specified: '${typeName}' is unknown, excluded or not an OBJECT type!`
         )
+      }
     })
 
     // Keep the orig type names for mixin configuration
@@ -135,6 +141,10 @@ export const ModelBase = MSTGQLObject
 
   function skipNonNull(type) {
     return type.kind === "NON_NULL" ? type.ofType : type
+  }
+
+  function isTypeReservedName(typeName) {
+    return reservedGraphqlNames.includes(typeName)
   }
 
   function autoDetectRootTypes() {
