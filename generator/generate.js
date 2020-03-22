@@ -95,15 +95,15 @@ export const ModelBase = MSTGQLObject
       )
     }
 
-    rootTypes.forEach(typeName => {
-      if (!objectTypes.includes(typeName)) {
-        if (isTypeReservedName(typeName)) {
+    rootTypes.forEach(type => {
+      if (!origObjectTypes.includes(type)) {
+        if (isTypeReservedName(type)) {
           throw new Error(
-            `Cannot generate ${typeName}Model, ${typeName} is a graphql reserved name`
+            `Cannot generate ${type}Model, ${type} is a graphql reserved name`
           )
         }
         throw new Error(
-          `The root type specified: '${typeName}' is unknown, excluded or not an OBJECT type!`
+          `The root type specified: '${type}' is unknown, excluded or not an OBJECT type!`
         )
       }
     })
