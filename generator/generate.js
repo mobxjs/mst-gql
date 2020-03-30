@@ -23,6 +23,7 @@ function generate(
   format = "js",
   rootTypes = [],
   excludes = [],
+  mandatoryFields = [],
   generationDate = "a long long time ago...",
   modelsOnly = false,
   noReact = false,
@@ -43,6 +44,8 @@ function generate(
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
   const enumTypes = [] // enum types to be imported when using typescript
   const toExport = [] // files to be exported from barrel file
+  const mandatoryTypes = typesStringToHash(mandatoryFields) // all known types with mandatory fields
+
   let currentType = "<none>"
   let origRootTypes = []
 
@@ -363,7 +366,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     let modelProperties = ""
     if (type.fields) {
-      modelProperties = type.fields.map(field => handleField(field)).join("\n")
+      modelProperties = type.fields
+        .map(field => handleField(field, type))
+        .join("\n")
     }
 
     return {
@@ -374,15 +379,19 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       refs
     }
 
-    function handleField(field) {
+    function handleField(field, type) {
       let r = ""
       if (field.description)
         r += `    /** ${sanitizeComment(field.description)} */\n`
-      r += `    ${field.name}: ${handleFieldType(field.name, field.type)},`
+      r += `    ${field.name}: ${handleFieldType(
+        field.name,
+        field.type,
+        type
+      )},`
       return r
     }
 
-    function handleFieldType(fieldName, fieldType, isNested = false) {
+    function handleFieldType(fieldName, fieldType, type, isNested = false) {
       let isNullable = true
       if (fieldType.kind === "NON_NULL") {
         fieldType = fieldType.ofType
@@ -403,13 +412,23 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           const primitiveType = primitiveToMstType(fieldType.name)
           return result(
             `types.${primitiveType}`,
-            primitiveType === "identifier"
+            primitiveType === "identifier" ||
+              isMandatoryFields(type.name, fieldName)
           )
         case "OBJECT":
-          return result(handleObjectFieldType(fieldName, fieldType, isNested))
+          return result(
+            handleObjectFieldType(fieldName, fieldType, isNested),
+            isMandatoryFields(type.name, fieldName)
+          )
         case "LIST":
           return result(
-            `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
+            `types.array(${handleFieldType(
+              fieldName,
+              fieldType.ofType,
+              type,
+              true
+            )})`,
+            isMandatoryFields(type.name, fieldName)
           )
         case "ENUM":
           primitiveFields.push(fieldName)
@@ -484,6 +503,13 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         } => ${subTypeClassName})`
       })
       return `types.union(${mstUnionArgs.join(", ")})`
+    }
+
+    function isMandatoryFields(typeName, fieldName) {
+      return (
+        mandatoryTypes[typeName] &&
+        mandatoryTypes[typeName].find(name => name === fieldName)
+      )
     }
   }
 
@@ -1080,6 +1106,19 @@ function writeFile(name, contents, force, format, outDir, log) {
   }
 }
 
+function typesStringToHash(types) {
+  return types.reduce((acc, curr) => {
+    // shape of curr: 'Type.field'
+    const [type, field] = curr.split(".")
+    if (acc[type]) {
+      acc[type].push(field)
+    } else {
+      acc[type] = [field]
+    }
+    return acc
+  }, {})
+}
+
 // used by tests
 function scaffold(
   definition,
@@ -1087,6 +1126,7 @@ function scaffold(
     format: "ts",
     roots: [],
     excludes: [],
+    mandatoryFields: [],
     modelsOnly: false,
     namingConvention: "js"
   }
@@ -1100,6 +1140,7 @@ function scaffold(
     options.format || "ts",
     options.roots || [],
     options.excludes || [],
+    options.mandatoryFields || [],
     "<during unit test run>",
     options.modelsOnly || false,
     options.noReact || false,
@@ -1241,4 +1282,9 @@ function logUnexpectedFiles(outDir, files) {
   })
 }
 
-module.exports = { generate, writeFiles, scaffold, logUnexpectedFiles }
+module.exports = {
+  generate,
+  writeFiles,
+  scaffold,
+  logUnexpectedFiles
+}
