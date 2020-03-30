@@ -589,7 +589,7 @@ export const MyUserModelBase = withTypedRefs<Refs>()(ModelBase
     __typename: types.optional(types.literal(\\"my_user\\"), \\"my_user\\"),
     id: types.identifier,
     name: types.union(types.undefined, types.string),
-    avatar: types.union(types.undefined, types.array(types.string)),
+    avatar: types.array(types.string),
     emptyBoxes: types.union(types.undefined, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel))))),
   })
   .views(self => ({
@@ -906,7 +906,7 @@ export const MyUserModelBase = withTypedRefs<Refs>()(ModelBase
     id: types.identifier,
     name: types.union(types.undefined, types.string),
     avatar: types.union(types.undefined, types.array(types.string)),
-    emptyBox: types.union(types.undefined, MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel))),
+    emptyBox: MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel)),
   })
   .views(self => ({
     get store() {
@@ -1221,7 +1221,7 @@ export const MyUserModelBase = withTypedRefs<Refs>()(ModelBase
   .props({
     __typename: types.optional(types.literal(\\"my_user\\"), \\"my_user\\"),
     id: types.identifier,
-    name: types.union(types.undefined, types.string),
+    name: types.string,
     avatar: types.union(types.undefined, types.array(types.string)),
     emptyBoxes: types.union(types.undefined, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel))))),
   })
@@ -1290,7 +1290,7 @@ export const PossiblyEmptyBoxModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"possibly_empty_box\\"), \\"possibly_empty_box\\"),
     id: types.identifier,
-    label: types.union(types.undefined, types.string),
+    label: types.string,
     isEmpty: types.union(types.undefined, types.boolean),
   })
   .views(self => ({
