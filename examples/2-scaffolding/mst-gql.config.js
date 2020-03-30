@@ -3,5 +3,6 @@ module.exports = {
   format: "ts",
   input: "graphql-schema.json",
   outDir: "src/models",
-  roots: ["Pokemon", "Attack"]
+  roots: ["Pokemon", "Attack"],
+  mandatoryFields: ["Pokemon.name", "Attack.name"]
 }

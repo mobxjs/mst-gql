@@ -36,7 +36,7 @@ export const PokemonModelBase = withTypedRefs<Refs>()(ModelBase
     /** The identifier of this Pokémon */
     number: types.union(types.undefined, types.null, types.string),
     /** The name of this Pokémon */
-    name: types.union(types.undefined, types.null, types.string),
+    name: types.string,
     /** The minimum and maximum weight of this Pokémon */
     weight: types.union(types.undefined, types.null, types.late((): any => PokemonDimensionModel)),
     /** The minimum and maximum weight of this Pokémon */

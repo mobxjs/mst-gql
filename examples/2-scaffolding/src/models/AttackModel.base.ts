@@ -19,7 +19,7 @@ export const AttackModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("Attack"), "Attack"),
     /** The name of this Pokémon attack */
-    name: types.union(types.undefined, types.null, types.string),
+    name: types.string,
     /** The type of this Pokémon attack */
     type: types.union(types.undefined, types.null, types.string),
     /** The damage of this Pokémon attack */
