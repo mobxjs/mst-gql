@@ -6,6 +6,7 @@ const explorer = cosmiconfig("mst-gql")
 
 const defaultConfig = {
   excludes: [],
+  mandatoryFields: [],
   force: false,
   format: "js",
   input: "graphql-schema.json",
@@ -37,6 +38,9 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     excludes: args["--excludes"]
       ? args["--excludes"].split(",").map(s => s.trim())
       : config.excludes,
+    mandatoryFields: args["--mandatoryFields"]
+      ? args["--mandatoryFields"].split(",").map(s => s.trim())
+      : config.mandatoryFields,
     modelsOnly: !!args["--modelsOnly"] || config.modelsOnly,
     forceAll: !!args["--force"] || config.force,
     noReact: !!args["--noReact"] || config.noReact,
