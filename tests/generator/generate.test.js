@@ -1,6 +1,6 @@
 /// <reference types="jest"/>
 
-const { scaffold } = require("../../generator/generate")
+const { scaffold, typesStringToHash } = require("../../generator/generate")
 const escapeStringRegexp = require("escape-string-regexp")
 
 const toRegex = snippet => new RegExp(`\\s+${escapeStringRegexp(snippet)}\\s+`)
@@ -329,4 +329,140 @@ test("handle reserved graphql name", () => {
       "Cannot generate SubscriptionModel, Subscription is a graphql reserved name"
     )
   }
+})
+
+describe("basic scaffolding with mandatory fields", () => {
+  test("when the field type is a SCALAR", () => {
+    const output = scaffold(
+      `
+      
+  schema {
+    query: query_root
+  }
+      
+  type my_user {
+    id: ID
+    name: String!
+    avatar: [String!]!
+    emptyBoxes: [possibly_empty_box]!
+  }
+  
+  type possibly_empty_box {
+    id: ID
+    label: String!
+    isEmpty: Boolean!
+  }
+  
+  type query_root {
+    me: my_user
+  }
+  `,
+      {
+        roots: ["my_user", "possibly_empty_box"],
+        mandatoryFields: ["MyUser.name", "PossiblyEmptyBox.label"]
+      }
+    )
+
+    expect(output).toMatchSnapshot()
+
+    expect(findFile(output, "MyUserModel.base")).toBeTruthy()
+    expect(
+      hasFileContent(
+        findFile(output, "MyUserModel.base"),
+        "name: types.string,"
+      )
+    ).toBeTruthy()
+
+    expect(findFile(output, "PossiblyEmptyBoxModel.base")).toBeTruthy()
+    expect(
+      hasFileContent(
+        findFile(output, "PossiblyEmptyBoxModel.base"),
+        "label: types.string,"
+      )
+    ).toBeTruthy()
+  })
+
+  test("when the field type is a LIST", () => {
+    const output = scaffold(
+      `
+      
+  schema {
+    query: query_root
+  }
+      
+  type my_user {
+    id: ID
+    name: String!
+    avatar: [String!]!
+    emptyBoxes: [possibly_empty_box]!
+  }
+  
+  type possibly_empty_box {
+    id: ID
+    label: String!
+    isEmpty: Boolean!
+  }
+  
+  type query_root {
+    me: my_user
+  }
+  `,
+      {
+        roots: ["my_user", "possibly_empty_box"],
+        mandatoryFields: ["MyUser.avatar"]
+      }
+    )
+
+    expect(output).toMatchSnapshot()
+
+    expect(findFile(output, "MyUserModel.base")).toBeTruthy()
+    expect(
+      hasFileContent(
+        findFile(output, "MyUserModel.base"),
+        "avatar: types.array(types.string),"
+      )
+    ).toBeTruthy()
+  })
+
+  test("when the field type is a OBJECT", () => {
+    const output = scaffold(
+      `
+      
+  schema {
+    query: query_root
+  }
+      
+  type my_user {
+    id: ID
+    name: String!
+    avatar: [String!]!
+    emptyBox: possibly_empty_box!
+  }
+  
+  type possibly_empty_box {
+    id: ID
+    label: String!
+    isEmpty: Boolean!
+  }
+  
+  type query_root {
+    me: my_user
+  }
+  `,
+      {
+        roots: ["my_user", "possibly_empty_box"],
+        mandatoryFields: ["MyUser.emptyBox"]
+      }
+    )
+
+    expect(output).toMatchSnapshot()
+
+    expect(findFile(output, "MyUserModel.base")).toBeTruthy()
+    expect(
+      hasFileContent(
+        findFile(output, "MyUserModel.base"),
+        "emptyBox: MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel)),"
+      )
+    ).toBeTruthy()
+  })
 })
