@@ -15,7 +15,7 @@
     "mobx-react": "^6.0.3",
     "mobx-state-tree": "^3.14.0",
     "mst-gql": "latest",
-    "next": "^9.0.5"
+    "next": "^9.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.19.2",
