@@ -260,7 +260,7 @@ type Query {
 
   expect(findFile(output, "UserModel")).toBeTruthy()
 
-  const roleEnumFile = findFile(output, "RoleEnumModel")
+  const roleEnumFile = findFile(output, "RoleEnum")
   expect(roleEnumFile).toBeTruthy()
 
   // TS type is plain Role
@@ -273,7 +273,7 @@ type Query {
     )
   ).toBeTruthy()
 
-  const interestEnumFile = findFile(output, "interest_enumModel")
+  const interestEnumFile = findFile(output, "interest_enum")
   expect(interestEnumFile).toBeTruthy()
   // TS type is plain interest_enum
   expect(
@@ -323,7 +323,7 @@ type Query {
 
   expect(findFile(output, "UserModel")).toBeTruthy()
 
-  const roleEnumFile = findFile(output, "RoleEnumModel")
+  const roleEnumFile = findFile(output, "RoleEnum")
   expect(roleEnumFile).toBeTruthy()
   expect(hasFileContentExact(roleEnumFile, "export enum Role {")).toBeTruthy()
   expect(
@@ -333,7 +333,7 @@ type Query {
     )
   ).toBeTruthy()
 
-  const interestEnumFile = findFile(output, "InterestEnumModel")
+  const interestEnumFile = findFile(output, "InterestEnum")
   console.log("interestEnumFile", interestEnumFile)
   expect(interestEnumFile).toBeTruthy()
   expect(
