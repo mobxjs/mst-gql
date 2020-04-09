@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.8.0
+
+- Allow LIST to be optional in TS. [174](https://github.com/mobxjs/mst-gql/pull/174) - [Aryk](https://github.com/Aryk)
+- Generate model names that match JS conventions by default, add escape hatch option to opt-out - [155](https://github.com/mobxjs/mst-gql/pull/155) - [beepsoft](https://github.com/beepsoft)
+- Better error handling around reserved model names. [192](https://github.com/mobxjs/mst-gql/pull/192) - [Matth10](https://github.com/Matth10)
+- Remove example project `yarn.lock` files to reduce the "github auto PR" noise.
+
+** ⚠️ Note**
+
+mst-gql now generates model names matching JS conventions by default. If you are upgrading from a pre-0.8.0 release this may result in different names being geneated when you scaffold. If you don't wish to update your names or want to wait, use the new `--dontRenameModels` option to keep your current model names.
+
 ## 0.7.1
 
 - update how optional types are generated. [150](https://github.com/mobxjs/mst-gql/pull/150)
