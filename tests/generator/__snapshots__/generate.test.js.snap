@@ -1703,7 +1703,7 @@ type Refs = {
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['Movie', () => MovieModel]], []))
+  .extend(configureStoreMixin([['Movie', () => MovieModel]], [], \\"js\\"))
   .props({
 
   })
