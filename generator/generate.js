@@ -790,7 +790,12 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     }
   }
 
-  function printTsType(field, name, canBeUndefined = true) {
+  function printTsType(
+    field,
+    name,
+    canBeUndefined = true,
+    fromUndefineableList = false
+  ) {
     let typeValue
     let type
 
@@ -803,9 +808,9 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 
     switch (type.kind) {
       case "NON_NULL":
-        return printTsType(type.ofType, name, false)
+        return printTsType(type.ofType, name, false, fromUndefineableList)
       case "LIST":
-        return `${printTsType(type.ofType, name, true)}[]`
+        return `${printTsType(type.ofType, name, true, canBeUndefined)}[]`
       case "OBJECT":
       case "INPUT_OBJECT":
       case "ENUM":
@@ -822,7 +827,9 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         typeValue = "any"
     }
 
-    return `${name}${canBeUndefined ? "?" : ""}: ${typeValue}`
+    return `${name}${
+      canBeUndefined || fromUndefineableList ? "?" : ""
+    }: ${typeValue}`
   }
 
   function printTsPrimitiveType(primitiveType) {

@@ -1583,3 +1583,167 @@ export * from \\"./reactUtils\\"
   ],
 ]
 `;
+
+exports[`when array is not required, should be optional in TS 1`] = `
+Array [
+  Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
+    "MovieModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * MovieBase
+ * auto generated base class for the model MovieModel.
+ */
+export const MovieModelBase = ModelBase
+  .named('Movie')
+  .props({
+    __typename: types.optional(types.literal(\\"Movie\\"), \\"Movie\\"),
+    description: types.union(types.undefined, types.string),
+    director: types.union(types.undefined, types.string),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class MovieModelSelector extends QueryBuilder {
+  get description() { return this.__attr(\`description\`) }
+  get director() { return this.__attr(\`director\`) }
+}
+export function selectFromMovie() {
+  return new MovieModelSelector()
+}
+
+export const movieModelPrimitives = selectFromMovie().description.director
+",
+    true,
+  ],
+  Array [
+    "MovieModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { MovieModelBase } from \\"./MovieModel.base\\"
+
+/* The TypeScript type of an instance of MovieModel */
+export interface MovieModelType extends Instance<typeof MovieModel.Type> {}
+
+/* A graphql query fragment builders for MovieModel */
+export { selectFromMovie, movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
+
+/**
+ * MovieModel
+ */
+export const MovieModel = MovieModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
+
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+
+export const RootStore = RootStoreBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
+
+import { MovieModel, MovieModelType } from \\"./MovieModel\\"
+import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
+
+
+export type MovieInput = {
+  description: string[]
+  director?: string[]
+}
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+
+}
+
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
+  .named(\\"RootStore\\")
+  .extend(configureStoreMixin([['Movie', () => MovieModel]], []))
+  .props({
+
+  })
+  .actions(self => ({
+    querySearch(variables: { text?: MovieInput[] }, resultSelector: string | ((qb: MovieModelSelector) => MovieModelSelector) = movieModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ search: MovieModelType}>(\`query search($text: [MovieInput!]) { search(text: $text) {
+        \${typeof resultSelector === \\"function\\" ? resultSelector(new MovieModelSelector()).toString() : resultSelector}
+      } }\`, variables, options)
+    },
+  })))
+",
+    true,
+  ],
+  Array [
+    "reactUtils",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
+import * as React from \\"react\\"
+import { RootStore, RootStoreType } from \\"./RootStore\\"
+
+export const StoreContext = createStoreContext<RootStoreType>(React)
+
+export const useQuery = createUseQueryHook(StoreContext, React)
+",
+    true,
+  ],
+  Array [
+    "index",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./MovieModel\\"
+export * from \\"./RootStore\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+]
+`;
