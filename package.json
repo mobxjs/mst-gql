@@ -1,6 +1,6 @@
 {
   "name": "mst-gql",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "author": "Michel Weststrate",
   "keywords": [
@@ -56,12 +56,12 @@
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/plugin-transform-modules-commonjs": "^7.4.4",
-    "@types/pluralize": "^0.0.29",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/register": "^7.4.4",
     "@types/graphql": "^14.2.3",
     "@types/jest": "^24.0.16",
+    "@types/pluralize": "^0.0.29",
     "@types/react": "^16.8.24",
     "@types/react-dom": "^16.8.5",
     "escape-string-regexp": "^2.0.0",
