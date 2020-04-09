@@ -43,11 +43,11 @@ The `mst-gql` libraries consists of two parts:
 
 The scaffolder is a compile-time utility that generates a MST store and models based on the type information provided by your endpoint. This utility doesn't just generate models for all your types, but also query, mutation and subscription code base on the data statically available.
 
-The runtime library is configured by the scaffolder, and provides entry points to use the generated generated or hand-written queries, React components, and additional utilities you want to _mixin_ to your stores.
+The runtime library is configured by the scaffolder, and provides entry points to use the generated or hand-written queries, React components, and additional utilities you want to _mixin_ to your stores.
 
 ### Scaffolding
 
-To get started,after [installing](#-installation-) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
+To get started, after [installing](#-installation-) mst-gql and its dependencies, the first task is to scaffold your store and runtime models based on your graphql endpoint.
 
 To scaffold TypeScript models based on a locally running graphQL endpoint on port 4000, run: `yarn mst-gql --format ts http://localhost:4000/graphql`. There are several additional args that can be passed to the CLI or put in a config file. Both are detailed [below](#cli).
 
@@ -138,7 +138,7 @@ export const RootStoreBase = MSTGQLStore.named("RootStore")
 
 _(Yes, that is a lot of code. A lot of code that you don't have to write 😇)_
 
-Note that the mutations and queries are now strongly typed! The parameters will be type checked, and the return types of the query methods are correct. Nonetheless, you will often write wrapper methods around those generated actions, to, for example, fine the fragments of the result set that should be retrieved
+Note that the mutations and queries are now strongly typed! The parameters will be type checked, and the return types of the query methods are correct. Nonetheless, you will often write wrapper methods around those generated actions, to, for example, define the fragments of the result set that should be retrieved.
 
 ### Initializing the store
 
@@ -178,7 +178,7 @@ window.store = rootStore
 3. When starting our client, we initialize a `rootStore`, which, in typical MST fashion, takes 2 arguments:
    1. The snapshot with the initial state of the client. In this case it is `undefined`, but one could rehydrate server state here, or pick a snapshot from `localStorage`, etc.
    2. The transportation of the store. Either `gqlHttpClient`, `gqlWsClient` or both need to be provided.
-4. We initialize rendering. Note that we use `StoreContext.Provider` to make the store available to the rest of the rendering three
+4. We initialize rendering. Note that we use `StoreContext.Provider` to make the store available to the rest of the rendering three.
 5. We expose the store on `window`. This has no practical use, and should be done only in DEV builds. It is a really convenient way to quickly inspect the store, or even fire actions or queries directly from the console of the browser's developer tools. (See this [talk](https://www.youtube.com/watch?v=3J9EJrvqOiM&index=7&t=0s&list=PLW0vzLDjfaNSFs7OBLK6anfQiE5FJzAPD) for some cool benefits of that)
 
 ### Loading and rendering your first data
@@ -256,7 +256,7 @@ export const TodoModel = TodoModelBase.actions(self => ({
 
 There are few things to notice:
 
-1. Our `toggle` action wraps around the generated `mutateToggleTodo` mutation of the base model, giving us a much more convenient client api
+1. Our `toggle` action wraps around the generated `mutateToggleTodo` mutation of the base model, giving us a much more convenient client api.
 2. The Query object created by `mutateToggleTodo` is returned from our action, so that we can pass it (for example) to the `setQuery` as done in the previous listing.
 3. We've set the third argument of the mutation, called `optimisticUpdate`. This function is executed immediately when the mutation is created, without awaiting it's result. So that the change becomes immediately visible in the UI. However, MST will record the [patches](https://github.com/mobxjs/mobx-state-tree#patches). If the mutation fails in the future, any changes made inside this `optimisticUpdate` callback will automatically be rolled back by reverse applying the recorded patches!
 
@@ -389,7 +389,7 @@ As described above, (root) model instances are kept alive automatically. Beyond 
 
 The default policy is `cache-and-network`. This is different from other graphQL clients. But since mst-gql leverages the MobX reactivity system, this means that, possibly stale, results are shown on screen immediately if a response is in cache, and that the screen will automatically update as soon as a new server response arrives.
 
-The query cache in is actually stored in MST as well, and can be accessed through `store.__queryCache`.
+The query cache is actually stored in MST as well, and can be accessed through `store.__queryCache`.
 
 Since the query cache is stored in the store, this means that mixins like `useLocalStore` will serialize them. This will help significantly in building offline-first applications.
 
