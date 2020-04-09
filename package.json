@@ -42,12 +42,15 @@
     }
   },
   "dependencies": {
+    "@types/pluralize": "^0.0.29",
     "apollo": "^2.16.3",
     "arg": "^4.1.1",
+    "camelcase": "^5.3.1",
     "cosmiconfig": "^5.2.1",
     "fast-json-stable-stringify": "^2.0.0",
     "graphql": "14.3.0",
-    "graphql-request": "^1.8.2"
+    "graphql-request": "^1.8.2",
+    "pluralize": "^8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",

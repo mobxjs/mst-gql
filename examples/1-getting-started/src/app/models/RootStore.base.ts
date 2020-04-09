@@ -24,7 +24,7 @@ type Refs = {
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Todo', () => TodoModel]], ['Todo']))
+  .extend(configureStoreMixin([['Todo', () => TodoModel]], ['Todo'], "js"))
   .props({
     todos: types.optional(types.map(types.late((): any => TodoModel)), {})
   })

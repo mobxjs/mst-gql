@@ -22,7 +22,7 @@ type Refs = {
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Message', () => MessageModel], ['User', () => UserModel]], ['Message', 'User']))
+  .extend(configureStoreMixin([['Message', () => MessageModel], ['User', () => UserModel]], ['Message', 'User'], "js"))
   .props({
     messages: types.optional(types.map(types.late((): any => MessageModel)), {}),
     users: types.optional(types.map(types.late((): any => UserModel)), {})

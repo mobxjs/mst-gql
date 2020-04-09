@@ -16,7 +16,8 @@ const definition = {
   "--modelsOnly": Boolean,
   "--force": Boolean,
   "--noReact": Boolean,
-  "--separate": Boolean
+  "--separate": Boolean,
+  "--dontRenameModels": Boolean
 }
 
 function main() {
@@ -41,7 +42,8 @@ function main() {
     excludes,
     modelsOnly,
     forceAll,
-    noReact
+    noReact,
+    namingConvention
   } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
 
@@ -96,13 +98,14 @@ function main() {
 
   // console.log(JSON.stringify(json, null, 2))
   const files = generate(
-    json.__schema.types,
+    json.__schema,
     format,
     roots,
     excludes,
     new Date().toUTCString(),
     modelsOnly,
-    noReact
+    noReact,
+    namingConvention
   )
   writeFiles(outDir, files, format, forceAll, true, separate)
   logUnexpectedFiles(outDir, files)

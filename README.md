@@ -8,14 +8,6 @@ Discuss this project on [spectrum](https://spectrum.chat/mst-gql)
 
 [![OpenCollective](https://opencollective.com/mobx/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/mobx/sponsors/badge.svg)](#sponsors) [![CircleCI](https://circleci.com/gh/mobxjs/mst-gql/tree/master.svg?style=svg)](https://circleci.com/gh/mobxjs/mst-gql/tree/master)
 
-# :warning: Warning: experimental project ahead :warning:
-
-_This project is an experimental integration between GraphQL and mobx-state-tree. The project will help you to bootstrap mobx-state-tree and graphQL based projects very quickly. However, be aware, there are currently no active maintainers for this project, so we are looking for maintainers that need use project in real life situations and evolve it further!_
-
-To become a maintainer, see: [#1](https://github.com/mobxjs/mst-gql/issues/1) 🙏
-
-That being said, it is pretty safe to adopt this project in the sense that just as scaffolding tool it can be pretty beneficial, even if it doesn't cover all cases of your project.
-
 # 🚀 Installation 🚀
 
 Installation: `yarn add mobx mobx-state-tree mobx-react react react-dom mst-gql graphql-request`
@@ -416,6 +408,7 @@ The `mst-gql` command currently accepts the following arguments:
 - `--modelsOnly` Generates only models, but no queries or graphQL capabilities. This is great for backend usage, or if you want to create your own root store
 - `--noReact` doesn't generate the React related utilities
 - `--force` When set, exiting files will always be overridden. This will drop all customizations of model classes!
+- `--dontRenameModels` By default generates model names from graphql schema types that are idiomatic Javascript/Typescript names, ie. type names will be PascalCased and root collection names camelCased. With `--dontRenameModels` the original names - as provided by the graphql schema - will be used for generating models.
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
   - a graphql files, like `schema.graphql`
