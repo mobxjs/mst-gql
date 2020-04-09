@@ -265,11 +265,11 @@ type Query {
 
   // TS type is plain Role
   expect(hasFileContentExact(roleEnumFile, "export enum Role {")).toBeTruthy()
-  // MST model is +EnumModel
+  // MST model is +Enum
   expect(
     hasFileContentExact(
       roleEnumFile,
-      'export const RoleEnumModel = types.enumeration("Role"'
+      'export const RoleEnum = types.enumeration("Role"'
     )
   ).toBeTruthy()
 
@@ -279,11 +279,11 @@ type Query {
   expect(
     hasFileContentExact(interestEnumFile, "export enum interest_enum")
   ).toBeTruthy()
-  // MST type is interest_enumModel (no extra Enum appended)
+  // MST type is interest_enum (no extra Enum appended)
   expect(
     hasFileContentExact(
       interestEnumFile,
-      'export const interest_enumModel = types.enumeration("interest_enum"'
+      'export const interest_enum = types.enumeration("interest_enum"'
     )
   ).toBeTruthy()
 })
@@ -329,7 +329,7 @@ type Query {
   expect(
     hasFileContentExact(
       roleEnumFile,
-      'export const RoleEnumModel = types.enumeration("Role"'
+      'export const RoleEnum = types.enumeration("Role"'
     )
   ).toBeTruthy()
 
@@ -342,7 +342,7 @@ type Query {
   expect(
     hasFileContentExact(
       interestEnumFile,
-      'export const InterestEnumModel = types.enumeration("InterestEnum"'
+      'export const InterestEnum = types.enumeration("InterestEnum"'
     )
   ).toBeTruthy()
 })

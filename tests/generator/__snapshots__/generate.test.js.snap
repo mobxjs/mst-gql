@@ -582,7 +582,7 @@ AUTHOR=\\"AUTHOR\\"
 /**
 * Role
 */
-export const RoleEnumModel = types.enumeration(\\"Role\\", [
+export const RoleEnum = types.enumeration(\\"Role\\", [
         \\"USER\\",
   \\"ADMIN\\",
   \\"AUTHOR\\",
@@ -610,7 +610,7 @@ COOKING=\\"COOKING\\"
 /**
 * interest_enum
 */
-export const interest_enumModel = types.enumeration(\\"interest_enum\\", [
+export const interest_enum = types.enumeration(\\"interest_enum\\", [
         \\"READING\\",
   \\"SPORTS\\",
   \\"COOKING\\",
@@ -810,7 +810,7 @@ AUTHOR=\\"AUTHOR\\"
 /**
 * Role
 */
-export const RoleEnumModel = types.enumeration(\\"Role\\", [
+export const RoleEnum = types.enumeration(\\"Role\\", [
         \\"USER\\",
   \\"ADMIN\\",
   \\"AUTHOR\\",
@@ -838,7 +838,7 @@ COOKING=\\"COOKING\\"
 /**
 * InterestEnum
 */
-export const InterestEnumModel = types.enumeration(\\"InterestEnum\\", [
+export const InterestEnum = types.enumeration(\\"InterestEnum\\", [
         \\"READING\\",
   \\"SPORTS\\",
   \\"COOKING\\",
