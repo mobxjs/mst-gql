@@ -188,7 +188,7 @@ ${tsType}
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-export const ${name}${enumPostfix}Model = ${handleEnumTypeCore(type)}
+export const ${name}${enumPostfix} = ${handleEnumTypeCore(type)}
 `
     if (format === "ts") {
       enumTypes.push(type.name)
