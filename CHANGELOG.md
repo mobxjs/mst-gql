@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.9.0 / 0.10.0
+
+- Enum's no longer get Model added to their name. This is a small breaking change from 0.8.0.
+
+#### **⚠️ Note**
+
+mst-gql now generates model names matching JS conventions by default. If you are upgrading from a pre-0.8.0 release this may result in different names being geneated when you scaffold. If you don't wish to update your names or want to wait, use the new `--dontRenameModels` option to keep your current model names.
+
 ## 0.8.0
 
 - Allow LIST to be optional in TS. [174](https://github.com/mobxjs/mst-gql/pull/174) - [Aryk](https://github.com/Aryk)
@@ -7,7 +15,7 @@
 - Better error handling around reserved model names. [192](https://github.com/mobxjs/mst-gql/pull/192) - [Matth10](https://github.com/Matth10)
 - Remove example project `yarn.lock` files to reduce the "github auto PR" noise.
 
-** ⚠️ Note**
+#### **⚠️ Note**
 
 mst-gql now generates model names matching JS conventions by default. If you are upgrading from a pre-0.8.0 release this may result in different names being geneated when you scaffold. If you don't wish to update your names or want to wait, use the new `--dontRenameModels` option to keep your current model names.
 
