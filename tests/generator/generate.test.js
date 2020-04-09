@@ -223,7 +223,7 @@ type Query {
   // description array of strings should be required
   expect(hasFileContent(searchResultBase, "description:")).toBeTruthy()
 })
-  
+
 test("enums ending in Enum doesn't have an extra Enum postfix with namingConvention=asis", () => {
   const output = scaffold(
     `
