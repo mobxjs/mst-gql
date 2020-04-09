@@ -188,6 +188,42 @@ type Query {
   ).toBeTruthy()
 })
 
+test("when array is not required, should be optional in TS", () => {
+  const output = scaffold(
+    `
+type Movie {
+  description: String!
+  director: String!
+}
+input MovieInput {
+  description: [String!]!
+  director: [String!]
+}
+
+type Query {
+  search(text: [MovieInput!]): Movie!
+}
+`,
+    {}
+  )
+  expect(output).toMatchSnapshot()
+
+  const searchResultBase = findFile(output, "RootStore.base")
+  expect(searchResultBase).toBeTruthy()
+  expect(
+    hasFileContent(
+      searchResultBase,
+      "querySearch(variables: { text?: MovieInput[] },"
+    )
+  ).toBeTruthy()
+
+  // director array of strings should be optional
+  expect(hasFileContent(searchResultBase, "director?:")).toBeTruthy()
+
+  // description array of strings should be required
+  expect(hasFileContent(searchResultBase, "description:")).toBeTruthy()
+})
+
 test("enums ending in Enum doesn't have an extra Enum postfix with namingConvention=asis", () => {
   const output = scaffold(
     `
@@ -309,4 +345,24 @@ type Query {
       'export const InterestEnumModel = types.enumeration("InterestEnum"'
     )
   ).toBeTruthy()
+})
+
+test("handle reserved graphql name", () => {
+  try {
+    const schema = `
+        type Subscription {
+          id: ID
+          channel: String
+        }
+        
+        type Query {
+          subscription: Subscription
+        }
+      `
+    scaffold(schema, { roots: ["Subscription"] })
+  } catch (error) {
+    expect(error.message).toMatch(
+      "Cannot generate SubscriptionModel, Subscription is a graphql reserved name"
+    )
+  }
 })

@@ -11,7 +11,7 @@ const exampleAction = `  .actions(self => ({
     }
   }))`
 
-const buildInExcludes = [
+const reservedGraphqlNames = [
   "Mutation",
   "CacheControlScope",
   "Query",
@@ -30,7 +30,7 @@ function generate(
 ) {
   const types = schema.types
 
-  excludes.push(...buildInExcludes)
+  excludes.push(...reservedGraphqlNames)
 
   // For each type converts 'name' according to namingConvention and copies
   // original name to the 'origName' field of the type's object
@@ -96,10 +96,16 @@ export const ModelBase = MSTGQLObject
     }
 
     rootTypes.forEach(type => {
-      if (!origObjectTypes.includes(type))
+      if (!origObjectTypes.includes(type)) {
+        if (isTypeReservedName(type)) {
+          throw new Error(
+            `Cannot generate ${type}Model, ${type} is a graphql reserved name`
+          )
+        }
         throw new Error(
           `The root type specified: '${type}' is unknown, excluded or not an OBJECT type!`
         )
+      }
     })
 
     // Keep the orig type names for mixin configuration
@@ -135,6 +141,10 @@ export const ModelBase = MSTGQLObject
 
   function skipNonNull(type) {
     return type.kind === "NON_NULL" ? type.ofType : type
+  }
+
+  function isTypeReservedName(typeName) {
+    return reservedGraphqlNames.includes(typeName)
   }
 
   function autoDetectRootTypes() {
@@ -780,7 +790,12 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
     }
   }
 
-  function printTsType(field, name, canBeUndefined = true) {
+  function printTsType(
+    field,
+    name,
+    canBeUndefined = true,
+    fromUndefineableList = false
+  ) {
     let typeValue
     let type
 
@@ -793,9 +808,9 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 
     switch (type.kind) {
       case "NON_NULL":
-        return printTsType(type.ofType, name, false)
+        return printTsType(type.ofType, name, false, fromUndefineableList)
       case "LIST":
-        return `${printTsType(type.ofType, name, true)}[]`
+        return `${printTsType(type.ofType, name, true, canBeUndefined)}[]`
       case "OBJECT":
       case "INPUT_OBJECT":
       case "ENUM":
@@ -812,7 +827,9 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         typeValue = "any"
     }
 
-    return `${name}${canBeUndefined ? "?" : ""}: ${typeValue}`
+    return `${name}${
+      canBeUndefined || fromUndefineableList ? "?" : ""
+    }: ${typeValue}`
   }
 
   function printTsPrimitiveType(primitiveType) {
