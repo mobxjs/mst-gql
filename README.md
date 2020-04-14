@@ -633,7 +633,7 @@ For examples, see the sections [Loading and rendering your first data](#loading-
 
 ## `localStorageMixin`
 
-The `localStorageMixin` can be used to automatically safe the full state of the `RootStore`. By default the store is saved after every change, but throttle to be saved once per 5 seconds. (The reason for the trotthling is that, although snapshotting is cheap, serializing a a snapshot to a string is expensive).
+The `localStorageMixin` can be used to automatically save the full state of the `RootStore`. By default the store is saved after every change, but throttle to be saved once per 5 seconds. (The reason for the throttling is that, although snapshotting is cheap, serializing a a snapshot to a string is expensive).
 
 Options:
 
