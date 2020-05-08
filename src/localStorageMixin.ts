@@ -6,6 +6,8 @@ import {
   onSnapshot
 } from "mobx-state-tree"
 
+import { throttle } from "throttle-debounce"
+
 // TODO: support skipping parts of the store, with a key filter for example
 type LocalStorageMixinOptions = {
   storage?: {
@@ -38,39 +40,12 @@ export function localStorageMixin(options: LocalStorageMixinOptions = {}) {
           self,
           onSnapshot(
             self,
-            throttle((data: any) => {
+            throttle(throttleInterval, (data: any) => {
               storage.setItem(storageKey, JSON.stringify(data))
-            }, throttleInterval)
+            })
           )
         )
       }
     }
   })
-}
-
-function throttle(fn: Function, delay: number) {
-  let lastCall = 0
-  let scheduled = false
-
-  return function(...args: any[]) {
-    // already scheduled
-    if (scheduled) return
-    const now = +new Date()
-    if (now - lastCall < delay) {
-      if (!scheduled) {
-        // within throttle period, but no next tick scheduled, schedule now
-        scheduled = true
-        setTimeout(() => {
-          // run and reset
-          lastCall = +new Date()
-          scheduled = false
-          fn.apply(null, args)
-        }, delay - (now - lastCall) + 10) // fire at the end of the current delay period
-      }
-    } else {
-      // outside throttle period, can execute immediately
-      lastCall = now
-      fn.apply(null, args)
-    }
-  }
 }
