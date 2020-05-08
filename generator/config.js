@@ -20,10 +20,10 @@ exports.defaultConfig = {
 exports.getConfig = function getConfig() {
   try {
     const result = explorer.search()
-    return result ? result.config : defaultConfig
+    return result ? result.config : exports.defaultConfig
   } catch (e) {
     console.error(e.message)
-    return defaultConfig
+    return exports.defaultConfig
   }
 }
 
