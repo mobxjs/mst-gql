@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.11.0
+
+- Adds support for --header flag to CLI. [#209](https://github.com/mobxjs/mst-gql/pull/209) - [mwarger](https://github.com/mwarger)
+- Update `localStorageMixin` to prevent stale local data. [#225](https://github.com/mobxjs/mst-gql/pull/225) - [special-character](https://github.com/special-character)
+
 ## 0.9.0 / 0.10.0
 
 - Enum's no longer get Model added to their name. This is a small breaking change from 0.8.0.
