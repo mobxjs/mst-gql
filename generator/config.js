@@ -4,7 +4,7 @@ const { cosmiconfigSync } = require("cosmiconfig")
 
 const explorer = cosmiconfigSync("mst-gql")
 
-const defaultConfig = {
+exports.defaultConfig = {
   excludes: [],
   force: false,
   format: "js",
@@ -13,20 +13,28 @@ const defaultConfig = {
   outDir: "src/models",
   roots: [],
   noReact: false,
-  namingConvention: "js" // supported option: "js", "asis"
+  namingConvention: "js", // supported option: "js", "asis",
+  header: undefined
 }
 
 exports.getConfig = function getConfig() {
   try {
     const result = explorer.search()
-    return result ? result.config : defaultConfig
+    return result ? result.config : exports.defaultConfig
   } catch (e) {
     console.error(e.message)
-    return defaultConfig
+    return exports.defaultConfig
   }
 }
 
 exports.mergeConfigs = function mergeConfigs(args, config) {
+  const headerConfigValues =
+    config && config.header
+      ? Object.keys(config.header)
+          .map(key => `${key}:${config.header[key]}`)
+          .join(" --header=")
+      : undefined
+
   return {
     format: args["--format"] || config.format,
     outDir: resolve(process.cwd(), args["--outDir"] || config.outDir),
@@ -42,6 +50,7 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     noReact: !!args["--noReact"] || config.noReact,
     namingConvention: args["--dontRenameModels"]
       ? "asis"
-      : config.namingConvention
+      : config.namingConvention,
+    header: args["--header"] || headerConfigValues // if multiple headers are passed in config, chain them up to pass on to apollo cli
   }
 }
