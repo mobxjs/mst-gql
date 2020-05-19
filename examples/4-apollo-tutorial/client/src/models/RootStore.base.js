@@ -15,14 +15,18 @@ import { UserModel } from "./UserModel"
 import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
 
+
+
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['LaunchConnection', () => LaunchConnectionModel], ['Launch', () => LaunchModel], ['Mission', () => MissionModel], ['Rocket', () => RocketModel], ['User', () => UserModel]], ['Launch', 'Rocket', 'User']))
+  .extend(configureStoreMixin([['LaunchConnection', () => LaunchConnectionModel], ['Launch', () => LaunchModel], ['Mission', () => MissionModel], ['Rocket', () => RocketModel], ['User', () => UserModel]], ['Launch', 'Rocket', 'User'], "js"))
   .props({
-    launchs: types.optional(types.map(types.late(() => LaunchModel)), {}),
+    launches: types.optional(types.map(types.late(() => LaunchModel)), {}),
     rockets: types.optional(types.map(types.late(() => RocketModel)), {}),
     users: types.optional(types.map(types.late(() => UserModel)), {})
   })

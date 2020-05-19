@@ -17,12 +17,29 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryTodos="queryTodos",
+queryDoneTodos="queryDoneTodos",
+queryUser="queryUser",
+queryUsers="queryUsers"
+}
+export enum RootStoreBaseMutations {
+mutateTodos="mutateTodos",
+mutateDoneTodos="mutateDoneTodos",
+mutateUser="mutateUser",
+mutateUsers="mutateUsers"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['Todo', () => TodoModel], ['User', () => UserModel]], ['Todo', 'User']))
+  .extend(configureStoreMixin([['Todo', () => TodoModel], ['User', () => UserModel]], ['Todo', 'User'], "js"))
   .props({
     todos: types.optional(types.map(types.late((): any => TodoModel)), {}),
     users: types.optional(types.map(types.late((): any => UserModel)), {})
