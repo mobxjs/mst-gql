@@ -679,9 +679,8 @@ ${rootTypes
    * @param {*} gqlPrefix query | mutation
    */
   function generateGraphQLActionsEnum(gqlType, gqlPlural, methodPrefix) {
-    const queries = findObjectByName(
-      schema.queryType ? schema.queryType.name : gqlType
-    )
+    const queries = findObjectByName(gqlType)
+    if (!queries) return ""
 
     const enumContent = queries.fields
       .map(({ name }) => {

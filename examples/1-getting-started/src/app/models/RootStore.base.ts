@@ -27,7 +27,8 @@ export enum RootStoreBaseQueries {
 queryTodos="queryTodos"
 }
 export enum RootStoreBaseMutations {
-mutateTodos="mutateTodos"
+mutateToggleTodo="mutateToggleTodo",
+mutateCreateTodo="mutateCreateTodo"
 }
 
 /**

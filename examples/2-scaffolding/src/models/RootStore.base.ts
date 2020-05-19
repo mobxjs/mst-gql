@@ -32,11 +32,7 @@ queryQuery="queryQuery",
 queryPokemons="queryPokemons",
 queryPokemon="queryPokemon"
 }
-export enum RootStoreBaseMutations {
-mutateQuery="mutateQuery",
-mutatePokemons="mutatePokemons",
-mutatePokemon="mutatePokemon"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL

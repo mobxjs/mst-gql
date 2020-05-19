@@ -28,10 +28,7 @@ queryUser="queryUser",
 queryUsers="queryUsers"
 }
 export enum RootStoreBaseMutations {
-mutateTodos="mutateTodos",
-mutateDoneTodos="mutateDoneTodos",
-mutateUser="mutateUser",
-mutateUsers="mutateUsers"
+mutateToggleTodo="mutateToggleTodo"
 }
 
 /**
