@@ -685,11 +685,13 @@ ${rootTypes
     const enumContent = queries.fields
       .map(({ name }) => {
         const queryName = `${methodPrefix}${toFirstUpper(name)}`
-        return `"${queryName}"`
+        return `${queryName}="${queryName}"`
       })
-      .join(" | ")
+      .join(",\n")
     if (enumContent === "") return
-    return `export type RootStoreBase${gqlPlural} = ${enumContent}`
+    return `export enum RootStoreBase${gqlPlural} {
+${enumContent}
+}`
   }
 
   function generateQueries() {
