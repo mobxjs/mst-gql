@@ -27,9 +27,9 @@ queryMessage="queryMessage",
 queryMe="queryMe"
 }
 export enum RootStoreBaseMutations {
-mutateMessages="mutateMessages",
-mutateMessage="mutateMessage",
-mutateMe="mutateMe"
+mutateChangeName="mutateChangeName",
+mutateLike="mutateLike",
+mutatePostTweet="mutatePostTweet"
 }
 
 /**

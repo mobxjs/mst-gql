@@ -119,9 +119,7 @@ type Refs = {
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
-export enum RootStoreBaseMutations {
-mutateMe=\\"mutateMe\\"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -441,12 +439,8 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-export enum RootStoreBaseQueries {
-queryMe=\\"queryMe\\"
-}
-export enum RootStoreBaseMutations {
-mutateMe=\\"mutateMe\\"
-}
+
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -684,9 +678,7 @@ type Refs = {
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
-export enum RootStoreBaseMutations {
-mutateMe=\\"mutateMe\\"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -923,9 +915,7 @@ type Refs = {
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
-export enum RootStoreBaseMutations {
-mutateMe=\\"mutateMe\\"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -1260,9 +1250,7 @@ type Refs = {
 export enum RootStoreBaseQueries {
 queryRepo=\\"queryRepo\\"
 }
-export enum RootStoreBaseMutations {
-mutateRepo=\\"mutateRepo\\"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -1593,9 +1581,7 @@ type Refs = {
 export enum RootStoreBaseQueries {
 querySearch=\\"querySearch\\"
 }
-export enum RootStoreBaseMutations {
-mutateSearch=\\"mutateSearch\\"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -1771,9 +1757,7 @@ type Refs = {
 export enum RootStoreBaseQueries {
 querySearch=\\"querySearch\\"
 }
-export enum RootStoreBaseMutations {
-mutateSearch=\\"mutateSearch\\"
-}
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
