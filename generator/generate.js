@@ -629,8 +629,7 @@ ${rootTypes
 ${ifTS(`
 /**
 * Enums for the names of base graphql actions
-*/
-`)}
+*/`)}
 ${ifTS(generateGraphQLActionsEnum("Query", "Queries", "query"))}
 ${ifTS(generateGraphQLActionsEnum("Mutation", "Mutations", "mutate"))}
 

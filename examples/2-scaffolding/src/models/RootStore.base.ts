@@ -27,7 +27,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 queryQuery="queryQuery",
 queryPokemons="queryPokemons",

@@ -116,7 +116,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
@@ -442,7 +441,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
@@ -683,7 +681,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
@@ -923,7 +920,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 queryMe=\\"queryMe\\"
 }
@@ -1261,7 +1257,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 queryRepo=\\"queryRepo\\"
 }
@@ -1595,7 +1590,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 querySearch=\\"querySearch\\"
 }
@@ -1774,7 +1768,6 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-
 export enum RootStoreBaseQueries {
 querySearch=\\"querySearch\\"
 }
