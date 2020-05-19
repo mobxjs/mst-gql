@@ -629,8 +629,8 @@ ${rootTypes
 /**
 * Enums for the names of base graphql actions
 */
-${generateGraphQLActionsEnum("Query", "Queries")}
-${generateGraphQLActionsEnum("Mutation", "Mutations")}
+${generateGraphQLActionsEnum("Query", "Queries", "query")}
+${generateGraphQLActionsEnum("Mutation", "Mutations", "mutate")}
 
 /**
 * Store, managing, among others, all the objects received through graphQL
@@ -677,14 +677,14 @@ ${rootTypes
    * @param {*} gqlType Query | Mutation
    * @param {*} gqlPrefix query | mutation
    */
-  function generateGraphQLActionsEnum(gqlType, gqlPlural) {
+  function generateGraphQLActionsEnum(gqlType, gqlPlural, methodPrefix) {
     const queries = findObjectByName(
       schema.queryType ? schema.queryType.name : gqlType
     )
 
     const enumContent = queries.fields
       .map(({ name }) => {
-        const queryName = `${gqlType.toLowerCase()}${toFirstUpper(name)}`
+        const queryName = `${methodPrefix}${toFirstUpper(name)}`
         return `${queryName}="${queryName}"`
       })
       .join(",\n")
