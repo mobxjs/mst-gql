@@ -20,14 +20,8 @@ import { organizationModelPrimitives, OrganizationModelSelector } from "./Organi
 /**
 * Enums for the names of base graphql actions
 */
-export enum RootStoreBaseQueries {
-querySearch="querySearch",
-queryGetAllRepos="queryGetAllRepos"
-}
-export enum RootStoreBaseMutations {
-mutateSearch="mutateSearch",
-mutateGetAllRepos="mutateGetAllRepos"
-}
+
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL

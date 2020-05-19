@@ -629,8 +629,8 @@ ${rootTypes
 /**
 * Enums for the names of base graphql actions
 */
-${generateGraphQLActionsEnum("Query", "Queries", "query")}
-${generateGraphQLActionsEnum("Mutation", "Mutations", "mutate")}
+${ifTS(generateGraphQLActionsEnum("Query", "Queries", "query"))}
+${ifTS(generateGraphQLActionsEnum("Mutation", "Mutations", "mutate"))}
 
 /**
 * Store, managing, among others, all the objects received through graphQL

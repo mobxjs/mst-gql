@@ -10,12 +10,8 @@ import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 /**
 * Enums for the names of base graphql actions
 */
-export enum RootStoreBaseQueries {
-queryTodos="queryTodos"
-}
-export enum RootStoreBaseMutations {
-mutateTodos="mutateTodos"
-}
+
+
 
 /**
 * Store, managing, among others, all the objects received through graphQL
