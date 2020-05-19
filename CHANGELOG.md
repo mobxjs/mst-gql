@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.11.1
+
+- Reset query error after successful query [#231](https://github.com/mobxjs/mst-gql/pull/231) - [reekris](https://github.com/reekris)
+- Add typescript enums for actions [#233](https://github.com/mobxjs/mst-gql/pull/233) - [special-character](https://github.com/special-character)
+
 ## 0.11.0
 
 - Adds support for --header flag to CLI. [#209](https://github.com/mobxjs/mst-gql/pull/209) - [mwarger](https://github.com/mwarger)
