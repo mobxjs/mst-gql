@@ -627,6 +627,12 @@ ${rootTypes
   .join(",\n")}
 }\n\n`)}\
 /**
+* Enums for the names of base graphql actions
+*/
+${generateGraphQLActionsEnum("Query", "Queries")}
+${generateGraphQLActionsEnum("Mutation", "Mutations")}
+
+/**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = ${ifTS("withTypedRefs<Refs>()(")}${
@@ -656,6 +662,36 @@ ${rootTypes
 `
     generateFile("RootStore", entryFile)
     generateFile("RootStore.base", modelFile, true)
+  }
+
+  /**
+   * A func to generate enums that are the names of the graphql actions in the RootStore.base
+   * Like:
+   * export enum RootStoreBaseQueries {
+   *    queryMessages="queryMessages",
+   *    queryMessage="queryMessage",
+   *    queryMe="queryMe"
+   * }
+   *
+   *
+   * @param {*} gqlType Query | Mutation
+   * @param {*} gqlPrefix query | mutation
+   */
+  function generateGraphQLActionsEnum(gqlType, gqlPlural) {
+    const queries = findObjectByName(
+      schema.queryType ? schema.queryType.name : gqlType
+    )
+
+    const enumContent = queries.fields
+      .map(({ name }) => {
+        const queryName = `${gqlType.toLowerCase()}${toFirstUpper(name)}`
+        return `${queryName}="${queryName}"`
+      })
+      .join(",\n")
+    if (enumContent === "") return
+    return `export enum RootStoreBase${gqlPlural} {
+${enumContent}
+}`
   }
 
   function generateQueries() {

@@ -16,6 +16,20 @@ type Refs = {
 }
 
 /**
+* Enums for the names of graphql actions in the root store
+*/
+export enum RootStoreBaseQueries {
+queryMessages="queryMessages",
+queryMessage="queryMessage",
+queryMe="queryMe"
+}
+export enum RootStoreBaseMutations {
+mutationMessages="mutationMessages",
+mutationMessage="mutationMessage",
+mutationMe="mutationMe"
+}
+
+/**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = withTypedRefs<Refs>()(types.model()
