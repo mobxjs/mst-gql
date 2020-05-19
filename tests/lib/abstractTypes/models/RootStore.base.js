@@ -18,6 +18,12 @@ import { organizationModelPrimitives, OrganizationModelSelector } from "./Organi
 
 
 /**
+* Enums for the names of base graphql actions
+*/
+export type RootStoreBaseQueries = "querySearch" | "queryGetAllRepos"
+export type RootStoreBaseMutations = "mutateSearch" | "mutateGetAllRepos"
+
+/**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = MSTGQLStore

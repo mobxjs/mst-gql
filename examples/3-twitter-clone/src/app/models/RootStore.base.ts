@@ -20,16 +20,8 @@ type Refs = {
 /**
 * Enums for the names of base graphql actions
 */
-export enum RootStoreBaseQueries {
-queryMessages="queryMessages",
-queryMessage="queryMessage",
-queryMe="queryMe"
-}
-export enum RootStoreBaseMutations {
-mutateMessages="mutateMessages",
-mutateMessage="mutateMessage",
-mutateMe="mutateMe"
-}
+export type RootStoreBaseQueries = "queryMessages" | "queryMessage" | "queryMe"
+export type RootStoreBaseMutations = "mutateMessages" | "mutateMessage" | "mutateMe"
 
 /**
 * Store, managing, among others, all the objects received through graphQL

@@ -8,6 +8,12 @@ import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 
 
 /**
+* Enums for the names of base graphql actions
+*/
+export type RootStoreBaseQueries = "queryTodos"
+export type RootStoreBaseMutations = "mutateTodos"
+
+/**
 * Store, managing, among others, all the objects received through graphQL
 */
 export const RootStoreBase = MSTGQLStore
