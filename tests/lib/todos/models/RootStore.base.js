@@ -7,9 +7,7 @@ import { TodoModel } from "./TodoModel"
 import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 
 
-/**
-* Enums for the names of base graphql actions
-*/
+
 
 
 

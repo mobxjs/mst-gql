@@ -17,9 +17,7 @@ import { OrganizationModel } from "./OrganizationModel"
 import { organizationModelPrimitives, OrganizationModelSelector } from "./OrganizationModel.base"
 
 
-/**
-* Enums for the names of base graphql actions
-*/
+
 
 
 

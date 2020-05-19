@@ -112,6 +112,18 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+export enum RootStoreBaseMutations {
+mutateMe=\\"mutateMe\\"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -426,6 +438,18 @@ type Refs = {
   possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBoxModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+export enum RootStoreBaseMutations {
+mutateMe=\\"mutateMe\\"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -655,6 +679,18 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+export enum RootStoreBaseMutations {
+mutateMe=\\"mutateMe\\"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -881,6 +917,18 @@ import { InterestEnum } from \\"./InterestEnum\\"
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   users: ObservableMap<string, UserModelType>
+}
+
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+export enum RootStoreBaseMutations {
+mutateMe=\\"mutateMe\\"
 }
 
 /**
@@ -1209,6 +1257,18 @@ type Refs = {
   repos: ObservableMap<string, RepoModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+queryRepo=\\"queryRepo\\"
+}
+export enum RootStoreBaseMutations {
+mutateRepo=\\"mutateRepo\\"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -1531,6 +1591,18 @@ type Refs = {
   searchresults: ObservableMap<string, SearchResultModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+querySearch=\\"querySearch\\"
+}
+export enum RootStoreBaseMutations {
+mutateSearch=\\"mutateSearch\\"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -1696,6 +1768,18 @@ export type MovieInput = {
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
 
+}
+
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+export enum RootStoreBaseQueries {
+querySearch=\\"querySearch\\"
+}
+export enum RootStoreBaseMutations {
+mutateSearch=\\"mutateSearch\\"
 }
 
 /**
