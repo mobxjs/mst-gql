@@ -514,9 +514,9 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { RoleEnum } from \\"./RoleEnum\\"
+import { RoleEnumModel } from \\"./RoleEnumModel\\"
 import { RootStoreType } from \\"./index\\"
-import { interest_enum } from \\"./interest_enum\\"
+import { interest_enumModel } from \\"./interest_enumModel\\"
 
 
 /**
@@ -530,8 +530,8 @@ export const UserModelBase = ModelBase
     id: types.identifier,
     name: types.union(types.undefined, types.string),
     avatar: types.union(types.undefined, types.string),
-    role: types.union(types.undefined, RoleEnum),
-    interest: types.union(types.undefined, interest_enum),
+    role: types.union(types.undefined, RoleEnumModel),
+    interest: types.union(types.undefined, interest_enumModel),
   })
   .views(self => ({
     get store() {
@@ -579,7 +579,7 @@ export const UserModel = UserModelBase
     false,
   ],
   Array [
-    "RoleEnum",
+    "RoleEnumModel",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -598,7 +598,7 @@ AUTHOR=\\"AUTHOR\\"
 /**
 * Role
 */
-export const RoleEnum = types.enumeration(\\"Role\\", [
+export const RoleEnumModel = types.enumeration(\\"Role\\", [
         \\"USER\\",
   \\"ADMIN\\",
   \\"AUTHOR\\",
@@ -607,7 +607,7 @@ export const RoleEnum = types.enumeration(\\"Role\\", [
     true,
   ],
   Array [
-    "interest_enum",
+    "interest_enumModel",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -626,7 +626,7 @@ COOKING=\\"COOKING\\"
 /**
 * interest_enum
 */
-export const interest_enum = types.enumeration(\\"interest_enum\\", [
+export const interest_enumModel = types.enumeration(\\"interest_enum\\", [
         \\"READING\\",
   \\"SPORTS\\",
   \\"COOKING\\",
@@ -663,8 +663,8 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
-import { Role } from \\"./RoleEnum\\"
-import { interest_enum } from \\"./interest_enum\\"
+import { Role } from \\"./RoleEnumModel\\"
+import { interest_enum } from \\"./interest_enumModel\\"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -722,8 +722,8 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./UserModel\\"
-export * from \\"./RoleEnum\\"
-export * from \\"./interest_enum\\"
+export * from \\"./RoleEnumModel\\"
+export * from \\"./interest_enumModel\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
@@ -751,8 +751,8 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { InterestEnum } from \\"./InterestEnum\\"
-import { RoleEnum } from \\"./RoleEnum\\"
+import { InterestEnumModel } from \\"./InterestEnumModel\\"
+import { RoleEnumModel } from \\"./RoleEnumModel\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -767,8 +767,8 @@ export const UserModelBase = ModelBase
     id: types.identifier,
     name: types.union(types.undefined, types.string),
     avatar: types.union(types.undefined, types.string),
-    role: types.union(types.undefined, RoleEnum),
-    interest: types.union(types.undefined, InterestEnum),
+    role: types.union(types.undefined, RoleEnumModel),
+    interest: types.union(types.undefined, InterestEnumModel),
   })
   .views(self => ({
     get store() {
@@ -816,7 +816,7 @@ export const UserModel = UserModelBase
     false,
   ],
   Array [
-    "RoleEnum",
+    "RoleEnumModel",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -835,7 +835,7 @@ AUTHOR=\\"AUTHOR\\"
 /**
 * Role
 */
-export const RoleEnum = types.enumeration(\\"Role\\", [
+export const RoleEnumModel = types.enumeration(\\"Role\\", [
         \\"USER\\",
   \\"ADMIN\\",
   \\"AUTHOR\\",
@@ -844,7 +844,7 @@ export const RoleEnum = types.enumeration(\\"Role\\", [
     true,
   ],
   Array [
-    "InterestEnum",
+    "InterestEnumModel",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -863,7 +863,7 @@ COOKING=\\"COOKING\\"
 /**
 * InterestEnum
 */
-export const InterestEnum = types.enumeration(\\"InterestEnum\\", [
+export const InterestEnumModel = types.enumeration(\\"InterestEnum\\", [
         \\"READING\\",
   \\"SPORTS\\",
   \\"COOKING\\",
@@ -900,8 +900,8 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
-import { Role } from \\"./RoleEnum\\"
-import { InterestEnum } from \\"./InterestEnum\\"
+import { Role } from \\"./RoleEnumModel\\"
+import { InterestEnum } from \\"./InterestEnumModel\\"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -959,8 +959,8 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./UserModel\\"
-export * from \\"./RoleEnum\\"
-export * from \\"./InterestEnum\\"
+export * from \\"./RoleEnumModel\\"
+export * from \\"./InterestEnumModel\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
