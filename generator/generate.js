@@ -913,9 +913,7 @@ import { createStoreContext, createUseQueryHook } from "mst-gql"
 import * as React from "react"
 ${
   format === "ts"
-    ? `import { RootStore${ifTS(
-        ", RootStoreType"
-      )} } from "./RootStore${importPostFix}"`
+    ? `import { RootStoreType } from "./RootStore${importPostFix}"`
     : ""
 }
 
