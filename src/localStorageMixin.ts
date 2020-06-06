@@ -7,8 +7,8 @@ import {
 } from "mobx-state-tree"
 
 import { throttle } from "throttle-debounce"
+import pick from "lodash/pick"
 
-// TODO: support skipping parts of the store, with a key filter for example
 type LocalStorageMixinOptions = {
   storage?: {
     getItem(key: string): string | null | Promise<string | null>
@@ -16,6 +16,7 @@ type LocalStorageMixinOptions = {
   }
   throttle?: number // How often the snapshot is written to local storage
   storageKey?: string
+  filter?: string[]
 }
 export function localStorageMixin(options: LocalStorageMixinOptions = {}) {
   const storage = options.storage || window.localStorage
@@ -41,6 +42,9 @@ export function localStorageMixin(options: LocalStorageMixinOptions = {}) {
           onSnapshot(
             self,
             throttle(throttleInterval, (data: any) => {
+              if (options.filter) {
+                data = pick(data, options.filter)
+              }
               storage.setItem(storageKey, JSON.stringify(data))
             })
           )
