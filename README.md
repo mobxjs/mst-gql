@@ -675,13 +675,14 @@ For examples, see the sections [Loading and rendering your first data](#loading-
 
 ## `localStorageMixin`
 
-The `localStorageMixin` can be used to automatically save the full state of the `RootStore`. By default the store is saved after every change, but throttle to be saved once per 5 seconds. (The reason for the throttling is that, although snapshotting is cheap, serializing a a snapshot to a string is expensive).
+The `localStorageMixin` can be used to automatically save the full state of the `RootStore`. By default the store is saved after every change, but throttle to be saved once per 5 seconds. (The reason for the throttling is that, although snapshotting is cheap, serializing a a snapshot to a string is expensive). If you only want to persist parts of the store you can use the `filter` option to filter which keys that should be stored.
 
 Options:
 
 - `storage` (the storage object to use. Defaults to `window.localStorage`)
 - `throttle` (in milliseconds)
 - `storageKey` (the key to be used to store in the local storage).
+- `filter` (an optional array of string keys that determines which data that will be stored to local storage)
 
 Example:
 
@@ -692,6 +693,7 @@ const RootStore = RootStoreBase.extend(
   localStorageMixin({
     throttle: 1000,
     storageKey: "appFluff"
+    filter: ['todos', 'key.subkey']
   })
 )
 ```
