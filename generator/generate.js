@@ -823,7 +823,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} ${
           isScalar
             ? ""
-            : ` {
+            : `{
         \${typeof resultSelector === "function" ? resultSelector(new ${returnType.name}ModelSelector()).toString() : resultSelector}
       } `
         }}\`, variables${extraActualArgs})
