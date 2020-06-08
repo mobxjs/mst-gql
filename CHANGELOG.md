@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.12.0
+
+- Suppot for non-object return values. These currently are not stored in the store automatically. [#246](https://github.com/mobxjs/mst-gql/pull/246)
+- Add `Type` suffix to MST enum types to avoid clash with typescript value [#238](https://github.com/mobxjs/mst-gql/pull/238) - [beepsoft](https://github.com/beepsoft)
+
 ## 0.11.1
 
 - Reset query error after successful query [#231](https://github.com/mobxjs/mst-gql/pull/231) - [reekris](https://github.com/reekris)
