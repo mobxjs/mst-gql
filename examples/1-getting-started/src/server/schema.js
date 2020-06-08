@@ -48,7 +48,7 @@ const resolvers = {
       return store.todos
     },
     stringFromServer: (root, { string }, context) => {
-      return string ? string : "No String Sent."
+      return string || "No String Sent."
     }
   },
   Mutation: {
