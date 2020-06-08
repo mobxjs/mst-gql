@@ -514,9 +514,9 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { RoleEnumType } from \\"./RoleEnumType\\"
+import { RoleEnumType } from \\"./RoleEnum\\"
 import { RootStoreType } from \\"./index\\"
-import { interest_enumType } from \\"./interest_enumType\\"
+import { interest_enumType } from \\"./interest_enum\\"
 
 
 /**
@@ -579,7 +579,7 @@ export const UserModel = UserModelBase
     false,
   ],
   Array [
-    "RoleEnumType",
+    "RoleEnum",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -607,7 +607,7 @@ export const RoleEnumType = types.enumeration(\\"Role\\", [
     true,
   ],
   Array [
-    "interest_enumType",
+    "interest_enum",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -663,8 +663,8 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
-import { Role } from \\"./RoleEnumType\\"
-import { interest_enum } from \\"./interest_enumType\\"
+import { RoleType } from \\"./RoleEnum\\"
+import { interest_enumType } from \\"./interest_enum\\"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -722,8 +722,8 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./UserModel\\"
-export * from \\"./RoleEnumType\\"
-export * from \\"./interest_enumType\\"
+export * from \\"./RoleEnum\\"
+export * from \\"./interest_enum\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
@@ -751,8 +751,8 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { InterestEnumType } from \\"./InterestEnumType\\"
-import { RoleEnumType } from \\"./RoleEnumType\\"
+import { InterestEnumType } from \\"./InterestEnum\\"
+import { RoleEnumType } from \\"./RoleEnum\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -816,7 +816,7 @@ export const UserModel = UserModelBase
     false,
   ],
   Array [
-    "RoleEnumType",
+    "RoleEnum",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -844,7 +844,7 @@ export const RoleEnumType = types.enumeration(\\"Role\\", [
     true,
   ],
   Array [
-    "InterestEnumType",
+    "InterestEnum",
     "/* This is a mst-gql generated file, don't modify it manually */
 /* eslint-disable */
 /* tslint:disable */
@@ -900,8 +900,8 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
-import { Role } from \\"./RoleEnumType\\"
-import { InterestEnum } from \\"./InterestEnumType\\"
+import { RoleType } from \\"./RoleEnum\\"
+import { InterestEnumType } from \\"./InterestEnum\\"
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -959,8 +959,8 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 /* tslint:disable */
 
 export * from \\"./UserModel\\"
-export * from \\"./RoleEnumType\\"
-export * from \\"./InterestEnumType\\"
+export * from \\"./RoleEnum\\"
+export * from \\"./InterestEnum\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
