@@ -682,13 +682,6 @@ ${rootTypes
     if (returnType.kind === "OBJECT" && excludes.includes(returnType.name))
       return true
     // TODO: probably we will need to support input object types soon
-    if (returnType.kind !== "OBJECT") {
-      console.warn(
-        `Skipping generation of query '${name}', its return type is not yet understood. PR is welcome`
-      )
-      // log(returnType)
-      return true // TODO: for now, we only generate queries for those queries that return objects
-    }
     return false
   }
 
@@ -770,11 +763,15 @@ ${enumContent}
     extraActualArgs = ""
   ) {
     if (!query) return ""
+
     return query.fields
       .map(field => {
         if (shouldSkipField(field)) return ""
 
         let { name, origName, args, type, description } = field
+
+        const isScalar = type.kind === "SCALAR"
+
         if (type.kind === "NON_NULL") type = type.ofType
         const returnsList = type.kind === "LIST"
         let returnType = returnsList ? type.ofType : type
@@ -783,8 +780,12 @@ ${enumContent}
         const tsType =
           format !== "ts"
             ? ""
-            : `<{ ${name}: ${returnType.name}${modelTypePostfix}${
-                returnsList ? "[]" : ""
+            : `<{ ${name}: ${
+                isScalar
+                  ? `${printTsPrimitiveType(type.name)} `
+                  : `${returnType.name}${modelTypePostfix}${
+                      returnsList ? "[]" : ""
+                    }`
               }}>`
 
         const formalArgs =
@@ -810,18 +811,22 @@ ${enumContent}
 ${optPrefix("\n    // ", sanitizeComment(description))}
     ${methodPrefix}${toFirstUpper(name)}(variables${
           args.length === 0 && format === "ts" ? "?" : ""
-        }${tsVariablesType}, resultSelector${
-          ifTS(
-            `: string | ((qb: ${returnType.name}ModelSelector) => ${returnType.name}ModelSelector)`
-          ) /* TODO or GQL object */
-        } = ${toFirstLower(
-          returnType.name
-        )}ModelPrimitives.toString()${extraFormalArgs}) {
-      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
-        \${typeof resultSelector === "function" ? resultSelector(new ${
-          returnType.name
-        }ModelSelector()).toString() : resultSelector}
-      } }\`, variables${extraActualArgs})
+        }${tsVariablesType}${
+          isScalar
+            ? ""
+            : `, resultSelector${
+                ifTS(
+                  `: string | ((qb: ${returnType.name}ModelSelector) => ${returnType.name}ModelSelector)`
+                ) /* TODO or GQL object */
+              } = ${toFirstLower(returnType.name)}ModelPrimitives.toString()`
+        }${extraFormalArgs}) {
+      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} ${
+          isScalar
+            ? ""
+            : ` {
+        \${typeof resultSelector === "function" ? resultSelector(new ${returnType.name}ModelSelector()).toString() : resultSelector}
+      } `
+        }}\`, variables${extraActualArgs})
     },`
       })
       .join("")
