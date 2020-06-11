@@ -112,6 +112,15 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -139,7 +148,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 
@@ -426,6 +435,13 @@ type Refs = {
   possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBoxModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -454,7 +470,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 
@@ -498,9 +514,9 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { RoleEnum } from \\"./RoleEnum\\"
+import { RoleEnumType } from \\"./RoleEnum\\"
 import { RootStoreType } from \\"./index\\"
-import { interest_enum } from \\"./interest_enum\\"
+import { interest_enumType } from \\"./interest_enum\\"
 
 
 /**
@@ -514,8 +530,8 @@ export const UserModelBase = ModelBase
     id: types.identifier,
     name: types.union(types.undefined, types.string),
     avatar: types.union(types.undefined, types.string),
-    role: types.union(types.undefined, RoleEnum),
-    interest: types.union(types.undefined, interest_enum),
+    role: types.union(types.undefined, RoleEnumType),
+    interest: types.union(types.undefined, interest_enumType),
   })
   .views(self => ({
     get store() {
@@ -582,7 +598,7 @@ AUTHOR=\\"AUTHOR\\"
 /**
 * Role
 */
-export const RoleEnum = types.enumeration(\\"Role\\", [
+export const RoleEnumType = types.enumeration(\\"Role\\", [
         \\"USER\\",
   \\"ADMIN\\",
   \\"AUTHOR\\",
@@ -610,7 +626,7 @@ COOKING=\\"COOKING\\"
 /**
 * interest_enum
 */
-export const interest_enum = types.enumeration(\\"interest_enum\\", [
+export const interest_enumType = types.enumeration(\\"interest_enum\\", [
         \\"READING\\",
   \\"SPORTS\\",
   \\"COOKING\\",
@@ -655,6 +671,15 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -682,7 +707,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 
@@ -726,8 +751,8 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { InterestEnum } from \\"./InterestEnum\\"
-import { RoleEnum } from \\"./RoleEnum\\"
+import { InterestEnumType } from \\"./InterestEnum\\"
+import { RoleEnumType } from \\"./RoleEnum\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -742,8 +767,8 @@ export const UserModelBase = ModelBase
     id: types.identifier,
     name: types.union(types.undefined, types.string),
     avatar: types.union(types.undefined, types.string),
-    role: types.union(types.undefined, RoleEnum),
-    interest: types.union(types.undefined, InterestEnum),
+    role: types.union(types.undefined, RoleEnumType),
+    interest: types.union(types.undefined, InterestEnumType),
   })
   .views(self => ({
     get store() {
@@ -810,7 +835,7 @@ AUTHOR=\\"AUTHOR\\"
 /**
 * Role
 */
-export const RoleEnum = types.enumeration(\\"Role\\", [
+export const RoleEnumType = types.enumeration(\\"Role\\", [
         \\"USER\\",
   \\"ADMIN\\",
   \\"AUTHOR\\",
@@ -838,7 +863,7 @@ COOKING=\\"COOKING\\"
 /**
 * InterestEnum
 */
-export const InterestEnum = types.enumeration(\\"InterestEnum\\", [
+export const InterestEnumType = types.enumeration(\\"InterestEnum\\", [
         \\"READING\\",
   \\"SPORTS\\",
   \\"COOKING\\",
@@ -883,6 +908,15 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryMe=\\"queryMe\\"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -910,7 +944,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 
@@ -1209,6 +1243,15 @@ type Refs = {
   repos: ObservableMap<string, RepoModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryRepo=\\"queryRepo\\"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -1236,7 +1279,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 
@@ -1531,6 +1574,15 @@ type Refs = {
   searchresults: ObservableMap<string, SearchResultModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+querySearch=\\"querySearch\\"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -1558,7 +1610,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 
@@ -1698,6 +1750,15 @@ type Refs = {
 
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+querySearch=\\"querySearch\\"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -1725,7 +1786,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
 import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
 import * as React from \\"react\\"
-import { RootStore, RootStoreType } from \\"./RootStore\\"
+import { RootStoreType } from \\"./RootStore\\"
 
 export const StoreContext = createStoreContext<RootStoreType>(React)
 

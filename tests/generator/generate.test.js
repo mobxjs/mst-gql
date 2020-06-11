@@ -269,7 +269,7 @@ type Query {
   expect(
     hasFileContentExact(
       roleEnumFile,
-      'export const RoleEnum = types.enumeration("Role"'
+      'export const RoleEnumType = types.enumeration("Role"'
     )
   ).toBeTruthy()
 
@@ -283,7 +283,7 @@ type Query {
   expect(
     hasFileContentExact(
       interestEnumFile,
-      'export const interest_enum = types.enumeration("interest_enum"'
+      'export const interest_enumType = types.enumeration("interest_enum"'
     )
   ).toBeTruthy()
 })
@@ -329,7 +329,7 @@ type Query {
   expect(
     hasFileContentExact(
       roleEnumFile,
-      'export const RoleEnum = types.enumeration("Role"'
+      'export const RoleEnumType = types.enumeration("Role"'
     )
   ).toBeTruthy()
 
@@ -342,7 +342,7 @@ type Query {
   expect(
     hasFileContentExact(
       interestEnumFile,
-      'export const InterestEnum = types.enumeration("InterestEnum"'
+      'export const InterestEnumType = types.enumeration("InterestEnum"'
     )
   ).toBeTruthy()
 })

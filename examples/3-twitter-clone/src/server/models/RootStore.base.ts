@@ -15,6 +15,21 @@ type Refs = {
   users: ObservableMap<string, UserModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryMessages="queryMessages",
+queryMessage="queryMessage",
+queryMe="queryMe"
+}
+export enum RootStoreBaseMutations {
+mutateChangeName="mutateChangeName",
+mutateLike="mutateLike",
+mutatePostTweet="mutatePostTweet"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */

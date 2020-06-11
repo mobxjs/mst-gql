@@ -19,6 +19,19 @@ type Refs = {
   todos: ObservableMap<string, TodoModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryTodos="queryTodos",
+queryStringFromServer="queryStringFromServer"
+}
+export enum RootStoreBaseMutations {
+mutateToggleTodo="mutateToggleTodo",
+mutateCreateTodo="mutateCreateTodo"
+}
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -33,6 +46,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       return self.query<{ todos: TodoModelType[]}>(`query todos { todos {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, options)
+    },
+    queryStringFromServer(variables: { string?: string }, options: QueryOptions = {}) {
+      return self.query<{ stringFromServer: string }>(`query stringFromServer($string: String) { stringFromServer(string: $string) }`, variables, options)
     },
     mutateToggleTodo(variables: { id: string }, resultSelector: string | ((qb: TodoModelSelector) => TodoModelSelector) = todoModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ toggleTodo: TodoModelType}>(`mutation toggleTodo($id: ID!) { toggleTodo(id: $id) {

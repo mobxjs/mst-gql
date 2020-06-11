@@ -23,6 +23,16 @@ type Refs = {
   attacks: ObservableMap<string, AttackModelType>
 }
 
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryPokemons="queryPokemons",
+queryPokemon="queryPokemon"
+}
+
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */

@@ -125,6 +125,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     promise.then(
       action((data: any) => {
         this.loading = false
+        this.error = false
         this.data = data
       }),
       action(error => {

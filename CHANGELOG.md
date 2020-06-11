@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 0.12.0
+
+- Suppot for non-object return values. These currently are not stored in the store automatically. [#246](https://github.com/mobxjs/mst-gql/pull/246)
+- Add `Type` suffix to MST enum types to avoid clash with typescript value [#238](https://github.com/mobxjs/mst-gql/pull/238) - [beepsoft](https://github.com/beepsoft)
+
+## 0.11.1
+
+- Reset query error after successful query [#231](https://github.com/mobxjs/mst-gql/pull/231) - [reekris](https://github.com/reekris)
+- Add typescript enums for actions [#233](https://github.com/mobxjs/mst-gql/pull/233) - [special-character](https://github.com/special-character)
+
+## 0.11.0
+
+- Adds support for --header flag to CLI. [#209](https://github.com/mobxjs/mst-gql/pull/209) - [mwarger](https://github.com/mwarger)
+- Update `localStorageMixin` to prevent stale local data. [#225](https://github.com/mobxjs/mst-gql/pull/225) - [special-character](https://github.com/special-character)
+
 ## 0.9.0 / 0.10.0
 
 - Enum's no longer get Model added to their name. This is a small breaking change from 0.8.0.
