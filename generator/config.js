@@ -14,7 +14,8 @@ exports.defaultConfig = {
   roots: [],
   noReact: false,
   namingConvention: "js", // supported option: "js", "asis",
-  header: undefined
+  header: undefined,
+  useIdentifierNumber: false
 }
 
 exports.getConfig = function getConfig() {
@@ -51,6 +52,8 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     namingConvention: args["--dontRenameModels"]
       ? "asis"
       : config.namingConvention,
-    header: args["--header"] || headerConfigValues // if multiple headers are passed in config, chain them up to pass on to apollo cli
+    header: args["--header"] || headerConfigValues, // if multiple headers are passed in config, chain them up to pass on to apollo cli
+    useIdentifierNumber:
+      !!args["--useIdentifierNumber"] || config.useIdentifierNumber
   }
 }

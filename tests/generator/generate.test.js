@@ -390,3 +390,47 @@ type Mutation {
     )
   ).toMatchSnapshot()
 })
+
+test("use identifierNumber as ID with useIdentifierNumber=true", () => {
+  const schema = `
+    type User {
+      id: ID
+      name: String!
+      avatar: String!
+    }
+
+    input UsersFilter {
+      ids: [ID!]!
+    }
+
+    type Query {
+      user(id: ID!): User!
+      users(input: UsersFilter!) : [User]!
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    useIdentifierNumber: true
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "RootStore.base"),
+      "queryUser(variables: { id: number },"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "RootStore.base"), "ids: number[]")
+  ).toBeTruthy()
+})

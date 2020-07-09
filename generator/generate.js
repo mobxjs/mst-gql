@@ -26,7 +26,8 @@ function generate(
   generationDate = "a long long time ago...",
   modelsOnly = false,
   noReact = false,
-  namingConvention = "js"
+  namingConvention = "js",
+  useIdentifierNumber = false
 ) {
   const types = schema.types
 
@@ -400,11 +401,13 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
-          const primitiveType = primitiveToMstType(fieldType.name)
-          return result(
-            `types.${primitiveType}`,
-            primitiveType === "identifier"
+          const primitiveType = primitiveToMstType(
+            fieldType.name,
+            useIdentifierNumber
           )
+          const requiredTypes = ["identifier", "identifierNumber"]
+          const isRequired = requiredTypes.includes(primitiveType)
+          return result(`types.${primitiveType}`, isRequired)
         case "OBJECT":
           return result(handleObjectFieldType(fieldName, fieldType, isNested))
         case "LIST":
@@ -901,7 +904,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 
   function printTsPrimitiveType(primitiveType) {
     const res = {
-      ID: "string",
+      ID: useIdentifierNumber ? "number" : "string",
       Int: "number",
       String: "string",
       Float: "number",
@@ -987,9 +990,9 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
   return files
 }
 
-function primitiveToMstType(type) {
+function primitiveToMstType(type, useIdentifierNumber) {
   const res = {
-    ID: "identifier",
+    ID: useIdentifierNumber ? "identifierNumber" : "identifier",
     Int: "integer",
     String: "string",
     Float: "number",
@@ -1160,7 +1163,8 @@ function scaffold(
     roots: [],
     excludes: [],
     modelsOnly: false,
-    namingConvention: "js"
+    namingConvention: "js",
+    useIdentifierNumber: false
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -1175,7 +1179,8 @@ function scaffold(
     "<during unit test run>",
     options.modelsOnly || false,
     options.noReact || false,
-    options.namingConvention || "js"
+    options.namingConvention || "js",
+    options.useIdentifierNumber || false
   )
 }
 

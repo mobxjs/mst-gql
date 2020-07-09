@@ -409,6 +409,7 @@ The `mst-gql` command currently accepts the following arguments:
 - `--noReact` doesn't generate the React related utilities
 - `--force` When set, exiting files will always be overridden. This will drop all customizations of model classes!
 - `--dontRenameModels` By default generates model names from graphql schema types that are idiomatic Javascript/Typescript names, ie. type names will be PascalCased and root collection names camelCased. With `--dontRenameModels` the original names - as provided by the graphql schema - will be used for generating models.
+- `--useIdentifierNumber` Specifies the use of `identifierNumber` instead of `identifier` as the mst type for the generated models unique keys. This requires your models to use numbers as their identifiers. See the [mobx-state-tree](https://mobx-state-tree.js.org/overview/types#property-types) for more information.
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
   - a graphql files, like `schema.graphql`
