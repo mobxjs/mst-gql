@@ -29,7 +29,8 @@ queryStringFromServer="queryStringFromServer"
 }
 export enum RootStoreBaseMutations {
 mutateToggleTodo="mutateToggleTodo",
-mutateCreateTodo="mutateCreateTodo"
+mutateCreateTodo="mutateCreateTodo",
+mutateReturnBoolean="mutateReturnBoolean"
 }
 
 /**
@@ -59,5 +60,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
       return self.mutate<{ createTodo: TodoModelType}>(`mutation createTodo($todo: CreateTodoInput!) { createTodo(todo: $todo) {
         ${typeof resultSelector === "function" ? resultSelector(new TodoModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
+    },
+    mutateReturnBoolean(variables: { toReturn: boolean }, optimisticUpdate?: () => void) {
+      return self.mutate<{ returnBoolean: boolean }>(`mutation returnBoolean($toReturn: Boolean!) { returnBoolean(toReturn: $toReturn) }`, variables, optimisticUpdate)
     },
   })))

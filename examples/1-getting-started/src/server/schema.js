@@ -28,6 +28,7 @@ const typeDefs = `
   type Mutation {
     toggleTodo(id: ID!): Todo
     createTodo(todo: CreateTodoInput!): Todo
+    returnBoolean(toReturn: Boolean!): Boolean
   }
   type Todo {
     id: ID,
@@ -64,6 +65,9 @@ const resolvers = {
       }
       store.todos.push(todo)
       return todo
+    },
+    returnBoolean: (root, args, context) => {
+      return args.toReturn
     }
   }
 }

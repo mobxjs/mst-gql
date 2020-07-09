@@ -366,3 +366,27 @@ test("handle reserved graphql name", () => {
     )
   }
 })
+
+test("boolean return value", () => {
+  expect(
+    scaffold(
+      `
+type User {
+  id: ID
+  name: String!
+  avatar: String!
+}
+type Query {
+  me: User
+}
+type Mutation {
+  returnBoolean(toReturn: Boolean!): Boolean
+}
+`,
+      {
+        roots: ["User"],
+        namingConvention: "asis"
+      }
+    )
+  ).toMatchSnapshot()
+})
