@@ -418,7 +418,7 @@ The `mst-gql` command currently accepts the following arguments:
 
 `mst-gql` also supports [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) as an alternative to using cli arguments.
 
-A sample config can be found in [Example 2](https://github.com/mobxjs/mst-gql/blob/master/examples/2-scaffolding/mst-gql.config.js).
+A sample config can be found in [Example 2](https://github.com/mobxjs/mst-gql/blob/main/examples/2-scaffolding/mst-gql.config.js).
 
 ## RootStore
 
