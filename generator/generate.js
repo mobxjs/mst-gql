@@ -3,6 +3,7 @@ const fs = require("fs")
 const graphql = require("graphql")
 const camelcase = require("camelcase")
 const pluralize = require("pluralize")
+const escapeStringRegexp = require("escape-string-regexp")
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -27,7 +28,8 @@ function generate(
   modelsOnly = false,
   noReact = false,
   namingConvention = "js",
-  useIdentifierNumber = false
+  useIdentifierNumber = false,
+  fieldOverrides = []
 ) {
   const types = schema.types
 
@@ -36,6 +38,8 @@ function generate(
   // For each type converts 'name' according to namingConvention and copies
   // original name to the 'origName' field of the type's object
   transformTypes(types, namingConvention)
+
+  const overrides = parseFieldOverrides(fieldOverrides)
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
@@ -362,6 +366,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const nonPrimitiveFields = []
     const refs = []
 
+    //remap all fields
+    //check for duplicate fields
+    //remap
+
     let modelProperties = ""
     if (type.fields) {
       modelProperties = type.fields.map(field => handleField(field)).join("\n")
@@ -402,8 +410,11 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "SCALAR":
           primitiveFields.push(fieldName)
           const primitiveType = primitiveToMstType(
+            fieldName,
             fieldType.name,
-            useIdentifierNumber
+            useIdentifierNumber,
+            currentType,
+            overrides
           )
           const requiredTypes = ["identifier", "identifierNumber"]
           const isRequired = requiredTypes.includes(primitiveType)
@@ -990,7 +1001,19 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
   return files
 }
 
-function primitiveToMstType(type, useIdentifierNumber) {
+function primitiveToMstType(
+  name,
+  type,
+  useIdentifierNumber,
+  currentType,
+  overrides
+) {
+  const currentOverides = overrides.filter(override =>
+    override.matches({ currentType, name, type })
+  )
+
+  if (currentOverides.length > 0) return currentOverides[0].destinationMstType
+
   const res = {
     ID: useIdentifierNumber ? "identifierNumber" : "identifier",
     Int: "integer",
@@ -1164,7 +1187,8 @@ function scaffold(
     excludes: [],
     modelsOnly: false,
     namingConvention: "js",
-    useIdentifierNumber: false
+    useIdentifierNumber: false,
+    fieldOverrides: []
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -1180,7 +1204,8 @@ function scaffold(
     options.modelsOnly || false,
     options.noReact || false,
     options.namingConvention || "js",
-    options.useIdentifierNumber || false
+    options.useIdentifierNumber || false,
+    options.fieldOverrides || []
   )
 }
 
@@ -1317,5 +1342,118 @@ function logUnexpectedFiles(outDir, files) {
     }
   })
 }
+
+function parseFieldOverrides(overrides) {
+  return overrides.map(override => {
+    const [fieldName, fieldType, destinationMstType] = override
+    //const specificity = computeOverrideSpecificity(fieldName, fieldType)
+
+    const overrideInput = {
+      fieldName,
+      fieldType,
+      destinationMstType
+      //specificity
+    }
+
+    return createOverride(overrideInput)
+  })
+}
+
+function createOverride(overrideInput) {
+  const splitFieldName = overrideInput.fieldName.split(".")
+  const fieldDeclaringType =
+    splitFieldName.length === 2 ? splitFieldName[0] : "*"
+  const fieldName =
+    splitFieldName.length === 1 ? splitFieldName[0] : splitFieldName[1]
+
+  const fieldDeclaringTypeRegExp = wildcardToRegExp(fieldDeclaringType)
+  const fieldNameRegExp = wildcardToRegExp(fieldName)
+
+  const matchesDeclaringType = declaringType =>
+    fieldDeclaringTypeRegExp.test(declaringType)
+
+  const matches = ({ currentType, name, type }) => {
+    return (
+      matchesDeclaringType(currentType) &&
+      fieldNameRegExp.test(name) &&
+      (type === overrideInput.fieldType ||
+        isOnlyWildcard(overrideInput.fieldType))
+    )
+  }
+
+  return {
+    matches,
+    destinationMstType: overrideInput.destinationMstType
+  }
+}
+
+/*
+  Specificity:
+    {prefix.}name:type (User.id:uuid)
+    prefix (User) - 0b0100
+    name (id) - 0b0010
+    name including wildcard (*id) - 0b001
+    type (uuid) - 0b0001
+    lone wildcards (*) - 0b0000
+
+    Ex:  
+    0b0100 - User.*:*
+    0b0010 - id:*
+    0b0001 - *id:*
+    0b0001 - *:uuid
+
+  Invalid specificities:
+    User.*:*
+    *:*
+*/
+
+function computeOverrideSpecificity(name, type) {
+  try {
+    const specificity =
+      computeNameSpecificity(name) + computeTypeSpecificity(type)
+    if (specificity & (0b0011 == 0b0000))
+      throw new Error("Both name and type cannot be wildcards")
+
+    return specificity
+  } catch (err) {
+    throw Error(`Error parsing fieldOverride ${name}:${type}:\n ${err.message}`)
+  }
+}
+
+function computeNameSpecificity(name) {
+  const parts = name.split(".")
+
+  if (parts.split.length > 1)
+    return (
+      computeNameSpecificity(parts[0]) << (1 + computeNameSpecificity(parts[1]))
+    )
+
+  if (isOnlyWildcard(type)) return 0b0000
+
+  if (hasWildcard(type)) return 0b0001
+
+  return 0b0010
+}
+
+function computeTypeSpecificity(type) {
+  if (isOnlyWildcard(type)) return 0b0000
+
+  if (hasWildcard(type))
+    throw new Error("type cannot be a partial wildcard: e.g. *_id")
+
+  return 0b0001
+}
+
+const hasWildcard = text => RegExp(/\*/).test(text)
+const isOnlyWildcard = text => text === "*"
+const wildcardToRegExp = text =>
+  new RegExp(
+    "^" +
+      text
+        .split(/\*+/)
+        .map(escapeStringRegexp)
+        .join(".+") +
+      "$"
+  )
 
 module.exports = { generate, writeFiles, scaffold, logUnexpectedFiles }

@@ -15,7 +15,8 @@ exports.defaultConfig = {
   noReact: false,
   namingConvention: "js", // supported option: "js", "asis",
   header: undefined,
-  useIdentifierNumber: false
+  useIdentifierNumber: false,
+  fieldOverrides: []
 }
 
 exports.getConfig = function getConfig() {
@@ -54,6 +55,23 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
       : config.namingConvention,
     header: args["--header"] || headerConfigValues, // if multiple headers are passed in config, chain them up to pass on to apollo cli
     useIdentifierNumber:
-      !!args["--useIdentifierNumber"] || config.useIdentifierNumber
+      !!args["--useIdentifierNumber"] || config.useIdentifierNumber,
+    fieldOverrides: args["--fieldOverrides"]
+      ? parseFieldOverrides(args["--fieldOverrides"])
+      : config.fieldOverrides
   }
+}
+
+const parseFieldOverrides = fieldOverrides => {
+  return fieldOverrides
+    .split(",")
+    .map(s => s.trim())
+    .map(item => {
+      const override = item.split(":").map(s => s.trim())
+
+      if (override.length !== 3)
+        throw new Error("--fieldOverrides used with invalid override: " + item)
+
+      return override
+    })
 }

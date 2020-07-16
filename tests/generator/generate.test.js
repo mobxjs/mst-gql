@@ -434,3 +434,107 @@ test("use identifierNumber as ID with useIdentifierNumber=true", () => {
     hasFileContent(findFile(output, "RootStore.base"), "ids: number[]")
   ).toBeTruthy()
 })
+
+const fieldOverridesSchema = `
+  scalar uuid
+  scalar bigint
+
+  type User {
+    id: bigint!
+    name: String!
+  }
+  type Book {
+    id: uuid!
+    name: String!
+  }
+  type Query {
+    me: User,
+    book: Book
+  }
+`
+
+test("overrides mst type with matching name and gql type using fieldOverrides", () => {
+  const output = scaffold(fieldOverridesSchema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["id", "uuid", "identifier"],
+      ["User.id", "bigint", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "BookModel.base"), "id: types.identifier,")
+  ).toBeTruthy()
+})
+
+test("overrides mst type with wildcard name or wildcard type using fieldOverrides", () => {
+  const output = scaffold(fieldOverridesSchema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "uuid", "identifier"],
+      ["User.id", "*", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "BookModel.base"), "id: types.identifier,")
+  ).toBeTruthy()
+})
+
+test("overrides mst type with partial wildcard name using fieldOverrides", () => {
+  const schema = `
+    scalar uuid
+
+    type User {
+      user_id: uuid!
+      name: String!
+    }
+    type Book {
+      id: uuid!
+      name: String!
+    }
+    type Query {
+      me: User,
+      book: Book
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    fieldOverrides: [["*id", "uuid", "identifier"]]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "user_id: types.identifier,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "id: types.union(types.undefined, types.frozen()),"
+    )
+  ).toBeTruthy()
+})
