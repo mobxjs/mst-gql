@@ -39,7 +39,7 @@ function generate(
   // original name to the 'origName' field of the type's object
   transformTypes(types, namingConvention)
 
-  const overrides = buildOverrides(fieldOverrides)
+  const overrides = buildOverrides(fieldOverrides, useIdentifierNumber)
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
@@ -410,11 +410,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         case "SCALAR":
           primitiveFields.push(fieldName)
           const primitiveType = primitiveToMstType(
-            fieldName,
-            fieldType.name,
-            useIdentifierNumber,
             currentType,
-            overrides
+            fieldName,
+            fieldType.name
           )
           const requiredTypes = ["identifier", "identifierNumber"]
           const isRequired = requiredTypes.includes(primitiveType)
@@ -998,28 +996,22 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
     return format === "ts" ? ifTSstr : notTSstr
   }
 
-  return files
-}
+  function primitiveToMstType(declaringType, name, type) {
+    const mstType = overrides.getMstTypeForField(declaringType, name, type)
+    if (mstType !== null) return mstType
 
-function primitiveToMstType(
-  name,
-  type,
-  useIdentifierNumber,
-  currentType,
-  overrides
-) {
-  const mstType = overrides.getMstTypeForField(currentType, name, type)
-  if (mstType !== null) return mstType
-
-  const res = {
-    ID: useIdentifierNumber ? "identifierNumber" : "identifier",
-    Int: "integer",
-    String: "string",
-    Float: "number",
-    Boolean: "boolean"
+    const res = {
+      ID: "identifier",
+      Int: "integer",
+      String: "string",
+      Float: "number",
+      Boolean: "boolean"
+    }
+    // if (!res[type]) throw new Error("Unknown primitive type: " + type)
+    return res[type] || "frozen()"
   }
-  // if (!res[type]) throw new Error("Unknown primitive type: " + type)
-  return res[type] || "frozen()"
+
+  return files
 }
 
 function getMstDefaultValue(type) {
@@ -1340,8 +1332,10 @@ function logUnexpectedFiles(outDir, files) {
   })
 }
 
-function buildOverrides(fieldOverrides) {
+function buildOverrides(fieldOverrides, useIdentifierNumber) {
   const overrides = fieldOverrides.map(parseFieldOverride)
+  if (useIdentifierNumber)
+    overrides.push(parseFieldOverride(["*", "ID", "identifierNumber"]))
 
   const getMstTypeForField = (declaringType, name, type) => {
     const matchingOverrides = overrides.filter(override =>
