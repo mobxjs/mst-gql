@@ -538,3 +538,32 @@ test("overrides mst type with partial wildcard name using fieldOverrides", () =>
     )
   ).toBeTruthy()
 })
+
+test("overrides with multiple matches uses best one when using fieldOverrides", () => {
+  const output = scaffold(fieldOverridesSchema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "bigint", "identifier"],
+      ["id", "bigint", "identifierNumber"],
+
+      ["id", "uuid", "identifier"],
+      ["Book.id", "*", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+})

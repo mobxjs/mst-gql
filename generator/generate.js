@@ -39,7 +39,7 @@ function generate(
   // original name to the 'origName' field of the type's object
   transformTypes(types, namingConvention)
 
-  const overrides = parseFieldOverrides(fieldOverrides)
+  const overrides = buildOverrides(fieldOverrides)
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
@@ -1008,11 +1008,8 @@ function primitiveToMstType(
   currentType,
   overrides
 ) {
-  const currentOverides = overrides.filter(override =>
-    override.matches({ currentType, name, type })
-  )
-
-  if (currentOverides.length > 0) return currentOverides[0].destinationMstType
+  const mstType = overrides.getMstTypeForField(currentType, name, type)
+  if (mstType !== null) return mstType
 
   const res = {
     ID: useIdentifierNumber ? "identifierNumber" : "identifier",
@@ -1343,28 +1340,61 @@ function logUnexpectedFiles(outDir, files) {
   })
 }
 
-function parseFieldOverrides(overrides) {
-  return overrides.map(override => {
-    const [fieldName, fieldType, destinationMstType] = override
-    //const specificity = computeOverrideSpecificity(fieldName, fieldType)
+function buildOverrides(fieldOverrides) {
+  const overrides = fieldOverrides.map(parseFieldOverride)
 
-    const overrideInput = {
+  const getMstTypeForField = (declaringType, name, type) => {
+    const matchingOverrides = overrides.filter(override =>
+      override.matches(declaringType, name, type)
+    )
+
+    const mostSpecificOverride = matchingOverrides.reduce((acc, override) => {
+      if (acc === null) return override
+
+      if (override.specificity > acc.specificity) return override
+
+      return acc
+    }, null)
+
+    return mostSpecificOverride === null
+      ? null
+      : mostSpecificOverride.destinationMstType
+  }
+
+  return {
+    getMstTypeForField,
+    overrides
+  }
+
+  function parseFieldOverride(override) {
+    const [unsplitFieldName, fieldType, destinationMstType] = override
+
+    const splitFieldName = unsplitFieldName.split(".")
+    const fieldDeclaringType =
+      splitFieldName.length === 2 ? splitFieldName[0] : "*"
+    const fieldName =
+      splitFieldName.length === 1 ? splitFieldName[0] : splitFieldName[1]
+
+    return createOverride({
+      fieldDeclaringType,
       fieldName,
       fieldType,
       destinationMstType
-      //specificity
-    }
-
-    return createOverride(overrideInput)
-  })
+    })
+  }
 }
 
-function createOverride(overrideInput) {
-  const splitFieldName = overrideInput.fieldName.split(".")
-  const fieldDeclaringType =
-    splitFieldName.length === 2 ? splitFieldName[0] : "*"
-  const fieldName =
-    splitFieldName.length === 1 ? splitFieldName[0] : splitFieldName[1]
+function createOverride({
+  fieldDeclaringType,
+  fieldName,
+  fieldType,
+  destinationMstType
+}) {
+  const specificity = computeOverrideSpecificity(
+    fieldDeclaringType,
+    fieldName,
+    fieldType
+  )
 
   const fieldDeclaringTypeRegExp = wildcardToRegExp(fieldDeclaringType)
   const fieldNameRegExp = wildcardToRegExp(fieldName)
@@ -1372,76 +1402,80 @@ function createOverride(overrideInput) {
   const matchesDeclaringType = declaringType =>
     fieldDeclaringTypeRegExp.test(declaringType)
 
-  const matches = ({ currentType, name, type }) => {
+  const matches = (declaringType, name, type) => {
     return (
-      matchesDeclaringType(currentType) &&
+      matchesDeclaringType(declaringType) &&
       fieldNameRegExp.test(name) &&
-      (type === overrideInput.fieldType ||
-        isOnlyWildcard(overrideInput.fieldType))
+      (type === fieldType || isOnlyWildcard(fieldType))
     )
   }
 
   return {
     matches,
-    destinationMstType: overrideInput.destinationMstType
+    specificity,
+    destinationMstType
   }
-}
 
-/*
+  /*
   Specificity:
-    {prefix.}name:type (User.id:uuid)
-    prefix (User) - 0b0100
+    {declaringType.}name:type (User.id:uuid)
+    declaringType (User) - 0b0100
     name (id) - 0b0010
     name including wildcard (*id) - 0b001
     type (uuid) - 0b0001
     lone wildcards (*) - 0b0000
 
     Ex:  
-    0b0100 - User.*:*
-    0b0010 - id:*
-    0b0001 - *id:*
+    0b0110 - User.id:*
+    0b0011 - id:uuid
+    0b0010 - *id:uuid
     0b0001 - *:uuid
 
   Invalid specificities:
     User.*:*
     *:*
 */
+  function computeOverrideSpecificity() {
+    try {
+      const declaringTypeSpecificity = getDeclaringTypeSpecificity()
+      const nameSpecificity = getNameSpecificity()
+      const typeSpecificity = getTypeSpecificity()
 
-function computeOverrideSpecificity(name, type) {
-  try {
-    const specificity =
-      computeNameSpecificity(name) + computeTypeSpecificity(type)
-    if (specificity & (0b0011 == 0b0000))
-      throw new Error("Both name and type cannot be wildcards")
+      if (nameSpecificity === 0 && typeSpecificity === 0)
+        throw new Error("Both name and type cannot be wildcards")
 
-    return specificity
-  } catch (err) {
-    throw Error(`Error parsing fieldOverride ${name}:${type}:\n ${err.message}`)
+      return declaringTypeSpecificity + nameSpecificity + typeSpecificity
+    } catch (err) {
+      throw Error(
+        `Error parsing fieldOverride ${name}:${type}:\n ${err.message}`
+      )
+    }
+
+    function getDeclaringTypeSpecificity() {
+      if (isOnlyWildcard(fieldDeclaringType)) return 0b0000
+
+      if (hasWildcard(fieldDeclaringType)) return 0b0010
+
+      return 0b0100
+    }
+
+    function getNameSpecificity() {
+      if (isOnlyWildcard(fieldName)) return 0b0000
+
+      if (hasWildcard(fieldName)) return 0b0001
+
+      return 0b0010
+    }
+
+    function getTypeSpecificity() {
+      if (isOnlyWildcard(fieldType)) return 0b0000
+
+      if (hasWildcard(fieldType))
+        throw new Error("type cannot be a partial wildcard: e.g. *_id")
+
+      return 0b0001
+    }
   }
-}
-
-function computeNameSpecificity(name) {
-  const parts = name.split(".")
-
-  if (parts.split.length > 1)
-    return (
-      computeNameSpecificity(parts[0]) << (1 + computeNameSpecificity(parts[1]))
-    )
-
-  if (isOnlyWildcard(type)) return 0b0000
-
-  if (hasWildcard(type)) return 0b0001
-
-  return 0b0010
-}
-
-function computeTypeSpecificity(type) {
-  if (isOnlyWildcard(type)) return 0b0000
-
-  if (hasWildcard(type))
-    throw new Error("type cannot be a partial wildcard: e.g. *_id")
-
-  return 0b0001
 }
 
 const hasWildcard = text => RegExp(/\*/).test(text)
