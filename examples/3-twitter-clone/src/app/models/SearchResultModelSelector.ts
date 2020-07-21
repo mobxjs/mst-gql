@@ -3,8 +3,12 @@
 /* tslint:disable */
 
 import { QueryBuilder } from "mst-gql"
+import { MessageModelType } from "./MessageModel"
 import { MessageModelSelector, messageModelPrimitives } from "./MessageModel.base"
+import { UserModelType } from "./UserModel"
 import { UserModelSelector, userModelPrimitives } from "./UserModel.base"
+
+export type SearchResultUnion = UserModelType | MessageModelType
 
 export class SearchResultModelSelector extends QueryBuilder {
   user(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__inlineFragment(`User`, UserModelSelector, builder) }
