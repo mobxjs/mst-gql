@@ -323,9 +323,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const {
       primitiveFields,
       nonPrimitiveFields,
-      imports,
-      modelProperties,
-      refs
+      imports
     } = resolveFieldsAndImports(type, fileName)
 
     interfaceOrUnionType &&
@@ -350,7 +348,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           )
         }
       })
-
 
     let contents = header + "\n\n"
     contents += 'import { QueryBuilder } from "mst-gql"\n'
