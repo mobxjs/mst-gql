@@ -340,6 +340,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
         /** Imports from core model */
         if (isUnion) {
+          // Import <model>ModelType from the core file to be used in the TS union type
           addImportToMap(
             imports,
             fileName,
@@ -353,12 +354,15 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
 
+    // Add the correct type for a TS union to the exports
     if (isUnion) {
-      contents += `export type ${
-        interfaceOrUnionType.name
-      }Union = ${interfaceOrUnionType.ofTypes
-        .map(unionModel => `${unionModel.name}ModelType`)
-        .join(" | ")}\n\n`
+      contents += ifTS(
+        `export type ${
+          interfaceOrUnionType.name
+        }Union = ${interfaceOrUnionType.ofTypes
+          .map(unionModel => `${unionModel.name}ModelType`)
+          .join(" | ")}\n\n`
+      )
     }
 
     contents += generateFragments(
