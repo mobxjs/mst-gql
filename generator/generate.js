@@ -820,9 +820,9 @@ ${enumContent}
             : `<{ ${name}: ${
                 isScalar
                   ? `${printTsPrimitiveType(type.name)} `
-                  : `${returnType.name}${modelTypePostfix}${
-                      returnsList ? "[]" : ""
-                    }`
+                  : `${returnType.name}${
+                      returnType.kind === "UNION" ? "Union" : modelTypePostfix
+                    }${returnsList ? "[]" : ""}`
               }}>`
 
         const formalArgs =

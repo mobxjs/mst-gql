@@ -47,7 +47,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   })
   .actions(self => ({
     querySearch(variables: { searchText: string }, resultSelector: string | ((qb: SearchResultModelSelector) => SearchResultModelSelector) = searchResultModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ search: SearchResultModelType[]}>(`query search($searchText: String!) { search(searchText: $searchText) {
+      return self.query<{ search: SearchResultUnion[]}>(`query search($searchText: String!) { search(searchText: $searchText) {
         ${typeof resultSelector === "function" ? resultSelector(new SearchResultModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
