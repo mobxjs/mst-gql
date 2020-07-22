@@ -10,7 +10,7 @@ import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 import { MessageModel, MessageModelType } from "./MessageModel"
 import { messageModelPrimitives, MessageModelSelector } from "./MessageModel.base"
 
-import { searchResultModelPrimitives, SearchResultModelSelector , SearchResultUnion } from "./SearchResultModelSelector"
+import { searchResultModelPrimitives, SearchResultModelSelector , SearchResultUnion } from "./"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */

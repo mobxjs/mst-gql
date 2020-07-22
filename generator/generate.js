@@ -632,7 +632,7 @@ ${unionTypes.map(
   t =>
     `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
       `, ${t}Union`
-    )} } from "./${t}ModelSelector"`
+    )} } from "./"`
 )}
 ${enumTypes
   .map(
