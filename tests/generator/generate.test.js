@@ -567,3 +567,62 @@ test("overrides with multiple matches uses best one when using fieldOverrides", 
     )
   ).toBeTruthy()
 })
+
+test("uses ID with highest specificity when multiple ID matches using fieldOverrides", () => {
+  const schema = `
+    scalar uuid
+
+    type User {
+      id: ID!
+      user_id: uuid!
+      name: String!
+    }
+    type Book {
+      id: ID!
+      book_id: ID!
+      name: String!
+    }
+    type Query {
+      me: User,
+      book: Book
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "uuid", "identifier"],
+      ["*id", "*", "identifier"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.union(types.undefined, types.frozen()),"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "user_id: types.identifier,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "id: types.union(types.undefined, types.frozen()),"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "book_id: types.identifier,"
+    )
+  ).toBeTruthy()
+})
