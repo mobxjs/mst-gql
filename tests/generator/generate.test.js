@@ -626,3 +626,39 @@ test("uses ID with highest specificity when multiple ID matches using fieldOverr
     )
   ).toBeTruthy()
 })
+
+test("overrides TS types for query arguments and input types for fields with global type overrides with fieldOverrides", () => {
+  const schema = `
+    scalar uuid
+
+    type User {
+      id: uuid!
+      name: String!
+    }
+
+    input UserInput {
+      user_id: uuid!
+    }
+    type Query {
+      getUser(input: UserInput) : User
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "uuid", "identifier"],
+      ["*id", "uuid", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(findFile(output, "UserModel.base"), "id: types.identifier,")
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "RootStore.base"), "user_id: string")
+  ).toBeTruthy()
+})

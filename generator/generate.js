@@ -909,8 +909,14 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
   }
 
   function printTsPrimitiveType(primitiveType) {
+    const primitiveTypeOverride = getTsPrimitiveTypeOverride(
+      primitiveType,
+      overrides
+    )
+    if (primitiveTypeOverride) return primitiveTypeOverride
+
     const res = {
-      ID: useIdentifierNumber ? "number" : "string",
+      ID: "string",
       Int: "number",
       String: "string",
       Float: "number",
@@ -1334,32 +1340,40 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
   if (useIdentifierNumber)
     overrides.push(parseFieldOverride(["*", "ID", "identifierNumber"]))
 
-  const getOverrideForField = (declaringType, name, type) => {
-    const matchingOverrides = overrides.filter(override =>
+  const getMatchingOverridesForField = (declaringType, name, type) => {
+    return overrides.filter(override =>
       override.matches(declaringType, name, type)
     )
+  }
 
-    const mostSpecificOverride = matchingOverrides.reduce((acc, override) => {
-      if (acc === null) return override
-
-      if (override.specificity > acc.specificity) return override
+  const getMostSpecificOverride = overrides => {
+    return overrides.reduce((acc, override) => {
+      if (acc === null || override.specificity > acc.specificity)
+        return override
 
       return acc
     }, null)
+  }
 
-    return mostSpecificOverride
+  const getOverrideForField = (declaringType, name, type) => {
+    const matchingOverrides = getMatchingOverridesForField(
+      declaringType,
+      name,
+      type
+    )
+    return getMostSpecificOverride(matchingOverrides)
   }
 
   const getMstTypeForField = (declaringType, name, type) => {
     const override = getOverrideForField(declaringType, name, type)
-
-    return override === null ? null : override.destinationMstType
+    return override && override.destinationMstType
   }
 
   return {
+    getMatchingOverridesForField,
+    getMostSpecificOverride,
     getOverrideForField,
-    getMstTypeForField,
-    overrides
+    getMstTypeForField
   }
 
   function parseFieldOverride(override) {
@@ -1371,13 +1385,29 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
     const fieldName =
       splitFieldName.length === 1 ? splitFieldName[0] : splitFieldName[1]
 
-    return Override({
+    return Override(
       fieldDeclaringType,
       fieldName,
       fieldType,
       destinationMstType
-    })
+    )
   }
+}
+
+function getTsPrimitiveTypeOverride(type, overrides) {
+  const mstType = overrides.getMstTypeForField("*", "*", type)
+
+  const res = {
+    identifier: "string",
+    identifierNumber: "number",
+    integer: "number",
+    string: "string",
+    number: "number",
+    boolean: "boolean",
+    "frozen()": "any"
+  }
+
+  return res[mstType]
 }
 
 function TypeOverride(currentType, overrides) {
@@ -1399,7 +1429,7 @@ function TypeOverride(currentType, overrides) {
       return "frozen()"
     }
 
-    return override === null ? null : override.destinationMstType
+    return override && override.destinationMstType
   }
 
   return {
@@ -1419,28 +1449,18 @@ function TypeOverride(currentType, overrides) {
     if (!currentType.fields) return null
 
     const idOverrides = currentType.fields
-      .map(field =>
-        field.type.kind === "NON_NULL"
-          ? { name: field.name, type: field.type.ofType }
-          : { name: field.name, type: field.type }
+      .map(({ name, type }) =>
+        type.kind === "NON_NULL" ? { name, type: type.ofType } : { name, type }
       )
-      .filter(field => field.type.kind === "SCALAR")
-      .map(field =>
-        overrides.getOverrideForField(
-          declaringType,
-          field.name,
-          field.type.name
-        )
+      .filter(({ type }) => type.kind === "SCALAR")
+      .map(({ name, type }) =>
+        overrides.getOverrideForField(declaringType, name, type.name)
       )
       .filter(isMstIdType)
 
-    const mostSpecificIdOverride = idOverrides.reduce((acc, override) => {
-      if (acc === null) return override
-
-      if (override.specificity > acc.specificity) return override
-
-      return acc
-    }, null)
+    const mostSpecificIdOverride = overrides.getMostSpecificOverride(
+      idOverrides
+    )
 
     const mostSpecificIdOverrideCount = idOverrides.filter(
       override => override.specificity === mostSpecificIdOverride.specificity
@@ -1454,12 +1474,12 @@ function TypeOverride(currentType, overrides) {
   }
 }
 
-function Override({
+function Override(
   fieldDeclaringType,
   fieldName,
   fieldType,
   destinationMstType
-}) {
+) {
   const specificity = computeOverrideSpecificity(
     fieldDeclaringType,
     fieldName,
