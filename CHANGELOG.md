@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.12.1
+
+- Support using union types in actions in RootStore.base [#257](https://github.com/mobxjs/mst-gql/pull/257)
+
 ## 0.12.0
 
 - Suppot for non-object return values. These currently are not stored in the store automatically. [#246](https://github.com/mobxjs/mst-gql/pull/246)
