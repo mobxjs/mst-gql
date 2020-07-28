@@ -5,8 +5,9 @@ import { ObservableMap } from "mobx"
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "mst-gql"
 
-import { MessageModel, MessageModelType } from "./MessageModel"
 import { UserModel, UserModelType } from "./UserModel"
+import { MessageModel, MessageModelType } from "./MessageModel"
+
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
@@ -20,6 +21,7 @@ type Refs = {
 * Enums for the names of base graphql actions
 */
 export enum RootStoreBaseQueries {
+querySearch="querySearch",
 queryMessages="queryMessages",
 queryMessage="queryMessage",
 queryMe="queryMe"
@@ -35,7 +37,7 @@ mutatePostTweet="mutatePostTweet"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(types.model()
   .named("RootStore")
-  .extend(configureStoreMixin([['Message', () => MessageModel], ['User', () => UserModel]], ['Message', 'User'], "js"))
+  .extend(configureStoreMixin([['User', () => UserModel], ['Message', () => MessageModel]], ['Message', 'User'], "js"))
   .props({
     messages: types.optional(types.map(types.late((): any => MessageModel)), {}),
     users: types.optional(types.map(types.late((): any => UserModel)), {})

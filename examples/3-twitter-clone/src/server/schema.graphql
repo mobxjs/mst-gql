@@ -12,6 +12,7 @@ type Message {
   replyTo: Message
 }
 type Query {
+  search(searchText: String!): [SearchResult!]
   messages(offset: ID, count: Int, replyTo: ID): [Message]
   message(id: ID!): Message
   me: User
@@ -24,3 +25,5 @@ type Mutation {
   like(msg: ID!, user: ID!): Message
   postTweet(text: String!, user: ID!, replyTo: ID): Message
 }
+
+union SearchResult = User | Message
