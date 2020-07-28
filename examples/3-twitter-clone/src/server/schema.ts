@@ -8,6 +8,16 @@ const store = RootStore.create()
 
 export const resolvers = {
   Query: {
+    search: (_, { searchText }) => {
+      const messages = store.messages
+        .values()
+        .filter(message => message.text.includes(searchText))
+      const user = store.users
+        .values()
+        .filter(user => user.name.includes(searchText))
+
+      return [...messages, ...user]
+    },
     messages: (_, { offset, count, replyTo }) =>
       store.allMessages(offset, count, replyTo),
     message: (_, { id }) => store.getMessage(id),
