@@ -117,7 +117,7 @@ export const MSTGQLStore = types
         throw error
       }
     ): () => void {
-      if (!gqlWsClient) onError(new Error("No WS client available"))
+      if (!gqlWsClient) throw new Error("No WS client available")
       const sub = gqlWsClient
         .request({
           query,
@@ -126,7 +126,7 @@ export const MSTGQLStore = types
         .subscribe({
           next(data) {
             if (data.errors) {
-              onError(new Error(JSON.stringify(data.errors)))
+              return onError(new Error(JSON.stringify(data.errors)))
             }
             ;(self as any).__runInStoreContext(() => {
               const res = (self as any).merge(getFirstValue(data.data))

@@ -786,9 +786,9 @@ ${enumContent}
         "subscription",
         "subscribe",
         format === "ts"
-          ? `, onData?: (item: any) => void` /* TODO: fix the any */
-          : `, onData`,
-        ", onData"
+          ? `, onData?: (item: any) => void, onError?: (error: Error) => void` /* TODO: fix the any */
+          : `, onData, onError`,
+        ", onData, onError"
       )
     )
   }
