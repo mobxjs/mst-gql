@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.12.3
+
+- Add ability to handle errors yourself when using subscriptions. [#261](https://github.com/mobxjs/mst-gql/pull/261) - [zpalin](https://github.com/zpalin)
+
 ## 0.12.1
 
 - Support using union types in actions in RootStore.base [#257](https://github.com/mobxjs/mst-gql/pull/257)

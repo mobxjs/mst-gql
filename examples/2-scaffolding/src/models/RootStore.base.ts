@@ -17,6 +17,7 @@ import { PokemonEvolutionRequirementModel, PokemonEvolutionRequirementModelType 
 import { pokemonEvolutionRequirementModelPrimitives, PokemonEvolutionRequirementModelSelector } from "./PokemonEvolutionRequirementModel.base"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   pokemon: ObservableMap<string, PokemonModelType>,
