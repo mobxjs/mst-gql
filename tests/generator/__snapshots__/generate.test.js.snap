@@ -107,6 +107,7 @@ import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   users: ObservableMap<string, UserModelType>
@@ -429,6 +430,7 @@ import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEm
 import { possiblyEmptyBoxModelPrimitives, PossiblyEmptyBoxModelSelector } from \\"./PossiblyEmptyBoxModel.base\\"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   myUsers: ObservableMap<string, MyUserModelType>,
@@ -600,6 +602,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
@@ -839,6 +842,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 
+
 import { Role } from \\"./RoleEnum\\"
 import { interest_enum } from \\"./interest_enum\\"
 
@@ -1075,6 +1079,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
 
 import { Role } from \\"./RoleEnum\\"
 import { InterestEnum } from \\"./InterestEnum\\"
@@ -1414,6 +1419,7 @@ import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   repos: ObservableMap<string, RepoModelType>
@@ -1584,6 +1590,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
 
 
 export type UserInput = {
@@ -1823,6 +1830,7 @@ import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
@@ -2068,6 +2076,7 @@ import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   users: ObservableMap<string, UserModelType>
@@ -2309,6 +2318,7 @@ import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
@@ -2554,6 +2564,7 @@ import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   users: ObservableMap<string, UserModelType>
@@ -2710,8 +2721,12 @@ export const SearchResultModel = SearchResultModelBase
 /* tslint:disable */
 
 import { QueryBuilder } from \\"mst-gql\\"
+import { BookModelType } from \\"./BookModel\\"
 import { BookModelSelector, bookModelPrimitives } from \\"./BookModel.base\\"
+import { MovieModelType } from \\"./MovieModel\\"
 import { MovieModelSelector, movieModelPrimitives } from \\"./MovieModel.base\\"
+
+export type SearchItemUnion = MovieModelType | BookModelType
 
 export class SearchItemModelSelector extends QueryBuilder {
   movie(builder?: string | MovieModelSelector | ((selector: MovieModelSelector) => MovieModelSelector)) { return this.__inlineFragment(\`Movie\`, MovieModelSelector, builder) }
@@ -2888,6 +2903,8 @@ import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
+import { searchItemModelPrimitives, SearchItemModelSelector , SearchItemUnion } from \\"./\\"
+
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -3061,6 +3078,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 
 import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
+
 
 
 export type UsersFilter = {
@@ -3312,6 +3330,7 @@ import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
 
 
+
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
   users: ObservableMap<string, UserModelType>
@@ -3486,6 +3505,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\
 
 import { MovieModel, MovieModelType } from \\"./MovieModel\\"
 import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
+
 
 
 export type MovieInput = {

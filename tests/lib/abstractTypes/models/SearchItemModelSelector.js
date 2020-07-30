@@ -2,7 +2,9 @@
 /* eslint-disable */
 
 import { QueryBuilder } from "mst-gql"
+import { BookModelType } from "./BookModel"
 import { BookModelSelector, bookModelPrimitives } from "./BookModel.base"
+import { MovieModelType } from "./MovieModel"
 import { MovieModelSelector, movieModelPrimitives } from "./MovieModel.base"
 
 export class SearchItemModelSelector extends QueryBuilder {

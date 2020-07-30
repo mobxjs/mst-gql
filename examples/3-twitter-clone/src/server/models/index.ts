@@ -2,6 +2,6 @@
 /* eslint-disable */
 /* tslint:disable */
 
-export * from "./MessageModel"
 export * from "./UserModel"
+export * from "./MessageModel"
 export * from "./RootStore"

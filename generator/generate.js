@@ -43,6 +43,7 @@ function generate(
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
+  const unionTypes = [] // all known UNION types for which ModelSelector classes are generated
   const origObjectTypes = [] // all known OBJECT types for which MST classes are generated
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
@@ -322,6 +323,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
     const isUnion =
       interfaceOrUnionType && interfaceOrUnionType.kind === "UNION"
+    if (isUnion) unionTypes.push(type.name)
     const fileName = type.name + "ModelSelector"
     const {
       primitiveFields,
@@ -331,6 +333,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     interfaceOrUnionType &&
       interfaceOrUnionType.ofTypes.forEach(t => {
+        /** Base file imports */
         const toBeImported = [`${t.name}ModelSelector`]
         if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
         addImportToMap(
@@ -339,11 +342,34 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           `${t.name}Model.base`,
           ...toBeImported
         )
+
+        /** Imports from core model */
+        if (isUnion) {
+          // Import <model>ModelType from the core file to be used in the TS union type
+          addImportToMap(
+            imports,
+            fileName,
+            `${t.name}Model`,
+            `${t.name}ModelType`
+          )
+        }
       })
 
     let contents = header + "\n\n"
     contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
+
+    // Add the correct type for a TS union to the exports
+    if (isUnion) {
+      contents += ifTS(
+        `export type ${
+          interfaceOrUnionType.name
+        }Union = ${interfaceOrUnionType.ofTypes
+          .map(unionModel => `${unionModel.name}ModelType`)
+          .join(" | ")}\n\n`
+      )
+    }
+
     contents += generateFragments(
       type.name,
       primitiveFields,
@@ -611,6 +637,12 @@ ${objectTypes
       }`
   )
   .join("")}
+${unionTypes.map(
+  t =>
+    `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
+      `, ${t}Union`
+    )} } from "./"`
+)}
 ${enumTypes
   .map(
     t =>
@@ -798,9 +830,9 @@ ${enumContent}
             : `<{ ${name}: ${
                 isScalar
                   ? `${printTsPrimitiveType(type.name)} `
-                  : `${returnType.name}${modelTypePostfix}${
-                      returnsList ? "[]" : ""
-                    }`
+                  : `${returnType.name}${
+                      returnType.kind === "UNION" ? "Union" : modelTypePostfix
+                    }${returnsList ? "[]" : ""}`
               }}>`
 
         const formalArgs =
