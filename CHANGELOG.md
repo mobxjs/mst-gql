@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.12.5
+
+- 🐛🐛🐛 Fix running scaffold when installing with npm
+
 ## 0.12.3
 
 - Add ability to handle errors yourself when using subscriptions. [#261](https://github.com/mobxjs/mst-gql/pull/261) - [zpalin](https://github.com/zpalin)
