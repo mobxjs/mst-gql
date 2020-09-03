@@ -8,6 +8,7 @@ const findFile = (output, name) =>
   output.find(o => o.length && o.length > 1 && o[0] === name)
 const hasFileContent = (file, snippet) => file[1].match(toRegex(snippet))
 const hasFileContentExact = (file, snippet) => file[1].indexOf(snippet) != -1
+const hasFileContentRegexp = (file, snippet) => file[1].match(snippet)
 
 test("basic scaffolding to work", () => {
   expect(
@@ -389,4 +390,40 @@ type Mutation {
       }
     )
   ).toMatchSnapshot()
+})
+
+test("scaffolding with scalar type", () => {
+  const output = scaffold(
+    `
+type Query {
+  helloWithString: String!
+  helloWithType: HelloResult!
+}
+
+type HelloResult {
+  result: String!
+}
+`,
+    {
+      namingConvention: "asis"
+    }
+  )
+
+  expect(output).toMatchSnapshot()
+
+  const rootStoreBase = findFile(output, "RootStore.base")
+  expect(rootStoreBase).toBeTruthy()
+  expect(
+    hasFileContentRegexp(rootStoreBase, ".*HelloResultModelSelector.*")
+  ).toBeTruthy()
+  expect(
+    hasFileContentRegexp(rootStoreBase, "import { .*HelloResultModelSelector }")
+  ).toBeTruthy()
+
+  expect(
+    hasFileContentRegexp(rootStoreBase, ".*StringModelSelector")
+  ).toBeTruthy()
+  expect(
+    hasFileContentRegexp(rootStoreBase, "import { .*StringModelSelector }")
+  ).toBeTruthy()
 })
