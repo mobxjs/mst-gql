@@ -420,12 +420,29 @@ type HelloResult {
     hasFileContentRegexp(rootStoreBase, "import { .*HelloResultModelSelector }")
   ).toBeTruthy()
 
+  // This should be generated for the query with scalar (String) return type
+  expect(
+    hasFileContentExact(
+      rootStoreBase,
+      "queryHelloWithString(variables?: {  }, options: QueryOptions = {}) {"
+    )
+  ).toBeTruthy()
+
+  // This should be generated for the query with complex return type
+  expect(
+    hasFileContentExact(
+      rootStoreBase,
+      "queryHelloWithType(variables?: {  }, resultSelector: string | ((qb: HelloResultModelSelector) => HelloResultModelSelector) = helloResultModelPrimitives.toString(), options: QueryOptions = {})"
+    )
+  ).toBeTruthy()
+
+  // Make sure no StringModelSelector is generated
   expect(
     hasFileContentRegexp(rootStoreBase, ".*StringModelSelector")
-  ).toBeTruthy()
+  ).toBeFalsy()
   expect(
     hasFileContentRegexp(rootStoreBase, "import { .*StringModelSelector }")
-  ).toBeTruthy()
+  ).toBeFalsy()
 })
 
 test("use identifierNumber as ID with useIdentifierNumber=true", () => {

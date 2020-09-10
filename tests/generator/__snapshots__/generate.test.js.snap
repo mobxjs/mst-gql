@@ -1616,10 +1616,8 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
   })
   .actions(self => ({
-    queryHelloWithString(variables?: {  }, resultSelector: string | ((qb: StringModelSelector) => StringModelSelector) = stringModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ helloWithString: StringModelType}>(\`query helloWithString { helloWithString {
-        \${typeof resultSelector === \\"function\\" ? resultSelector(new StringModelSelector()).toString() : resultSelector}
-      } }\`, variables, options)
+    queryHelloWithString(variables?: {  }, options: QueryOptions = {}) {
+      return self.query<{ helloWithString: string }>(\`query helloWithString { helloWithString }\`, variables, options)
     },
     queryHelloWithType(variables?: {  }, resultSelector: string | ((qb: HelloResultModelSelector) => HelloResultModelSelector) = helloResultModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ helloWithType: HelloResultModelType}>(\`query helloWithType { helloWithType {

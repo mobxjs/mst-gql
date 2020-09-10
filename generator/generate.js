@@ -817,7 +817,9 @@ ${enumContent}
 
         let { name, origName, args, type, description } = field
 
-        const isScalar = type.kind === "SCALAR"
+        const isScalar =
+          type.kind === "SCALAR" ||
+          (type.ofType && type.ofType.kind === "SCALAR")
 
         if (type.kind === "NON_NULL") type = type.ofType
         const returnsList = type.kind === "LIST"
