@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.13.0
+
+- Fixes `onError` functionality when using subscriptions. [#262](https://github.com/mobxjs/mst-gql/pull/262) - [zpalin](https://github.com/zpalin)
+- Fix scaffolding on npm install. [#265](https://github.com/mobxjs/mst-gql/pull/265) - [jvcmanke](https://github.com/jvcmanke)
+- Add `clearData` option to query. [#275](https://github.com/mobxjs/mst-gql/pull/275) - [mattiasewers](https://github.com/mattiasewers)
+- Fix `Scaffolding references unknown classes` error. [#277](https://github.com/mobxjs/mst-gql/pull/277) - [beepsoft](https://github.com/beepsoft)
+
 ## 0.12.5
 
 - 🐛🐛🐛 Fix running scaffold when installing with npm
