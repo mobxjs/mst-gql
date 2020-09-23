@@ -14,7 +14,7 @@ export default observer(function Cart() {
         <p data-testid="empty-message">No items in your cart</p>
       ) : (
         <Fragment>
-          {store.cartItems.map(launchId => (
+          {store.cartItems.map((launchId) => (
             <CartItem key={launchId} launchId={launchId} />
           ))}
           <BookTrips />

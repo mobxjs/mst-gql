@@ -7,12 +7,12 @@ export type UserModelType = typeof UserModel.Type
 /**
  * UserModel
  */
-export const UserModel = UserModelBase.actions(self => ({
+export const UserModel = UserModelBase.actions((self) => ({
   setName(name: string) {
     self.name = name
     self.store.save()
   }
-})).views(self => ({
+})).views((self) => ({
   serialize() {
     return getSnapshot(self)
   }

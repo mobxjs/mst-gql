@@ -11,10 +11,10 @@ export const resolvers = {
     search: (_, { searchText }) => {
       const messages = store.messages
         .values()
-        .filter(message => message.text.includes(searchText))
+        .filter((message) => message.text.includes(searchText))
       const user = store.users
         .values()
-        .filter(user => user.name.includes(searchText))
+        .filter((user) => user.name.includes(searchText))
 
       return [...messages, ...user]
     },

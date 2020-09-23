@@ -28,14 +28,14 @@ export const RootStore = RootStoreBase.extend(
       []
     )
   })
-  .views(self => ({
+  .views((self) => ({
     get me(): UserModelType {
       return self.users.get("mweststrate")
     }
   }))
-  .actions(self => ({
+  .actions((self) => ({
     afterCreate() {
-      self.subscribeNewMessages({}, MESSAGE_FRAGMENT, message => {
+      self.subscribeNewMessages({}, MESSAGE_FRAGMENT, (message) => {
         self.sortedMessages.unshift(message)
       })
     },
@@ -44,13 +44,13 @@ export const RootStore = RootStoreBase.extend(
         { offset, count, replyTo },
         MESSAGE_FRAGMENT
       )
-      query.then(data => {
+      query.then((data) => {
         self.sortedMessages.push(...data.messages)
       })
       return query
     }
   }))
-  .actions(self => ({
+  .actions((self) => ({
     sendTweet(text: string, replyTo = undefined) {
       return self.mutatePostTweet({ text, user: self.me.id, replyTo })
     },

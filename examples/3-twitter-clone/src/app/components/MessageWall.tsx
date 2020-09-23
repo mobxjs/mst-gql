@@ -7,7 +7,7 @@ import { useQuery } from "../models/reactUtils"
 import { Message } from "./Message"
 
 export const MessageWall = observer(() => {
-  const { store, error, loading, setQuery } = useQuery(store =>
+  const { store, error, loading, setQuery } = useQuery((store) =>
     store.loadInitialMessages()
   )
   if (error) return <Error>{error.message}</Error>
@@ -15,7 +15,7 @@ export const MessageWall = observer(() => {
   return (
     <>
       <ul>
-        {store.sortedMessages.map(message => (
+        {store.sortedMessages.map((message) => (
           <Message key={message.id} message={message} />
         ))}
       </ul>

@@ -14,7 +14,7 @@ export type RootStoreType = typeof RootStore.Type
 const DB_FILE = __dirname + "/../db/data.json"
 const DB_FILE_INITIAL = __dirname + "/../db/initial.json"
 
-export const RootStore = RootStoreBase.views(self => {
+export const RootStore = RootStoreBase.views((self) => {
   return {
     allMessages(offset = "", count = 10, replyToId?) {
       /* This is just a stub implementation! Should be powered by real DB in reality */
@@ -26,7 +26,7 @@ export const RootStore = RootStoreBase.views(self => {
 
       // sort messages
       const sortedMessages = Array.from(self.messages.values())
-        .filter(m => (replyTo ? m.replyTo === replyTo : !m.replyTo))
+        .filter((m) => (replyTo ? m.replyTo === replyTo : !m.replyTo))
         .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
 
       // the timeline is sorted in reverse, compared to replies
@@ -39,19 +39,19 @@ export const RootStore = RootStoreBase.views(self => {
       // apply limit, serialize message
       return sortedMessages
         .slice(start, start + count)
-        .map(msg => msg.serialize())
+        .map((msg) => msg.serialize())
     },
     getMessage(id: string) {
       return self.messages.get(id).serialize()
     },
     getReplies(parent) {
       return Array.from(self.messages.values())
-        .filter(m => m.replyTo === parent)
+        .filter((m) => m.replyTo === parent)
         .sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-        .map(m => m.serialize())
+        .map((m) => m.serialize())
     }
   }
-}).actions(self => {
+}).actions((self) => {
   const pubsub = new PubSub()
 
   function saveToDB() {
@@ -119,5 +119,5 @@ export const RootStore = RootStoreBase.views(self => {
 })
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

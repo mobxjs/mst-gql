@@ -2,14 +2,12 @@ import { observer } from "mobx-react"
 import { selectFromTodo, useQuery } from "../src/models"
 import { UserPreview } from "./users"
 
-const todoSelector = selectFromTodo()
-  .text.done.assignee()
-  .toString()
+const todoSelector = selectFromTodo().text.done.assignee().toString()
 
 const TodosList = observer(({ todos }) => {
   return (
     <ul>
-      {todos.map(todo => (
+      {todos.map((todo) => (
         <li key={todo.id}>
           <span style={{ textDecoration: todo.done ? "line-through" : "none" }}>
             {todo.text}
@@ -31,7 +29,7 @@ const TodosList = observer(({ todos }) => {
 })
 
 export const AllTodosView = observer(() => {
-  const { error, data, loading, query } = useQuery(store => {
+  const { error, data, loading, query } = useQuery((store) => {
     return store.queryTodos({}, todoSelector)
   })
   if (error) return error.message
@@ -49,7 +47,7 @@ export const AllTodosView = observer(() => {
 })
 
 export const DoneTodosView = observer(() => {
-  const { error, data, loading, query } = useQuery(store => {
+  const { error, data, loading, query } = useQuery((store) => {
     return store.queryDoneTodos({}, todoSelector)
   })
   if (error) return error.message

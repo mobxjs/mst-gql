@@ -10,7 +10,7 @@ module.exports.paginateResults = ({
   if (pageSize < 1) return []
 
   if (!cursor) return results.slice(0, pageSize)
-  const cursorIndex = results.findIndex(item => {
+  const cursorIndex = results.findIndex((item) => {
     // if an item has a `cursor` on it, use that, otherwise try to generate one
     let itemCursor = item.cursor ? item.cursor : getCursor(item)
 

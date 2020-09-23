@@ -10,7 +10,7 @@ export {
 /**
  * MissionModel
  */
-export const MissionModel = MissionModelBase.actions(self => ({
+export const MissionModel = MissionModelBase.actions((self) => ({
   // This is an auto-generated example action.
   log() {
     console.log(JSON.stringify(self))

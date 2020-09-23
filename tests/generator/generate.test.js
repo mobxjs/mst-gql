@@ -3,9 +3,10 @@
 const { scaffold } = require("../../generator/generate")
 const escapeStringRegexp = require("escape-string-regexp")
 
-const toRegex = snippet => new RegExp(`\\s+${escapeStringRegexp(snippet)}\\s+`)
+const toRegex = (snippet) =>
+  new RegExp(`\\s+${escapeStringRegexp(snippet)}\\s+`)
 const findFile = (output, name) =>
-  output.find(o => o.length && o.length > 1 && o[0] === name)
+  output.find((o) => o.length && o.length > 1 && o[0] === name)
 const hasFileContent = (file, snippet) => file[1].match(toRegex(snippet))
 const hasFileContentExact = (file, snippet) => file[1].indexOf(snippet) != -1
 const hasFileContentRegexp = (file, snippet) => file[1].match(snippet)

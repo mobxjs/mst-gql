@@ -10,12 +10,12 @@ export {
 /**
  * LaunchModel
  */
-export const LaunchModel = LaunchModelBase.actions(self => ({
+export const LaunchModel = LaunchModelBase.actions((self) => ({
   // This is an auto-generated example action.
   log() {
     console.log(JSON.stringify(self))
   }
-})).views(self => ({
+})).views((self) => ({
   get isInCart() {
     return self.store.cartItems.includes(self.id)
   }

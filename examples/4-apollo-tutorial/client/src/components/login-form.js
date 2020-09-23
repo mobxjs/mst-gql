@@ -12,12 +12,12 @@ import { colors, unit } from "../styles"
 export default class LoginForm extends Component {
   state = { email: "" }
 
-  onChange = event => {
+  onChange = (event) => {
     const email = event.target.value
-    this.setState(s => ({ email }))
+    this.setState((s) => ({ email }))
   }
 
-  onSubmit = event => {
+  onSubmit = (event) => {
     event.preventDefault()
     this.props.login(this.state.email)
   }

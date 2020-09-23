@@ -30,10 +30,10 @@ const resolvers = {
       return store.todos
     },
     doneTodos: () => {
-      return store.todos.filter(todo => todo.done)
+      return store.todos.filter((todo) => todo.done)
     },
     user: (root, args) => {
-      return store.users.find(user => user.id === args.id)
+      return store.users.find((user) => user.id === args.id)
     },
     users: () => {
       return store.users
@@ -41,18 +41,18 @@ const resolvers = {
   },
   Mutation: {
     toggleTodo: (root, args) => {
-      const todo = store.todos.find(todo => todo.id === args.id)
+      const todo = store.todos.find((todo) => todo.id === args.id)
       todo.done = !todo.done
       return todo
     }
   },
   Todo: {
-    assignee: todo => {
-      return store.users.find(user => user.id === todo.assignee)
+    assignee: (todo) => {
+      return store.users.find((user) => user.id === todo.assignee)
     }
   },
   User: {
-    unobservedProp: user => {
+    unobservedProp: (user) => {
       return "foo"
     }
   }

@@ -15,7 +15,7 @@ export {
 /**
  * TodoModel
  */
-export const TodoModel = TodoModelBase.actions(self => ({
+export const TodoModel = TodoModelBase.actions((self) => ({
   toggle(): Query<{
     toggleTodo: TodoModelType
   }> {

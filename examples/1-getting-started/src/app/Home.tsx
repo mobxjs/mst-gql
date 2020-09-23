@@ -5,13 +5,15 @@ import { useQuery } from "./models/reactUtils"
 import { Error, Loading, Todo } from "./components"
 
 export const Home = observer(() => {
-  const { loading, error, data, query } = useQuery(store => store.queryTodos())
+  const { loading, error, data, query } = useQuery((store) =>
+    store.queryTodos()
+  )
   if (error) return <Error>{error.message}</Error>
   if (data)
     return (
       <>
         <ul>
-          {data.todos.map(todo => (
+          {data.todos.map((todo) => (
             <Todo key={todo.id} todo={todo} />
           ))}
         </ul>

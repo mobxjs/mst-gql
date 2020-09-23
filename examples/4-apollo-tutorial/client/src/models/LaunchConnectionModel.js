@@ -13,14 +13,14 @@ export {
  * Simple wrapper around our list of launches that contains a cursor to the last item in the list. Pass this cursor to the launches query to fetch results after these.
  */
 export const LaunchConnectionModel = LaunchConnectionModelBase.volatile(
-  self => ({
+  (self) => ({
     isFetchingMore: false
   })
-).actions(self => ({
+).actions((self) => ({
   fetchMore() {
     self.isFetchingMore = true
     const query = self.store.fetchLaunches(self.cursor)
-    query.then(lc => self.doneFetchingMore(lc))
+    query.then((lc) => self.doneFetchingMore(lc))
     return query
   },
   doneFetchingMore(launchConnection) {

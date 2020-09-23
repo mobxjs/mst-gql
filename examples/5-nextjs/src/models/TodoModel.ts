@@ -14,11 +14,11 @@ export {
 /**
  * TodoModel
  */
-export const TodoModel = TodoModelBase.actions(self => ({
+export const TodoModel = TodoModelBase.actions((self) => ({
   toggle() {
     return self.store.mutateToggleTodo(
       { id: self.id },
-      todo => todo.done,
+      (todo) => todo.done,
       () => {
         self.done = !self.done
       }

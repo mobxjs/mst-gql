@@ -10,7 +10,7 @@ export {
 /**
  * OrganizationModel
  */
-export const OrganizationModel = OrganizationModelBase.actions(self => ({
+export const OrganizationModel = OrganizationModelBase.actions((self) => ({
   // This is an auto-generated example action.
   log() {
     console.log(JSON.stringify(self))
