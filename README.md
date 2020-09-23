@@ -2,11 +2,9 @@
 
 Bindings for mobx-state-tree and GraphQL
 
-This project can be sponsored through our [open collective](https://opencollective.com/mobx)!
-
 Discuss this project on [spectrum](https://spectrum.chat/mst-gql)
 
-[![OpenCollective](https://opencollective.com/mobx/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/mobx/sponsors/badge.svg)](#sponsors) [![CircleCI](https://circleci.com/gh/mobxjs/mst-gql/tree/master.svg?style=svg)](https://circleci.com/gh/mobxjs/mst-gql/tree/master)
+[![CircleCI](https://circleci.com/gh/mobxjs/mst-gql/tree/master.svg?style=svg)](https://circleci.com/gh/mobxjs/mst-gql/tree/master)
 
 # 🚀 Installation 🚀
 
