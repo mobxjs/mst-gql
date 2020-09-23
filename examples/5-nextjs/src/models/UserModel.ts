@@ -14,4 +14,4 @@ export {
 /**
  * UserModel
  */
-export const UserModel = UserModelBase.actions(self => ({}))
+export const UserModel = UserModelBase.actions((self) => ({}))

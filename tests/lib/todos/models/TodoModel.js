@@ -10,8 +10,8 @@ export {
 /**
  * TodoModel
  */
-export const TodoModel = TodoModelBase.actions(self => ({
+export const TodoModel = TodoModelBase.actions((self) => ({
   toggle() {
-    return self.store.mutateToggleTodo({ id: self.id }, todo => todo.complete)
+    return self.store.mutateToggleTodo({ id: self.id }, (todo) => todo.complete)
   }
 }))

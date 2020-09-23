@@ -5,7 +5,7 @@ import { LaunchTile, Header, Button, Loading } from "../components"
 import { useQuery } from "../models/reactUtils"
 
 export default observer(function Launches() {
-  const { query } = useQuery(store => store.fetchLaunches())
+  const { query } = useQuery((store) => store.fetchLaunches())
   return (
     <Fragment>
       <Header />
@@ -14,7 +14,7 @@ export default observer(function Launches() {
         loading: () => <Loading />,
         data: ({ launches: launchConnection }) => (
           <Fragment>
-            {launchConnection.launches.map(launch => (
+            {launchConnection.launches.map((launch) => (
               <LaunchTile key={launch.id} launch={launch} />
             ))}
             {launchConnection.isFetchingMore ? (

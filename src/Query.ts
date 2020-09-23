@@ -134,7 +134,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
         this.error = false
         this.data = data
       }),
-      action(error => {
+      action((error) => {
         this.loading = false
         this.error = error
       })
@@ -170,10 +170,10 @@ export class Query<T = unknown> implements PromiseLike<T> {
   ): PromiseLike<TResult1 | TResult2>
   then(onfulfilled: any, onrejected: any) {
     return this.promise.then(
-      d => {
+      (d) => {
         this.store.__runInStoreContext(() => onfulfilled(d))
       },
-      e => {
+      (e) => {
         this.store.__runInStoreContext(() => onrejected(e))
       }
     )

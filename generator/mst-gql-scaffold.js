@@ -96,7 +96,7 @@ function main() {
 
   console.log(
     "Detected types: \n" +
-      json.__schema.types.map(t => `  - [${t.kind}] ${t.name}`).join("\n")
+      json.__schema.types.map((t) => `  - [${t.kind}] ${t.name}`).join("\n")
   )
 
   // console.log(JSON.stringify(json, null, 2))

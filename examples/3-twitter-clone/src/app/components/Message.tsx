@@ -25,7 +25,7 @@ export const Message = observer(
               💙
             </div>
             {asChild ? null : (
-              <div className="collapse" onClick={() => setCollapsed(c => !c)}>
+              <div className="collapse" onClick={() => setCollapsed((c) => !c)}>
                 💬
               </div>
             )}

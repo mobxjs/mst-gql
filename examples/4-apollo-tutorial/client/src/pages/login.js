@@ -10,7 +10,7 @@ export default function Login() {
     case "pending":
       return <Loading />
     case "loggedOut":
-      return <LoginForm login={email => store.login(email)} />
+      return <LoginForm login={(email) => store.login(email)} />
     default:
       return <p>An error occurred</p>
   }

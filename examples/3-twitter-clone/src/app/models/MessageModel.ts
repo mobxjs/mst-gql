@@ -14,11 +14,11 @@ export {
 /**
  * MessageModel
  */
-export const MessageModel = MessageModelBase.views(self => ({
+export const MessageModel = MessageModelBase.views((self) => ({
   get isLikedByMe(): boolean {
     return self.likes.includes(self.store.me)
   }
-})).actions(self => {
+})).actions((self) => {
   let loadReplyQuery: ReturnType<typeof self.store.loadMessages>
 
   return {

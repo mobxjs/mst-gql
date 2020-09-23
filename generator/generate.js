@@ -77,10 +77,10 @@ export const ModelBase = MSTGQLObject
 
   function generateTypes() {
     types
-      .filter(type => !excludes.includes(type.name))
-      .filter(type => !type.name.startsWith("__"))
-      .filter(type => type.kind !== "SCALAR")
-      .forEach(type => {
+      .filter((type) => !excludes.includes(type.name))
+      .filter((type) => !type.name.startsWith("__"))
+      .filter((type) => type.kind !== "SCALAR")
+      .forEach((type) => {
         knownTypes.push(type.name)
         if (type.kind === "OBJECT") {
           origObjectTypes.push(type.origName)
@@ -96,7 +96,7 @@ export const ModelBase = MSTGQLObject
       )
     }
 
-    rootTypes.forEach(type => {
+    rootTypes.forEach((type) => {
       if (!origObjectTypes.includes(type)) {
         if (isTypeReservedName(type)) {
           throw new Error(
@@ -111,13 +111,13 @@ export const ModelBase = MSTGQLObject
 
     // Keep the orig type names for mixin configuration
     origRootTypes = [...rootTypes]
-    rootTypes = rootTypes.map(t => transformTypeName(t, namingConvention))
+    rootTypes = rootTypes.map((t) => transformTypeName(t, namingConvention))
 
     console.log("rootTypes", JSON.stringify(rootTypes, null, 2))
 
     types
-      .filter(type => knownTypes.includes(type.name))
-      .forEach(type => {
+      .filter((type) => knownTypes.includes(type.name))
+      .forEach((type) => {
         currentType = type.name
         // console.log(`Generating type '${type.name}' (${type.kind})`)
         try {
@@ -151,16 +151,16 @@ export const ModelBase = MSTGQLObject
   function autoDetectRootTypes() {
     return types
       .filter(
-        type =>
+        (type) =>
           objectTypes.includes(type.name) &&
           type.fields.some(
-            field =>
+            (field) =>
               field.name === "id" &&
               skipNonNull(field.type).kind === "SCALAR" &&
               skipNonNull(field.type).name === "ID"
           )
       )
-      .map(t => t.origName)
+      .map((t) => t.origName)
   }
 
   function handleEnumType(type) {
@@ -176,7 +176,7 @@ export const ModelBase = MSTGQLObject
  */
 
 export enum ${name} {
-  ${type.enumValues.map(enumV => `${enumV.name}="${enumV.name}"`).join(",\n")}
+  ${type.enumValues.map((enumV) => `${enumV.name}="${enumV.name}"`).join(",\n")}
 }`
         : ""
 
@@ -201,7 +201,7 @@ export const ${name}${enumPostfix}Type = ${handleEnumTypeCore(type)}
     return `types.enumeration("${type.name}", [
       ${type.enumValues
         .map(
-          enumV =>
+          (enumV) =>
             `  "${enumV.name}",${optPrefix(
               " // ",
               sanitizeComment(enumV.description)
@@ -327,7 +327,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     } = resolveFieldsAndImports(type, fileName)
 
     interfaceOrUnionType &&
-      interfaceOrUnionType.ofTypes.forEach(t => {
+      interfaceOrUnionType.ofTypes.forEach((t) => {
         /** Base file imports */
         const toBeImported = [`${t.name}ModelSelector`]
         if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
@@ -360,7 +360,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         `export type ${
           interfaceOrUnionType.name
         }Union = ${interfaceOrUnionType.ofTypes
-          .map(unionModel => `${unionModel.name}ModelType`)
+          .map((unionModel) => `${unionModel.name}ModelType`)
           .join(" | ")}\n\n`
       )
     }
@@ -389,7 +389,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     let modelProperties = ""
     if (type.fields) {
-      modelProperties = type.fields.map(field => handleField(field)).join("\n")
+      modelProperties = type.fields
+        .map((field) => handleField(field))
+        .join("\n")
     }
 
     return {
@@ -500,7 +502,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       addImport(className, className)
 
       const interfaceOrUnionType = interfaceAndUnionTypes.get(fieldType.name)
-      const mstUnionArgs = interfaceOrUnionType.ofTypes.map(t => {
+      const mstUnionArgs = interfaceOrUnionType.ofTypes.map((t) => {
         // Note that members of a union type need to be concrete object types;
         // you can't create a union type out of interfaces or other unions.
         const subTypeClassName = t.name + "Model"
@@ -528,7 +530,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     let output = `export class ${name}ModelSelector extends QueryBuilder {\n`
     output += primitiveFields
-      .map(p => `  get ${p}() { return this.__attr(\`${p}\`) }`)
+      .map((p) => `  get ${p}() { return this.__attr(\`${p}\`) }`)
       .join("\n")
     output += primitiveFields.length > 0 ? "\n" : ""
     output += nonPrimitiveFields
@@ -546,7 +548,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     if (interfaceOrUnionType) {
       output += interfaceOrUnionType.ofTypes
-        .map(subType => {
+        .map((subType) => {
           const selector = `${subType.name}ModelSelector`
           let p = `  ${toFirstLower(subType.name)}(builder`
           p += ifTS(
@@ -574,7 +576,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       output += modelPrimitives
       output += interfaceOrUnionType.ofTypes
         .map(
-          memberType =>
+          (memberType) =>
             `.${toFirstLower(memberType.name)}(${toFirstLower(
               memberType.name
             )}ModelPrimitives)`
@@ -584,8 +586,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       // for interaces and objects, select the defined fields
       output += modelPrimitives
       output += primitiveFields
-        .filter(p => p !== "id") // id will be automatically inserted by the query generator
-        .map(p => `.${p}`)
+        .filter((p) => p !== "id") // id will be automatically inserted by the query generator
+        .map((p) => `.${p}`)
         .join("")
     }
 
@@ -616,7 +618,7 @@ import { MSTGQLStore, configureStoreMixin${
     } } from "mst-gql"
 ${objectTypes
   .map(
-    t =>
+    (t) =>
       `\nimport { ${t}Model${ifTS(
         `, ${t}${modelTypePostfix}`
       )} } from "./${t}Model${importPostFix}"${
@@ -629,14 +631,14 @@ ${objectTypes
   )
   .join("")}
 ${unionTypes.map(
-  t =>
+  (t) =>
     `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
       `, ${t}Union`
     )} } from "./"`
 )}
 ${enumTypes
   .map(
-    t =>
+    (t) =>
       `\nimport { ${t} } from "./${t}${
         !t.toLowerCase().endsWith("enum") ? "Enum" : ""
       }${importPostFix}"`
@@ -645,9 +647,9 @@ ${enumTypes
 ${ifTS(
   inputTypes
     .map(
-      t =>
+      (t) =>
         `\nexport type ${t.name} = {\n${t.inputFields
-          .map(field => `  ${printTsType(field)}`)
+          .map((field) => `  ${printTsType(field)}`)
           .join("\n")}\n}`
     )
     .join("")
@@ -656,7 +658,7 @@ ${ifTS(`/* The TypeScript type that explicits the refs to other models in order 
 type Refs = {
 ${rootTypes
   .map(
-    t =>
+    (t) =>
       `  ${transformRootName(
         t,
         namingConvention
@@ -679,14 +681,16 @@ export const RootStoreBase = ${ifTS("withTypedRefs<Refs>()(")}${
     }
   .named("RootStore")
   .extend(configureStoreMixin([${origObjectTypes
-    .map(s => `['${s}', () => ${transformTypeName(s, namingConvention)}Model]`)
-    .join(", ")}], [${origRootTypes.map(s => `'${s}'`).join(", ")}]${
+    .map(
+      (s) => `['${s}', () => ${transformTypeName(s, namingConvention)}Model]`
+    )
+    .join(", ")}], [${origRootTypes.map((s) => `'${s}'`).join(", ")}]${
       namingConvention == "asis" ? "" : `, "${namingConvention}"`
     }))
   .props({
 ${rootTypes
   .map(
-    t =>
+    (t) =>
       `    ${transformRootName(
         t,
         namingConvention
@@ -741,14 +745,14 @@ ${rootTypes
     if (!queries) return ""
 
     const enumContent = queries.fields
-      .map(field => {
+      .map((field) => {
         const { name } = field
         if (shouldSkipField(field)) return ""
         const queryName = `${methodPrefix}${toFirstUpper(name)}`
         return `${queryName}="${queryName}"`
       })
       // Filter out empty strings for skipped fields
-      .filter(n => n)
+      .filter((n) => n)
       .join(",\n")
     if (enumContent === "") return
     return `export enum RootStoreBase${gqlPlural} {
@@ -803,7 +807,7 @@ ${enumContent}
     if (!query) return ""
 
     return query.fields
-      .map(field => {
+      .map((field) => {
         if (shouldSkipField(field)) return ""
 
         let { name, origName, args, type, description } = field
@@ -833,19 +837,19 @@ ${enumContent}
             ? ""
             : "(" +
               args
-                .map(arg => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
+                .map((arg) => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
                 .join(", ") +
               ")"
         const actualArgs =
           args.length === 0
             ? ""
             : "(" +
-              args.map(arg => `${arg.origName}: \$${arg.name}`).join(", ") +
+              args.map((arg) => `${arg.origName}: \$${arg.name}`).join(", ") +
               ")"
 
         const tsVariablesType =
           format === "ts"
-            ? `: { ${args.map(arg => `${printTsType(arg)}`).join(", ")} }`
+            ? `: { ${args.map((arg) => `${printTsType(arg)}`).join(", ")} }`
             : ""
         return `\
 ${optPrefix("\n    // ", sanitizeComment(description))}
@@ -946,7 +950,9 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
   }
 
   function findObjectByName(name) {
-    return types.find(type => type.origName === name && type.kind === "OBJECT")
+    return types.find(
+      (type) => type.origName === name && type.kind === "OBJECT"
+    )
   }
 
   function generateReactUtils() {
@@ -976,7 +982,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
     const contents = `\
 ${header}
 
-${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
+${toExport.map((f) => `export * from "./${f}${importPostFix}"`).join("\n")}
 `
     generateFile("index", contents, true)
   }
@@ -1004,7 +1010,7 @@ ${toExport.map(f => `export * from "./${f}${importPostFix}"`).join("\n")}
     const moduleNames = [...imports.keys()].sort()
     return (
       moduleNames
-        .map(moduleName => {
+        .map((moduleName) => {
           const toBeImported = [...imports.get(moduleName)].sort()
           return `import { ${[...toBeImported].join(
             ", "
@@ -1053,11 +1059,11 @@ function resolveInterfaceAndUnionTypes(types) {
   const result = new Map()
   const interfaces = new Map()
   const memberTypesToUnions = new Map()
-  types.forEach(type => {
+  types.forEach((type) => {
     if (type.kind === "INTERFACE") {
       interfaces.set(type.name, type)
     } else if (type.kind === "UNION") {
-      type.possibleTypes.forEach(possibleType => {
+      type.possibleTypes.forEach((possibleType) => {
         if (memberTypesToUnions.has(possibleType.name)) {
           const unions = memberTypesToUnions.get(possibleType.name)
           unions.add(type)
@@ -1067,16 +1073,16 @@ function resolveInterfaceAndUnionTypes(types) {
       })
     }
   })
-  types.forEach(type => {
+  types.forEach((type) => {
     if (type.kind === "OBJECT") {
-      type.interfaces.forEach(i => {
+      type.interfaces.forEach((i) => {
         const interfaceType = interfaces.get(i.name)
         upsertInterfaceOrUnionType(interfaceType, type, result)
 
-        interfaceType.fields.forEach(interfaceField => {
+        interfaceType.fields.forEach((interfaceField) => {
           if (
             !type.fields.some(
-              objectField => objectField.name === interfaceField.name
+              (objectField) => objectField.name === interfaceField.name
             )
           )
             type.fields.push(interfaceField) // Note: is inlining necessary? Deriving objects need to define all interface properties?
@@ -1085,7 +1091,7 @@ function resolveInterfaceAndUnionTypes(types) {
       if (memberTypesToUnions.has(type.name)) {
         memberTypesToUnions
           .get(type.name)
-          .forEach(union => upsertInterfaceOrUnionType(union, type, result))
+          .forEach((union) => upsertInterfaceOrUnionType(union, type, result))
       }
     }
   })
@@ -1285,9 +1291,9 @@ function transformRootName(text, namingConvention) {
 function transformTypes(types, namingConvention) {
   //console.log(JSON.stringify(types, null, 2));
   types
-    .filter(type => !type.name.startsWith("__"))
-    .filter(type => type.kind !== "SCALAR")
-    .forEach(type => transformType(type, namingConvention))
+    .filter((type) => !type.name.startsWith("__"))
+    .filter((type) => type.kind !== "SCALAR")
+    .forEach((type) => transformType(type, namingConvention))
   //console.log(JSON.stringify(types, null, 2));
 }
 
@@ -1314,12 +1320,12 @@ function transformType(type, namingConvention) {
 
     // process type names in fields, inputFields and ofType
     if (type.fields) {
-      type.fields.forEach(f => {
+      type.fields.forEach((f) => {
         // process own type
         transformType(f.type, namingConvention)
         // process types of args
         if (f.args) {
-          f.args.forEach(arg => {
+          f.args.forEach((arg) => {
             arg.origName = arg.name
             arg.name = transformName(arg.name, namingConvention)
             transformType(arg.type, namingConvention)
@@ -1328,7 +1334,7 @@ function transformType(type, namingConvention) {
       })
     }
     if (type.inputFields) {
-      type.inputFields.forEach(f => transformType(f.type, namingConvention))
+      type.inputFields.forEach((f) => transformType(f.type, namingConvention))
     }
     if (type.ofType) {
       transformType(type.ofType, namingConvention)
@@ -1338,7 +1344,7 @@ function transformType(type, namingConvention) {
 
 function logUnexpectedFiles(outDir, files) {
   const expectedFiles = new Set(files.map(([name]) => name))
-  fs.readdirSync(outDir).forEach(file => {
+  fs.readdirSync(outDir).forEach((file) => {
     if (!expectedFiles.has(path.parse(file).name)) {
       console.log(
         `Unexpected file "${file}". This could be a type that is no longer needed.`

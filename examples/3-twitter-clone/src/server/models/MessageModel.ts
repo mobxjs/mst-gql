@@ -7,11 +7,11 @@ export type MessageModelType = typeof MessageModel.Type
 /**
  * MessageModel
  */
-export const MessageModel = MessageModelBase.views(self => ({
+export const MessageModel = MessageModelBase.views((self) => ({
   serialize() {
     return {
       ...getSnapshot(self),
-      likes: self.likes.map(like => like.serialize()),
+      likes: self.likes.map((like) => like.serialize()),
       user: self.user.serialize()
     }
   }

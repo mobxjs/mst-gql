@@ -35,7 +35,7 @@ export const MSTGQLStore = types
       __afterInit: false
     }
   })
-  .actions(self => {
+  .actions((self) => {
     Promise.resolve().then(() => (self as any).__onAfterInit())
 
     const {
@@ -113,7 +113,7 @@ export const MSTGQLStore = types
       query: string | DocumentNode,
       variables?: any,
       onData?: (item: T) => void,
-      onError: (error: Error) => void = error => {
+      onError: (error: Error) => void = (error) => {
         throw error
       }
     ): () => void {

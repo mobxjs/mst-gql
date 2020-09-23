@@ -19,7 +19,7 @@ export const GET_LAUNCH = gql`
 export default observer(function CartItem({ launchId }) {
   const { query } = useQuery(GET_LAUNCH, { variables: { launchId } })
   return query.case({
-    error: error => <p>ERROR: {error.message}</p>,
+    error: (error) => <p>ERROR: {error.message}</p>,
     loading: () => <p>Loading...</p>,
     data: ({ launch }) => <LaunchTile launch={launch} />
   })

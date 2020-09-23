@@ -20,7 +20,7 @@ export const Replies = observer(
         ) : (
           <>
             <ul>
-              {data.messages.map(message => (
+              {data.messages.map((message) => (
                 <Message key={message.id} message={message} asChild />
               ))}
             </ul>

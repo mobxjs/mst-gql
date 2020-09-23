@@ -118,7 +118,7 @@ export const RootStoreBase = MSTGQLStore.named("RootStore")
     messages: types.optional(types.map(types.late(() => Message)), {}),
     users: types.optional(types.map(types.late(() => User)), {})
   })
-  .actions(self => ({
+  .actions((self) => ({
     queryMessages(
       variables?: {},
       resultSelector = messagePrimitives,
@@ -195,14 +195,14 @@ import { Error, Loading, Message } from "./"
 import { useQuery } from "../models/reactUtils"
 
 export const Home = observer(() => {
-  const { store, error, loading, data } = useQuery(store =>
+  const { store, error, loading, data } = useQuery((store) =>
     store.queryMessages()
   )
   if (error) return <Error>{error.message}</Error>
   if (loading) return <Loading />
   return (
     <ul>
-      {data.messages.map(message => (
+      {data.messages.map((message) => (
         <Message key={message.id} message={message} />
       ))}
     </ul>
@@ -245,7 +245,7 @@ export const Todo = observer(({ todo }) => {
 The Todo model used in the above component is defined as follows:
 
 ```javascript
-export const TodoModel = TodoModelBase.actions(self => ({
+export const TodoModel = TodoModelBase.actions((self) => ({
   toggle() {
     return self.store.mutateToggleTodo({ id: self.id }, undefined, () => {
       self.complete = !self.complete
@@ -273,9 +273,9 @@ It is possible to use `gql` from the `graphql-tag` package. This enables highlig
 However, the recommended way to write the result selectors is to use the query builder that mst-gql will generate for you. This querybuilder is entirely strongly typed, provides auto completion and automatically takes care of `__typename` and `id` fields. It can be used by passing a function as second argument to a mutation or query. That callback will be invoked with a querybuilder for the type of object that is returned. With the querybuilder, we could write the above mutation as:
 
 ```javascript
-export const TodoModel = TodoModelBase.actions(self => ({
+export const TodoModel = TodoModelBase.actions((self) => ({
   toggle() {
-    return self.store.mutateToggleTodo({ id: self.id }, todo => todo.complete)
+    return self.store.mutateToggleTodo({ id: self.id }, (todo) => todo.complete)
   }
 }))
 ```
@@ -286,7 +286,7 @@ Complex children can be selected by calling the field as function, and provide a
 
 ```javascript
 // prettier-ignore
-msg => msg
+;msg => msg
   .timestamp
   .text
   .user(user => user.name.avatar)
@@ -322,7 +322,7 @@ Example of a generated model, that introduces a `toggle` action that wraps aroun
 // src/models/TodoModel.js
 import { TodoModelBase } from "./TodoModel.base"
 
-export const TodoModel = TodoModelBase.actions(self => ({
+export const TodoModel = TodoModelBase.actions((self) => ({
   toggle() {
     return self.store.mutateToggleTodo({ id: self.id })
   }
@@ -446,25 +446,28 @@ Similar to `query`, but sets up an websocket based subscription. The `gqlWsClien
 Example initalization:
 
 ```js
-import { SubscriptionClient } from 'subscriptions-transport-ws'
-``` 
+import { SubscriptionClient } from "subscriptions-transport-ws"
+```
 
 build a websocket client:
+
 ```js
 // see: https://www.npmjs.com/package/subscriptions-transport-ws#hybrid-websocket-transport
 const gqlWsClient = new SubscriptionClient(constants.graphQlWsUri, {
   reconnect: true,
   connectionParams: {
-    headers: { authorization: `Bearer ${tokenWithRoles}` },
-  },
+    headers: { authorization: `Bearer ${tokenWithRoles}` }
+  }
 })
-``` 
+```
+
 add the ws client when creating the store:
+
 ```js
 // see: https://github.com/mobxjs/mst-gql/blob/master/src/MSTGQLStore.ts#L42-L43
 const store = RootStore.create(undefined, {
   gqlHttpClient,
-  gqlWsClient,
+  gqlWsClient
 })
 ```
 
@@ -489,7 +492,7 @@ The result selector defines which fields should fetched from the backend. By def
 ```typescript
 import { MessageBaseModel } from "./MessageModel.base"
 
-const MessageModel = MessageBaseModel.actions(self => ({
+const MessageModel = MessageBaseModel.actions((self) => ({
   queryCommentsAndLikes(): Query<MessageModelType> {
     return store.queryMessage(
       { id: self.id },

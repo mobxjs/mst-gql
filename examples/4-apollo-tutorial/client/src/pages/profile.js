@@ -23,7 +23,7 @@ export default observer(function Profile() {
   const { query, store } = useQuery(GET_MY_TRIPS)
 
   return query.case({
-    error: error => <p>ERROR: {error.message}</p>,
+    error: (error) => <p>ERROR: {error.message}</p>,
     // render cached trips if available
     loading: () => (store.hasTrips ? renderTrips(store) : <Loading />),
     data: () => renderTrips(store)
@@ -35,7 +35,7 @@ function renderTrips(store) {
     <Fragment>
       <Header>My Trips</Header>
       {store.hasTrips ? (
-        store.me.trips.map(launch => (
+        store.me.trips.map((launch) => (
           <LaunchTile key={launch.id} launch={launch} />
         ))
       ) : (

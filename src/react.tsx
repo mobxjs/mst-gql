@@ -77,7 +77,7 @@ export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
   context: React.Context<STORE>,
   React: typeof ReactNamespace
 ): UseQueryHook<STORE> {
-  return function<DATA>(
+  return function <DATA>(
     queryIn: undefined | QueryLike<STORE, DATA> = undefined,
     opts: UseQueryHookOptions<STORE> = {}
   ) {

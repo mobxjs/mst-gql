@@ -7,11 +7,11 @@ export type ReplyModelType = typeof ReplyModel.Type
 /**
  * ReplyModel
  */
-export const ReplyModel = ReplyModelBase.views(self => ({
+export const ReplyModel = ReplyModelBase.views((self) => ({
   serialize() {
     return {
       ...getSnapshot(self),
-      likes: self.likes.map(like => like.serialize()),
+      likes: self.likes.map((like) => like.serialize()),
       user: self.user.serialize()
     }
   }

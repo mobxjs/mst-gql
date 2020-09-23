@@ -36,7 +36,7 @@ export function MSTGQLRef<T extends IAnyModelType>(
   })
 }
 
-export const MSTGQLObject = types.model("MSTGQLObject").extend(self => {
+export const MSTGQLObject = types.model("MSTGQLObject").extend((self) => {
   let store: StoreType
 
   function getStore(): StoreType {

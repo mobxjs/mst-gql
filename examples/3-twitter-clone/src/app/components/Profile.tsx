@@ -7,7 +7,7 @@ import { useQuery } from "../models/reactUtils"
 
 export const Profile = observer(() => {
   const inputRef = useRef<HTMLInputElement>()
-  const { loading, error, data, store, setQuery } = useQuery(store =>
+  const { loading, error, data, store, setQuery } = useQuery((store) =>
     store.queryMe()
   )
 

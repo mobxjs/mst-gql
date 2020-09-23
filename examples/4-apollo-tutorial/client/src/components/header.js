@@ -41,7 +41,7 @@ const Container = styled("div")({
   marginBottom: unit * 4.5
 })
 
-const Image = styled("img")(size(134), props => ({
+const Image = styled("img")(size(134), (props) => ({
   marginRight: unit * 2.5,
   borderRadius: props.round && "50%"
 }))

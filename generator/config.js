@@ -31,7 +31,7 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
   const headerConfigValues =
     config && config.header
       ? Object.keys(config.header)
-          .map(key => `${key}:${config.header[key]}`)
+          .map((key) => `${key}:${config.header[key]}`)
           .join(" --header=")
       : undefined
 
@@ -40,10 +40,10 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     outDir: resolve(process.cwd(), args["--outDir"] || config.outDir),
     input: args._[0] || config.input,
     roots: args["--roots"]
-      ? args["--roots"].split(",").map(s => s.trim())
+      ? args["--roots"].split(",").map((s) => s.trim())
       : config.roots,
     excludes: args["--excludes"]
-      ? args["--excludes"].split(",").map(s => s.trim())
+      ? args["--excludes"].split(",").map((s) => s.trim())
       : config.excludes,
     modelsOnly: !!args["--modelsOnly"] || config.modelsOnly,
     forceAll: !!args["--force"] || config.force,

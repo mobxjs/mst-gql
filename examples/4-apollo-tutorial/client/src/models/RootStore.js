@@ -61,7 +61,7 @@ export const RootStore = RootStoreBase.props({
   loginStatus: loginStatus,
   cartItems: types.array(types.string)
 })
-  .views(self => ({
+  .views((self) => ({
     get me() {
       return Array.from(self.users.values())[0]
     },
@@ -69,10 +69,10 @@ export const RootStore = RootStoreBase.props({
       return self.me && self.me.trips.length
     }
   }))
-  .actions(self => ({
+  .actions((self) => ({
     addOrRemoveFromCart(id) {
       self.cartItems = self.cartItems.includes(id)
-        ? self.cartItems.filter(i => i !== id)
+        ? self.cartItems.filter((i) => i !== id)
         : [...self.cartItems, id]
     },
     cancelTrip(launchId) {

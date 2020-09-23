@@ -30,7 +30,7 @@ class LaunchAPI extends RESTDataSource {
 
     // transform the raw launches to a more friendly
     return Array.isArray(response)
-      ? response.map(launch => this.launchReducer(launch))
+      ? response.map((launch) => this.launchReducer(launch))
       : []
   }
 
@@ -41,7 +41,7 @@ class LaunchAPI extends RESTDataSource {
 
   async getLaunchesByIds({ launchIds }) {
     return Promise.all(
-      launchIds.map(launchId => this.getLaunchById({ launchId }))
+      launchIds.map((launchId) => this.getLaunchById({ launchId }))
     )
   }
 }

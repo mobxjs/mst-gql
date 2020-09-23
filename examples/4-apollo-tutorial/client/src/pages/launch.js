@@ -23,7 +23,7 @@ export const GET_LAUNCH_DETAILS = gql`
 export default observer(function Launch({ launchId }) {
   const { query } = useQuery(GET_LAUNCH_DETAILS, { variables: { launchId } })
   return query.case({
-    error: error => <p>ERROR: {error.message}</p>,
+    error: (error) => <p>ERROR: {error.message}</p>,
     loading: () => <Loading />,
     data: ({ launch }) => (
       <Fragment>

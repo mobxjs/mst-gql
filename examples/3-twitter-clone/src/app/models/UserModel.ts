@@ -14,14 +14,14 @@ export {
 /**
  * UserModel
  */
-export const UserModel = UserModelBase.actions(self => ({
+export const UserModel = UserModelBase.actions((self) => ({
   changeName(name: string) {
     return self.store.mutateChangeName(
       {
         id: self.id,
         name
       },
-      user => user.name,
+      (user) => user.name,
       () => {
         self.name = name
       }

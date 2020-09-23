@@ -11,7 +11,7 @@ const schemaContents = fs
   .toString()
 const schema = buildSchema(schemaContents)
 
-const validateQuery = queryString => {
+const validateQuery = (queryString) => {
   const errors = validate(schema, parse(queryString))
   if (errors.length > 0) {
     console.log(queryString, errors)
@@ -95,7 +95,7 @@ describe("Abstract types tests", () => {
   })
 
   test("as a lib user i want to query interface field types", async () => {
-    const mockRepoQuery = query => {
+    const mockRepoQuery = (query) => {
       validateQuery(query.toString())
 
       return {
@@ -175,7 +175,7 @@ describe("Abstract types tests", () => {
       }
     }
 
-    const mockGetReposQuery = query => {
+    const mockGetReposQuery = (query) => {
       validateQuery(query.toString())
 
       return {
