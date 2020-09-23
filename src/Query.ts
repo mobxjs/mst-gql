@@ -93,7 +93,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     }
   }
 
-  clear = (): void => {
+  clearData = (): void => {
     action(() => {
       this.data = undefined
     })
