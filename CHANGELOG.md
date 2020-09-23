@@ -9,7 +9,7 @@
 
 ## 0.12.5
 
-- 🐛🐛🐛 Fix running scaffold when installing with npm
+- Fix running scaffold when installing with npm. [#265](https://github.com/mobxjs/mst-gql/pull/265) - [jvcmanke](https://github.com/jvcmanke)
 
 ## 0.12.3
 
