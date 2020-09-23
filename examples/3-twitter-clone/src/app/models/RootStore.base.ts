@@ -81,9 +81,9 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    subscribeNewMessages(variables?: {  }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), onData?: (item: any) => void) {
+    subscribeNewMessages(variables?: {  }, resultSelector: string | ((qb: MessageModelSelector) => MessageModelSelector) = messageModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
       return self.subscribe<{ newMessages: MessageModelType}>(`subscription newMessages { newMessages {
         ${typeof resultSelector === "function" ? resultSelector(new MessageModelSelector()).toString() : resultSelector}
-      } }`, variables, onData)
+      } }`, variables, onData, onError)
     },
   })))
