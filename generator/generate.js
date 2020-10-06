@@ -825,7 +825,10 @@ ${enumContent}
                 isScalar
                   ? `${printTsPrimitiveType(type.name)} `
                   : `${returnType.name}${
-                      returnType.kind === "UNION" ? "Union" : modelTypePostfix
+                      returnType.kind === "UNION" ||
+                      returnType.kind === "INTERFACE"
+                        ? "Union"
+                        : modelTypePostfix
                     }${returnsList ? "[]" : ""}`
               }}>`
 
