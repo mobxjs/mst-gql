@@ -8,7 +8,7 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "m
 import { UserModel, UserModelType } from "./UserModel"
 import { MessageModel, MessageModelType } from "./MessageModel"
 
-import { baseIDModelPrimitives, BaseIDModelSelector , BaseIDUnion } from "./",
+import { baseIDModelPrimitives, BaseIDModelSelector , BaseIDUnion } from "./"
 import { searchResultModelPrimitives, SearchResultModelSelector , SearchResultUnion } from "./"
 
 

@@ -625,12 +625,14 @@ ${objectTypes
   .join("")}
 ${
   /** 3) Add imports for ModelPrimitives and ModelSelector in RootStore.base */
-  [...interfaceAndUnionTypes.values()].map(
-    (t) =>
-      `\nimport { ${toFirstLower(t.name)}ModelPrimitives, ${
-        t.name
-      }ModelSelector ${ifTS(`, ${t.name}Union`)} } from "./"`
-  )
+  [...interfaceAndUnionTypes.values()]
+    .map(
+      (t) =>
+        `\nimport { ${toFirstLower(t.name)}ModelPrimitives, ${
+          t.name
+        }ModelSelector ${ifTS(`, ${t.name}Union`)} } from "./"`
+    )
+    .join("")
 }
 ${enumTypes
   .map(
