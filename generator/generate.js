@@ -38,7 +38,6 @@ function generate(
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
-  const unionTypes = [] // all known UNION types for which ModelSelector classes are generated
   const origObjectTypes = [] // all known OBJECT types for which MST classes are generated
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
@@ -57,7 +56,6 @@ function generate(
   const modelTypePostfix = "ModelType"
 
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
-
   generateModelBase()
   generateTypes()
   generateRootStore()
@@ -318,7 +316,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
     const isUnion =
       interfaceOrUnionType && interfaceOrUnionType.kind === "UNION"
-    if (isUnion) unionTypes.push(type.name)
     const fileName = type.name + "ModelSelector"
     const {
       primitiveFields,
@@ -628,11 +625,11 @@ ${objectTypes
   .join("")}
 ${
   /** 3) Add imports for ModelPrimitives and ModelSelector in RootStore.base */
-  unionTypes.map(
+  [...interfaceAndUnionTypes.values()].map(
     (t) =>
-      `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
-        `, ${t}Union`
-      )} } from "./"`
+      `\nimport { ${toFirstLower(t.name)}ModelPrimitives, ${
+        t.name
+      }ModelSelector ${ifTS(`, ${t.name}Union`)} } from "./"`
   )
 }
 ${enumTypes

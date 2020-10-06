@@ -10,6 +10,7 @@ import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 import { MessageModel, MessageModelType } from "./MessageModel"
 import { messageModelPrimitives, MessageModelSelector } from "./MessageModel.base"
 
+import { baseIDModelPrimitives, BaseIDModelSelector , BaseIDUnion } from "./",
 import { searchResultModelPrimitives, SearchResultModelSelector , SearchResultUnion } from "./"
 
 

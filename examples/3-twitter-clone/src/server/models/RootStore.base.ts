@@ -8,6 +8,8 @@ import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from "m
 import { UserModel, UserModelType } from "./UserModel"
 import { MessageModel, MessageModelType } from "./MessageModel"
 
+import { baseIDModelPrimitives, BaseIDModelSelector , BaseIDUnion } from "./",
+import { searchResultModelPrimitives, SearchResultModelSelector , SearchResultUnion } from "./"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
