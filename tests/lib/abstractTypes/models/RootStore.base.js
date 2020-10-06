@@ -17,6 +17,7 @@ import { OrganizationModel } from "./OrganizationModel"
 import { organizationModelPrimitives, OrganizationModelSelector } from "./OrganizationModel.base"
 
 import { searchItemModelPrimitives, SearchItemModelSelector  } from "./"
+import { ownerModelPrimitives, OwnerModelSelector  } from "./"
 
 
 
