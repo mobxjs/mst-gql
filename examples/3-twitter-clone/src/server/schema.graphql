@@ -1,13 +1,9 @@
-interface BaseID {
-  id: ID
-}
-
-type User implements BaseID {
+type User {
   id: ID
   name: String!
   avatar: String!
 }
-type Message implements BaseID {
+type Message {
   id: ID
   timestamp: Float!
   user: User!

@@ -4,7 +4,6 @@
 
 export * from "./SearchResultModelSelector"
 export * from "./UserModel"
-export * from "./BaseIDModelSelector"
 export * from "./MessageModel"
 export * from "./RootStore"
 export * from "./reactUtils"
