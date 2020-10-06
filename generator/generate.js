@@ -338,7 +338,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           ...toBeImported
         )
 
-        /** Imports from core model */
+        /** 1) Imports model type from the model */
         if (isUnion) {
           // Import <model>ModelType from the core file to be used in the TS union type
           addImportToMap(
@@ -350,11 +350,12 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         }
       })
 
+    // Start building out the ModelSelector file
     let contents = header + "\n\n"
     contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
 
-    // Add the correct type for a TS union to the exports
+    /** 2) Add the correct type for a TS union to the exports of the ModelSelector file */
     if (isUnion) {
       contents += ifTS(
         `export type ${
@@ -630,12 +631,15 @@ ${objectTypes
       }`
   )
   .join("")}
-${unionTypes.map(
-  (t) =>
-    `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
-      `, ${t}Union`
-    )} } from "./"`
-)}
+${
+  /** 3) Add imports for ModelPrimitives and ModelSelector in RootStore.base */
+  unionTypes.map(
+    (t) =>
+      `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
+        `, ${t}Union`
+      )} } from "./"`
+  )
+}
 ${enumTypes
   .map(
     (t) =>
@@ -821,6 +825,7 @@ ${enumContent}
         let returnType = returnsList ? type.ofType : type
         if (returnType.kind === "NON_NULL") returnType = returnType.ofType
 
+        /** 4) Add the return type of the query if TS */
         const tsType =
           format !== "ts"
             ? ""
