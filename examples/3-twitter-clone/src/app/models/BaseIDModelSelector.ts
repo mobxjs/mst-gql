@@ -3,8 +3,12 @@
 /* tslint:disable */
 
 import { QueryBuilder } from "mst-gql"
+import { MessageModelType } from "./MessageModel"
 import { MessageModelSelector } from "./MessageModel.base"
+import { UserModelType } from "./UserModel"
 import { UserModelSelector } from "./UserModel.base"
+
+export type BaseIDUnion = UserModelType | MessageModelType
 
 export class BaseIDModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }

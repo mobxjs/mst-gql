@@ -339,15 +339,12 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         )
 
         /** 1) Imports model type from the model */
-        if (isUnion) {
-          // Import <model>ModelType from the core file to be used in the TS union type
-          addImportToMap(
-            imports,
-            fileName,
-            `${t.name}Model`,
-            `${t.name}ModelType`
-          )
-        }
+        addImportToMap(
+          imports,
+          fileName,
+          `${t.name}Model`,
+          `${t.name}ModelType`
+        )
       })
 
     // Start building out the ModelSelector file
@@ -356,15 +353,13 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     contents += printRelativeImports(imports)
 
     /** 2) Add the correct type for a TS union to the exports of the ModelSelector file */
-    if (isUnion) {
-      contents += ifTS(
-        `export type ${
-          interfaceOrUnionType.name
-        }Union = ${interfaceOrUnionType.ofTypes
-          .map((unionModel) => `${unionModel.name}ModelType`)
-          .join(" | ")}\n\n`
-      )
-    }
+    contents += ifTS(
+      `export type ${
+        interfaceOrUnionType.name
+      }Union = ${interfaceOrUnionType.ofTypes
+        .map((unionModel) => `${unionModel.name}ModelType`)
+        .join(" | ")}\n\n`
+    )
 
     contents += generateFragments(
       type.name,
