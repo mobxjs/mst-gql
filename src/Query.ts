@@ -140,7 +140,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
         this.error = false
         this.data = data
       }),
-      action((error) => {
+      action((error: any) => {
         this.loading = false
         this.error = error
       })
