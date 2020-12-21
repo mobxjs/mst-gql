@@ -1184,7 +1184,7 @@ export const RepoModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"Repo\\"), \\"Repo\\"),
     id: types.identifier,
-    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
+    owner: types.union(types.undefined, types.null, types.union(types.late((): any => UserModel), types.late((): any => OrganizationModel))),
   })
   .views(self => ({
     get store() {
@@ -1693,7 +1693,7 @@ export const SearchResultModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
     inputQuery: types.union(types.undefined, types.string),
-    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
+    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late((): any => MovieModel), types.late((): any => BookModel))))),
   })
   .views(self => ({
     get store() {

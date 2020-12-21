@@ -510,10 +510,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           // TODO: split field type resolvement from model properties output
           addImport(subTypeClassName, subTypeClassName)
         }
-        const isSelf = fieldType.name === currentType
         // always using late prevents potential circular dependency issues between files
         return `types.late(()${
-          isSelf && format === "ts" ? ": any" : ""
+          format === "ts" ? ": any" : ""
         } => ${subTypeClassName})`
       })
       return `types.union(${mstUnionArgs.join(", ")})`
