@@ -146,7 +146,7 @@ type Query {
   expect(
     hasFileContent(
       repoModelBase,
-      "owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),"
+      "owner: types.union(types.undefined, types.null, types.union(types.late((): any => UserModel), types.late((): any => OrganizationModel))),"
     )
   ).toBeTruthy()
 })
@@ -185,7 +185,7 @@ type Query {
   expect(
     hasFileContent(
       searchResultBase,
-      "items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),"
+      "items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late((): any => MovieModel), types.late((): any => BookModel))))),"
     )
   ).toBeTruthy()
 })
