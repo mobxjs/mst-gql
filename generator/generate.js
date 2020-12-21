@@ -639,12 +639,14 @@ ${objectTypes
       }`
   )
   .join("")}
-${unionTypes.map(
-  (t) =>
-    `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
-      `, ${t}Union`
-    )} } from "./"`
-)}
+${unionTypes
+  .map(
+    (t) =>
+      `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
+        `, ${t}Union`
+      )} } from "./"`
+  )
+  .join("")}
 ${enumTypes
   .map(
     (t) =>
