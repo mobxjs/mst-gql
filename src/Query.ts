@@ -3,7 +3,7 @@ import stringify from "fast-json-stable-stringify"
 import { DocumentNode, print } from "graphql"
 
 import { StoreType } from "./MSTGQLStore"
-import { action, observable } from "mobx"
+import { action, observable, makeObservable } from "mobx"
 
 export type CaseHandlers<T, R> = {
   loading(): R
@@ -26,9 +26,9 @@ export interface QueryOptions {
 const isServer: boolean = typeof window === "undefined"
 
 export class Query<T = unknown> implements PromiseLike<T> {
-  @observable loading = false
-  @observable.ref data: T | undefined = undefined
-  @observable error: any = undefined
+  loading = false
+  data: T | undefined = undefined
+  error: any = undefined
 
   public query: string
   public promise!: Promise<T>
@@ -41,6 +41,12 @@ export class Query<T = unknown> implements PromiseLike<T> {
     public variables: any,
     public options: QueryOptions = {}
   ) {
+    makeObservable(this, {
+      loading: observable,
+      data: observable.ref,
+      error: observable
+    })
+
     this.query = typeof query === "string" ? query : print(query)
     this.queryKey = this.query + stringify(variables)
 
@@ -134,7 +140,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
         this.error = false
         this.data = data
       }),
-      action((error) => {
+      action((error: any) => {
         this.loading = false
         this.error = error
       })
