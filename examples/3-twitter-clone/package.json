@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start:server": "yarn scaffold:server && ts-node-dev --transpileOnly --project ./src/server/tsconfig.json ./src/server/index.ts",
+    "start:server": "yarn scaffold:server && ts-node-dev --transpile-only --project ./src/server/tsconfig.json ./src/server/index.ts",
     "start:client": "yarn scaffold:client && parcel serve -p 3000 public/index.html",
     "scaffold": "yarn scaffold:server && yarn scaffold:client",
     "scaffold:client": "node ../../generator/mst-gql-scaffold.js --roots Message,User --outDir src/app/models/ --format ts src/server/schema.graphql",
