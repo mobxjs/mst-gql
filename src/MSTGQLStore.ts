@@ -23,32 +23,28 @@ export const MSTGQLStore = types
     ssr: boolean
     __promises: Map<string, Promise<unknown>>
     __afterInit: boolean
+    gqlHttpClient: RequestHandler
+    gqlWsClient: SubscriptionClient
   } => {
     const {
-      ssr = false
+      ssr = false,
+      gqlHttpClient,
+      gqlWsClient
     }: {
       ssr: boolean
+      gqlHttpClient: RequestHandler
+      gqlWsClient: SubscriptionClient
     } = getEnv(self)
     return {
       ssr,
+      gqlHttpClient,
+      gqlWsClient,
       __promises: new Map(),
       __afterInit: false
     }
   })
   .actions((self) => {
     Promise.resolve().then(() => (self as any).__onAfterInit())
-
-    const {
-      gqlHttpClient, // TODO: rename to requestHandler
-      gqlWsClient // TODO: rename to streamHandler
-    }: {
-      gqlHttpClient: RequestHandler
-      gqlWsClient: SubscriptionClient
-    } = getEnv(self)
-    if (!gqlHttpClient && !gqlWsClient)
-      throw new Error(
-        "Either gqlHttpClient or gqlWsClient (or both) should provided in the MSTGQLStore environment"
-      )
 
     function merge(data: unknown) {
       return mergeHelper(self, data)
@@ -59,10 +55,15 @@ export const MSTGQLStore = types
     }
 
     function rawRequest(query: string, variables: any): Promise<any> {
-      if (gqlHttpClient) return gqlHttpClient.request(query, variables)
+      if (!self.gqlHttpClient && !self.gqlWsClient)
+        throw new Error(
+          "Either gqlHttpClient or gqlWsClient (or both) should provided in the MSTGQLStore environment"
+        )
+      if (self.gqlHttpClient)
+        return self.gqlHttpClient.request(query, variables)
       else {
         return new Promise((resolve, reject) => {
-          gqlWsClient
+          self.gqlWsClient
             .request({
               query,
               variables
@@ -117,8 +118,8 @@ export const MSTGQLStore = types
         throw error
       }
     ): () => void {
-      if (!gqlWsClient) throw new Error("No WS client available")
-      const sub = gqlWsClient
+      if (!self.gqlWsClient) throw new Error("No WS client available")
+      const sub = self.gqlWsClient
         .request({
           query,
           variables
@@ -138,6 +139,14 @@ export const MSTGQLStore = types
       return () => sub.unsubscribe()
     }
 
+    function setHttpClient(value: RequestHandler) {
+      self.gqlHttpClient = value
+    }
+
+    function setWsClient(value: SubscriptionClient) {
+      self.gqlWsClient = value
+    }
+
     // exposed actions
     return {
       merge,
@@ -146,6 +155,8 @@ export const MSTGQLStore = types
       query,
       subscribe,
       rawRequest,
+      setHttpClient,
+      setWsClient,
       __pushPromise(promise: Promise<{}>, queryKey: string) {
         self.__promises.set(queryKey, promise)
         const onSettled = () => self.__promises.delete(queryKey)
