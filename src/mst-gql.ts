@@ -1,6 +1,6 @@
 export { MSTGQLStore, configureStoreMixin } from "./MSTGQLStore"
 export { Query, CaseHandlers, QueryOptions, FetchPolicy } from "./Query"
-export { MSTGQLObject, MSTGQLRef } from "./MSTGQLObject"
+export { MSTGQLObject, MSTGQLRef, getMSTGQLRefLabelAndId } from "./MSTGQLObject"
 export { createHttpClient, HttpClientOptions } from "./createHttpClient"
 export { QueryBuilder } from "./queryBuilder"
 export * from "./localStorageMixin"

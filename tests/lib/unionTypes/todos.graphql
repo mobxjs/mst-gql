@@ -1,0 +1,21 @@
+type Query {
+  todoLists: [TodoList!]!
+}
+
+union Todo = BasicTodo | FancyTodo
+
+type BasicTodo {
+  id: ID
+  text: String
+  complete: Boolean
+}
+type FancyTodo {
+  id: ID
+  label: String
+  color: String
+  complete: Boolean
+}
+type TodoList {
+  id: ID!
+  todos: [Todo!]!
+}

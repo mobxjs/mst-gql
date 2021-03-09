@@ -13,11 +13,19 @@ import { StoreType } from "./MSTGQLStore"
  For detached objects (objects that are not part of the Roots, or one of their children, for example: query results),
  we cannot use the default resolution mechanism, since they are not part of the store. So, first fetch the store and resolve from there
 */
+const MSTGQL_ID_DELIM = "::"
+export function getMSTGQLRefLabelAndId(labeledId: string) {
+  const [label, ...id] = labeledId.split(MSTGQL_ID_DELIM)
+  return { label, id: id.join("") }
+}
+
 export function MSTGQLRef<T extends IAnyModelType>(
-  targetType: T
+  targetType: T,
+  label: string = targetType.name
 ): IReferenceType<T> {
   return types.reference(targetType, {
-    get(id: string, parent: any) {
+    get(labeledId: string, parent: any) {
+      const id = getMSTGQLRefLabelAndId(labeledId).id
       const node = resolveIdentifier(
         targetType,
         parent.store || getParent<any>(parent).store,
@@ -31,7 +39,7 @@ export function MSTGQLRef<T extends IAnyModelType>(
       return node
     },
     set(value: any) {
-      return value.id
+      return [label, MSTGQL_ID_DELIM, value.id].join("")
     }
   })
 }
