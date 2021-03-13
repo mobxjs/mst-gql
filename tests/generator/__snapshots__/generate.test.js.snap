@@ -1235,8 +1235,12 @@ export const RepoModel = RepoModelBase
 /* tslint:disable */
 
 import { QueryBuilder } from \\"mst-gql\\"
+import { OrganizationModelType } from \\"./OrganizationModel\\"
 import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
+import { UserModelType } from \\"./UserModel\\"
 import { UserModelSelector } from \\"./UserModel.base\\"
+
+export type OwnerUnion = UserModelType | OrganizationModelType
 
 export class OwnerModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
@@ -1418,6 +1422,7 @@ import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
 import { organizationModelPrimitives, OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 
+import { ownerModelPrimitives, OwnerModelSelector , OwnerUnion } from \\"./\\"
 
 
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */

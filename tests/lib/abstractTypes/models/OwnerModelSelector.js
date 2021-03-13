@@ -2,7 +2,9 @@
 /* eslint-disable */
 
 import { QueryBuilder } from "mst-gql"
+import { OrganizationModelType } from "./OrganizationModel"
 import { OrganizationModelSelector } from "./OrganizationModel.base"
+import { UserModelType } from "./UserModel"
 import { UserModelSelector } from "./UserModel.base"
 
 export class OwnerModelSelector extends QueryBuilder {

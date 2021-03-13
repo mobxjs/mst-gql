@@ -43,7 +43,6 @@ function generate(
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
-  const unionTypes = [] // all known UNION types for which ModelSelector classes are generated
   const origObjectTypes = [] // all known OBJECT types for which MST classes are generated
   const inputTypes = [] // all known INPUT_OBJECT types for which MST classes are generated
   const knownTypes = [] // all known types (including enums and such) for which MST classes are generated
@@ -62,7 +61,6 @@ function generate(
   const modelTypePostfix = "ModelType"
 
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
-
   generateModelBase()
   generateTypes()
   generateRootStore()
@@ -323,7 +321,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const interfaceOrUnionType = interfaceAndUnionTypes.get(type.name)
     const isUnion =
       interfaceOrUnionType && interfaceOrUnionType.kind === "UNION"
-    if (isUnion) unionTypes.push(type.name)
     const fileName = type.name + "ModelSelector"
     const {
       primitiveFields,
@@ -343,32 +340,28 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           ...toBeImported
         )
 
-        /** Imports from core model */
-        if (isUnion) {
-          // Import <model>ModelType from the core file to be used in the TS union type
-          addImportToMap(
-            imports,
-            fileName,
-            `${t.name}Model`,
-            `${t.name}ModelType`
-          )
-        }
+        /** 1) Imports model type from the model */
+        addImportToMap(
+          imports,
+          fileName,
+          `${t.name}Model`,
+          `${t.name}ModelType`
+        )
       })
 
+    // Start building out the ModelSelector file
     let contents = header + "\n\n"
     contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
 
-    // Add the correct type for a TS union to the exports
-    if (isUnion) {
-      contents += ifTS(
-        `export type ${
-          interfaceOrUnionType.name
-        }Union = ${interfaceOrUnionType.ofTypes
-          .map((unionModel) => `${unionModel.name}ModelType`)
-          .join(" | ")}\n\n`
-      )
-    }
+    /** 2) Add the correct type for a TS union to the exports of the ModelSelector file */
+    contents += ifTS(
+      `export type ${
+        interfaceOrUnionType.name
+      }Union = ${interfaceOrUnionType.ofTypes
+        .map((unionModel) => `${unionModel.name}ModelType`)
+        .join(" | ")}\n\n`
+    )
 
     contents += generateFragments(
       type.name,
@@ -639,14 +632,17 @@ ${objectTypes
       }`
   )
   .join("")}
-${unionTypes
-  .map(
-    (t) =>
-      `\nimport { ${toFirstLower(t)}ModelPrimitives, ${t}ModelSelector ${ifTS(
-        `, ${t}Union`
-      )} } from "./"`
-  )
-  .join("")}
+${
+  /** 3) Add imports for ModelPrimitives and ModelSelector in RootStore.base */
+  [...interfaceAndUnionTypes.values()]
+    .map(
+      (t) =>
+        `\nimport { ${toFirstLower(t.name)}ModelPrimitives, ${
+          t.name
+        }ModelSelector ${ifTS(`, ${t.name}Union`)} } from "./"`
+    )
+    .join("")
+}
 ${enumTypes
   .map(
     (t) =>
@@ -832,6 +828,7 @@ ${enumContent}
         let returnType = returnsList ? type.ofType : type
         if (returnType.kind === "NON_NULL") returnType = returnType.ofType
 
+        /** 4) Add the return type of the query if TS */
         const tsType =
           format !== "ts"
             ? ""
@@ -839,7 +836,10 @@ ${enumContent}
                 isScalar
                   ? `${printTsPrimitiveType(type.name)} `
                   : `${returnType.name}${
-                      returnType.kind === "UNION" ? "Union" : modelTypePostfix
+                      returnType.kind === "UNION" ||
+                      returnType.kind === "INTERFACE"
+                        ? "Union"
+                        : modelTypePostfix
                     }${returnsList ? "[]" : ""}`
               }}>`
 
