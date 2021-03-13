@@ -18,7 +18,9 @@ const definition = {
   "--noReact": Boolean,
   "--separate": Boolean,
   "--dontRenameModels": Boolean,
-  "--header": String
+  "--header": String,
+  "--useIdentifierNumber": Boolean,
+  "--fieldOverrides": String
 }
 
 function main() {
@@ -45,7 +47,9 @@ function main() {
     forceAll,
     noReact,
     namingConvention,
-    header
+    header,
+    useIdentifierNumber,
+    fieldOverrides
   } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
 
@@ -108,7 +112,9 @@ function main() {
     new Date().toUTCString(),
     modelsOnly,
     noReact,
-    namingConvention
+    namingConvention,
+    useIdentifierNumber,
+    fieldOverrides
   )
   writeFiles(outDir, files, format, forceAll, true, separate)
   logUnexpectedFiles(outDir, files)

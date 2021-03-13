@@ -64,3 +64,36 @@ test("config is used for multiple headers", () => {
     "x-hasura-admin-secret:supersecret --header=x-hasura-role:superuser"
   )
 })
+
+test("fieldOverrides outputs items with valid signature", () => {
+  const fieldOverridesArgs = {
+    "--fieldOverrides": "id:uuid:identifier, id:bigint:identifierNumber"
+  }
+  const args = { ...testArgsWithoutHeader, ...fieldOverridesArgs }
+  const config = {
+    input: "http://localhost:8080/v1/graphql",
+    format: "ts",
+    outDir: "src/models",
+    roots: ["todos"]
+  }
+
+  const results = mergeConfigs(args, config)
+
+  expect(results.fieldOverrides).toEqual([
+    ["id", "uuid", "identifier"],
+    ["id", "bigint", "identifierNumber"]
+  ])
+})
+
+test("throws with invalid fieldOverrides format", () => {
+  const fieldOverridesArgs = { "--fieldOverrides": "id:uuid, newId" }
+  const args = { ...testArgsWithoutHeader, ...fieldOverridesArgs }
+  const config = {
+    input: "http://localhost:8080/v1/graphql",
+    format: "ts",
+    outDir: "src/models",
+    roots: ["todos"]
+  }
+
+  expect(() => mergeConfigs(args, config)).toThrow(/invalid override/i)
+})

@@ -407,6 +407,21 @@ The `mst-gql` command currently accepts the following arguments:
 - `--noReact` doesn't generate the React related utilities
 - `--force` When set, exiting files will always be overridden. This will drop all customizations of model classes!
 - `--dontRenameModels` By default generates model names from graphql schema types that are idiomatic Javascript/Typescript names, ie. type names will be PascalCased and root collection names camelCased. With `--dontRenameModels` the original names - as provided by the graphql schema - will be used for generating models.
+- `--useIdentifierNumber` Specifies the use of `identifierNumber` instead of `identifier` as the mst type for the generated models IDs. This requires your models to use numbers as their identifiers. See the [mobx-state-tree](https://mobx-state-tree.js.org/overview/types#property-types) for more information.
+- `--fieldOverrides id:uuid:idenfitier,*:ID:identifierNumber` Overrides default MST types for matching GraphQL names and types. The format is `gqlFieldName:gqlFieldType:mstType`. Supports full or partial wildcards for fieldNames, and full wildcards for fieldTypes. Case Sensitive. If multiple matches occur, the match with the least amount of wildcards will be used, followd by the order specified in the arg list if there are still multiple matches. Some examples:
+
+  - `*_id:*:string` - Matches any GQL type with the field name `*_id` (like `user_id`), and uses the MST type `types.string`
+  - `*:ID:identifierNumber` - Matches any GQL type with any field name and the `ID` type, and uses the MST type `types.identifierNumber`
+  - `User.user_id:ID:number` - Matches the `user_id` field on `User` with the GQL type `ID`, and uses the MST type `types.number`
+
+    Specifying this argument additionaly allows the use of multiple IDs on a type. The best matched ID will be used, setting the other IDs to `types.frozen()`
+
+  - `Book.author_id:ID:identifierNumber` - Matches the `author_id` field on `Book` with the GQL type `ID` and uses the MST type `types.identifierNumber`, and sets any other GQL IDs on `Book` to `types.frozen()`
+
+    For TS users, input types and query arguments will only be modified for fieldOverrides with a wildcard for `gqlFieldName` (`*:uuid:identifier`). An override like `*_id:uuid:identifier` will not affect input types.
+
+    The primary use case for this feature is for GQL Servers that don't always do what you want. For example, Hasura does not generate GQL ID types for UUID fields, which causes issues when trying to reference associate types in MST. To overcome this, simply specify `--fieldOverrides *:UUID:identifier`
+
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
   - a graphql files, like `schema.graphql`
