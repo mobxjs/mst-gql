@@ -1108,9 +1108,9 @@ function resolveInterfaceAndUnionTypes(types) {
             type.fields.push(interfaceField) // Note: is inlining necessary? Deriving objects need to define all interface properties?
         })
       })
-      if (memberTypesToUnions.has(type.name)) {
+      if (memberTypesToUnions.has(type.origName)) {
         memberTypesToUnions
-          .get(type.name)
+          .get(type.origName)
           .forEach((union) => upsertInterfaceOrUnionType(union, type, result))
       }
     }
@@ -1557,7 +1557,7 @@ function Override(
     type (uuid) - 0b0001
     lone wildcards (*) - 0b0000
 
-    Ex:  
+    Ex:
     0b0110 - User.id:*
     0b0011 - id:uuid
     0b0010 - *id:uuid
