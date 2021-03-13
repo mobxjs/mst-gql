@@ -445,3 +445,275 @@ type HelloResult {
     hasFileContentRegexp(rootStoreBase, "import { .*StringModelSelector }")
   ).toBeFalsy()
 })
+
+test("use identifierNumber as ID with useIdentifierNumber=true", () => {
+  const schema = `
+    type User {
+      id: ID
+      name: String!
+      avatar: String!
+    }
+
+    input UsersFilter {
+      ids: [ID!]!
+    }
+
+    type Query {
+      user(id: ID!): User!
+      users(input: UsersFilter!) : [User]!
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    useIdentifierNumber: true
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "RootStore.base"),
+      "queryUser(variables: { id: number },"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "RootStore.base"), "ids: number[]")
+  ).toBeTruthy()
+})
+
+const fieldOverridesSchema = `
+  scalar uuid
+  scalar bigint
+
+  type User {
+    id: bigint!
+    name: String!
+  }
+  type Book {
+    id: uuid!
+    name: String!
+  }
+  type Query {
+    me: User,
+    book: Book
+  }
+`
+
+test("overrides mst type with matching name and gql type using fieldOverrides", () => {
+  const output = scaffold(fieldOverridesSchema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["id", "uuid", "identifier"],
+      ["User.id", "bigint", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "BookModel.base"), "id: types.identifier,")
+  ).toBeTruthy()
+})
+
+test("overrides mst type with wildcard name or wildcard type using fieldOverrides", () => {
+  const output = scaffold(fieldOverridesSchema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "uuid", "identifier"],
+      ["User.id", "*", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "BookModel.base"), "id: types.identifier,")
+  ).toBeTruthy()
+})
+
+test("overrides mst type with partial wildcard name using fieldOverrides", () => {
+  const schema = `
+    scalar uuid
+
+    type User {
+      user_id: uuid!
+      name: String!
+    }
+    type Book {
+      id: uuid!
+      name: String!
+    }
+    type Query {
+      me: User,
+      book: Book
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    fieldOverrides: [["*id", "uuid", "identifier"]]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "user_id: types.identifier,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "id: types.union(types.undefined, types.frozen()),"
+    )
+  ).toBeTruthy()
+})
+
+test("overrides with multiple matches uses best one when using fieldOverrides", () => {
+  const output = scaffold(fieldOverridesSchema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "bigint", "identifier"],
+      ["id", "bigint", "identifierNumber"],
+
+      ["id", "uuid", "identifier"],
+      ["Book.id", "*", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "id: types.identifierNumber,"
+    )
+  ).toBeTruthy()
+})
+
+test("uses ID with highest specificity when multiple ID matches using fieldOverrides", () => {
+  const schema = `
+    scalar uuid
+
+    type User {
+      id: ID!
+      user_id: uuid!
+      name: String!
+    }
+    type Book {
+      id: ID!
+      book_id: ID!
+      name: String!
+    }
+    type Query {
+      me: User,
+      book: Book
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "uuid", "identifier"],
+      ["*id", "*", "identifier"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "id: types.union(types.undefined, types.frozen()),"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "UserModel.base"),
+      "user_id: types.identifier,"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "id: types.union(types.undefined, types.frozen()),"
+    )
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(
+      findFile(output, "BookModel.base"),
+      "book_id: types.identifier,"
+    )
+  ).toBeTruthy()
+})
+
+test("overrides TS types for query arguments and input types for fields with global type overrides with fieldOverrides", () => {
+  const schema = `
+    scalar uuid
+
+    type User {
+      id: uuid!
+      name: String!
+    }
+
+    input UserInput {
+      user_id: uuid!
+    }
+    type Query {
+      getUser(input: UserInput) : User
+    }
+  `
+
+  const output = scaffold(schema, {
+    roots: ["User"],
+    fieldOverrides: [
+      ["*", "uuid", "identifier"],
+      ["*id", "uuid", "identifierNumber"]
+    ]
+  })
+
+  expect(output).toMatchSnapshot()
+
+  expect(
+    hasFileContent(findFile(output, "UserModel.base"), "id: types.identifier,")
+  ).toBeTruthy()
+
+  expect(
+    hasFileContent(findFile(output, "RootStore.base"), "user_id: string")
+  ).toBeTruthy()
+})
