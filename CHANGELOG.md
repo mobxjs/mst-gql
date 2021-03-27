@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.14.0
+
+- Fix interface generation/references. [#288](https://github.com/mobxjs/mst-gql/pull/288) - [special-character](https://github.com/special-character)
+- Fix ts-node-dev option in example. [#293](https://github.com/mobxjs/mst-gql/pull/293) - [yasinuslu](https://github.com/yasinuslu)
+- Add MobX 6 Support. [#294](https://github.com/mobxjs/mst-gql/pull/294) - [BradenM](https://github.com/BradenM)
+- Fix for comma between lines importing union types in RootStore.Base.ts. [#300](https://github.com/mobxjs/mst-gql/pull/300) - [emckay](https://github.com/emckay)
+- Expose Clients for later initiation. [#303](https://github.com/mobxjs/mst-gql/pull/303) - [BradenM](https://github.com/BradenM)
+- Bump node-notifier from 8.0.0 to 8.0.1. [#307](https://github.com/mobxjs/mst-gql/pull/307) - [dependabot](https://github.com/apps/dependabot)
+- Fix broken snapshot. [#315](https://github.com/mobxjs/mst-gql/pull/315) - [emckay](https://github.com/emckay)
+
 ## 0.13.0
 
 - Fixes `onError` functionality when using subscriptions. [#262](https://github.com/mobxjs/mst-gql/pull/262) - [zpalin](https://github.com/zpalin)
