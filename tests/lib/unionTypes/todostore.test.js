@@ -74,4 +74,27 @@ describe("unionTypes tests", () => {
       store2.todoLists.get("c").todos.filter((f) => f.complete)
     ).toHaveLength(1)
   })
+
+  test("it should get todo by reference", () => {
+    const basicTodoItemSnapshot = {
+      id: "custom-item",
+      complete: true,
+      text: "something"
+    }
+
+    const storeSnapshot = {
+      todoLists: {
+        "custom-list": { id: "custom-list", todos: ["custom-item"] }
+      },
+      basicTodos: {
+        [basicTodoItemSnapshot.id]: basicTodoItemSnapshot
+      }
+    }
+
+    const store = models.RootStore.create(storeSnapshot, {})
+
+    expect(store.todoLists.get("custom-list").todos[0].text).toBe(
+      basicTodoItemSnapshot.text
+    )
+  })
 })
