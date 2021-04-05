@@ -15,8 +15,12 @@ import { StoreType } from "./MSTGQLStore"
 */
 const MSTGQL_ID_DELIM = "::"
 export function getMSTGQLRefLabelAndId(labeledId: string) {
-  const [label, ...id] = labeledId.split(MSTGQL_ID_DELIM)
-  return { label, id: id.join("") || labeledId }
+  if (labeledId.includes(MSTGQL_ID_DELIM)) {
+    const [label, ...id] = labeledId.split(MSTGQL_ID_DELIM)
+    return { label, id: id.join("") }
+  }
+
+  return { label: null, id: labeledId }
 }
 
 export function MSTGQLRef<T extends IAnyModelType>(
