@@ -3,7 +3,6 @@ const fs = require("fs")
 const graphql = require("graphql")
 const camelcase = require("camelcase")
 const pluralize = require("pluralize")
-const escapeStringRegexp = require("escape-string-regexp")
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -27,9 +26,7 @@ function generate(
   generationDate = "a long long time ago...",
   modelsOnly = false,
   noReact = false,
-  namingConvention = "js",
-  useIdentifierNumber = false,
-  fieldOverrides = []
+  namingConvention = "js"
 ) {
   const types = schema.types
 
@@ -38,8 +35,6 @@ function generate(
   // For each type converts 'name' according to namingConvention and copies
   // original name to the 'origName' field of the type's object
   transformTypes(types, namingConvention)
-
-  const overrides = buildOverrides(fieldOverrides, useIdentifierNumber)
 
   const files = [] // [[name, contents]]
   const objectTypes = [] // all known OBJECT types for which MST classes are generated
@@ -61,6 +56,7 @@ function generate(
   const modelTypePostfix = "ModelType"
 
   const interfaceAndUnionTypes = resolveInterfaceAndUnionTypes(types)
+
   generateModelBase()
   generateTypes()
   generateRootStore()
@@ -192,7 +188,7 @@ ${tsType}
 /**
 * ${name}${optPrefix("\n *\n * ", sanitizeComment(type.description))}
 */
-export const ${name}${enumPostfix}Type = ${handleEnumTypeCore(type)}
+export const ${name}${enumPostfix} = ${handleEnumTypeCore(type)}
 `
     if (format === "ts") {
       enumTypes.push(type.name)
@@ -330,7 +326,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
     interfaceOrUnionType &&
       interfaceOrUnionType.ofTypes.forEach((t) => {
-        /** Base file imports */
         const toBeImported = [`${t.name}ModelSelector`]
         if (isUnion) toBeImported.push(`${toFirstLower(t.name)}ModelPrimitives`)
         addImportToMap(
@@ -339,30 +334,11 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           `${t.name}Model.base`,
           ...toBeImported
         )
-
-        /** 1) Imports model type from the model */
-        addImportToMap(
-          imports,
-          fileName,
-          `${t.name}Model`,
-          `${t.name}ModelType`
-        )
       })
 
-    // Start building out the ModelSelector file
     let contents = header + "\n\n"
     contents += 'import { QueryBuilder } from "mst-gql"\n'
     contents += printRelativeImports(imports)
-
-    /** 2) Add the correct type for a TS union to the exports of the ModelSelector file */
-    contents += ifTS(
-      `export type ${
-        interfaceOrUnionType.name
-      }Union = ${interfaceOrUnionType.ofTypes
-        .map((unionModel) => `${unionModel.name}ModelType`)
-        .join(" | ")}\n\n`
-    )
-
     contents += generateFragments(
       type.name,
       primitiveFields,
@@ -384,7 +360,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const primitiveFields = []
     const nonPrimitiveFields = []
     const refs = []
-    const typeOverride = TypeOverride(type, overrides)
 
     let modelProperties = ""
     if (type.fields) {
@@ -427,14 +402,11 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
-          const primitiveType = primitiveToMstType(
-            fieldName,
-            fieldType.name,
-            typeOverride
+          const primitiveType = primitiveToMstType(fieldType.name)
+          return result(
+            `types.${primitiveType}`,
+            primitiveType === "identifier"
           )
-          const requiredTypes = ["identifier", "identifierNumber"]
-          const isRequired = requiredTypes.includes(primitiveType)
-          return result(`types.${primitiveType}`, isRequired)
         case "OBJECT":
           return result(handleObjectFieldType(fieldName, fieldType, isNested))
         case "LIST":
@@ -445,16 +417,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           primitiveFields.push(fieldName)
           const enumType =
             fieldType.name +
-            (!fieldType.name.toLowerCase().endsWith("enum")
-              ? "EnumType"
-              : "Type")
+            (!fieldType.name.toLowerCase().endsWith("enum") ? "Enum" : "")
           if (type.kind !== "UNION" && type.kind !== "INTERFACE") {
             // TODO: import again when enums in query builders are supported
-            addImport(
-              fieldType.name +
-                (!fieldType.name.toLowerCase().endsWith("enum") ? "Enum" : ""),
-              enumType
-            )
+            addImport(enumType, enumType)
           }
           return result(enumType)
         case "INTERFACE":
@@ -484,9 +450,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       }
 
       // always using late prevents potential circular dependency issues between files
-      const realType = `types.late(()${format === "ts" ? ": any" : ""} => ${
-        fieldType.name
-      }Model)`
+      const realType = `types.late(()${
+        format === "ts" ? `: ${modelType}` : ""
+      } => ${fieldType.name}Model)`
 
       // this object is not a root type, so assume composition relationship
       if (!isSelf && !rootTypes.includes(fieldType.name)) return realType
@@ -515,7 +481,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         const isSelf = fieldType.name === currentType
         // always using late prevents potential circular dependency issues between files
         return `types.late(()${
-          isSelf && format === "ts" ? ": any" : ""
+          isSelf && format === "ts" ? `: ${subTypeClassName}` : ""
         } => ${subTypeClassName})`
       })
       return `types.union(${mstUnionArgs.join(", ")})`
@@ -632,17 +598,6 @@ ${objectTypes
       }`
   )
   .join("")}
-${
-  /** 3) Add imports for ModelPrimitives and ModelSelector in RootStore.base */
-  [...interfaceAndUnionTypes.values()]
-    .map(
-      (t) =>
-        `\nimport { ${toFirstLower(t.name)}ModelPrimitives, ${
-          t.name
-        }ModelSelector ${ifTS(`, ${t.name}Union`)} } from "./"`
-    )
-    .join("")
-}
 ${enumTypes
   .map(
     (t) =>
@@ -731,6 +686,13 @@ ${rootTypes
     if (returnType.kind === "OBJECT" && excludes.includes(returnType.name))
       return true
     // TODO: probably we will need to support input object types soon
+    if (returnType.kind !== "OBJECT") {
+      console.warn(
+        `Skipping generation of query '${name}', its return type is not yet understood. PR is welcome`
+      )
+      // log(returnType)
+      return true // TODO: for now, we only generate queries for those queries that return objects
+    }
     return false
   }
 
@@ -797,9 +759,9 @@ ${enumContent}
         "subscription",
         "subscribe",
         format === "ts"
-          ? `, onData?: (item: any) => void, onError?: (error: Error) => void` /* TODO: fix the any */
-          : `, onData, onError`,
-        ", onData, onError"
+          ? `, onData?: (item: any) => void` /* TODO: fix the any */
+          : `, onData`,
+        ", onData"
       )
     )
   }
@@ -812,35 +774,21 @@ ${enumContent}
     extraActualArgs = ""
   ) {
     if (!query) return ""
-
     return query.fields
       .map((field) => {
         if (shouldSkipField(field)) return ""
 
         let { name, origName, args, type, description } = field
-
-        const isScalar =
-          type.kind === "SCALAR" ||
-          (type.ofType && type.ofType.kind === "SCALAR")
-
         if (type.kind === "NON_NULL") type = type.ofType
         const returnsList = type.kind === "LIST"
         let returnType = returnsList ? type.ofType : type
         if (returnType.kind === "NON_NULL") returnType = returnType.ofType
 
-        /** 4) Add the return type of the query if TS */
         const tsType =
           format !== "ts"
             ? ""
-            : `<{ ${name}: ${
-                isScalar
-                  ? `${printTsPrimitiveType(type.name)} `
-                  : `${returnType.name}${
-                      returnType.kind === "UNION" ||
-                      returnType.kind === "INTERFACE"
-                        ? "Union"
-                        : modelTypePostfix
-                    }${returnsList ? "[]" : ""}`
+            : `<{ ${name}: ${returnType.name}${modelTypePostfix}${
+                returnsList ? "[]" : ""
               }}>`
 
         const formalArgs =
@@ -866,22 +814,18 @@ ${enumContent}
 ${optPrefix("\n    // ", sanitizeComment(description))}
     ${methodPrefix}${toFirstUpper(name)}(variables${
           args.length === 0 && format === "ts" ? "?" : ""
-        }${tsVariablesType}${
-          isScalar
-            ? ""
-            : `, resultSelector${
-                ifTS(
-                  `: string | ((qb: ${returnType.name}ModelSelector) => ${returnType.name}ModelSelector)`
-                ) /* TODO or GQL object */
-              } = ${toFirstLower(returnType.name)}ModelPrimitives.toString()`
-        }${extraFormalArgs}) {
-      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} ${
-          isScalar
-            ? ""
-            : `{
-        \${typeof resultSelector === "function" ? resultSelector(new ${returnType.name}ModelSelector()).toString() : resultSelector}
-      } `
-        }}\`, variables${extraActualArgs})
+        }${tsVariablesType}, resultSelector${
+          ifTS(
+            `: string | ((qb: ${returnType.name}ModelSelector) => ${returnType.name}ModelSelector)`
+          ) /* TODO or GQL object */
+        } = ${toFirstLower(
+          returnType.name
+        )}ModelPrimitives.toString()${extraFormalArgs}) {
+      return self.${methodPrefix}${tsType}(\`${gqlPrefix} ${name}${formalArgs} { ${name}${actualArgs} {
+        \${typeof resultSelector === "function" ? resultSelector(new ${
+          returnType.name
+        }ModelSelector()).toString() : resultSelector}
+      } }\`, variables${extraActualArgs})
     },`
       })
       .join("")
@@ -949,12 +893,6 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
   }
 
   function printTsPrimitiveType(primitiveType) {
-    const primitiveTypeOverride = getTsPrimitiveTypeOverride(
-      primitiveType,
-      overrides
-    )
-    if (primitiveTypeOverride) return primitiveTypeOverride
-
     const res = {
       ID: "string",
       Int: "number",
@@ -981,7 +919,9 @@ import { createStoreContext, createUseQueryHook } from "mst-gql"
 import * as React from "react"
 ${
   format === "ts"
-    ? `import { RootStoreType } from "./RootStore${importPostFix}"`
+    ? `import { RootStore${ifTS(
+        ", RootStoreType"
+      )} } from "./RootStore${importPostFix}"`
     : ""
 }
 
@@ -1041,22 +981,19 @@ ${toExport.map((f) => `export * from "./${f}${importPostFix}"`).join("\n")}
     return format === "ts" ? ifTSstr : notTSstr
   }
 
-  function primitiveToMstType(name, type, typeOverride) {
-    const mstType = typeOverride.getMstTypeForField(name, type)
-    if (mstType !== null) return mstType
-
-    const res = {
-      ID: "identifier",
-      Int: "integer",
-      String: "string",
-      Float: "number",
-      Boolean: "boolean"
-    }
-    // if (!res[type]) throw new Error("Unknown primitive type: " + type)
-    return res[type] || "frozen()"
-  }
-
   return files
+}
+
+function primitiveToMstType(type) {
+  const res = {
+    ID: "identifier",
+    Int: "integer",
+    String: "string",
+    Float: "number",
+    Boolean: "boolean"
+  }
+  // if (!res[type]) throw new Error("Unknown primitive type: " + type)
+  return res[type] || "frozen()"
 }
 
 function getMstDefaultValue(type) {
@@ -1108,9 +1045,9 @@ function resolveInterfaceAndUnionTypes(types) {
             type.fields.push(interfaceField) // Note: is inlining necessary? Deriving objects need to define all interface properties?
         })
       })
-      if (memberTypesToUnions.has(type.origName)) {
+      if (memberTypesToUnions.has(type.name)) {
         memberTypesToUnions
-          .get(type.origName)
+          .get(type.name)
           .forEach((union) => upsertInterfaceOrUnionType(union, type, result))
       }
     }
@@ -1220,9 +1157,7 @@ function scaffold(
     roots: [],
     excludes: [],
     modelsOnly: false,
-    namingConvention: "js",
-    useIdentifierNumber: false,
-    fieldOverrides: []
+    namingConvention: "js"
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -1237,9 +1172,7 @@ function scaffold(
     "<during unit test run>",
     options.modelsOnly || false,
     options.noReact || false,
-    options.namingConvention || "js",
-    options.useIdentifierNumber || false,
-    options.fieldOverrides || []
+    options.namingConvention || "js"
   )
 }
 
@@ -1376,243 +1309,5 @@ function logUnexpectedFiles(outDir, files) {
     }
   })
 }
-
-function buildOverrides(fieldOverrides, useIdentifierNumber) {
-  const overrides = fieldOverrides.map(parseFieldOverride)
-  if (useIdentifierNumber)
-    overrides.push(parseFieldOverride(["*", "ID", "identifierNumber"]))
-
-  const getMatchingOverridesForField = (declaringType, name, type) => {
-    return overrides.filter((override) =>
-      override.matches(declaringType, name, type)
-    )
-  }
-
-  const getMostSpecificOverride = (overrides) => {
-    return overrides.reduce((acc, override) => {
-      if (acc === null || override.specificity > acc.specificity)
-        return override
-
-      return acc
-    }, null)
-  }
-
-  const getOverrideForField = (declaringType, name, type) => {
-    const matchingOverrides = getMatchingOverridesForField(
-      declaringType,
-      name,
-      type
-    )
-    return getMostSpecificOverride(matchingOverrides)
-  }
-
-  const getMstTypeForField = (declaringType, name, type) => {
-    const override = getOverrideForField(declaringType, name, type)
-    return override && override.destinationMstType
-  }
-
-  return {
-    getMatchingOverridesForField,
-    getMostSpecificOverride,
-    getOverrideForField,
-    getMstTypeForField
-  }
-
-  function parseFieldOverride(override) {
-    const [unsplitFieldName, fieldType, destinationMstType] = override
-
-    const splitFieldName = unsplitFieldName.split(".")
-    const fieldDeclaringType =
-      splitFieldName.length === 2 ? splitFieldName[0] : "*"
-    const fieldName =
-      splitFieldName.length === 1 ? splitFieldName[0] : splitFieldName[1]
-
-    return Override(
-      fieldDeclaringType,
-      fieldName,
-      fieldType,
-      destinationMstType
-    )
-  }
-}
-
-function getTsPrimitiveTypeOverride(type, overrides) {
-  const mstType = overrides.getMstTypeForField("*", "*", type)
-
-  const res = {
-    identifier: "string",
-    identifierNumber: "number",
-    integer: "number",
-    string: "string",
-    number: "number",
-    boolean: "boolean",
-    "frozen()": "any"
-  }
-
-  return res[mstType]
-}
-
-function TypeOverride(currentType, overrides) {
-  const declaringType = currentType.name
-  const mostSpecificIdOverride = getMostSpecificIdOverride()
-
-  const hasIdOverride = () => mostSpecificIdOverride !== null
-
-  const getMstTypeForField = (name, type) => {
-    const override = overrides.getOverrideForField(declaringType, name, type)
-
-    if (hasIdOverride() && isIdType(override, type)) {
-      if (
-        override &&
-        override.specificity === mostSpecificIdOverride.specificity
-      )
-        return override.destinationMstType
-
-      return "frozen()"
-    }
-
-    return override && override.destinationMstType
-  }
-
-  return {
-    getMstTypeForField
-  }
-
-  function isMstIdType(override) {
-    const mstIdTypes = ["identifier", "identifierNumber"]
-    return override && mstIdTypes.includes(override.destinationMstType)
-  }
-
-  function isIdType(override, type) {
-    return isMstIdType(override) || type === "ID"
-  }
-
-  function getMostSpecificIdOverride() {
-    if (!currentType.fields) return null
-
-    const idOverrides = currentType.fields
-      .map(({ name, type }) =>
-        type.kind === "NON_NULL" ? { name, type: type.ofType } : { name, type }
-      )
-      .filter(({ type }) => type.kind === "SCALAR")
-      .map(({ name, type }) =>
-        overrides.getOverrideForField(declaringType, name, type.name)
-      )
-      .filter(isMstIdType)
-
-    const mostSpecificIdOverride = overrides.getMostSpecificOverride(
-      idOverrides
-    )
-
-    const mostSpecificIdOverrideCount = idOverrides.filter(
-      (override) => override.specificity === mostSpecificIdOverride.specificity
-    ).length
-    if (mostSpecificIdOverrideCount > 1)
-      console.warn(
-        `Type: ${declaringType} has multiple matching id field overrides.\nConsider adding a more specific override.`
-      )
-
-    return mostSpecificIdOverride
-  }
-}
-
-function Override(
-  fieldDeclaringType,
-  fieldName,
-  fieldType,
-  destinationMstType
-) {
-  const specificity = computeOverrideSpecificity(
-    fieldDeclaringType,
-    fieldName,
-    fieldType
-  )
-
-  const fieldDeclaringTypeRegExp = wildcardToRegExp(fieldDeclaringType)
-  const fieldNameRegExp = wildcardToRegExp(fieldName)
-
-  const matchesDeclaringType = (declaringType) =>
-    fieldDeclaringTypeRegExp.test(declaringType)
-
-  const matches = (declaringType, name, type) => {
-    return (
-      matchesDeclaringType(declaringType) &&
-      fieldNameRegExp.test(name) &&
-      (type === fieldType || isOnlyWildcard(fieldType))
-    )
-  }
-
-  return {
-    matches,
-    specificity,
-    destinationMstType
-  }
-
-  /*
-  Specificity:
-    {declaringType.}name:type (User.id:uuid)
-    declaringType (User) - 0b0100
-    name (id) - 0b0010
-    name including wildcard (*id) - 0b001
-    type (uuid) - 0b0001
-    lone wildcards (*) - 0b0000
-
-    Ex:
-    0b0110 - User.id:*
-    0b0011 - id:uuid
-    0b0010 - *id:uuid
-    0b0001 - *:uuid
-
-  Invalid specificities:
-    User.*:*
-    *:*
-*/
-  function computeOverrideSpecificity() {
-    try {
-      const declaringTypeSpecificity = getDeclaringTypeSpecificity()
-      const nameSpecificity = getNameSpecificity()
-      const typeSpecificity = getTypeSpecificity()
-
-      if (nameSpecificity === 0 && typeSpecificity === 0)
-        throw new Error("Both name and type cannot be wildcards")
-
-      return declaringTypeSpecificity + nameSpecificity + typeSpecificity
-    } catch (err) {
-      throw Error(
-        `Error parsing fieldOverride ${name}:${type}:\n ${err.message}`
-      )
-    }
-
-    function getDeclaringTypeSpecificity() {
-      if (isOnlyWildcard(fieldDeclaringType)) return 0b0000
-
-      if (hasWildcard(fieldDeclaringType)) return 0b0010
-
-      return 0b0100
-    }
-
-    function getNameSpecificity() {
-      if (isOnlyWildcard(fieldName)) return 0b0000
-
-      if (hasWildcard(fieldName)) return 0b0001
-
-      return 0b0010
-    }
-
-    function getTypeSpecificity() {
-      if (isOnlyWildcard(fieldType)) return 0b0000
-
-      if (hasWildcard(fieldType))
-        throw new Error("type cannot be a partial wildcard: e.g. *_id")
-
-      return 0b0001
-    }
-  }
-}
-
-const hasWildcard = (text) => RegExp(/\*/).test(text)
-const isOnlyWildcard = (text) => text === "*"
-const wildcardToRegExp = (text) =>
-  new RegExp("^" + text.split(/\*+/).map(escapeStringRegexp).join(".+") + "$")
 
 module.exports = { generate, writeFiles, scaffold, logUnexpectedFiles }
