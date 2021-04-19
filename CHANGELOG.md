@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.14.1
+
+- Fix 'id' getter MSTGQLRef. [#319](https://github.com/mobxjs/mst-gql/pull/319) - [weglov](https://github.com/weglov)
+
 ## 0.14.0
 
 - Fix interface generation/references. [#288](https://github.com/mobxjs/mst-gql/pull/288) - [special-character](https://github.com/special-character)
