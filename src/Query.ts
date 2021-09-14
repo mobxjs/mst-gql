@@ -18,7 +18,7 @@ export type FetchPolicy =
   | "network-only" // Skip cache, but cache the result
   | "no-cache" // Skip cache, and don't cache the response either
 
-export interface QueryOptions {
+export type QueryOptions = {
   fetchPolicy?: FetchPolicy
   noSsr?: boolean
 }
@@ -49,7 +49,9 @@ export class Query<T = unknown> implements PromiseLike<T> {
 
     this.query = typeof query === "string" ? query : print(query)
     this.queryKey = this.query + stringify(variables)
-
+    this.store = store
+    this.variables = variables
+    
     let fetchPolicy = options.fetchPolicy || "cache-and-network"
     if (
       this.store.ssr &&

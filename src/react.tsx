@@ -1,3 +1,4 @@
+import { Instance } from 'mobx-state-tree'
 import { DocumentNode } from "graphql"
 
 import { Query, FetchPolicy } from "./Query"
@@ -12,13 +13,13 @@ export type QueryLike<STORE, DATA> =
   | string
   | DocumentNode
 
-export function createStoreContext<STORE extends typeof MSTGQLStore.Type>(
+export function createStoreContext<STORE extends Instance<typeof MSTGQLStore>>(
   React: typeof ReactNamespace
 ) {
   return React.createContext<STORE>(null as any)
 }
 
-export async function getDataFromTree<STORE extends typeof MSTGQLStore.Type>(
+export async function getDataFromTree<STORE extends Instance<typeof MSTGQLStore>>(
   tree: React.ReactElement<any>,
   client: STORE,
   renderFunction: (
@@ -34,7 +35,7 @@ export async function getDataFromTree<STORE extends typeof MSTGQLStore.Type>(
   }
 }
 
-function normalizeQuery<STORE extends typeof MSTGQLStore.Type, DATA>(
+function normalizeQuery<STORE extends Instance<typeof MSTGQLStore>, DATA>(
   store: STORE,
   query: QueryLike<STORE, DATA>,
   {
@@ -73,7 +74,7 @@ export type UseQueryHook<STORE> = <DATA>(
   options?: UseQueryHookOptions<STORE>
 ) => UseQueryHookResult<STORE, DATA>
 
-export function createUseQueryHook<STORE extends typeof MSTGQLStore.Type>(
+export function createUseQueryHook<STORE extends Instance<typeof MSTGQLStore>>(
   context: React.Context<STORE>,
   React: typeof ReactNamespace
 ): UseQueryHook<STORE> {
