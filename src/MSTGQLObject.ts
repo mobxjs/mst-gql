@@ -1,6 +1,7 @@
 import {
   types,
   getParent,
+  getRoot,
   IAnyModelType,
   resolveIdentifier,
   IReferenceType
@@ -52,7 +53,8 @@ export const MSTGQLObject = types.model("MSTGQLObject").extend((self) => {
   let store: StoreType
 
   function getStore(): StoreType {
-    return store || (store = getParent(self, 2))
+    // https://github.com/mobxjs/mobx-state-tree/issues/1408#issuecomment-547247080
+    return store || (store = getRoot(self))
   }
 
   return {

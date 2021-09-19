@@ -1,3 +1,4 @@
+import { Instance } from 'mobx-state-tree'
 import camelcase from "camelcase"
 import { DocumentNode } from "graphql"
 import { getEnv, IAnyModelType, recordPatches, types } from "mobx-state-tree"
@@ -9,7 +10,7 @@ import { mergeHelper } from "./mergeHelper"
 import { Query, QueryOptions } from "./Query"
 import { getFirstValue } from "./utils"
 
-export interface RequestHandler<T = any> {
+export type RequestHandler<T = any> = {
   request(query: string, variables: any): Promise<T>
 }
 
@@ -220,4 +221,5 @@ export function configureStoreMixin(
   })
 }
 
-export type StoreType = typeof MSTGQLStore.Type
+export type StoreType = Instance<typeof MSTGQLStore>
+
