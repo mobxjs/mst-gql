@@ -134,7 +134,11 @@ export class Query<T = unknown> implements PromiseLike<T> {
         this.store.__cacheResponse(this.queryKey, this.store.deflate(data))
       }
       return this.store.merge(data)
+    }).catch((error: any) => {
+      this.loading = false
+      this.error = error
     })
+
     this.promise = promise
     promise.then(
       action((data: any) => {
