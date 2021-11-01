@@ -15,20 +15,42 @@ const proxyHandler = (store: any) => ({
   }
 })
 
-export function mergeHelper(store: any, initialData: any): any {
+// prepare reactive results with proxies and for any depth
+function buildResponse(data: any, store: any) {
+  if (!data || typeof data !== "object") return data
+  if (Array.isArray(data)) return new Proxy(data, proxyHandler(store))
+
+  const { __typename, id } = data
+
+  if (__typename && id) {
+    const typeDef = store.getTypeDef(__typename)
+
+    return resolveIdentifier(typeDef, store, id)
+  }
+
   const reactiveResult: any = {}
 
-  function merge(data: any, depth = 0, prevKey = ""): any {
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      reactiveResult[key] = buildResponse(data[key], store)
+    }
+  }
+
+  return reactiveResult
+}
+
+// logic to wrap and update mst-tree
+export function mergeHelper(store: any, initialData: any): any {
+  function merge(data: any): any {
     if (!data || typeof data !== "object") return data
-    if (Array.isArray(data)) return data.map((d) => merge(d, depth, prevKey))
+    if (Array.isArray(data)) return data.map(merge)
 
     const { __typename, id } = data
     const snapshot: any = {}
 
-    // convert values deeply first to MST objects as much as possible
     for (const key in data) {
       if (isObject(data[key]) || Array.isArray(data[key])) {
-        snapshot[key] = merge(data[key], depth + 1, key)
+        snapshot[key] = merge(data[key])
       } else {
         snapshot[key] = data[key]
       }
@@ -39,15 +61,13 @@ export function mergeHelper(store: any, initialData: any): any {
       if (store.isRootType(__typename)) {
         const rootMap = store[store.getCollectionName(__typename)]
         const instance = rootMap.get(id)
-        // update existing object
         const newInstance = {
           ...(instance ? getSnapshot<Object>(instance) : {}),
           ...snapshot
         }
-        // register in the store if a root
         rootMap.set(id, newInstance)
+        // another ones
       } else {
-        // try create a new one and return non root type model
         const typeDef = store.getTypeDef(__typename)
         const instance = typeDef.create(snapshot)
         instance.__setStore(store)
@@ -56,31 +76,10 @@ export function mergeHelper(store: any, initialData: any): any {
       }
     }
 
-    // build reactive structure as result this merge logic,
-    // only for the first keys in the gql response, this is sufficient
-    // as the rest of the tree will be reactive due to the mst structure
-    if (depth === 1 && prevKey) {
-      if (!reactiveResult[prevKey]) {
-        reactiveResult[prevKey] = Array.isArray(initialData[prevKey])
-          ? new Proxy([], proxyHandler(store))
-          : {}
-      }
-
-      if (Array.isArray(initialData[prevKey])) {
-        reactiveResult[prevKey].push(snapshot)
-      } else {
-        const typeDef = store.getTypeDef(__typename)
-        const instance = typeDef
-          ? resolveIdentifier(typeDef, store, id)
-          : snapshot
-        reactiveResult[prevKey] = instance
-      }
-    }
-
     return __typename && store.isRootType(__typename) ? id : snapshot
   }
 
   merge(initialData)
 
-  return reactiveResult
+  return buildResponse(initialData, store)
 }
