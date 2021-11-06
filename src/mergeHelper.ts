@@ -18,7 +18,11 @@ const proxyHandler = (store: any) => ({
 // prepare reactive results with proxies and for any depth
 function buildResponse(data: any, store: any) {
   if (!data || typeof data !== "object") return data
-  if (Array.isArray(data)) return new Proxy(data, proxyHandler(store))
+  if (Array.isArray(data))
+    return new Proxy(
+      Object.isFrozen(data) ? Array.from(data) : data,
+      proxyHandler(store)
+    )
 
   const { __typename, id } = data
 
