@@ -405,11 +405,20 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       let r = ""
       if (field.description)
         r += `    /** ${sanitizeComment(field.description)} */\n`
-      r += `    ${field.name}: ${handleFieldType(field.name, field.type)},`
+      r += `    ${field.name}: ${handleFieldType(
+        field.name,
+        field.type,
+        field.args
+      )},`
       return r
     }
 
-    function handleFieldType(fieldName, fieldType, isNested = false) {
+    function handleFieldType(
+      fieldName,
+      fieldType,
+      fieldArgs,
+      isNested = false
+    ) {
       let isNullable = true
       if (fieldType.kind === "NON_NULL") {
         fieldType = fieldType.ofType
@@ -436,10 +445,17 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           const isRequired = requiredTypes.includes(primitiveType)
           return result(`types.${primitiveType}`, isRequired)
         case "OBJECT":
-          return result(handleObjectFieldType(fieldName, fieldType, isNested))
+          return result(
+            handleObjectFieldType(fieldName, fieldType, fieldArgs, isNested)
+          )
         case "LIST":
           return result(
-            `types.array(${handleFieldType(fieldName, fieldType.ofType, true)})`
+            `types.array(${handleFieldType(
+              fieldName,
+              fieldType.ofType,
+              fieldArgs,
+              true
+            )})`
           )
         case "ENUM":
           primitiveFields.push(fieldName)
@@ -459,7 +475,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           return result(enumType)
         case "INTERFACE":
         case "UNION":
-          return result(handleInterfaceOrUnionFieldType(fieldName, fieldType))
+          return result(
+            handleInterfaceOrUnionFieldType(fieldName, fieldType, fieldArgs)
+          )
         default:
           throw new Error(
             `Failed to convert type ${JSON.stringify(fieldType)}. PR Welcome!`
@@ -467,8 +485,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       }
     }
 
-    function handleObjectFieldType(fieldName, fieldType, isNested) {
-      nonPrimitiveFields.push([fieldName, fieldType.name])
+    function handleObjectFieldType(fieldName, fieldType, fieldArgs, isNested) {
+      nonPrimitiveFields.push([fieldName, fieldType.name, fieldArgs])
       const isSelf = fieldType.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
@@ -496,7 +514,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       return `MSTGQLRef(${realType})`
     }
 
-    function handleInterfaceOrUnionFieldType(fieldName, fieldType) {
+    function handleInterfaceOrUnionFieldType(fieldName, fieldType, fieldArgs) {
       nonPrimitiveFields.push([fieldName, fieldType.name])
 
       // import the type
@@ -536,13 +554,29 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       .join("\n")
     output += primitiveFields.length > 0 ? "\n" : ""
     output += nonPrimitiveFields
-      .map(([field, fieldName]) => {
+      .map(([field, fieldName, fieldArgs]) => {
+        let args = ""
         const selector = `${fieldName}ModelSelector`
         let p = `  ${field}(builder`
         p += ifTS(
-          `?: string | ${selector} | ((selector: ${selector}) => ${selector})`
+          `: string | ${selector} | ((selector: ${selector}) => ${selector}) | undefined`
         )
-        p += `) { return this.__child(\`${field}\`, ${selector}, builder) }`
+        if (fieldArgs && fieldArgs.length) {
+          const required = fieldArgs.find(
+            ({ type }) => type.kind === "NON_NULL"
+          )
+          p += ", args"
+          p += ifTS(
+            `${required ? "" : "?"}: { ${fieldArgs
+              .map((arg) => `${printTsType(arg)}`)
+              .join(", ")} }`
+          )
+          args = `(${fieldArgs
+            .map(({ name }) => `${name}: \${JSON.stringify(args['${name}'])}`)
+            .join(", ")})`
+          console.log(fieldArgs)
+        }
+        p += `) { return this.__child(\`${field}${args}\`, ${selector}, builder) }`
         return p
       })
       .join("\n")
