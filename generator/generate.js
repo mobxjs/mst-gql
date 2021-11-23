@@ -467,8 +467,10 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       }
     }
 
-    function handleObjectFieldType(fieldName, fieldType, isNested) {
-      nonPrimitiveFields.push([fieldName, fieldType.name])
+    function handleObjectFieldType(fieldName, fieldType, isNested, skipField) {
+      if (!skipField) {
+        nonPrimitiveFields.push([fieldName, fieldType.name])
+      }
       const isSelf = fieldType.name === currentType
 
       // this type is not going to be handled by mst-gql, store as frozen
@@ -507,16 +509,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       const mstUnionArgs = interfaceOrUnionType.ofTypes.map((t) => {
         // Note that members of a union type need to be concrete object types;
         // you can't create a union type out of interfaces or other unions.
-        const subTypeClassName = t.name + "Model"
-        if (type.kind !== "INTERFACE" && type.kind !== "UNION") {
-          // TODO: split field type resolvement from model properties output
-          addImport(subTypeClassName, subTypeClassName)
-        }
-        const isSelf = fieldType.name === currentType
-        // always using late prevents potential circular dependency issues between files
-        return `types.late(()${
-          isSelf && format === "ts" ? ": any" : ""
-        } => ${subTypeClassName})`
+        return handleObjectFieldType(t.name, t, false, true)
       })
       return `types.union(${mstUnionArgs.join(", ")})`
     }
