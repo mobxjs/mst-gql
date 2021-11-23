@@ -73,7 +73,7 @@ function main() {
   let json
   if (input.startsWith("http:") || input.startsWith("https:")) {
     const tmpFile = "tmp_schema.json"
-    const command = `${__dirname}/../../.bin/apollo client:download-schema --endpoint=${input} ${tmpFile} ${
+    const command = `./node_modules/.bin/apollo client:download-schema --endpoint=${input} ${tmpFile} ${
       header ? `--header=${header}` : "" // the header options MUST be after the output 0_o
     }`
     child_process.execSync(command)
