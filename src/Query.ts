@@ -1,10 +1,10 @@
 // @ts-ignore
 import stringify from "fast-json-stable-stringify"
 import { DocumentNode, print } from "graphql"
+import { action, makeObservable, observable } from "mobx"
 
+import { HttpClientOptions } from "./createHttpClient"
 import { StoreType } from "./MSTGQLStore"
-import { action, observable, makeObservable } from "mobx"
-
 export type CaseHandlers<T, R> = {
   loading(): R
   error(error: any): R
@@ -18,9 +18,14 @@ export type FetchPolicy =
   | "network-only" // Skip cache, but cache the result
   | "no-cache" // Skip cache, and don't cache the response either
 
+export type QueryHttpClientOptions = Pick<
+  NonNullable<HttpClientOptions>,
+  "signal"
+>
 export type QueryOptions = {
   fetchPolicy?: FetchPolicy
   noSsr?: boolean
+  httpClientOptions?: QueryHttpClientOptions
 }
 
 const isServer: boolean = typeof window === "undefined"
@@ -51,7 +56,7 @@ export class Query<T = unknown> implements PromiseLike<T> {
     this.queryKey = this.query + stringify(variables)
     this.store = store
     this.variables = variables
-    
+
     let fetchPolicy = options.fetchPolicy || "cache-and-network"
     if (
       this.store.ssr &&
@@ -125,7 +130,11 @@ export class Query<T = unknown> implements PromiseLike<T> {
     if (existingPromise) {
       promise = existingPromise as Promise<T>
     } else {
-      promise = this.store.rawRequest(this.query, this.variables)
+      promise = this.store.rawRequest(
+        this.query,
+        this.variables,
+        this.options.httpClientOptions
+      )
       this.store.__pushPromise(promise, this.queryKey)
     }
     promise = promise.then((data: any) => {
