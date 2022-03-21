@@ -1,44 +1,89 @@
-import { resolveIdentifier } from "mobx-state-tree"
-import { typenameToCollectionName } from "./utils"
+import { isNumber, isObject } from "lodash"
+import { resolveIdentifier, getSnapshot } from "mobx-state-tree"
 
-export function mergeHelper(store: any, data: any) {
+// use a proxy for array-type structures, saves huge amounts of memory, and improves performance
+const proxyHandler = (store: any) => ({
+  get(target: any, prop: any, receiver: any) {
+    const instance = Reflect.get(target, prop, receiver) as any
+
+    if (isNumber(prop)) return instance
+
+    const { __typename, id } = instance
+    const typeDef = store.getTypeDef(__typename)
+
+    return id !== undefined ? resolveIdentifier(typeDef, store, id) : instance
+  }
+})
+
+// prepare reactive results with proxies and for any depth
+function buildResponse(data: any, store: any) {
+  if (!data || typeof data !== "object") return data
+  if (Array.isArray(data))
+    return new Proxy(
+      Object.isFrozen(data) ? Array.from(data) : data,
+      proxyHandler(store)
+    )
+
+  const { __typename, id } = data
+
+  if (__typename && id) {
+    const typeDef = store.getTypeDef(__typename)
+
+    return resolveIdentifier(typeDef, store, id)
+  }
+
+  const reactiveResult: any = {}
+
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      reactiveResult[key] = buildResponse(data[key], store)
+    }
+  }
+
+  return reactiveResult
+}
+
+// logic to wrap and update mst-tree
+export function mergeHelper(store: any, initialData: any): any {
   function merge(data: any): any {
     if (!data || typeof data !== "object") return data
     if (Array.isArray(data)) return data.map(merge)
 
     const { __typename, id } = data
-
-    // convert values deeply first to MST objects as much as possible
     const snapshot: any = {}
+
     for (const key in data) {
-      snapshot[key] = merge(data[key])
+      if (isObject(data[key]) || Array.isArray(data[key])) {
+        snapshot[key] = merge(data[key])
+      } else {
+        snapshot[key] = data[key]
+      }
     }
 
-    // GQL object
     if (__typename && store.isKnownType(__typename)) {
-      // GQL object with known type, instantiate or recycle MST object
-      const typeDef = store.getTypeDef(__typename)
-      // Try to reuse instance, even if it is not a root type
-      let instance = id !== undefined && resolveIdentifier(typeDef, store, id)
-      if (instance) {
-        // update existing object
-        Object.assign(instance, snapshot)
-      } else {
-        // create a new one
-        instance = typeDef.create(snapshot)
-        if (store.isRootType(__typename)) {
-          // register in the store if a root
-          //store[typenameToCollectionName(__typename)].set(id, instance)
-          store[store.getCollectionName(__typename)].set(id, instance)
+      // process with root types
+      if (store.isRootType(__typename)) {
+        const rootMap = store[store.getCollectionName(__typename)]
+        const instance = rootMap.get(id)
+        const newInstance = {
+          ...(instance ? getSnapshot<Object>(instance) : {}),
+          ...snapshot
         }
+        rootMap.set(id, newInstance)
+        // another ones
+      } else {
+        const typeDef = store.getTypeDef(__typename)
+        const instance = typeDef.create(snapshot)
         instance.__setStore(store)
+
+        return instance
       }
-      return instance
-    } else {
-      // GQL object with unknown type, return verbatim
-      return snapshot
     }
+
+    return __typename && store.isRootType(__typename) ? id : snapshot
   }
 
-  return merge(data)
+  merge(initialData)
+
+  return buildResponse(initialData, store)
 }
