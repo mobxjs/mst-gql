@@ -1,17 +1,30 @@
-import { Instance } from 'mobx-state-tree'
 import camelcase from "camelcase"
 import { DocumentNode } from "graphql"
-import { getEnv, IAnyModelType, recordPatches, types } from "mobx-state-tree"
+import {
+  getEnv,
+  IAnyModelType,
+  Instance,
+  recordPatches,
+  types
+} from "mobx-state-tree"
 import pluralize from "pluralize"
 import { SubscriptionClient } from "subscriptions-transport-ws"
-import { deflateHelper } from "./deflateHelper"
+import { HttpClientOptions } from "./createHttpClient"
 
+import { deflateHelper } from "./deflateHelper"
 import { mergeHelper } from "./mergeHelper"
-import { Query, QueryOptions } from "./Query"
+import { Query, QueryHttpClientOptions, QueryOptions } from "./Query"
 import { getFirstValue } from "./utils"
+
+type RequestOptions = {
+  document: string
+  variables?: any
+  signal?: QueryHttpClientOptions["signal"]
+}
 
 export type RequestHandler<T = any> = {
   request(query: string, variables: any): Promise<T>
+  request(options?: RequestOptions): Promise<T>
 }
 
 // TODO: also provide an interface for stream handler
@@ -20,30 +33,34 @@ export const MSTGQLStore = types
   .model("MSTGQLStore", {
     __queryCache: types.optional(types.map(types.frozen()), {})
   })
-  .volatile((self): {
-    ssr: boolean
-    __promises: Map<string, Promise<unknown>>
-    __afterInit: boolean
-    gqlHttpClient: RequestHandler
-    gqlWsClient: SubscriptionClient
-  } => {
-    const {
-      ssr = false,
-      gqlHttpClient,
-      gqlWsClient
-    }: {
+  .volatile(
+    (
+      self
+    ): {
       ssr: boolean
+      __promises: Map<string, Promise<unknown>>
+      __afterInit: boolean
       gqlHttpClient: RequestHandler
       gqlWsClient: SubscriptionClient
-    } = getEnv(self)
-    return {
-      ssr,
-      gqlHttpClient,
-      gqlWsClient,
-      __promises: new Map(),
-      __afterInit: false
+    } => {
+      const {
+        ssr = false,
+        gqlHttpClient,
+        gqlWsClient
+      }: {
+        ssr: boolean
+        gqlHttpClient: RequestHandler
+        gqlWsClient: SubscriptionClient
+      } = getEnv(self)
+      return {
+        ssr,
+        gqlHttpClient,
+        gqlWsClient,
+        __promises: new Map(),
+        __afterInit: false
+      }
     }
-  })
+  )
   .actions((self) => {
     Promise.resolve().then(() => (self as any).__onAfterInit())
 
@@ -55,14 +72,24 @@ export const MSTGQLStore = types
       return deflateHelper(self, data)
     }
 
-    function rawRequest(query: string, variables: any): Promise<any> {
+    function rawRequest(
+      query: string,
+      variables: any,
+      options?: QueryHttpClientOptions
+    ): Promise<any> {
       if (!self.gqlHttpClient && !self.gqlWsClient)
         throw new Error(
           "Either gqlHttpClient or gqlWsClient (or both) should provided in the MSTGQLStore environment"
         )
-      if (self.gqlHttpClient)
-        return self.gqlHttpClient.request(query, variables)
-      else {
+      if (self.gqlHttpClient) {
+        if (options)
+          return self.gqlHttpClient.request({
+            document: query,
+            variables,
+            signal: options.signal
+          })
+        else return self.gqlHttpClient.request(query, variables)
+      } else {
         return new Promise((resolve, reject) => {
           self.gqlWsClient
             .request({
@@ -222,4 +249,3 @@ export function configureStoreMixin(
 }
 
 export type StoreType = Instance<typeof MSTGQLStore>
-
