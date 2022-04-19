@@ -433,6 +433,15 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             }${thing})`
           : thing
       }
+      for (let arg of fieldArgs) {
+          let argType = arg.type
+          while (['NON_NULL', 'LIST'].includes(argType.kind)) {
+              argType = argType.ofType
+          }
+          if (argType.kind === 'ENUM') {
+              addImport(argType.name + (!argType.name.toLowerCase().endsWith('enum') ? 'Enum' : ''), argType.name)
+          }
+      }
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
@@ -528,7 +537,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         // Note that members of a union type need to be concrete object types;
         // you can't create a union type out of interfaces or other unions.
         // TODO investigate passing null for fieldArgs -- was done to solve a sneaky merge bug
-        return handleObjectFieldType(t.name, t, null, false, true)
+        return handleObjectFieldType(t.name, t, fieldArgs, false, true)
       })
       return `types.union(${mstUnionArgs.join(", ")})`
     }
