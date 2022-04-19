@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.15.0
+
+- Fix handling of union of root types. [#348](https://github.com/mobxjs/mst-gql/pull/348) - [smokku](https://github.com/smokku)
+- Introduced support for AbortController in GraphQL HTTP requests [#355](https://github.com/mobxjs/mst-gql/pull/355) - [wtuminski](https://github.com/wtuminski)
+- Added support for field parameters [#349](https://github.com/mobxjs/mst-gql/pull/349) - [smokku](https://github.com/smokku) 
+- Package version upgrades, fixed TS errors, other bugs [#337](https://github.com/mobxjs/mst-gql/pull/337) - [jkolyer](https://github.com/jkolyer)
+
 ## 0.14.1
 
 - Fix 'id' getter MSTGQLRef. [#319](https://github.com/mobxjs/mst-gql/pull/319) - [weglov](https://github.com/weglov)
