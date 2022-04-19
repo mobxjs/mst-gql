@@ -218,7 +218,7 @@ export const QueryRootModelBase = withTypedRefs<Refs>()(ModelBase
   })))
 
 export class QueryRootModelSelector extends QueryBuilder {
-  me(builder?: string | MyUserModelSelector | ((selector: MyUserModelSelector) => MyUserModelSelector)) { return this.__child(\`me\`, MyUserModelSelector, builder) }
+  me(builder: string | MyUserModelSelector | ((selector: MyUserModelSelector) => MyUserModelSelector) | undefined) { return this.__child(\`me\`, MyUserModelSelector, builder) }
 }
 export function selectFromQueryRoot() {
   return new QueryRootModelSelector()
@@ -295,7 +295,7 @@ export class MyUserModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
   get name() { return this.__attr(\`name\`) }
   get avatar() { return this.__attr(\`avatar\`) }
-  emptyBoxes(builder?: string | PossiblyEmptyBoxModelSelector | ((selector: PossiblyEmptyBoxModelSelector) => PossiblyEmptyBoxModelSelector)) { return this.__child(\`emptyBoxes\`, PossiblyEmptyBoxModelSelector, builder) }
+  emptyBoxes(builder: string | PossiblyEmptyBoxModelSelector | ((selector: PossiblyEmptyBoxModelSelector) => PossiblyEmptyBoxModelSelector) | undefined) { return this.__child(\`emptyBoxes\`, PossiblyEmptyBoxModelSelector, builder) }
 }
 export function selectFromMyUser() {
   return new MyUserModelSelector()
@@ -1169,9 +1169,11 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { OrganizationModel } from \\"./OrganizationModel\\"
+import { OrganizationModel, OrganizationModelType } from \\"./OrganizationModel\\"
+import { OrganizationModelSelector } from \\"./OrganizationModel.base\\"
 import { OwnerModelSelector } from \\"./OwnerModelSelector\\"
-import { UserModel } from \\"./UserModel\\"
+import { UserModel, UserModelType } from \\"./UserModel\\"
+import { UserModelSelector } from \\"./UserModel.base\\"
 import { RootStoreType } from \\"./index\\"
 
 
@@ -1184,7 +1186,7 @@ export const RepoModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"Repo\\"), \\"Repo\\"),
     id: types.identifier,
-    owner: types.union(types.undefined, types.null, types.union(types.late(() => UserModel), types.late(() => OrganizationModel))),
+    owner: types.union(types.undefined, types.null, types.union(types.late((): any => UserModel), types.late((): any => OrganizationModel))),
   })
   .views(self => ({
     get store() {
@@ -1194,7 +1196,7 @@ export const RepoModelBase = ModelBase
 
 export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
-  owner(builder?: string | OwnerModelSelector | ((selector: OwnerModelSelector) => OwnerModelSelector)) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
+  owner(builder: string | OwnerModelSelector | ((selector: OwnerModelSelector) => OwnerModelSelector) | undefined) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
 }
 export function selectFromRepo() {
   return new RepoModelSelector()
@@ -1484,178 +1486,6 @@ export * from \\"./RepoModel\\"
 export * from \\"./OwnerModelSelector\\"
 export * from \\"./UserModel\\"
 export * from \\"./OrganizationModel\\"
-export * from \\"./RootStore\\"
-export * from \\"./reactUtils\\"
-",
-    true,
-  ],
-]
-`;
-
-exports[`scaffolding with scalar type 1`] = `
-Array [
-  Array [
-    "ModelBase",
-    "import { MSTGQLObject } from \\"mst-gql\\"
-
-export const ModelBase = MSTGQLObject
-",
-    false,
-  ],
-  Array [
-    "HelloResultModel.base",
-    "/* This is a mst-gql generated file, don't modify it manually */
-/* eslint-disable */
-/* tslint:disable */
-
-import { types } from \\"mobx-state-tree\\"
-import { QueryBuilder } from \\"mst-gql\\"
-import { ModelBase } from \\"./ModelBase\\"
-import { RootStoreType } from \\"./index\\"
-
-
-/**
- * HelloResultBase
- * auto generated base class for the model HelloResultModel.
- */
-export const HelloResultModelBase = ModelBase
-  .named('HelloResult')
-  .props({
-    __typename: types.optional(types.literal(\\"HelloResult\\"), \\"HelloResult\\"),
-    result: types.union(types.undefined, types.string),
-  })
-  .views(self => ({
-    get store() {
-      return self.__getStore<RootStoreType>()
-    }
-  }))
-
-export class HelloResultModelSelector extends QueryBuilder {
-  get result() { return this.__attr(\`result\`) }
-}
-export function selectFromHelloResult() {
-  return new HelloResultModelSelector()
-}
-
-export const helloResultModelPrimitives = selectFromHelloResult().result
-",
-    true,
-  ],
-  Array [
-    "HelloResultModel",
-    "import { Instance } from \\"mobx-state-tree\\"
-import { HelloResultModelBase } from \\"./HelloResultModel.base\\"
-
-/* The TypeScript type of an instance of HelloResultModel */
-export interface HelloResultModelType extends Instance<typeof HelloResultModel.Type> {}
-
-/* A graphql query fragment builders for HelloResultModel */
-export { selectFromHelloResult, helloResultModelPrimitives, HelloResultModelSelector } from \\"./HelloResultModel.base\\"
-
-/**
- * HelloResultModel
- */
-export const HelloResultModel = HelloResultModelBase
-  .actions(self => ({
-    // This is an auto-generated example action.
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))
-",
-    false,
-  ],
-  Array [
-    "RootStore",
-    "import { Instance } from \\"mobx-state-tree\\"
-import { RootStoreBase } from \\"./RootStore.base\\"
-
-export interface RootStoreType extends Instance<typeof RootStore.Type> {}
-
-export const RootStore = RootStoreBase
-  .actions(self => ({
-    // This is an auto-generated example action.
-    log() {
-      console.log(JSON.stringify(self))
-    }
-  }))
-",
-    false,
-  ],
-  Array [
-    "RootStore.base",
-    "/* This is a mst-gql generated file, don't modify it manually */
-/* eslint-disable */
-/* tslint:disable */
-import { ObservableMap } from \\"mobx\\"
-import { types } from \\"mobx-state-tree\\"
-import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
-
-import { HelloResultModel, HelloResultModelType } from \\"./HelloResultModel\\"
-import { helloResultModelPrimitives, HelloResultModelSelector } from \\"./HelloResultModel.base\\"
-
-
-
-/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
-type Refs = {
-
-}
-
-
-/**
-* Enums for the names of base graphql actions
-*/
-export enum RootStoreBaseQueries {
-queryHelloWithString=\\"queryHelloWithString\\",
-queryHelloWithType=\\"queryHelloWithType\\"
-}
-
-
-/**
-* Store, managing, among others, all the objects received through graphQL
-*/
-export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
-  .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['HelloResult', () => HelloResultModel]], []))
-  .props({
-
-  })
-  .actions(self => ({
-    queryHelloWithString(variables?: {  }, options: QueryOptions = {}) {
-      return self.query<{ helloWithString: string }>(\`query helloWithString { helloWithString }\`, variables, options)
-    },
-    queryHelloWithType(variables?: {  }, resultSelector: string | ((qb: HelloResultModelSelector) => HelloResultModelSelector) = helloResultModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ helloWithType: HelloResultModelType}>(\`query helloWithType { helloWithType {
-        \${typeof resultSelector === \\"function\\" ? resultSelector(new HelloResultModelSelector()).toString() : resultSelector}
-      } }\`, variables, options)
-    },
-  })))
-",
-    true,
-  ],
-  Array [
-    "reactUtils",
-    "/* This is a mst-gql generated file, don't modify it manually */
-/* eslint-disable */
-/* tslint:disable */
-
-import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
-import * as React from \\"react\\"
-import { RootStoreType } from \\"./RootStore\\"
-
-export const StoreContext = createStoreContext<RootStoreType>(React)
-
-export const useQuery = createUseQueryHook(StoreContext, React)
-",
-    true,
-  ],
-  Array [
-    "index",
-    "/* This is a mst-gql generated file, don't modify it manually */
-/* eslint-disable */
-/* tslint:disable */
-
-export * from \\"./HelloResultModel\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
@@ -2813,6 +2643,178 @@ export * from \\"./reactUtils\\"
 ]
 `;
 
+exports[`scaffolding with scalar type 1`] = `
+Array [
+  Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
+    "HelloResultModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * HelloResultBase
+ * auto generated base class for the model HelloResultModel.
+ */
+export const HelloResultModelBase = ModelBase
+  .named('HelloResult')
+  .props({
+    __typename: types.optional(types.literal(\\"HelloResult\\"), \\"HelloResult\\"),
+    result: types.union(types.undefined, types.string),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class HelloResultModelSelector extends QueryBuilder {
+  get result() { return this.__attr(\`result\`) }
+}
+export function selectFromHelloResult() {
+  return new HelloResultModelSelector()
+}
+
+export const helloResultModelPrimitives = selectFromHelloResult().result
+",
+    true,
+  ],
+  Array [
+    "HelloResultModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { HelloResultModelBase } from \\"./HelloResultModel.base\\"
+
+/* The TypeScript type of an instance of HelloResultModel */
+export interface HelloResultModelType extends Instance<typeof HelloResultModel.Type> {}
+
+/* A graphql query fragment builders for HelloResultModel */
+export { selectFromHelloResult, helloResultModelPrimitives, HelloResultModelSelector } from \\"./HelloResultModel.base\\"
+
+/**
+ * HelloResultModel
+ */
+export const HelloResultModel = HelloResultModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
+
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+
+export const RootStore = RootStoreBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
+
+import { HelloResultModel, HelloResultModelType } from \\"./HelloResultModel\\"
+import { helloResultModelPrimitives, HelloResultModelSelector } from \\"./HelloResultModel.base\\"
+
+
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+
+}
+
+
+/**
+* Enums for the names of base graphql actions
+*/
+export enum RootStoreBaseQueries {
+queryHelloWithString=\\"queryHelloWithString\\",
+queryHelloWithType=\\"queryHelloWithType\\"
+}
+
+
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
+  .named(\\"RootStore\\")
+  .extend(configureStoreMixin([['HelloResult', () => HelloResultModel]], []))
+  .props({
+
+  })
+  .actions(self => ({
+    queryHelloWithString(variables?: {  }, options: QueryOptions = {}) {
+      return self.query<{ helloWithString: string }>(\`query helloWithString { helloWithString }\`, variables, options)
+    },
+    queryHelloWithType(variables?: {  }, resultSelector: string | ((qb: HelloResultModelSelector) => HelloResultModelSelector) = helloResultModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ helloWithType: HelloResultModelType}>(\`query helloWithType { helloWithType {
+        \${typeof resultSelector === \\"function\\" ? resultSelector(new HelloResultModelSelector()).toString() : resultSelector}
+      } }\`, variables, options)
+    },
+  })))
+",
+    true,
+  ],
+  Array [
+    "reactUtils",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { createStoreContext, createUseQueryHook } from \\"mst-gql\\"
+import * as React from \\"react\\"
+import { RootStoreType } from \\"./RootStore\\"
+
+export const StoreContext = createStoreContext<RootStoreType>(React)
+
+export const useQuery = createUseQueryHook(StoreContext, React)
+",
+    true,
+  ],
+  Array [
+    "index",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./HelloResultModel\\"
+export * from \\"./RootStore\\"
+export * from \\"./reactUtils\\"
+",
+    true,
+  ],
+]
+`;
+
 exports[`union field type to work 1`] = `
 Array [
   Array [
@@ -2832,8 +2834,10 @@ export const ModelBase = MSTGQLObject
 import { types } from \\"mobx-state-tree\\"
 import { QueryBuilder } from \\"mst-gql\\"
 import { ModelBase } from \\"./ModelBase\\"
-import { BookModel } from \\"./BookModel\\"
-import { MovieModel } from \\"./MovieModel\\"
+import { BookModel, BookModelType } from \\"./BookModel\\"
+import { BookModelSelector } from \\"./BookModel.base\\"
+import { MovieModel, MovieModelType } from \\"./MovieModel\\"
+import { MovieModelSelector } from \\"./MovieModel.base\\"
 import { SearchItemModelSelector } from \\"./SearchItemModelSelector\\"
 import { RootStoreType } from \\"./index\\"
 
@@ -2847,7 +2851,7 @@ export const SearchResultModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal(\\"SearchResult\\"), \\"SearchResult\\"),
     inputQuery: types.union(types.undefined, types.string),
-    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late(() => MovieModel), types.late(() => BookModel))))),
+    items: types.union(types.undefined, types.array(types.union(types.null, types.union(types.late((): any => MovieModel), types.late((): any => BookModel))))),
   })
   .views(self => ({
     get store() {
@@ -2857,7 +2861,7 @@ export const SearchResultModelBase = ModelBase
 
 export class SearchResultModelSelector extends QueryBuilder {
   get inputQuery() { return this.__attr(\`inputQuery\`) }
-  items(builder?: string | SearchItemModelSelector | ((selector: SearchItemModelSelector) => SearchItemModelSelector)) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
+  items(builder: string | SearchItemModelSelector | ((selector: SearchItemModelSelector) => SearchItemModelSelector) | undefined) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
 }
 export function selectFromSearchResult() {
   return new SearchResultModelSelector()

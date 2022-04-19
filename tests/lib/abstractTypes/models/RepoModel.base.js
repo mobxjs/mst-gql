@@ -5,8 +5,10 @@ import { types } from "mobx-state-tree"
 import { QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { OrganizationModel } from "./OrganizationModel"
+import { OrganizationModelSelector } from "./OrganizationModel.base"
 import { OwnerModelSelector } from "./OwnerModelSelector"
 import { UserModel } from "./UserModel"
+import { UserModelSelector } from "./UserModel.base"
 
 
 /**

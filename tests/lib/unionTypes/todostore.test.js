@@ -28,7 +28,7 @@ describe("unionTypes tests", () => {
                 complete: false,
                 label: "Initially loaded todo",
                 color: "red"
-              }
+              },
             ]
           }
         ]

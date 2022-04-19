@@ -2,10 +2,12 @@
 /* eslint-disable */
 
 import { types } from "mobx-state-tree"
-import { QueryBuilder } from "mst-gql"
+import { MSTGQLRef, QueryBuilder } from "mst-gql"
 import { ModelBase } from "./ModelBase"
 import { BasicTodoModel } from "./BasicTodoModel"
+import { BasicTodoModelSelector } from "./BasicTodoModel.base"
 import { FancyTodoModel } from "./FancyTodoModel"
+import { FancyTodoModelSelector } from "./FancyTodoModel.base"
 import { TodoModelSelector } from "./TodoModelSelector"
 
 
@@ -18,7 +20,7 @@ export const TodoListModelBase = ModelBase
   .props({
     __typename: types.optional(types.literal("TodoList"), "TodoList"),
     id: types.identifier,
-    todos: types.union(types.undefined, types.array(types.union(types.late(() => BasicTodoModel), types.late(() => FancyTodoModel)))),
+    todos: types.union(types.undefined, types.array(types.union(MSTGQLRef(types.late(() => BasicTodoModel)), MSTGQLRef(types.late(() => FancyTodoModel))))),
   })
   .views(self => ({
     get store() {

@@ -39,8 +39,8 @@ export const PokemonAttackModelBase = withTypedRefs<Refs>()(ModelBase
   })))
 
 export class PokemonAttackModelSelector extends QueryBuilder {
-  fast(builder?: string | AttackModelSelector | ((selector: AttackModelSelector) => AttackModelSelector)) { return this.__child(`fast`, AttackModelSelector, builder) }
-  special(builder?: string | AttackModelSelector | ((selector: AttackModelSelector) => AttackModelSelector)) { return this.__child(`special`, AttackModelSelector, builder) }
+  fast(builder: string | AttackModelSelector | ((selector: AttackModelSelector) => AttackModelSelector) | undefined) { return this.__child(`fast`, AttackModelSelector, builder) }
+  special(builder: string | AttackModelSelector | ((selector: AttackModelSelector) => AttackModelSelector) | undefined) { return this.__child(`special`, AttackModelSelector, builder) }
 }
 export function selectFromPokemonAttack() {
   return new PokemonAttackModelSelector()
