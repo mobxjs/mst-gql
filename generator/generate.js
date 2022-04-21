@@ -602,8 +602,6 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             + ".join(', ') "
             +"+ ')'"
             + ": '')"
-
-          console.log(fieldArgs)
         }
         p += `) { return this.__child(\`${field}\`${args}, ${selector}, builder) }`
         return p
