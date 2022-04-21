@@ -20,7 +20,8 @@ const definition = {
   "--dontRenameModels": Boolean,
   "--header": String,
   "--useIdentifierNumber": Boolean,
-  "--fieldOverrides": String
+  "--fieldOverrides": String,
+  "--dynamicArgs": Boolean
 }
 
 function main() {
@@ -49,7 +50,8 @@ function main() {
     namingConvention,
     header,
     useIdentifierNumber,
-    fieldOverrides
+    fieldOverrides,
+    dynamicArgs
   } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
 
@@ -114,7 +116,8 @@ function main() {
     noReact,
     namingConvention,
     useIdentifierNumber,
-    fieldOverrides
+    fieldOverrides,
+    dynamicArgs
   )
   writeFiles(outDir, files, format, forceAll, true, separate)
   logUnexpectedFiles(outDir, files)
