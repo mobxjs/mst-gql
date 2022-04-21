@@ -31,7 +31,7 @@
     "generator"
   ],
   "scripts": {
-    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start",
+    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start && cd ../6-scaffolding-ts-hasura && yarn && yarn start ",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
