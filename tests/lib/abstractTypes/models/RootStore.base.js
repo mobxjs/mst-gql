@@ -3,18 +3,18 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 
-import { SearchResultModel } from "./SearchResultModel"
-import { searchResultModelPrimitives, SearchResultModelSelector } from "./SearchResultModel.base"
 import { MovieModel } from "./MovieModel"
 import { movieModelPrimitives, MovieModelSelector } from "./MovieModel.base"
 import { BookModel } from "./BookModel"
 import { bookModelPrimitives, BookModelSelector } from "./BookModel.base"
-import { RepoModel } from "./RepoModel"
-import { repoModelPrimitives, RepoModelSelector } from "./RepoModel.base"
+import { SearchResultModel } from "./SearchResultModel"
+import { searchResultModelPrimitives, SearchResultModelSelector } from "./SearchResultModel.base"
 import { UserModel } from "./UserModel"
 import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 import { OrganizationModel } from "./OrganizationModel"
 import { organizationModelPrimitives, OrganizationModelSelector } from "./OrganizationModel.base"
+import { RepoModel } from "./RepoModel"
+import { repoModelPrimitives, RepoModelSelector } from "./RepoModel.base"
 
 import { searchItemModelPrimitives, SearchItemModelSelector  } from "./"
 import { ownerModelPrimitives, OwnerModelSelector  } from "./"
@@ -29,7 +29,7 @@ import { ownerModelPrimitives, OwnerModelSelector  } from "./"
 */
 export const RootStoreBase = MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['SearchResult', () => SearchResultModel], ['Movie', () => MovieModel], ['Book', () => BookModel], ['Repo', () => RepoModel], ['User', () => UserModel], ['Organization', () => OrganizationModel]], ['SearchResult', 'Repo']))
+  .extend(configureStoreMixin([['Movie', () => MovieModel], ['Book', () => BookModel], ['SearchResult', () => SearchResultModel], ['User', () => UserModel], ['Organization', () => OrganizationModel], ['Repo', () => RepoModel]], ['SearchResult', 'Repo']))
   .props({
     searchresults: types.optional(types.map(types.late(() => SearchResultModel)), {}),
     repos: types.optional(types.map(types.late(() => RepoModel)), {})

@@ -3,12 +3,12 @@
 import { types } from "mobx-state-tree"
 import { MSTGQLStore, configureStoreMixin } from "mst-gql"
 
-import { TodoListModel } from "./TodoListModel"
-import { todoListModelPrimitives, TodoListModelSelector } from "./TodoListModel.base"
 import { BasicTodoModel } from "./BasicTodoModel"
 import { basicTodoModelPrimitives, BasicTodoModelSelector } from "./BasicTodoModel.base"
 import { FancyTodoModel } from "./FancyTodoModel"
 import { fancyTodoModelPrimitives, FancyTodoModelSelector } from "./FancyTodoModel.base"
+import { TodoListModel } from "./TodoListModel"
+import { todoListModelPrimitives, TodoListModelSelector } from "./TodoListModel.base"
 
 import { todoModelPrimitives, TodoModelSelector  } from "./"
 
@@ -22,7 +22,7 @@ import { todoModelPrimitives, TodoModelSelector  } from "./"
 */
 export const RootStoreBase = MSTGQLStore
   .named("RootStore")
-  .extend(configureStoreMixin([['TodoList', () => TodoListModel], ['BasicTodo', () => BasicTodoModel], ['FancyTodo', () => FancyTodoModel]], ['TodoList', 'BasicTodo', 'FancyTodo'], "js"))
+  .extend(configureStoreMixin([['BasicTodo', () => BasicTodoModel], ['FancyTodo', () => FancyTodoModel], ['TodoList', () => TodoListModel]], ['TodoList', 'BasicTodo', 'FancyTodo'], "js"))
   .props({
     todoLists: types.optional(types.map(types.late(() => TodoListModel)), {}),
     basicTodos: types.optional(types.map(types.late(() => BasicTodoModel)), {}),

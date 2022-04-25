@@ -176,6 +176,7 @@ type Query {
       namingConvention: "asis"
     }
   )
+  console.log("+++ output", output)
   expect(output).toMatchSnapshot()
 
   expect(findFile(output, "SearchItemModelSelector")).toBeTruthy()

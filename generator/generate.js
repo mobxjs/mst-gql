@@ -4,6 +4,7 @@ const graphql = require("graphql")
 const camelcase = require("camelcase")
 const pluralize = require("pluralize")
 const escapeStringRegexp = require("escape-string-regexp")
+const { getIntrospectionQuery } = require("graphql")
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -1262,8 +1263,12 @@ function scaffold(
     fieldOverrides: []
   }
 ) {
+
   const schema = graphql.buildSchema(definition)
-  const res = graphql.graphqlSync(schema, graphql.introspectionQuery)
+  //console.log("+++ schema", definition)
+  // console.log("+++ introspectionQuery", graphql.introspectionQuery, getIntrospectionQuery())
+  //const res = graphql.graphqlSync(schema, getIntrospectionQuery())
+  const res = graphql.graphqlSync({schema, source: getIntrospectionQuery()})
   if (!res.data)
     throw new Error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
   return generate(
