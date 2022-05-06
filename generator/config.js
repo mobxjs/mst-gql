@@ -16,7 +16,8 @@ exports.defaultConfig = {
   namingConvention: "js", // supported option: "js", "asis",
   header: undefined,
   useIdentifierNumber: false,
-  fieldOverrides: []
+  fieldOverrides: [],
+  dynamicArgs: false
 }
 
 exports.getConfig = function getConfig() {
@@ -58,7 +59,8 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
       !!args["--useIdentifierNumber"] || config.useIdentifierNumber,
     fieldOverrides: args["--fieldOverrides"]
       ? parseFieldOverrides(args["--fieldOverrides"])
-      : config.fieldOverrides
+      : config.fieldOverrides,
+    dynamicArgs: !!args["--dynamicArgs"] || config.dynamicArgs
   }
 }
 

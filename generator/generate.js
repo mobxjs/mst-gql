@@ -29,7 +29,8 @@ function generate(
   noReact = false,
   namingConvention = "js",
   useIdentifierNumber = false,
-  fieldOverrides = []
+  fieldOverrides = [],
+  dynamicArgs = false
 ) {
   const types = schema.types
 
@@ -904,20 +905,44 @@ ${enumContent}
                     }${returnsList ? "[]" : ""}`
               }}>`
 
-        const formalArgs =
-          args.length === 0
+        let formalArgs = ""
+        let actualArgs = ""
+        // Static args: all args are geerated into formalArgs and actualArgs
+        if (!dynamicArgs) {
+          formalArgs = args.length === 0
             ? ""
             : "(" +
-              args
-                .map((arg) => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
-                .join(", ") +
-              ")"
-        const actualArgs =
-          args.length === 0
-            ? ""
-            : "(" +
+            args
+              .map((arg) => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
+              .join(", ") +
+            ")"
+
+          actualArgs =
+            args.length === 0
+              ? ""
+              : "(" +
               args.map((arg) => `${arg.origName}: \$${arg.name}`).join(", ") +
               ")"
+
+        }
+        // Dynamic args: only those args are generated, which have a corresponding variable set in variables
+        else {
+          formalArgs =
+            args.length === 0
+              ? ""
+              : "`+(Object.keys(variables).length !== 0 ? '('+Object.entries({" +
+              args
+                .map((arg) => `${arg.name}: '\$${arg.name}: ${printGraphqlType(arg.type)}'`)
+                .join(", ") +
+              `}).filter(([k, v]) => (variables as any)[k]).map(([k, v]) => v).join(", ")+')' : '')+\``
+
+          actualArgs =
+            args.length === 0
+              ? ""
+              : "`+(Object.keys(variables).length !== 0 ? '('+Object.entries({" +
+              args.map((arg) => `${arg.name}: '${arg.origName}: \$${arg.name}'`).join(", ") +
+              `}).filter(([k, v]) => (variables as any)[k]).map(([k, v]) => v).join(", ")+')' : '')+\``
+        }
 
         const tsVariablesType =
           format === "ts"
@@ -1283,7 +1308,8 @@ function scaffold(
     modelsOnly: false,
     namingConvention: "js",
     useIdentifierNumber: false,
-    fieldOverrides: []
+    fieldOverrides: [],
+    dynamicArgs: false,
   }
 ) {
   const schema = graphql.buildSchema(definition)
@@ -1300,7 +1326,8 @@ function scaffold(
     options.noReact || false,
     options.namingConvention || "js",
     options.useIdentifierNumber || false,
-    options.fieldOverrides || []
+    options.fieldOverrides || [],
+    options.dynamicArgs || false
   )
 }
 
