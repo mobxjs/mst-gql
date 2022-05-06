@@ -1,6 +1,6 @@
 {
   "name": "mst-gql",
-  "version": "0.15.0",
+  "version": "0.15.0-361-graphql-upgrade",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "author": "Michel Weststrate",
   "keywords": [
@@ -31,7 +31,7 @@
     "generator"
   ],
   "scripts": {
-    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start && cd ../6-scaffolding-ts-hasura && yarn && yarn start ",
+    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start && cd ../6-scaffolding-ts-hasura && yarn && yarn start && cd ../../tests && ./test-cra.sh && rm -rf cra-test",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
@@ -48,8 +48,8 @@
     "camelcase": "^6.2.0",
     "cosmiconfig": "^7.0.0",
     "fast-json-stable-stringify": "^2.1.0",
-    "graphql": "14.6.0",
-    "graphql-request": "^4.0.0",
+    "graphql": "^16.3.0",
+    "graphql-request": "^4.2.0",
     "lodash": "^4.17.21",
     "pluralize": "^8.0.0",
     "throttle-debounce": "^3.0.1"
@@ -90,6 +90,6 @@
     "mobx-state-tree": "^5.0.1"
   },
   "resolutions": {
-    "graphql": "14.6.0"
+    "graphql": "^16.3.0"
   }
 }
