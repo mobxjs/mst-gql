@@ -4,6 +4,7 @@ const path = require("path")
 const fs = require("fs")
 const child_process = require("child_process")
 const graphql = require("graphql")
+const { getIntrospectionQuery } = require("graphql")
 
 const { getConfig, mergeConfigs } = require("./config")
 const { generate, writeFiles, logUnexpectedFiles } = require("./generate")
@@ -85,7 +86,7 @@ function main() {
     // Tnx https://blog.apollographql.com/three-ways-to-represent-your-graphql-schema-a41f4175100d!
     const text = fs.readFileSync(input, "utf8")
     const schema = graphql.buildSchema(text)
-    const res = graphql.graphqlSync(schema, graphql.introspectionQuery)
+    const res = graphql.graphqlSync({schema, source: getIntrospectionQuery()})
     if (res.data) json = res.data
     else {
       console.error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
