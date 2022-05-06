@@ -439,8 +439,14 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           while (['NON_NULL', 'LIST'].includes(argType.kind)) {
               argType = argType.ofType
           }
+          // Enums have their own generated files
           if (argType.kind === 'ENUM') {
               addImport(argType.name + (!argType.name.toLowerCase().endsWith('enum') ? 'Enum' : ''), argType.name)
+          }
+          // TODO: Other types are supposed to be generated in RootStore.base.ts, but I'm not sure this is true in
+          // all cases. For Hasura schemas, it works.
+          else if (argType.kind !== 'SCALAR') {
+            addImport("RootStore.base", argType.name)
           }
       }
       switch (fieldType.kind) {
@@ -575,12 +581,30 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
               .map((arg) => `${printTsType(arg)}`)
               .join(", ")} }`
           )
-          args = `(${fieldArgs
-            .map(({ name }) => `${name}: \${JSON.stringify(args['${name}'])}`)
-            .join(", ")})`
-          console.log(fieldArgs)
+
+          // args maybe optional and even the fields of args maybe optional so we need to take care of optional
+          // values at runtime. We need to generate sg like this:
+          //   	return this.__child(`choices` +
+          // 		(args
+          // 			? '(' + ['distinctOn', 'limit', 'offset', 'orderBy', 'where']
+          // 				.map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null))
+          // 				.filter((v) => v != null)
+          // 			.join(', ') + ')'
+          // 			: ''),
+          // 		ChoicesModelSelector, builder
+          // 	)
+
+          // using (args as any) casy i the map() to avoid the following error. Is there a better way?
+          // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index
+          args = "+ (args ? '('+"+
+            "[" + fieldArgs.map(({ name }) => `'${name}'`).join(", ") + "]"
+            + ".map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) )"
+            + ".filter((v) => v!=null)"
+            + ".join(', ') "
+            +"+ ')'"
+            + ": '')"
         }
-        p += `) { return this.__child(\`${field}${args}\`, ${selector}, builder) }`
+        p += `) { return this.__child(\`${field}\`${args}, ${selector}, builder) }`
         return p
       })
       .join("\n")

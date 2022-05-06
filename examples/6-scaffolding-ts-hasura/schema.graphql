@@ -1,0 +1,965 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+scalar bigint
+
+# expression to compare columns of type bigint. All fields are combined with logical 'AND'.
+input bigint_comparison_exp {
+  _eq: bigint
+  _gt: bigint
+  _gte: bigint
+  _in: [bigint!]
+  _is_null: Boolean
+  _lt: bigint
+  _lte: bigint
+  _neq: bigint
+  _nin: [bigint!]
+}
+
+# columns and relationships of "choices"
+type choices {
+  id: ID!
+
+  # An object relationship
+  poll: polls!
+  poll_id: bigint!
+  text: String
+}
+
+# aggregated selection of "choices"
+type choices_aggregate {
+  aggregate: choices_aggregate_fields
+  nodes: [choices!]!
+}
+
+# aggregate fields of "choices"
+type choices_aggregate_fields {
+  avg: choices_avg_fields
+  count(columns: [choices_select_column!], distinct: Boolean): Int
+  max: choices_max_fields
+  min: choices_min_fields
+  stddev: choices_stddev_fields
+  stddev_pop: choices_stddev_pop_fields
+  stddev_samp: choices_stddev_samp_fields
+  sum: choices_sum_fields
+  var_pop: choices_var_pop_fields
+  var_samp: choices_var_samp_fields
+  variance: choices_variance_fields
+}
+
+# order by aggregate values of table "choices"
+input choices_aggregate_order_by {
+  avg: choices_avg_order_by
+  count: order_by
+  max: choices_max_order_by
+  min: choices_min_order_by
+  stddev: choices_stddev_order_by
+  stddev_pop: choices_stddev_pop_order_by
+  stddev_samp: choices_stddev_samp_order_by
+  sum: choices_sum_order_by
+  var_pop: choices_var_pop_order_by
+  var_samp: choices_var_samp_order_by
+  variance: choices_variance_order_by
+}
+
+# input type for inserting array relation for remote table "choices"
+input choices_arr_rel_insert_input {
+  data: [choices_insert_input!]!
+  on_conflict: choices_on_conflict
+}
+
+# aggregate avg on columns
+type choices_avg_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by avg() on columns of table "choices"
+input choices_avg_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# Boolean expression to filter rows from the table "choices". All fields are combined with a logical 'AND'.
+input choices_bool_exp {
+  _and: [choices_bool_exp]
+  _not: choices_bool_exp
+  _or: [choices_bool_exp]
+  id: bigint_comparison_exp
+  poll: polls_bool_exp
+  poll_id: bigint_comparison_exp
+  text: String_comparison_exp
+}
+
+# unique or primary key constraints on table "choices"
+enum choices_constraint {
+  # unique or primary key constraint
+  choices_pkey
+}
+
+# input type for incrementing integer columne in table "choices"
+input choices_inc_input {
+  id: bigint
+  poll_id: bigint
+}
+
+# input type for inserting data into table "choices"
+input choices_insert_input {
+  id: bigint
+  poll: polls_obj_rel_insert_input
+  poll_id: bigint
+  text: String
+}
+
+# aggregate max on columns
+type choices_max_fields {
+  id: bigint
+  poll_id: bigint
+  text: String
+}
+
+# order by max() on columns of table "choices"
+input choices_max_order_by {
+  id: order_by
+  poll_id: order_by
+  text: order_by
+}
+
+# aggregate min on columns
+type choices_min_fields {
+  id: bigint
+  poll_id: bigint
+  text: String
+}
+
+# order by min() on columns of table "choices"
+input choices_min_order_by {
+  id: order_by
+  poll_id: order_by
+  text: order_by
+}
+
+# response of any mutation on the table "choices"
+type choices_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [choices!]!
+}
+
+# input type for inserting object relation for remote table "choices"
+input choices_obj_rel_insert_input {
+  data: choices_insert_input!
+  on_conflict: choices_on_conflict
+}
+
+# on conflict condition type for table "choices"
+input choices_on_conflict {
+  constraint: choices_constraint!
+  update_columns: [choices_update_column!]!
+}
+
+# ordering options when selecting data from "choices"
+input choices_order_by {
+  id: order_by
+  poll: polls_order_by
+  poll_id: order_by
+  text: order_by
+}
+
+# select columns of table "choices"
+enum choices_select_column {
+  # column name
+  id
+
+  # column name
+  poll_id
+
+  # column name
+  text
+}
+
+# input type for updating data in table "choices"
+input choices_set_input {
+  id: bigint
+  poll_id: bigint
+  text: String
+}
+
+# aggregate stddev on columns
+type choices_stddev_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by stddev() on columns of table "choices"
+input choices_stddev_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# aggregate stddev_pop on columns
+type choices_stddev_pop_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by stddev_pop() on columns of table "choices"
+input choices_stddev_pop_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# aggregate stddev_samp on columns
+type choices_stddev_samp_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by stddev_samp() on columns of table "choices"
+input choices_stddev_samp_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# aggregate sum on columns
+type choices_sum_fields {
+  id: bigint
+  poll_id: bigint
+}
+
+# order by sum() on columns of table "choices"
+input choices_sum_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# update columns of table "choices"
+enum choices_update_column {
+  # column name
+  id
+
+  # column name
+  poll_id
+
+  # column name
+  text
+}
+
+# aggregate var_pop on columns
+type choices_var_pop_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by var_pop() on columns of table "choices"
+input choices_var_pop_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# aggregate var_samp on columns
+type choices_var_samp_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by var_samp() on columns of table "choices"
+input choices_var_samp_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# aggregate variance on columns
+type choices_variance_fields {
+  id: Float
+  poll_id: Float
+}
+
+# order by variance() on columns of table "choices"
+input choices_variance_order_by {
+  id: order_by
+  poll_id: order_by
+}
+
+# conflict action
+enum conflict_action {
+  # ignore the insert on this row
+  ignore
+
+  # update the row with the given values
+  update
+}
+
+# mutation root
+type mutation_root {
+  # delete data from the table: "choices"
+  delete_choices(
+    # filter the rows which have to be deleted
+    where: choices_bool_exp!
+  ): choices_mutation_response
+
+  # delete data from the table: "polls"
+  delete_polls(
+    # filter the rows which have to be deleted
+    where: polls_bool_exp!
+  ): polls_mutation_response
+
+  # insert data into the table: "choices"
+  insert_choices(
+    # the rows to be inserted
+    objects: [choices_insert_input!]!
+
+    # on conflict condition
+    on_conflict: choices_on_conflict
+  ): choices_mutation_response
+
+  # insert data into the table: "polls"
+  insert_polls(
+    # the rows to be inserted
+    objects: [polls_insert_input!]!
+
+    # on conflict condition
+    on_conflict: polls_on_conflict
+  ): polls_mutation_response
+
+  # update data of the table: "choices"
+  update_choices(
+    # increments the integer columns with given value of the filtered values
+    _inc: choices_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: choices_set_input
+
+    # filter the rows which have to be updated
+    where: choices_bool_exp!
+  ): choices_mutation_response
+
+  # update data of the table: "polls"
+  update_polls(
+    # increments the integer columns with given value of the filtered values
+    _inc: polls_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: polls_set_input
+
+    # filter the rows which have to be updated
+    where: polls_bool_exp!
+  ): polls_mutation_response
+}
+
+# column ordering options
+enum order_by {
+  # in the ascending order, nulls last
+  asc
+
+  # in the ascending order, nulls first
+  asc_nulls_first
+
+  # in the ascending order, nulls last
+  asc_nulls_last
+
+  # in the descending order, nulls first
+  desc
+
+  # in the descending order, nulls first
+  desc_nulls_first
+
+  # in the descending order, nulls last
+  desc_nulls_last
+}
+
+# columns and relationships of "polls"
+type polls {
+  # An array relationship
+  choices(
+    # distinct select on columns
+    distinct_on: [choices_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [choices_order_by!]
+
+    # filter the rows returned
+    where: choices_bool_exp
+  ): [choices!]!
+
+  # An aggregated array relationship
+  choices_aggregate(
+    # distinct select on columns
+    distinct_on: [choices_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [choices_order_by!]
+
+    # filter the rows returned
+    where: choices_bool_exp
+  ): choices_aggregate!
+  created_at: timestamp
+  created_by: bigint
+  expiration_date_time: timestamp!
+  foo: String
+  id: ID!
+  ize: String
+  question: String
+  updated_at: timestamp
+  updated_by: bigint
+}
+
+# aggregated selection of "polls"
+type polls_aggregate {
+  aggregate: polls_aggregate_fields
+  nodes: [polls!]!
+}
+
+# aggregate fields of "polls"
+type polls_aggregate_fields {
+  avg: polls_avg_fields
+  count(columns: [polls_select_column!], distinct: Boolean): Int
+  max: polls_max_fields
+  min: polls_min_fields
+  stddev: polls_stddev_fields
+  stddev_pop: polls_stddev_pop_fields
+  stddev_samp: polls_stddev_samp_fields
+  sum: polls_sum_fields
+  var_pop: polls_var_pop_fields
+  var_samp: polls_var_samp_fields
+  variance: polls_variance_fields
+}
+
+# order by aggregate values of table "polls"
+input polls_aggregate_order_by {
+  avg: polls_avg_order_by
+  count: order_by
+  max: polls_max_order_by
+  min: polls_min_order_by
+  stddev: polls_stddev_order_by
+  stddev_pop: polls_stddev_pop_order_by
+  stddev_samp: polls_stddev_samp_order_by
+  sum: polls_sum_order_by
+  var_pop: polls_var_pop_order_by
+  var_samp: polls_var_samp_order_by
+  variance: polls_variance_order_by
+}
+
+# input type for inserting array relation for remote table "polls"
+input polls_arr_rel_insert_input {
+  data: [polls_insert_input!]!
+  on_conflict: polls_on_conflict
+}
+
+# aggregate avg on columns
+type polls_avg_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by avg() on columns of table "polls"
+input polls_avg_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# Boolean expression to filter rows from the table "polls". All fields are combined with a logical 'AND'.
+input polls_bool_exp {
+  _and: [polls_bool_exp]
+  _not: polls_bool_exp
+  _or: [polls_bool_exp]
+  choices: choices_bool_exp
+  created_at: timestamp_comparison_exp
+  created_by: bigint_comparison_exp
+  expiration_date_time: timestamp_comparison_exp
+  foo: String_comparison_exp
+  id: bigint_comparison_exp
+  ize: String_comparison_exp
+  question: String_comparison_exp
+  updated_at: timestamp_comparison_exp
+  updated_by: bigint_comparison_exp
+}
+
+# unique or primary key constraints on table "polls"
+enum polls_constraint {
+  # unique or primary key constraint
+  polls_pkey
+}
+
+# input type for incrementing integer columne in table "polls"
+input polls_inc_input {
+  created_by: bigint
+  id: bigint
+  updated_by: bigint
+}
+
+# input type for inserting data into table "polls"
+input polls_insert_input {
+  choices: choices_arr_rel_insert_input
+  created_at: timestamp
+  created_by: bigint
+  expiration_date_time: timestamp
+  foo: String
+  id: bigint
+  ize: String
+  question: String
+  updated_at: timestamp
+  updated_by: bigint
+}
+
+# aggregate max on columns
+type polls_max_fields {
+  created_by: bigint
+  foo: String
+  id: bigint
+  ize: String
+  question: String
+  updated_by: bigint
+}
+
+# order by max() on columns of table "polls"
+input polls_max_order_by {
+  created_by: order_by
+  foo: order_by
+  id: order_by
+  ize: order_by
+  question: order_by
+  updated_by: order_by
+}
+
+# aggregate min on columns
+type polls_min_fields {
+  created_by: bigint
+  foo: String
+  id: bigint
+  ize: String
+  question: String
+  updated_by: bigint
+}
+
+# order by min() on columns of table "polls"
+input polls_min_order_by {
+  created_by: order_by
+  foo: order_by
+  id: order_by
+  ize: order_by
+  question: order_by
+  updated_by: order_by
+}
+
+# response of any mutation on the table "polls"
+type polls_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [polls!]!
+}
+
+# input type for inserting object relation for remote table "polls"
+input polls_obj_rel_insert_input {
+  data: polls_insert_input!
+  on_conflict: polls_on_conflict
+}
+
+# on conflict condition type for table "polls"
+input polls_on_conflict {
+  constraint: polls_constraint!
+  update_columns: [polls_update_column!]!
+}
+
+# ordering options when selecting data from "polls"
+input polls_order_by {
+  choices_aggregate: choices_aggregate_order_by
+  created_at: order_by
+  created_by: order_by
+  expiration_date_time: order_by
+  foo: order_by
+  id: order_by
+  ize: order_by
+  question: order_by
+  updated_at: order_by
+  updated_by: order_by
+}
+
+# select columns of table "polls"
+enum polls_select_column {
+  # column name
+  created_at
+
+  # column name
+  created_by
+
+  # column name
+  expiration_date_time
+
+  # column name
+  foo
+
+  # column name
+  id
+
+  # column name
+  ize
+
+  # column name
+  question
+
+  # column name
+  updated_at
+
+  # column name
+  updated_by
+}
+
+# input type for updating data in table "polls"
+input polls_set_input {
+  created_at: timestamp
+  created_by: bigint
+  expiration_date_time: timestamp
+  foo: String
+  id: bigint
+  ize: String
+  question: String
+  updated_at: timestamp
+  updated_by: bigint
+}
+
+# aggregate stddev on columns
+type polls_stddev_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by stddev() on columns of table "polls"
+input polls_stddev_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# aggregate stddev_pop on columns
+type polls_stddev_pop_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by stddev_pop() on columns of table "polls"
+input polls_stddev_pop_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# aggregate stddev_samp on columns
+type polls_stddev_samp_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by stddev_samp() on columns of table "polls"
+input polls_stddev_samp_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# aggregate sum on columns
+type polls_sum_fields {
+  created_by: bigint
+  id: bigint
+  updated_by: bigint
+}
+
+# order by sum() on columns of table "polls"
+input polls_sum_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# update columns of table "polls"
+enum polls_update_column {
+  # column name
+  created_at
+
+  # column name
+  created_by
+
+  # column name
+  expiration_date_time
+
+  # column name
+  foo
+
+  # column name
+  id
+
+  # column name
+  ize
+
+  # column name
+  question
+
+  # column name
+  updated_at
+
+  # column name
+  updated_by
+}
+
+# aggregate var_pop on columns
+type polls_var_pop_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by var_pop() on columns of table "polls"
+input polls_var_pop_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# aggregate var_samp on columns
+type polls_var_samp_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by var_samp() on columns of table "polls"
+input polls_var_samp_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# aggregate variance on columns
+type polls_variance_fields {
+  created_by: Float
+  id: Float
+  updated_by: Float
+}
+
+# order by variance() on columns of table "polls"
+input polls_variance_order_by {
+  created_by: order_by
+  id: order_by
+  updated_by: order_by
+}
+
+# query root
+type query_root {
+  # fetch data from the table: "choices"
+  choices(
+    # distinct select on columns
+    distinct_on: [choices_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [choices_order_by!]
+
+    # filter the rows returned
+    where: choices_bool_exp
+  ): [choices!]!
+
+  # fetch aggregated fields from the table: "choices"
+  choices_aggregate(
+    # distinct select on columns
+    distinct_on: [choices_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [choices_order_by!]
+
+    # filter the rows returned
+    where: choices_bool_exp
+  ): choices_aggregate!
+
+  # fetch data from the table: "choices" using primary key columns
+  choices_by_pk(id: bigint!): choices
+
+  # fetch data from the table: "polls"
+  polls(
+    # distinct select on columns
+    distinct_on: [polls_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [polls_order_by!]
+
+    # filter the rows returned
+    where: polls_bool_exp
+  ): [polls!]!
+
+  # fetch aggregated fields from the table: "polls"
+  polls_aggregate(
+    # distinct select on columns
+    distinct_on: [polls_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [polls_order_by!]
+
+    # filter the rows returned
+    where: polls_bool_exp
+  ): polls_aggregate!
+
+  # fetch data from the table: "polls" using primary key columns
+  polls_by_pk(id: bigint!): polls
+}
+
+# expression to compare columns of type String. All fields are combined with logical 'AND'.
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  _ilike: String
+  _in: [String!]
+  _is_null: Boolean
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  _nilike: String
+  _nin: [String!]
+  _nlike: String
+  _nsimilar: String
+  _similar: String
+}
+
+# subscription root
+type subscription_root {
+  # fetch data from the table: "choices"
+  choices(
+    # distinct select on columns
+    distinct_on: [choices_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [choices_order_by!]
+
+    # filter the rows returned
+    where: choices_bool_exp
+  ): [choices!]!
+
+  # fetch aggregated fields from the table: "choices"
+  choices_aggregate(
+    # distinct select on columns
+    distinct_on: [choices_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [choices_order_by!]
+
+    # filter the rows returned
+    where: choices_bool_exp
+  ): choices_aggregate!
+
+  # fetch data from the table: "choices" using primary key columns
+  choices_by_pk(id: bigint!): choices
+
+  # fetch data from the table: "polls"
+  polls(
+    # distinct select on columns
+    distinct_on: [polls_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [polls_order_by!]
+
+    # filter the rows returned
+    where: polls_bool_exp
+  ): [polls!]!
+
+  # fetch aggregated fields from the table: "polls"
+  polls_aggregate(
+    # distinct select on columns
+    distinct_on: [polls_select_column!]
+
+    # limit the nuber of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [polls_order_by!]
+
+    # filter the rows returned
+    where: polls_bool_exp
+  ): polls_aggregate!
+
+  # fetch data from the table: "polls" using primary key columns
+  polls_by_pk(id: bigint!): polls
+}
+
+scalar timestamp
+
+# expression to compare columns of type timestamp. All fields are combined with logical 'AND'.
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
+}
+
