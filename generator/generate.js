@@ -1289,9 +1289,6 @@ function scaffold(
 ) {
 
   const schema = graphql.buildSchema(definition)
-  //console.log("+++ schema", definition)
-  // console.log("+++ introspectionQuery", graphql.introspectionQuery, getIntrospectionQuery())
-  //const res = graphql.graphqlSync(schema, getIntrospectionQuery())
   const res = graphql.graphqlSync({schema, source: getIntrospectionQuery()})
   if (!res.data)
     throw new Error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
