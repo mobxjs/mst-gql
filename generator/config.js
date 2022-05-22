@@ -17,7 +17,8 @@ exports.defaultConfig = {
   header: undefined,
   useIdentifierNumber: false,
   fieldOverrides: [],
-  dynamicArgs: false
+  dynamicArgs: false,
+  customScalars: []
 }
 
 exports.getConfig = function getConfig() {
@@ -60,7 +61,10 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     fieldOverrides: args["--fieldOverrides"]
       ? parseFieldOverrides(args["--fieldOverrides"])
       : config.fieldOverrides,
-    dynamicArgs: !!args["--dynamicArgs"] || config.dynamicArgs
+    dynamicArgs: !!args["--dynamicArgs"] || config.dynamicArgs,
+    customScalars: args["--customScalars"]
+      ? parseCustomScalars(args["--customScalars"])
+      : config.customScalars
   }
 }
 
@@ -73,6 +77,20 @@ const parseFieldOverrides = (fieldOverrides) => {
 
       if (override.length !== 3)
         throw new Error("--fieldOverrides used with invalid override: " + item)
+
+      return override
+    })
+}
+
+const parseCustomScalars = (fieldOverrides) => {
+  return fieldOverrides
+    .split(",")
+    .map((s) => s.trim())
+    .map((item) => {
+      const override = item.split(":").map((s) => s.trim())
+
+      if (override.length !== 2)
+        throw new Error("--customScalar used with invalid scalar: " + item)
 
       return override
     })

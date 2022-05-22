@@ -14,6 +14,7 @@ const definition = {
   "--outDir": String,
   "--roots": String,
   "--excludes": String,
+  "--customScalars": String,
   "--modelsOnly": Boolean,
   "--force": Boolean,
   "--noReact": Boolean,
@@ -52,7 +53,8 @@ function main() {
     header,
     useIdentifierNumber,
     fieldOverrides,
-    dynamicArgs
+    dynamicArgs,
+    customScalars
   } = mergeConfigs(args, config)
   const separate = !!args["--separate"]
 
@@ -88,7 +90,7 @@ function main() {
     // Tnx https://blog.apollographql.com/three-ways-to-represent-your-graphql-schema-a41f4175100d!
     const text = fs.readFileSync(input, "utf8")
     const schema = graphql.buildSchema(text)
-    const res = graphql.graphqlSync({schema, source: getIntrospectionQuery()})
+    const res = graphql.graphqlSync({ schema, source: getIntrospectionQuery() })
     if (res.data) json = res.data
     else {
       console.error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
@@ -112,6 +114,7 @@ function main() {
     format,
     roots,
     excludes,
+    customScalars.map(([file, name]) => [path.relative(outDir, file), name]),
     new Date().toUTCString(),
     modelsOnly,
     noReact,

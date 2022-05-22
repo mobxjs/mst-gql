@@ -25,6 +25,7 @@ function generate(
   format = "js",
   rootTypes = [],
   excludes = [],
+  customScalars = [],
   generationDate = "a long long time ago...",
   modelsOnly = false,
   noReact = false,
@@ -33,6 +34,7 @@ function generate(
   fieldOverrides = [],
   dynamicArgs = false
 ) {
+  console.log("DS customScalars", customScalars)
   const types = schema.types
 
   excludes.push(...reservedGraphqlNames)
@@ -458,9 +460,21 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
             fieldType.name,
             typeOverride
           )
-          const requiredTypes = ["identifier", "identifierNumber"]
-          const isRequired = requiredTypes.includes(primitiveType)
-          return result(`types.${primitiveType}`, isRequired)
+          if (primitiveType) {
+            const requiredTypes = ["identifier", "identifierNumber"]
+            const isRequired = requiredTypes.includes(primitiveType)
+            return result(`types.${primitiveType}`, isRequired)
+          } else {
+            const scalar = customScalars.find(
+              (scalar) => scalar[1] === fieldType.name
+            )
+            if (scalar) {
+              addImport(scalar[0], scalar[1])
+              return result(scalar[1], false)
+            } else {
+              return result("types.frozen()", false)
+            }
+          }
         case "OBJECT":
           return result(
             handleObjectFieldType(fieldName, fieldType, fieldArgs, isNested)
@@ -1140,7 +1154,7 @@ ${toExport.map((f) => `export * from "./${f}${importPostFix}"`).join("\n")}
       Boolean: "boolean"
     }
     // if (!res[type]) throw new Error("Unknown primitive type: " + type)
-    return res[type] || "frozen()"
+    return res[type] || null
   }
 
   return files
@@ -1311,9 +1325,9 @@ function scaffold(
     useIdentifierNumber: false,
     fieldOverrides: [],
     dynamicArgs: false,
+    customScalars: []
   }
 ) {
-
   const schema = graphql.buildSchema(definition)
   const res = graphql.graphqlSync({schema, source: getIntrospectionQuery()})
   if (!res.data)
@@ -1323,6 +1337,7 @@ function scaffold(
     options.format || "ts",
     options.roots || [],
     options.excludes || [],
+    options.customScalars || [],
     "<during unit test run>",
     options.modelsOnly || false,
     options.noReact || false,
