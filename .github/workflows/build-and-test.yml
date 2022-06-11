@@ -1,0 +1,26 @@
+name: Test
+on:
+  pull_request: {}
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn && yarn build && cd examples/2-scaffolding && yarn install
+
+      - name: Run Tests
+        run: yarn tests
