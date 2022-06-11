@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.17.0
+
+- Passing the `--header` flag multiple times is now supported
+- Download remote schemas using a POST request instead of [Apollo](npmjs.com/package/apollo)
+- Add a centralized logger with colour support, toggleable via `--disableLogColors` flag or equivalent config option
+- Add a debug mode, toggleable by the `--debug` flag or `DEBUG` environment variable
+- Add a `--help` flag and improve the existing help dialog
+- Improve CLI experience when user provides no schema
+- Re-add support for GraphQL 14 and 15
+
 ## 0.16.0
 
 - Upgrade graphql package [#367](https://github.com/mobxjs/mst-gql/pull/367) - [beepsoft](https://github.com/beepsoft)
