@@ -1,4 +1,4 @@
-// ignore a wide range of support files
+# ignore a wide range of support files
 .*
 
 # build files
@@ -6,6 +6,8 @@ dist/
 
 # test files
 __snapshots__
+tests/test-cra.sh
+*.sqlite
 
 # mst-gql generated files
 **/models/index.*
@@ -17,6 +19,13 @@ __snapshots__
 # yarn
 yarn.lock
 yarn-error.log
+
+# images
+*.png
+*.jpg
+*.svg
+*.gif
+*.ico
 
 # etc
 LICENSE
