@@ -1,10 +1,17 @@
 # CHANGELOG
 
+## 0.16.0
+
+- Upgrade graphql package [#367](https://github.com/mobxjs/mst-gql/pull/367) - [beepsoft](https://github.com/beepsoft)
+- Add --dynamicArgs option to generate operation arguments dynamically [#363](https://github.com/mobxjs/mst-gql/pull/363) - [beepsoft](https://github.com/beepsoft)
+- Field param generation fix [#361](https://github.com/mobxjs/mst-gql/pull/361) - [beepsoft](https://github.com/beepsoft)
+- Add failing scaffolding example/test for the problem mentioned in #349 [#360](https://github.com/mobxjs/mst-gql/pull/360) - [beepsoft](https://github.com/beepsoft)
+
 ## 0.15.0
 
 - Fix handling of union of root types. [#348](https://github.com/mobxjs/mst-gql/pull/348) - [smokku](https://github.com/smokku)
 - Introduced support for AbortController in GraphQL HTTP requests [#355](https://github.com/mobxjs/mst-gql/pull/355) - [wtuminski](https://github.com/wtuminski)
-- Added support for field parameters [#349](https://github.com/mobxjs/mst-gql/pull/349) - [smokku](https://github.com/smokku) 
+- Added support for field parameters [#349](https://github.com/mobxjs/mst-gql/pull/349) - [smokku](https://github.com/smokku)
 - Package version upgrades, fixed TS errors, other bugs [#337](https://github.com/mobxjs/mst-gql/pull/337) - [jkolyer](https://github.com/jkolyer)
 
 ## 0.14.1
