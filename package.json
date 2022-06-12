@@ -41,7 +41,10 @@
     "examples/6-scaffolding-ts-hasura"
   ],
   "scripts": {
-    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start && cd ../6-scaffolding-ts-hasura && yarn && yarn start && cd ../../tests && ./test-cra.sh && rm -rf cra-test",
+    "test": "jest test && yarn test:example-2 && yarn test:example-6 && yarn test:cra",
+    "test:example-2": "cd examples/2-scaffolding && yarn && yarn start",
+    "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn && yarn start",
+    "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
