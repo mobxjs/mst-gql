@@ -83,4 +83,8 @@ tmp_schema.json
 # Parcel cache
 .parcel-cache
 
+# create-react-app test folder
+tests/cra-test
+
+# IntelliJ IDEA project files
 .idea
