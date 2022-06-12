@@ -23,4 +23,4 @@ jobs:
         run: yarn install --immutable
 
       - name: Run Tests
-        run: yarn tests
+        run: yarn test
