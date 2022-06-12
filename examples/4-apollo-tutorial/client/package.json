@@ -5,12 +5,12 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "emotion": "^10.0.6",
-    "mst-gql": "latest",
+    "mst-gql": "portal:../../../",
     "polished": "^2.3.3",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "react-emotion": "^9.2.12",
-    "react-scripts": "2.1.3"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "yarn scaffold && wait-port 4000 && react-scripts start",
@@ -29,14 +29,11 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "wait-port": "^0.2.9",
     "jest-dom": "^3.0.0",
-    "mobx": "^5.9.4",
-    "mobx-react": "^6.0.0-rc.4",
-    "mobx-state-tree": "^3.14.0",
-    "react-testing-library": "^5.4.4"
-  },
-  "relativeDependencies": {
-    "mst-gql": "../../../"
+    "mobx": "^6.6.0",
+    "mobx-react": "^7.5.0",
+    "mobx-state-tree": "^5.1.5",
+    "react-testing-library": "^5.4.4",
+    "wait-port": "^0.2.9"
   }
 }

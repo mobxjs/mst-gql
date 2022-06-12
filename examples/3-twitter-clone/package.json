@@ -9,36 +9,32 @@
     "scaffold": "yarn scaffold:server && yarn scaffold:client",
     "scaffold:client": "node ../../generator/mst-gql-scaffold.js --roots Message,User --outDir src/app/models/ --format ts src/server/schema.graphql",
     "scaffold:server": "node ../../generator/mst-gql-scaffold.js --roots Message,User --outDir src/server/models/ --format ts --modelsOnly src/server/schema.graphql",
-    "start": "run-p start:server start:client",
-    "postinstall": "../../node_modules/.bin/relative-deps"
+    "start": "run-p start:server start:client"
   },
   "dependencies": {
-    "@types/jest": "^24.0.16",
-    "@types/react": "^16.8.24",
-    "@types/react-dom": "^16.8.5",
     "apollo-server-express": "^2.18.0",
-    "arg": "^4.1.1",
+    "arg": "^5.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fakergem": "^1.0.3",
     "graphql-playground-middleware-express": "^1.7.21",
     "isomorphic-fetch": "^2.2.1",
-    "mobx": "5.13.0",
+    "mobx": "^6.6.0",
     "mobx-react-lite": "^1.4.1",
-    "mobx-state-tree": "^3.14.1",
-    "mst-gql": "latest",
+    "mobx-state-tree": "^5.1.5",
+    "mst-gql": "portal:../../",
     "node-uuid": "^1.4.8",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "ts-node-dev": "^1.0.0-pre.40"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
+    "@babel/core": "^7.14.3",
+    "@types/jest": "^27.5.2",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
     "npm-run-all": "^4.1.5",
-    "parcel": "^1.12.4",
-    "typescript": "^4.0.3"
-  },
-  "relativeDependencies": {
-    "mst-gql": "../../"
+    "parcel": "^2.6.0",
+    "typescript": "^4.7.3"
   }
 }
