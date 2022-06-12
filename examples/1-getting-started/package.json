@@ -13,9 +13,6 @@
     "type-check:watch": "yarn type-check -- --watch"
   },
   "dependencies": {
-    "@types/jest": "^24.0.16",
-    "@types/react": "^16.8.24",
-    "@types/react-dom": "^16.8.5",
     "apollo-server-express": "^2.8.1",
     "arg": "^4.1.1",
     "cors": "^2.8.5",
@@ -33,7 +30,7 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
-    "wait-port": "^0.2.9",
+    "parcel": "^2.6.0",
     "@babel/core": "^7.6.4",
     "npm-run-all": "^4.1.5",
     "parcel": "^1.12.4",
