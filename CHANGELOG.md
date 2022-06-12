@@ -9,6 +9,8 @@
 - Add a `--help` flag and improve the existing help dialog
 - Improve CLI experience when user provides no schema
 - Re-add support for GraphQL 14 and 15
+- Upgrade to React 18
+- Switch CI from CircleCI to GitHub Actions
 
 ## 0.16.0
 
