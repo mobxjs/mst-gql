@@ -40,7 +40,7 @@
     "tests/cra-test/cra-app"
   ],
   "scripts": {
-    "test": "jest test && yarn test:example-2 && yarn test:example-6 && yarn test:cra",
+    "test": "jest test && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
     "test:example-2": "cd examples/2-scaffolding && yarn && yarn start",
     "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn && yarn start",
     "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
@@ -62,6 +62,7 @@
     "cosmiconfig": "^7.0.1",
     "fast-json-stable-stringify": "^2.1.0",
     "lodash": "^4.17.21",
+    "node-fetch": "^2.2.1",
     "pluralize": "^8.0.0",
     "throttle-debounce": "^5.0.0"
   },
