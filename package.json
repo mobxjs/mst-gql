@@ -1,34 +1,24 @@
 {
   "name": "mst-gql",
-  "version": "0.17.0",
-  "packageManager": "yarn@3.2.1",
   "description": "Bindings for mobx-state-tree and GraphQL",
-  "author": "Michel Weststrate",
-  "keywords": [
-    "mobx-state-tree",
-    "graphql"
-  ],
-  "homepage": "https://github.com/mobxjs/mst-gql#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mobxjs/mst-gql.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mobxjs/mst-gql/issues"
-  },
   "license": "MIT",
-  "main": "dist/mst-gql.js",
-  "source": "src/mst-gql.ts",
-  "umd:main": "dist/mst-gql.umd.js",
-  "module": "dist/mst-gql.module.js",
-  "jsnext:main": "dist/mst-gql.module.js",
-  "react-native": "dist/mst-gql.module.js",
-  "types": "./dist/mst-gql.d.ts",
-  "bin": "./generator/mst-gql-scaffold.js",
-  "files": [
-    "dist",
-    "generator"
-  ],
+  "version": "0.17.0",
+  "author": "Michel Weststrate",
+  "homepage": "https://github.com/mobxjs/mst-gql#readme",
+  "bugs": "https://github.com/mobxjs/mst-gql/issues",
+  "scripts": {
+    "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
+    "fix-mismatches": "yarn dlx syncpack fix-mismatches --prod --dev",
+    "format": "prettier --write '**/*'",
+    "list-mismatches": "yarn dlx syncpack list-mismatches",
+    "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
+    "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:example-2": "cd examples/2-scaffolding && yarn start",
+    "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn start",
+    "test:mst-gql": "jest test",
+    "watch": "jest test --watch"
+  },
   "workspaces": [
     "examples/1-getting-started",
     "examples/2-scaffolding",
@@ -39,23 +29,6 @@
     "examples/6-scaffolding-ts-hasura",
     "tests/cra-test/cra-app"
   ],
-  "scripts": {
-    "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
-    "test:mst-gql": "jest test",
-    "test:example-2": "cd examples/2-scaffolding && yarn start",
-    "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn start",
-    "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-    "watch": "jest test --watch",
-    "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
-    "format": "prettier --write '**/*'",
-    "list-mismatches": "yarn dlx syncpack list-mismatches",
-    "fix-mismatches": "yarn dlx syncpack fix-mismatches --prod --dev"
-  },
-  "syncpack": {
-    "filter": "^(?!(mst-gql)).*",
-    "resolutions": true
-  },
   "dependencies": {
     "ansi-colors": "^4.1.3",
     "arg": "^5.0.2",
@@ -109,5 +82,43 @@
   },
   "resolutions": {
     "react-scripts@5.0.1": "patch:react-scripts@npm:5.0.1#.yarn/patches/react-scripts-npm-5.0.1-d06bd2d5ad.patch"
-  }
+  },
+  "bin": "./generator/mst-gql-scaffold.js",
+  "files": [
+    "dist",
+    "generator"
+  ],
+  "jsnext:main": "dist/mst-gql.module.js",
+  "keywords": [
+    "graphql",
+    "mobx-state-tree"
+  ],
+  "main": "dist/mst-gql.js",
+  "module": "dist/mst-gql.module.js",
+  "packageManager": "yarn@3.2.1",
+  "react-native": "dist/mst-gql.module.js",
+  "repository": "mobxjs/mst-gql.git",
+  "source": "src/mst-gql.ts",
+  "syncpack": {
+    "filter": "^(?!(mst-gql)).*",
+    "resolutions": true,
+    "sortFirst": [
+      "name",
+      "description",
+      "license",
+      "version",
+      "author",
+      "contributors",
+      "homepage",
+      "bugs",
+      "scripts",
+      "workspaces",
+      "dependencies",
+      "devDependencies",
+      "peerDependencies",
+      "resolutions"
+    ]
+  },
+  "types": "./dist/mst-gql.d.ts",
+  "umd:main": "dist/mst-gql.umd.js"
 }

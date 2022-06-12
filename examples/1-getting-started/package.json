@@ -1,13 +1,12 @@
 {
   "name": "@mst-gql/getting-started",
-  "version": "1.0.0",
-  "private": true,
   "license": "MIT",
+  "version": "1.0.0",
   "scripts": {
-    "start:server": "node ./src/server/index.js",
-    "start:client": "wait-port 3001 && yarn scaffold && parcel serve -p 3000 public/index.html",
     "scaffold": "node ../../generator/mst-gql-scaffold.js --roots Todo --outDir src/app/models/ --format ts http://localhost:3001/graphql",
     "start": "run-p start:server start:client",
+    "start:client": "wait-port 3001 && yarn scaffold && parcel serve -p 3000 public/index.html",
+    "start:server": "node ./src/server/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "yarn type-check -- --watch"
   },
@@ -37,5 +36,6 @@
     "parcel": "^2.6.0",
     "typescript": "^4.7.3",
     "wait-port": "^0.2.9"
-  }
+  },
+  "private": true
 }

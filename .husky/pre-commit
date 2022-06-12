@@ -1,1 +1,2 @@
 yarn pretty-quick --staged
+yarn dlx syncpack format

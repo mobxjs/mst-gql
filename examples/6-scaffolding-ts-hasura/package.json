@@ -1,8 +1,8 @@
 {
   "name": "@mst-gql/scaffold-test-hasura",
   "scripts": {
-    "scaffold": "../../generator/mst-gql-scaffold.js",
     "build": "tsc",
+    "scaffold": "../../generator/mst-gql-scaffold.js",
     "start": "yarn scaffold && yarn build"
   },
   "dependencies": {

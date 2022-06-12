@@ -1,9 +1,9 @@
 {
   "name": "@mst-gql/scaffold-test-2",
   "scripts": {
+    "build": "tsc",
     "download": "yarn dlx gql-sdl https://graphql-pokemon.now.sh/ --output graphql-schema.gql",
     "scaffold": "../../generator/mst-gql-scaffold.js",
-    "build": "tsc",
     "start": "yarn scaffold && yarn build"
   },
   "dependencies": {
