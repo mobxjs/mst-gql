@@ -22,5 +22,14 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
-      - name: Run Tests
-        run: yarn test
+      - name: Test mst-gql
+        run: yarn test:mst-gql
+
+      - name: Test Example 2 (Scaffolding)
+        run: yarn test:example-2
+
+      - name: Test Example 6 (Hasura)
+        run: yarn test:example-6
+
+      - name: Test CRA (Create React App)
+        run: yarn test:cra

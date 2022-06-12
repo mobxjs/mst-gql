@@ -40,7 +40,8 @@
     "tests/cra-test/cra-app"
   ],
   "scripts": {
-    "test": "jest test && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
+    "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
+    "test:mst-gql": "jest test",
     "test:example-2": "cd examples/2-scaffolding && yarn && yarn start",
     "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn && yarn start",
     "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
