@@ -52,6 +52,13 @@ typings/
 *.tgz
 
 # Yarn Integrity file
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 .yarn-integrity
 
 # dotenv environment variables file
@@ -72,3 +79,8 @@ tmp_schema.json
 
 .DS_Store
 .cache
+
+# Parcel cache
+.parcel-cache
+
+.idea

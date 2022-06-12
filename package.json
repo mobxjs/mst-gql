@@ -1,6 +1,7 @@
 {
   "name": "mst-gql",
   "version": "0.17.0",
+  "packageManager": "yarn@3.2.1",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "author": "Michel Weststrate",
   "keywords": [
@@ -29,6 +30,15 @@
   "files": [
     "dist",
     "generator"
+  ],
+  "workspaces": [
+    "examples/1-getting-started",
+    "examples/2-scaffolding",
+    "examples/3-twitter-clone",
+    "examples/4-apollo-tutorial/client",
+    "examples/4-apollo-tutorial/server",
+    "examples/5-nextjs",
+    "examples/6-scaffolding-ts-hasura"
   ],
   "scripts": {
     "test": "jest test && cd examples/2-scaffolding && yarn && yarn start && cd ../6-scaffolding-ts-hasura && yarn && yarn start && cd ../../tests && ./test-cra.sh && rm -rf cra-test",
@@ -78,6 +88,7 @@
     "mobx": "^6.6.0",
     "mobx-react": "^7.5.0",
     "mobx-state-tree": "^5.1.5",
+    "node-gyp": "^9.0.0",
     "prettier": "^2.6.2",
     "pretty-quick": "^3.1.3",
     "react": "^17.0.2",
