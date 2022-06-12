@@ -20,7 +20,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn && yarn build && cd examples/2-scaffolding && yarn install
+        run: yarn install --immutable
 
       - name: Run Tests
         run: yarn tests
