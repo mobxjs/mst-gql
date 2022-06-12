@@ -24,9 +24,7 @@
   "jsnext:main": "dist/mst-gql.module.js",
   "react-native": "dist/mst-gql.module.js",
   "types": "./dist/mst-gql.d.ts",
-  "bin": {
-    "mst-gql": "./generator/mst-gql-scaffold.js"
-  },
+  "bin": "./generator/mst-gql-scaffold.js",
   "files": [
     "dist",
     "generator"
