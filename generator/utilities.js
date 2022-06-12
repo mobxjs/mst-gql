@@ -11,7 +11,11 @@ async function download_schema_json(endpoint, query, headers) {
 
     const res = await fetch(url, {
       method: "POST",
-      headers,
+      redirect: "follow",
+      headers: {
+        "Content-Type": "application/json",
+        ...headers
+      },
       body: JSON.stringify({ query })
     })
     const { data, errors } = await res.json()
