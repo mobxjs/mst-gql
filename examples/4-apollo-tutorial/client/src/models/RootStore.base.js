@@ -19,6 +19,7 @@ import { userModelPrimitives, UserModelSelector } from "./UserModel.base"
 
 
 
+
 /**
 * Store, managing, among others, all the objects received through graphQL
 */
@@ -45,5 +46,8 @@ export const RootStoreBase = MSTGQLStore
       return self.query(`query me { me {
         ${typeof resultSelector === "function" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }`, variables, options)
+    },
+    mutateLogin(variables, optimisticUpdate) {
+      return self.mutate(`mutation login($email: String) { login(email: $email) }`, variables, optimisticUpdate)
     },
   }))
