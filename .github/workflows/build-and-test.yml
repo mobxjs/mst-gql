@@ -22,6 +22,9 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
+      - name: Build mst-gql
+        run: yarn build
+
       - name: Test mst-gql
         run: yarn test:mst-gql
 
