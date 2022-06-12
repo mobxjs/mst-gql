@@ -46,7 +46,13 @@
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
-    "format": "prettier --write '**/*'"
+    "format": "prettier --write '**/*'",
+    "list-mismatches": "yarn dlx syncpack list-mismatches",
+    "fix-mismatches": "yarn dlx syncpack fix-mismatches --prod --dev"
+  },
+  "syncpack": {
+    "filter": "^(?!(mst-gql)).*",
+    "resolutions": true
   },
   "dependencies": {
     "ansi-colors": "^4.1.3",
