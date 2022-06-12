@@ -1,5 +1,5 @@
 {
-  "name": "@mst-gql/scaffold-test",
+  "name": "@mst-gql/scaffold-test-2",
   "scripts": {
     "download": "yarn dlx gql-sdl https://graphql-pokemon.now.sh/ --output graphql-schema.gql",
     "scaffold": "../../generator/mst-gql-scaffold.js",

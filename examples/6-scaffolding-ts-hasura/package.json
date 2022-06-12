@@ -1,5 +1,5 @@
 {
-  "name": "@mst-gql/scaffold-test",
+  "name": "@mst-gql/scaffold-test-hasura",
   "scripts": {
     "postinstall": "../../node_modules/.bin/relative-deps",
     "scaffold": "../../generator/mst-gql-scaffold.js",
