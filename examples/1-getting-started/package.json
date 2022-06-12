@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start:server": "node ./src/server/index.js",
-    "start:client": "sleep 1 && yarn scaffold && parcel serve -p 3000 public/index.html",
+    "start:client": "wait-port 3001 && yarn scaffold && parcel serve -p 3000 public/index.html",
     "scaffold": "node ../../generator/mst-gql-scaffold.js --roots Todo --outDir src/app/models/ --format ts http://localhost:3001/graphql",
     "postinstall": "../../node_modules/.bin/relative-deps",
     "start": "run-p start:server start:client",
@@ -33,6 +33,7 @@
     "react-dom": "^16.8.6"
   },
   "devDependencies": {
+    "wait-port": "^0.2.9",
     "@babel/core": "^7.6.4",
     "npm-run-all": "^4.1.5",
     "parcel": "^1.12.4",
