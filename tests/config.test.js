@@ -2,7 +2,7 @@
 
 const { mergeConfigs, defaultConfig } = require("../generator/config")
 
-const testArgsWithoutHeader = {
+const defaultArgs = {
   _: ["file_input"],
   "--format": undefined,
   "--outDir": undefined,
@@ -13,63 +13,90 @@ const testArgsWithoutHeader = {
   "--noReact": undefined,
   "--separate": undefined,
   "--dontRenameModels": undefined,
-  "--header": undefined
+  "--header": undefined,
+  "--help": undefined,
+  "--debug": undefined
 }
 
-const testArgsWithHeader = {
-  ...testArgsWithoutHeader,
-  "--header": "X-Hasura-Admin-Secret:supersecret"
+const argsWithHeader = {
+  ...defaultArgs,
+  "--header": ["X-Hasura-Admin-Secret:secret_from_args"]
+}
+
+const argsWithMultipleHeaders = {
+  ...argsWithHeader,
+  "--header": [
+    "X-Hasura-Admin-Secret:secret_from_args",
+    "X-Hasura-Role:superuser"
+  ]
 }
 
 const configWithHeader = {
+  ...defaultConfig,
   input: "http://localhost:8080/v1/graphql",
   format: "ts",
   outDir: "src/models",
   roots: ["todos", "otherthings"],
   header: {
-    "x-hasura-admin-secret": "supersecret"
+    "x-hasura-admin-secret": "secret_from_config"
   }
 }
 
-const testConfigMultipleHeaders = {
+const configWithMultipleHeaders = {
   ...configWithHeader,
   header: {
-    "x-hasura-admin-secret": "supersecret",
+    "x-hasura-admin-secret": "secret_from_config",
     "x-hasura-role": "superuser"
   }
 }
 
-test("header is used when passed as argument", () => {
-  const results = mergeConfigs(testArgsWithHeader, defaultConfig)
+test("CLI supports a single usage of the --header argument", () => {
+  const results = mergeConfigs(argsWithHeader, defaultConfig)
 
-  expect(results.header).toBe(testArgsWithHeader["--header"])
+  expect(results.header).toStrictEqual({
+    "x-hasura-admin-secret": "secret_from_args"
+  })
 })
 
-test("header is used when passed as argument even if config is passed", () => {
-  const results = mergeConfigs(testArgsWithHeader, configWithHeader)
+test("CLI supports multiple usages of the --header argument", () => {
+  const results = mergeConfigs(argsWithMultipleHeaders, defaultConfig)
 
-  expect(results.header).toBe(testArgsWithHeader["--header"])
+  expect(results.header).toStrictEqual({
+    "x-hasura-admin-secret": "secret_from_args",
+    "x-hasura-role": "superuser"
+  })
 })
 
-test("config is used for header", () => {
-  const results = mergeConfigs(testArgsWithoutHeader, configWithHeader)
+test("config supports specifying a single header", () => {
+  const results = mergeConfigs(defaultArgs, configWithHeader)
 
-  expect(results.header).toBe("x-hasura-admin-secret:supersecret")
+  expect(results.header).toStrictEqual({
+    "x-hasura-admin-secret": "secret_from_config"
+  })
 })
 
-test("config is used for multiple headers", () => {
-  const results = mergeConfigs(testArgsWithoutHeader, testConfigMultipleHeaders)
+test("config supports specifying multiple headers", () => {
+  const results = mergeConfigs(defaultArgs, configWithMultipleHeaders)
 
-  expect(results.header).toBe(
-    "x-hasura-admin-secret:supersecret --header=x-hasura-role:superuser"
-  )
+  expect(results.header).toStrictEqual({
+    "x-hasura-admin-secret": "secret_from_config",
+    "x-hasura-role": "superuser"
+  })
+})
+
+test("the --header argument takes priority over the config file", () => {
+  const results = mergeConfigs(argsWithHeader, configWithHeader)
+
+  expect(results.header).toStrictEqual({
+    "x-hasura-admin-secret": "secret_from_args"
+  })
 })
 
 test("fieldOverrides outputs items with valid signature", () => {
   const fieldOverridesArgs = {
     "--fieldOverrides": "id:uuid:identifier, id:bigint:identifierNumber"
   }
-  const args = { ...testArgsWithoutHeader, ...fieldOverridesArgs }
+  const args = { ...defaultArgs, ...fieldOverridesArgs }
   const config = {
     input: "http://localhost:8080/v1/graphql",
     format: "ts",
@@ -87,7 +114,7 @@ test("fieldOverrides outputs items with valid signature", () => {
 
 test("throws with invalid fieldOverrides format", () => {
   const fieldOverridesArgs = { "--fieldOverrides": "id:uuid, newId" }
-  const args = { ...testArgsWithoutHeader, ...fieldOverridesArgs }
+  const args = { ...defaultArgs, ...fieldOverridesArgs }
   const config = {
     input: "http://localhost:8080/v1/graphql",
     format: "ts",

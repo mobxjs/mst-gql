@@ -284,7 +284,7 @@ Complex children can be selected by calling the field as function, and provide a
 
 ```javascript
 // prettier-ignore
-;msg => msg
+msg => msg
   .timestamp
   .text
   .user(user => user.name.avatar)

@@ -56,12 +56,12 @@ describe("todos.graphql tests", () => {
     }
   }
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const files = scaffold(
       fs.readFileSync(__dirname + "/todos.graphql", "utf8"),
       { format: "js", roots: ["Todo"] }
     )
-    writeFiles(__dirname + "/models", files, "js", false)
+    await writeFiles(__dirname + "/models", files, "js", false)
     models = require("./models")
   })
 

@@ -1,44 +1,41 @@
 {
   "name": "@mst-gql/getting-started",
-  "version": "1.0.0",
-  "private": true,
   "license": "MIT",
+  "version": "1.0.0",
   "scripts": {
-    "start:server": "node ./src/server/index.js",
-    "start:client": "sleep 1 && yarn scaffold && parcel serve -p 3000 public/index.html",
     "scaffold": "node ../../generator/mst-gql-scaffold.js --roots Todo --outDir src/app/models/ --format ts http://localhost:3001/graphql",
-    "postinstall": "../../node_modules/.bin/relative-deps",
     "start": "run-p start:server start:client",
+    "start:client": "wait-port 3001 && yarn scaffold && parcel serve -p 3000 public/index.html",
+    "start:server": "node ./src/server/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "yarn type-check -- --watch"
   },
   "dependencies": {
-    "@types/jest": "^24.0.16",
-    "@types/react": "^16.8.24",
-    "@types/react-dom": "^16.8.5",
-    "apollo-server-express": "^2.8.1",
-    "arg": "^4.1.1",
+    "apollo-server-express": "^2.18.0",
+    "arg": "^5.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "graphql": "^14.6.0",
-    "graphql-playground-middleware-express": "^1.7.12",
-    "graphql-tag": "^2.10.1",
+    "graphql": "^16.5.0",
+    "graphql-playground-middleware-express": "^1.7.21",
+    "graphql-tag": "^2.12.6",
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^24.8.0",
-    "mobx": "^5.13.0",
-    "mobx-react": "^6.1.1",
-    "mobx-state-tree": "^3.14.1",
-    "mst-gql": "latest",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "jest": "^27.0.6",
+    "mobx": "^6.6.0",
+    "mobx-react": "^7.5.0",
+    "mobx-state-tree": "^5.1.5",
+    "mst-gql": "portal:../../",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
+    "@babel/core": "^7.14.3",
+    "@types/jest": "^27.5.2",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
     "npm-run-all": "^4.1.5",
-    "parcel": "^1.12.4",
-    "typescript": "^3.4.5"
+    "parcel": "^2.6.0",
+    "typescript": "^4.7.3",
+    "wait-port": "^0.2.9"
   },
-  "relativeDependencies": {
-    "mst-gql": "../../"
-  }
+  "private": true
 }

@@ -1,25 +1,21 @@
 {
-  "name": "@mst-gql/scaffold-test",
+  "name": "@mst-gql/scaffold-test-hasura",
   "scripts": {
-    "postinstall": "../../node_modules/.bin/relative-deps",
-    "scaffold": "../../generator/mst-gql-scaffold.js",
     "build": "tsc",
+    "scaffold": "../../generator/mst-gql-scaffold.js",
     "start": "yarn scaffold && yarn build"
   },
   "dependencies": {
-    "mobx": "^6.5.0",
-    "mobx-state-tree": "^5.1.3",
-    "mst-gql": "latest",
-    "graphql-request": "^4.2.0"
+    "graphql-request": "^4.3.0",
+    "mobx": "^6.6.0",
+    "mobx-state-tree": "^5.1.5",
+    "mst-gql": "portal:../../"
   },
   "devDependencies": {
-    "@types/react": "^16.8.18",
-    "@types/react-dom": "^16.8.4",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "typescript": "^4.6.3"
-  },
-  "relativeDependencies": {
-    "mst-gql": "../../"
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "typescript": "^4.7.3"
   }
 }

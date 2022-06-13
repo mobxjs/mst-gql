@@ -9,6 +9,7 @@ import { TodoModel, TodoModelType } from "./TodoModel"
 import { todoModelPrimitives, TodoModelSelector } from "./TodoModel.base"
 
 
+
 export type CreateTodoInput = {
   id: string
   text: string
