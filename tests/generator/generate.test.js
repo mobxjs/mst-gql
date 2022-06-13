@@ -494,6 +494,7 @@ test("use identifierNumber as ID with useIdentifierNumber=true", () => {
 const fieldOverridesSchema = `
   scalar uuid
   scalar bigint
+  scalar Date
 
   type User {
     id: bigint!
@@ -507,6 +508,13 @@ const fieldOverridesSchema = `
     me: User,
     book: Book
   }
+
+  type Message {
+    id: ID!
+    text: String!
+    timestamp: Date!
+  }
+
 `
 
 test("overrides mst type with matching name and gql type using fieldOverrides", () => {
@@ -514,7 +522,8 @@ test("overrides mst type with matching name and gql type using fieldOverrides", 
     roots: ["User"],
     fieldOverrides: [
       ["id", "uuid", "identifier"],
-      ["User.id", "bigint", "identifierNumber"]
+      ["User.id", "bigint", "identifierNumber"],
+      ["*", "Date", "DateScalar", "../scalars"],
     ]
   })
 

@@ -67,7 +67,7 @@ test("config is used for multiple headers", () => {
 
 test("fieldOverrides outputs items with valid signature", () => {
   const fieldOverridesArgs = {
-    "--fieldOverrides": "id:uuid:identifier, id:bigint:identifierNumber"
+    "--fieldOverrides": "id:uuid:identifier, id:bigint:identifierNumber, *:Date:Date:../scalars"
   }
   const args = { ...testArgsWithoutHeader, ...fieldOverridesArgs }
   const config = {
@@ -81,7 +81,8 @@ test("fieldOverrides outputs items with valid signature", () => {
 
   expect(results.fieldOverrides).toEqual([
     ["id", "uuid", "identifier"],
-    ["id", "bigint", "identifierNumber"]
+    ["id", "bigint", "identifierNumber"],
+    ["*", "Date", "Date", "../scalars"],
   ])
 })
 
