@@ -5,7 +5,7 @@ const LOGGER = {
     console.log(c.green(message))
   },
   debug: (message) => {
-    if (!process.env.DEBUG) return
+    if (!process.env.DEBUG || process.env.DEBUG === "false") return
     console.debug(c.blue(message))
   },
   warning: (message) => {

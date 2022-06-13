@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.17.1
+
+- Add a fix for debug mode turning on when process.env.DEBUG is a string
+
 ## 0.17.0
 
 - Passing the `--header` flag multiple times is now supported
