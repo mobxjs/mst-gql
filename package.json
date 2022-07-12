@@ -1,6 +1,6 @@
 {
   "name": "mst-gql",
-  "version": "0.16.0",
+  "version": "0.15.0",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "author": "Michel Weststrate",
   "keywords": [
@@ -31,7 +31,7 @@
     "generator"
   ],
   "scripts": {
-    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start && cd ../6-scaffolding-ts-hasura && yarn && yarn start && cd ../../tests && ./test-cra.sh && rm -rf cra-test",
+    "test": "jest test && cd examples/2-scaffolding && yarn && yarn start",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "watch": "jest test --watch",
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
@@ -48,8 +48,9 @@
     "camelcase": "^6.2.0",
     "cosmiconfig": "^7.0.0",
     "fast-json-stable-stringify": "^2.1.0",
-    "graphql": "^16.3.0",
-    "graphql-request": "^4.2.0",
+    "graphql": "14.6.0",
+    "graphql-request": "^4.0.0",
+    "graphql-ws": "^5.9.1",
     "lodash": "^4.17.21",
     "pluralize": "^8.0.0",
     "throttle-debounce": "^3.0.1"
@@ -74,9 +75,9 @@
     "husky": "^6.0.0",
     "jest": "^27.0.1",
     "microbundle": "^0.13.1",
-    "mobx": "^6.1.0",
-    "mobx-react": "^7.2.0",
-    "mobx-state-tree": "^5.0.1",
+    "mobx": "^6.6.0",
+    "mobx-react": "^7.3.0",
+    "mobx-state-tree": "^5.1.3",
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "react": "^17.0.2",
@@ -86,10 +87,10 @@
     "typescript": "^4.3.2"
   },
   "peerDependencies": {
-    "mobx": "^6.3.2",
-    "mobx-state-tree": "^5.0.1"
+    "mobx": "^6.6.0",
+    "mobx-state-tree": "^5.1.3"
   },
   "resolutions": {
-    "graphql": "^16.3.0"
+    "graphql": "15.8.0"
   }
 }
