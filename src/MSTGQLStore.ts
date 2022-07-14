@@ -147,7 +147,7 @@ export const MSTGQLStore = types
          variables?: any,
          onData?: (item: T) => void,
          onError: (error: Error) => void = (error) => {
-            throw error
+            console.error('MSTGQLStore subscribe', error);
          }
       ): () => void {
          let cleanup: () => void;
@@ -156,20 +156,23 @@ export const MSTGQLStore = types
                .subscribe(
                   {
                      query: query ? query.toString() : '',
+                     variables: variables,
                   },
                   {
                      next: (data) => {
-                        (self as any).__runInStoreContext(() => {
-                           // CABDEBUG
-                           console.log('DATA', JSON.stringify(data));
-                           const res = (self as any).merge(getFirstValue(data))
-                           if (onData) onData(res)
-                           return res
-                        })
+                        if (data.data) {
+                           (self as any).__runInStoreContext(() => {
+                              const res = (self as any).merge(getFirstValue(data.data))
+                              if (onData) onData(res)
+                              return res
+                           })
+                        }
+                        else {
+                           onError(new Error(JSON.stringify(data)))
+                        }
                      },
-                     // error: (error) => { onError(new Error(JSON.stringify(error))) },
-                     error: (error) => { console.error('graphqlWsClient subscribe error', error) },
-                     complete: () => { console.log('graphqlWsClient complete') },
+                     error: (error) => { onError(new Error((error as any).toString())) },
+                     complete: () => { console.log('graphqlWsClient completed', JSON.stringify(query)) },
                   },
                )
          }
