@@ -9,7 +9,7 @@ import {
 } from "mobx-state-tree"
 import pluralize from "pluralize"
 import { SubscriptionClient } from "subscriptions-transport-ws"
-import { HttpClientOptions } from "./createHttpClient"
+import { Client as GraphqlClient } from "graphql-ws"
 
 import { deflateHelper } from "./deflateHelper"
 import { mergeHelper } from "./mergeHelper"
@@ -42,22 +42,26 @@ export const MSTGQLStore = types
       __afterInit: boolean
       gqlHttpClient: RequestHandler
       gqlWsClient: SubscriptionClient
+      graphqlWsClient: GraphqlClient
     } => {
       const {
         ssr = false,
         gqlHttpClient,
-        gqlWsClient
+        gqlWsClient,
+        graphqlWsClient
       }: {
         ssr: boolean
         gqlHttpClient: RequestHandler
         gqlWsClient: SubscriptionClient
+        graphqlWsClient: GraphqlClient
       } = getEnv(self)
       return {
         ssr,
         gqlHttpClient,
         gqlWsClient,
         __promises: new Map(),
-        __afterInit: false
+        __afterInit: false,
+        graphqlWsClient
       }
     }
   )
@@ -139,32 +143,64 @@ export const MSTGQLStore = types
 
     // N.b: the T is ignored, but it does simplify code generation
     function subscribe<T = any>(
-      query: string | DocumentNode,
+      query: string | DocumentNode | undefined,
       variables?: any,
       onData?: (item: T) => void,
       onError: (error: Error) => void = (error) => {
-        throw error
+        console.error("MSTGQLStore subscribe", error)
       }
     ): () => void {
-      if (!self.gqlWsClient) throw new Error("No WS client available")
-      const sub = self.gqlWsClient
-        .request({
-          query,
-          variables
-        })
-        .subscribe({
-          next(data) {
-            if (data.errors) {
-              return onError(new Error(JSON.stringify(data.errors)))
+      let cleanup: () => void
+      if (self.graphqlWsClient) {
+        cleanup = self.graphqlWsClient.subscribe(
+          {
+            query: query ? query.toString() : "",
+            variables: variables
+          },
+          {
+            next: (data) => {
+              if (data.data) {
+                ;(self as any).__runInStoreContext(() => {
+                  const res = (self as any).merge(getFirstValue(data.data))
+                  if (onData) onData(res)
+                  return res
+                })
+              } else {
+                onError(new Error(JSON.stringify(data)))
+              }
+            },
+            error: (error) => {
+              onError(new Error((error as any).toString()))
+            },
+            complete: () => {
+              console.log("graphqlWsClient completed", JSON.stringify(query))
             }
-            ;(self as any).__runInStoreContext(() => {
-              const res = (self as any).merge(getFirstValue(data.data))
-              if (onData) onData(res)
-              return res
-            })
           }
-        })
-      return () => sub.unsubscribe()
+        )
+      } else {
+        if (!self.gqlWsClient) throw new Error("No WS client available")
+        const sub = self.gqlWsClient
+          .request({
+            query: query ? query.toString() : "",
+            variables
+          })
+          .subscribe({
+            next(data) {
+              if (data.errors) {
+                return onError(new Error(JSON.stringify(data.errors)))
+              }
+              ;(self as any).__runInStoreContext(() => {
+                const res = (self as any).merge(getFirstValue(data.data))
+                if (onData) onData(res)
+                return res
+              })
+            }
+          })
+        cleanup = () => {
+          sub.unsubscribe()
+        }
+      }
+      return cleanup
     }
 
     function setHttpClient(value: RequestHandler) {
@@ -173,6 +209,10 @@ export const MSTGQLStore = types
 
     function setWsClient(value: SubscriptionClient) {
       self.gqlWsClient = value
+    }
+
+    function setGraphqlWsClient(value: GraphqlClient) {
+      self.graphqlWsClient = value
     }
 
     // exposed actions
@@ -185,6 +225,7 @@ export const MSTGQLStore = types
       rawRequest,
       setHttpClient,
       setWsClient,
+      setGraphqlWsClient,
       __pushPromise(promise: Promise<{}>, queryKey: string) {
         self.__promises.set(queryKey, promise)
         const onSettled = () => self.__promises.delete(queryKey)

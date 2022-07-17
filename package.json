@@ -60,7 +60,7 @@
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
     "graphql-tag": "^2.12.6",
-    "graphql-ws": "^5.9.0",
+    "graphql-ws": "^5.9.1",
     "husky": "^8.0.1",
     "jest": "^27.0.6",
     "microbundle": "^0.15.0",
