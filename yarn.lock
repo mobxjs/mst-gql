@@ -11961,12 +11961,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-ws@npm:^5.9.0":
-  version: 5.9.0
-  resolution: "graphql-ws@npm:5.9.0"
+"graphql-ws@npm:^5.9.1":
+  version: 5.9.1
+  resolution: "graphql-ws@npm:5.9.1"
   peerDependencies:
     graphql: ">=0.11 <=16"
-  checksum: b13abfc4094314940f7ffd1e5c9fa34b6b1a64d477d3f1728740d04edd36e1191c83dcec3c2d7f3d6653995b1ba32edeb75f92921710d716b4cc7fc349d1f276
+  checksum: 5fcb4da352f2273b8056f06e48fb4d5957304e85e593d65b509960f9344fe4ff32c4d1a067bb3f81704d3f552d826d79a606a8fde00d3af7822b9b25998ce8aa
   languageName: node
   linkType: hard
 
@@ -15735,7 +15735,7 @@ __metadata:
     graphql: ^16.5.0
     graphql-request: ^4.3.0
     graphql-tag: ^2.12.6
-    graphql-ws: ^5.9.0
+    graphql-ws: ^5.9.1
     husky: ^8.0.1
     jest: ^27.0.6
     lodash: ^4.17.21
