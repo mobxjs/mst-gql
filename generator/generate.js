@@ -1056,7 +1056,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
 
     return `${name}${
       canBeUndefined || fromUndefineableList ? "?" : ""
-    }: ${typeValue}`
+    }: ${canBeUndefined ? `(${typeValue} | null)` : typeValue}`
   }
 
   function printTsPrimitiveType(primitiveType) {
