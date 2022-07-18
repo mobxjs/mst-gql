@@ -18,7 +18,7 @@ cd cra-app
 cp ../../../examples/6-scaffolding-ts-hasura/schema.graphql .
 yarn add mobx mobx-state-tree mobx-react graphql graphql-tag graphql-request
 
-# Add current ms-gql version as relative dependency
+# Add current mst-gql version as relative dependency
 yarn add mst-gql@portal:../../../
 
 
