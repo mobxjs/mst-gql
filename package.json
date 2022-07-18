@@ -2,7 +2,7 @@
   "name": "mst-gql",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "license": "MIT",
-  "version": "0.17.1",
+  "version": "0.17.0",
   "author": "Michel Weststrate",
   "homepage": "https://github.com/mobxjs/mst-gql#readme",
   "bugs": "https://github.com/mobxjs/mst-gql/issues",
