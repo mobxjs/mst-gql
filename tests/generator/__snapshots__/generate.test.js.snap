@@ -1627,7 +1627,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
   .actions(self => ({
-    queryGetUser(variables: { input?: UserInput }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryGetUser(variables: { input?: (UserInput | null) }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getUser: UserModelType}>(\`query getUser($input: UserInput) { getUser(input: $input) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)

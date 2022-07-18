@@ -79,275 +79,275 @@ import { PollsSelectColumn } from "./PollsSelectColumnEnum"
 import { PollsUpdateColumn } from "./PollsUpdateColumnEnum"
 
 export type BigintComparisonExp = {
-  _eq?: any
-  _gt?: any
-  _gte?: any
+  _eq?: (any | null)
+  _gt?: (any | null)
+  _gte?: (any | null)
   _in?: any[]
-  _is_null?: boolean
-  _lt?: any
-  _lte?: any
-  _neq?: any
+  _is_null?: (boolean | null)
+  _lt?: (any | null)
+  _lte?: (any | null)
+  _neq?: (any | null)
   _nin?: any[]
 }
 export type ChoicesAggregateOrderBy = {
-  avg?: ChoicesAvgOrderBy
-  count?: OrderBy
-  max?: ChoicesMaxOrderBy
-  min?: ChoicesMinOrderBy
-  stddev?: ChoicesStddevOrderBy
-  stddev_pop?: ChoicesStddevPopOrderBy
-  stddev_samp?: ChoicesStddevSampOrderBy
-  sum?: ChoicesSumOrderBy
-  var_pop?: ChoicesVarPopOrderBy
-  var_samp?: ChoicesVarSampOrderBy
-  variance?: ChoicesVarianceOrderBy
+  avg?: (ChoicesAvgOrderBy | null)
+  count?: (OrderBy | null)
+  max?: (ChoicesMaxOrderBy | null)
+  min?: (ChoicesMinOrderBy | null)
+  stddev?: (ChoicesStddevOrderBy | null)
+  stddev_pop?: (ChoicesStddevPopOrderBy | null)
+  stddev_samp?: (ChoicesStddevSampOrderBy | null)
+  sum?: (ChoicesSumOrderBy | null)
+  var_pop?: (ChoicesVarPopOrderBy | null)
+  var_samp?: (ChoicesVarSampOrderBy | null)
+  variance?: (ChoicesVarianceOrderBy | null)
 }
 export type ChoicesArrRelInsertInput = {
   data: ChoicesInsertInput[]
-  on_conflict?: ChoicesOnConflict
+  on_conflict?: (ChoicesOnConflict | null)
 }
 export type ChoicesAvgOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesBoolExp = {
-  _and?: ChoicesBoolExp[]
-  _not?: ChoicesBoolExp
-  _or?: ChoicesBoolExp[]
-  id?: BigintComparisonExp
-  poll?: PollsBoolExp
-  poll_id?: BigintComparisonExp
-  text?: StringComparisonExp
+  _and?: (ChoicesBoolExp | null)[]
+  _not?: (ChoicesBoolExp | null)
+  _or?: (ChoicesBoolExp | null)[]
+  id?: (BigintComparisonExp | null)
+  poll?: (PollsBoolExp | null)
+  poll_id?: (BigintComparisonExp | null)
+  text?: (StringComparisonExp | null)
 }
 export type ChoicesIncInput = {
-  id?: any
-  poll_id?: any
+  id?: (any | null)
+  poll_id?: (any | null)
 }
 export type ChoicesInsertInput = {
-  id?: any
-  poll?: PollsObjRelInsertInput
-  poll_id?: any
-  text?: string
+  id?: (any | null)
+  poll?: (PollsObjRelInsertInput | null)
+  poll_id?: (any | null)
+  text?: (string | null)
 }
 export type ChoicesMaxOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
-  text?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
+  text?: (OrderBy | null)
 }
 export type ChoicesMinOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
-  text?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
+  text?: (OrderBy | null)
 }
 export type ChoicesObjRelInsertInput = {
   data: ChoicesInsertInput
-  on_conflict?: ChoicesOnConflict
+  on_conflict?: (ChoicesOnConflict | null)
 }
 export type ChoicesOnConflict = {
   constraint: ChoicesConstraint
   update_columns: ChoicesUpdateColumn[]
 }
 export type ChoicesOrderBy = {
-  id?: OrderBy
-  poll?: PollsOrderBy
-  poll_id?: OrderBy
-  text?: OrderBy
+  id?: (OrderBy | null)
+  poll?: (PollsOrderBy | null)
+  poll_id?: (OrderBy | null)
+  text?: (OrderBy | null)
 }
 export type ChoicesSetInput = {
-  id?: any
-  poll_id?: any
-  text?: string
+  id?: (any | null)
+  poll_id?: (any | null)
+  text?: (string | null)
 }
 export type ChoicesStddevOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesStddevPopOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesStddevSampOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesSumOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesVarPopOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesVarSampOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type ChoicesVarianceOrderBy = {
-  id?: OrderBy
-  poll_id?: OrderBy
+  id?: (OrderBy | null)
+  poll_id?: (OrderBy | null)
 }
 export type PollsAggregateOrderBy = {
-  avg?: PollsAvgOrderBy
-  count?: OrderBy
-  max?: PollsMaxOrderBy
-  min?: PollsMinOrderBy
-  stddev?: PollsStddevOrderBy
-  stddev_pop?: PollsStddevPopOrderBy
-  stddev_samp?: PollsStddevSampOrderBy
-  sum?: PollsSumOrderBy
-  var_pop?: PollsVarPopOrderBy
-  var_samp?: PollsVarSampOrderBy
-  variance?: PollsVarianceOrderBy
+  avg?: (PollsAvgOrderBy | null)
+  count?: (OrderBy | null)
+  max?: (PollsMaxOrderBy | null)
+  min?: (PollsMinOrderBy | null)
+  stddev?: (PollsStddevOrderBy | null)
+  stddev_pop?: (PollsStddevPopOrderBy | null)
+  stddev_samp?: (PollsStddevSampOrderBy | null)
+  sum?: (PollsSumOrderBy | null)
+  var_pop?: (PollsVarPopOrderBy | null)
+  var_samp?: (PollsVarSampOrderBy | null)
+  variance?: (PollsVarianceOrderBy | null)
 }
 export type PollsArrRelInsertInput = {
   data: PollsInsertInput[]
-  on_conflict?: PollsOnConflict
+  on_conflict?: (PollsOnConflict | null)
 }
 export type PollsAvgOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsBoolExp = {
-  _and?: PollsBoolExp[]
-  _not?: PollsBoolExp
-  _or?: PollsBoolExp[]
-  choices?: ChoicesBoolExp
-  created_at?: TimestampComparisonExp
-  created_by?: BigintComparisonExp
-  expiration_date_time?: TimestampComparisonExp
-  foo?: StringComparisonExp
-  id?: BigintComparisonExp
-  ize?: StringComparisonExp
-  question?: StringComparisonExp
-  updated_at?: TimestampComparisonExp
-  updated_by?: BigintComparisonExp
+  _and?: (PollsBoolExp | null)[]
+  _not?: (PollsBoolExp | null)
+  _or?: (PollsBoolExp | null)[]
+  choices?: (ChoicesBoolExp | null)
+  created_at?: (TimestampComparisonExp | null)
+  created_by?: (BigintComparisonExp | null)
+  expiration_date_time?: (TimestampComparisonExp | null)
+  foo?: (StringComparisonExp | null)
+  id?: (BigintComparisonExp | null)
+  ize?: (StringComparisonExp | null)
+  question?: (StringComparisonExp | null)
+  updated_at?: (TimestampComparisonExp | null)
+  updated_by?: (BigintComparisonExp | null)
 }
 export type PollsIncInput = {
-  created_by?: any
-  id?: any
-  updated_by?: any
+  created_by?: (any | null)
+  id?: (any | null)
+  updated_by?: (any | null)
 }
 export type PollsInsertInput = {
-  choices?: ChoicesArrRelInsertInput
-  created_at?: any
-  created_by?: any
-  expiration_date_time?: any
-  foo?: string
-  id?: any
-  ize?: string
-  question?: string
-  updated_at?: any
-  updated_by?: any
+  choices?: (ChoicesArrRelInsertInput | null)
+  created_at?: (any | null)
+  created_by?: (any | null)
+  expiration_date_time?: (any | null)
+  foo?: (string | null)
+  id?: (any | null)
+  ize?: (string | null)
+  question?: (string | null)
+  updated_at?: (any | null)
+  updated_by?: (any | null)
 }
 export type PollsMaxOrderBy = {
-  created_by?: OrderBy
-  foo?: OrderBy
-  id?: OrderBy
-  ize?: OrderBy
-  question?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  foo?: (OrderBy | null)
+  id?: (OrderBy | null)
+  ize?: (OrderBy | null)
+  question?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsMinOrderBy = {
-  created_by?: OrderBy
-  foo?: OrderBy
-  id?: OrderBy
-  ize?: OrderBy
-  question?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  foo?: (OrderBy | null)
+  id?: (OrderBy | null)
+  ize?: (OrderBy | null)
+  question?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsObjRelInsertInput = {
   data: PollsInsertInput
-  on_conflict?: PollsOnConflict
+  on_conflict?: (PollsOnConflict | null)
 }
 export type PollsOnConflict = {
   constraint: PollsConstraint
   update_columns: PollsUpdateColumn[]
 }
 export type PollsOrderBy = {
-  choices_aggregate?: ChoicesAggregateOrderBy
-  created_at?: OrderBy
-  created_by?: OrderBy
-  expiration_date_time?: OrderBy
-  foo?: OrderBy
-  id?: OrderBy
-  ize?: OrderBy
-  question?: OrderBy
-  updated_at?: OrderBy
-  updated_by?: OrderBy
+  choices_aggregate?: (ChoicesAggregateOrderBy | null)
+  created_at?: (OrderBy | null)
+  created_by?: (OrderBy | null)
+  expiration_date_time?: (OrderBy | null)
+  foo?: (OrderBy | null)
+  id?: (OrderBy | null)
+  ize?: (OrderBy | null)
+  question?: (OrderBy | null)
+  updated_at?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsSetInput = {
-  created_at?: any
-  created_by?: any
-  expiration_date_time?: any
-  foo?: string
-  id?: any
-  ize?: string
-  question?: string
-  updated_at?: any
-  updated_by?: any
+  created_at?: (any | null)
+  created_by?: (any | null)
+  expiration_date_time?: (any | null)
+  foo?: (string | null)
+  id?: (any | null)
+  ize?: (string | null)
+  question?: (string | null)
+  updated_at?: (any | null)
+  updated_by?: (any | null)
 }
 export type PollsStddevOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsStddevPopOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsStddevSampOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsSumOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsVarPopOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsVarSampOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type PollsVarianceOrderBy = {
-  created_by?: OrderBy
-  id?: OrderBy
-  updated_by?: OrderBy
+  created_by?: (OrderBy | null)
+  id?: (OrderBy | null)
+  updated_by?: (OrderBy | null)
 }
 export type StringComparisonExp = {
-  _eq?: string
-  _gt?: string
-  _gte?: string
-  _ilike?: string
+  _eq?: (string | null)
+  _gt?: (string | null)
+  _gte?: (string | null)
+  _ilike?: (string | null)
   _in?: string[]
-  _is_null?: boolean
-  _like?: string
-  _lt?: string
-  _lte?: string
-  _neq?: string
-  _nilike?: string
+  _is_null?: (boolean | null)
+  _like?: (string | null)
+  _lt?: (string | null)
+  _lte?: (string | null)
+  _neq?: (string | null)
+  _nilike?: (string | null)
   _nin?: string[]
-  _nlike?: string
-  _nsimilar?: string
-  _similar?: string
+  _nlike?: (string | null)
+  _nsimilar?: (string | null)
+  _similar?: (string | null)
 }
 export type TimestampComparisonExp = {
-  _eq?: any
-  _gt?: any
-  _gte?: any
+  _eq?: (any | null)
+  _gt?: (any | null)
+  _gte?: (any | null)
   _in?: any[]
-  _is_null?: boolean
-  _lt?: any
-  _lte?: any
-  _neq?: any
+  _is_null?: (boolean | null)
+  _lt?: (any | null)
+  _lte?: (any | null)
+  _neq?: (any | null)
   _nin?: any[]
 }
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
@@ -374,12 +374,12 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     polls: types.optional(types.map(types.late((): any => PollsModel)), {})
   })
   .actions(self => ({
-    queryChoices(variables: { distinctOn?: ChoicesSelectColumn[], limit?: number, offset?: number, orderBy?: ChoicesOrderBy[], where?: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryChoices(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ choices: ChoicesModelType[]}>(`query choices($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[], limit?: number, offset?: number, orderBy?: ChoicesOrderBy[], where?: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ choices_aggregate: ChoicesAggregateModelType}>(`query choices_aggregate($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, options)
@@ -389,12 +389,12 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryPolls(variables: { distinctOn?: PollsSelectColumn[], limit?: number, offset?: number, orderBy?: PollsOrderBy[], where?: PollsBoolExp }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryPolls(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ polls: PollsModelType[]}>(`query polls($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryPolls_aggregate(variables: { distinctOn?: PollsSelectColumn[], limit?: number, offset?: number, orderBy?: PollsOrderBy[], where?: PollsBoolExp }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryPolls_aggregate(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ polls_aggregate: PollsAggregateModelType}>(`query polls_aggregate($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, options)
@@ -414,32 +414,32 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new PollsMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateInsert_choices(variables: { objects: ChoicesInsertInput[], onConflict?: ChoicesOnConflict }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutateInsert_choices(variables: { objects: ChoicesInsertInput[], onConflict?: (ChoicesOnConflict | null) }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ insert_choices: ChoicesMutationResponseModelType}>(`mutation insert_choices($objects: [choices_insert_input!]!, $onConflict: choices_on_conflict) { insert_choices(objects: $objects, on_conflict: $onConflict) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateInsert_polls(variables: { objects: PollsInsertInput[], onConflict?: PollsOnConflict }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutateInsert_polls(variables: { objects: PollsInsertInput[], onConflict?: (PollsOnConflict | null) }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ insert_polls: PollsMutationResponseModelType}>(`mutation insert_polls($objects: [polls_insert_input!]!, $onConflict: polls_on_conflict) { insert_polls(objects: $objects, on_conflict: $onConflict) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateUpdate_choices(variables: { inc?: ChoicesIncInput, set?: ChoicesSetInput, where: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutateUpdate_choices(variables: { inc?: (ChoicesIncInput | null), set?: (ChoicesSetInput | null), where: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ update_choices: ChoicesMutationResponseModelType}>(`mutation update_choices($inc: choices_inc_input, $set: choices_set_input, $where: choices_bool_exp!) { update_choices(_inc: $inc, _set: $set, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    mutateUpdate_polls(variables: { inc?: PollsIncInput, set?: PollsSetInput, where: PollsBoolExp }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
+    mutateUpdate_polls(variables: { inc?: (PollsIncInput | null), set?: (PollsSetInput | null), where: PollsBoolExp }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
       return self.mutate<{ update_polls: PollsMutationResponseModelType}>(`mutation update_polls($inc: polls_inc_input, $set: polls_set_input, $where: polls_bool_exp!) { update_polls(_inc: $inc, _set: $set, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    subscribeChoices(variables: { distinctOn?: ChoicesSelectColumn[], limit?: number, offset?: number, orderBy?: ChoicesOrderBy[], where?: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+    subscribeChoices(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
       return self.subscribe<{ choices: ChoicesModelType[]}>(`subscription choices($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
-    subscribeChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[], limit?: number, offset?: number, orderBy?: ChoicesOrderBy[], where?: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+    subscribeChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
       return self.subscribe<{ choices_aggregate: ChoicesAggregateModelType}>(`subscription choices_aggregate($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
@@ -449,12 +449,12 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
-    subscribePolls(variables: { distinctOn?: PollsSelectColumn[], limit?: number, offset?: number, orderBy?: PollsOrderBy[], where?: PollsBoolExp }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+    subscribePolls(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
       return self.subscribe<{ polls: PollsModelType[]}>(`subscription polls($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
-    subscribePolls_aggregate(variables: { distinctOn?: PollsSelectColumn[], limit?: number, offset?: number, orderBy?: PollsOrderBy[], where?: PollsBoolExp }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+    subscribePolls_aggregate(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
       return self.subscribe<{ polls_aggregate: PollsAggregateModelType}>(`subscription polls_aggregate($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
