@@ -124,7 +124,8 @@
       "devDependencies",
       "peerDependencies",
       "resolutions"
-    ]
+    ],
+    "peer": false
   },
   "types": "./dist/mst-gql.d.ts",
   "umd:main": "dist/mst-gql.umd.js"
