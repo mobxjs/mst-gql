@@ -8,10 +8,10 @@
   "bugs": "https://github.com/mobxjs/mst-gql/issues",
   "scripts": {
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
-    "fix-mismatches": "yarn dlx syncpack fix-mismatches --prod --dev",
+    "fix-mismatches": "syncpack fix-mismatches --prod --dev",
     "postinstall": "husky install",
     "format": "pretty-quick",
-    "list-mismatches": "yarn dlx syncpack list-mismatches",
+    "list-mismatches": "syncpack list-mismatches",
     "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
     "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
@@ -80,6 +80,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "subscriptions-transport-ws": "^0.11.0",
+    "syncpack": "8.2.4",
     "typescript": "^4.7.3"
   },
   "peerDependencies": {
