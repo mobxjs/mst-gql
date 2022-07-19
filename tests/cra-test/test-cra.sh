@@ -8,27 +8,30 @@
 # Note: the generated cra-test directory should not be checked into git.
 #
 
-rm -rf cra-test
+# Navigate into the current directory so that nothing explodes
+cd "${0%/*}"
 
-mkdir cra-test
-cd cra-test
+# Cleanup and create a fresh directory to work with
+rm -rf cra-tmp
+mkdir cra-tmp
+cd cra-tmp
 
-yarn create-react-app cra-app --template typescript
+yarn create react-app cra-app --template typescript
 cd cra-app
-cp ../../../examples/6-scaffolding-ts-hasura/schema.graphql .
+cp ../../../../examples/6-scaffolding-ts-hasura/schema.graphql .
 yarn add mobx mobx-state-tree mobx-react graphql graphql-tag graphql-request
 
 # Add current mst-gql version as relative dependency
-yarn add mst-gql@portal:../../../
+yarn add mst-gql@portal:../../../../
 
 
 # Add some code to import the generated files
 perl -0777 -pi.original -e 's|(import.*?./App.css.*?;)|\1\nimport {RootStore} from "./model/RootStore";\nconst rootStore = RootStore.create({})|sm' src/App.tsx
 
 # now generate models
-npx mst-gql --format ts --outDir src/model schema.graphql
+yarn mst-gql --format ts --outDir src/model schema.graphql
 # Compile it
-npx tsc --extendedDiagnostics
+yarn tsc --extendedDiagnostics
 
 # run the project and check if runs all right. Not sure how portable or exact this is, but seems to work
 rm -f out
@@ -42,7 +45,7 @@ do
   if [[ ! -z ${failed} ]]; then
     echo
     echo "App failed to compile"
-    pid=`ps -ef | grep tests/cra-test/cra-app | grep -v grep | awk '{print $2}' -`
+    pid=`ps -ef | grep tests/cra-test/cra-tmp/cra-app | grep -v grep | awk '{print $2}' -`
     kill -9 $pid > /dev/null 2>&1
     exit
   fi
@@ -51,7 +54,7 @@ do
   if [ "$no_issues" -eq "1" ]; then
     echo
     echo "App ran successfully!"
-    pid=`ps -ef | grep tests/cra-test/cra-app | grep -v grep | awk '{print $2}' -`
+    pid=`ps -ef | grep tests/cra-test/cra-tmp/cra-app | grep -v grep | awk '{print $2}' -`
     kill -9 $pid > /dev/null 2>&1
     exit
   fi
