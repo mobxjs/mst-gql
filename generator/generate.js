@@ -471,7 +471,9 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           if (typeImportPath) {
             addImport(typeImportPath, primitiveType)
           }
-          const typeName = typeImportPath ?  primitiveType :`types.${primitiveType}`
+          const typeName = typeImportPath
+            ? primitiveType
+            : `types.${primitiveType}`
           return result(typeName, isRequired)
         case "OBJECT":
           return result(
@@ -1169,7 +1171,7 @@ ${toExport.map((f) => `export * from "./${f}${importPostFix}"`).join("\n")}
     }
     // if (!res[type]) throw new Error("Unknown primitive type: " + type)
     if (res[type]) {
-      return [ res[type], undefined]
+      return [res[type], undefined]
     } else {
       return ["frozen()", undefined]
     }
@@ -1535,12 +1537,8 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
   }
 
   function parseFieldOverride(override) {
-    const [
-      unsplitFieldName,
-      fieldType,
-      destinationMstType,
-      typeImportPath
-    ] = override
+    const [unsplitFieldName, fieldType, destinationMstType, typeImportPath] =
+      override
 
     const splitFieldName = unsplitFieldName.split(".")
     const fieldDeclaringType =

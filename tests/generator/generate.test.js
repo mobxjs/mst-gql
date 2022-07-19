@@ -523,7 +523,7 @@ test("overrides mst type with matching name and gql type using fieldOverrides", 
     fieldOverrides: [
       ["id", "uuid", "identifier"],
       ["User.id", "bigint", "identifierNumber"],
-      ["*", "Date", "DateScalar", "../scalars"],
+      ["*", "Date", "DateScalar", "../scalars"]
     ]
   })
 
