@@ -7707,19 +7707,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cra-test@workspace:tests/cra-test":
-  version: 0.0.0-use.local
-  resolution: "cra-test@workspace:tests/cra-test"
-  dependencies:
-    graphql: 16.5.0
-    graphql-request: 4.3.0
-    graphql-tag: 2.12.6
-    mobx: 6.6.1
-    mobx-react: 7.5.2
-    mobx-state-tree: 5.1.5
-  languageName: unknown
-  linkType: soft
-
 "create-emotion-styled@npm:^9.2.8":
   version: 9.2.8
   resolution: "create-emotion-styled@npm:9.2.8"
@@ -10616,7 +10603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:4.3.0, graphql-request@npm:^4.3.0":
+"graphql-request@npm:^4.3.0":
   version: 4.3.0
   resolution: "graphql-request@npm:4.3.0"
   dependencies:
@@ -10682,7 +10669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:16.5.0, graphql@npm:^16.5.0":
+"graphql@npm:^16.5.0":
   version: 16.5.0
   resolution: "graphql@npm:16.5.0"
   checksum: a82a926d085818934d04fdf303a269af170e79de943678bd2726370a96194f9454ade9d6d76c2de69afbd7b9f0b4f8061619baecbbddbe82125860e675ac219e
@@ -13903,23 +13890,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react@npm:7.5.2":
-  version: 7.5.2
-  resolution: "mobx-react@npm:7.5.2"
-  dependencies:
-    mobx-react-lite: ^3.4.0
-  peerDependencies:
-    mobx: ^6.1.0
-    react: ^16.8.0 || ^17 || ^18
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 71c45d20600f22c72bb92fc6197bbbe925ceac542cfc1770c9bcb5533c0adb80f299b2910af746d6225b2cf3939dbaaf50533a4c917b55abd418519cba5701b2
-  languageName: node
-  linkType: hard
-
 "mobx-react@npm:^7.5.0":
   version: 7.5.0
   resolution: "mobx-react@npm:7.5.0"
@@ -13937,19 +13907,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-state-tree@npm:5.1.5, mobx-state-tree@npm:^5.1.5":
+"mobx-state-tree@npm:^5.1.5":
   version: 5.1.5
   resolution: "mobx-state-tree@npm:5.1.5"
   peerDependencies:
     mobx: ^6.3.0
   checksum: 7d88e6018668e0fe21908301848a724810640d8271e287bc90cbe63f87172d8353dc9f7fb922899e0ba70efba290c6cc7166b90032c76b957faec42a4dd27923
-  languageName: node
-  linkType: hard
-
-"mobx@npm:6.6.1":
-  version: 6.6.1
-  resolution: "mobx@npm:6.6.1"
-  checksum: 20e876693d1a99916d347ba666f47e7931d5aa5a1172eae48d172477d537577d604207a8f8918041f9b6c74280b6533a516cf1639929735c6bb514f34776225a
   languageName: node
   linkType: hard
 

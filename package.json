@@ -32,8 +32,7 @@
     "examples/4-apollo-tutorial/client",
     "examples/4-apollo-tutorial/server",
     "examples/5-nextjs",
-    "examples/6-scaffolding-ts-hasura",
-    "tests/cra-test"
+    "examples/6-scaffolding-ts-hasura"
   ],
   "dependencies": {
     "ansi-colors": "^4.1.3",
