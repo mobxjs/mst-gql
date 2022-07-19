@@ -11,6 +11,10 @@
 - Re-add support for GraphQL 14 and 15
 - Upgrade to React 18
 - Switch CI from CircleCI to GitHub Actions
+- Add support of type import to --fieldOverrides [#375](https://github.com/mobxjs/mst-gql/pull/375) - [dmytro-shpak](https://github.com/dmytro-shpak)
+- Update next.js mobx, mobx-react and mobx-state-tree versions [#376](https://github.com/mobxjs/mst-gql/pull/376) - [Amosel](https://github.com/Amosel)
+- Scaffold nullable types as "(type | null)" [#378](https://github.com/mobxjs/mst-gql/pull/378) - [smokku](https://github.com/smokku)
+- Add support for `graphql-ws` (subscriptions only) [#381](https://github.com/mobxjs/mst-gql/pull/381) - [ChrisABryant](https://github.com/ChrisABryant)
 
 ## 0.16.0
 
