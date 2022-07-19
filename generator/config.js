@@ -86,7 +86,7 @@ const parseFieldOverrides = (fieldOverrides) => {
     .map((item) => {
       const override = item.split(":").map((s) => s.trim())
 
-      if (override.length !== 3)
+      if (!(override.length === 3 || override.length === 4))
         throw new Error("--fieldOverrides used with invalid override: " + item)
 
       return override

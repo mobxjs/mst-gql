@@ -461,14 +461,18 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
-          const primitiveType = primitiveToMstType(
+          const [primitiveType, typeImportPath] = primitiveToMstType(
             fieldName,
             fieldType.name,
             typeOverride
           )
           const requiredTypes = ["identifier", "identifierNumber"]
           const isRequired = requiredTypes.includes(primitiveType)
-          return result(`types.${primitiveType}`, isRequired)
+          if (typeImportPath) {
+            addImport(typeImportPath, primitiveType)
+          }
+          const typeName = typeImportPath ?  primitiveType :`types.${primitiveType}`
+          return result(typeName, isRequired)
         case "OBJECT":
           return result(
             handleObjectFieldType(fieldName, fieldType, fieldArgs, isNested)
@@ -1164,7 +1168,11 @@ ${toExport.map((f) => `export * from "./${f}${importPostFix}"`).join("\n")}
       Boolean: "boolean"
     }
     // if (!res[type]) throw new Error("Unknown primitive type: " + type)
-    return res[type] || "frozen()"
+    if (res[type]) {
+      return [ res[type], undefined]
+    } else {
+      return ["frozen()", undefined]
+    }
   }
 
   return files
@@ -1527,7 +1535,12 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
   }
 
   function parseFieldOverride(override) {
-    const [unsplitFieldName, fieldType, destinationMstType] = override
+    const [
+      unsplitFieldName,
+      fieldType,
+      destinationMstType,
+      typeImportPath
+    ] = override
 
     const splitFieldName = unsplitFieldName.split(".")
     const fieldDeclaringType =
@@ -1539,7 +1552,8 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
       fieldDeclaringType,
       fieldName,
       fieldType,
-      destinationMstType
+      destinationMstType,
+      typeImportPath
     )
   }
 }
@@ -1574,12 +1588,12 @@ function TypeOverride(currentType, overrides) {
         override &&
         override.specificity === mostSpecificIdOverride.specificity
       )
-        return override.destinationMstType
+        return [override.destinationMstType, override.typeImportPath]
 
-      return "frozen()"
+      return ["frozen()", undefined]
     }
 
-    return override && override.destinationMstType
+    return override && [override.destinationMstType, override.typeImportPath]
   }
 
   return {
@@ -1627,7 +1641,8 @@ function Override(
   fieldDeclaringType,
   fieldName,
   fieldType,
-  destinationMstType
+  destinationMstType,
+  typeImportPath
 ) {
   const specificity = computeOverrideSpecificity(
     fieldDeclaringType,
@@ -1652,7 +1667,8 @@ function Override(
   return {
     matches,
     specificity,
-    destinationMstType
+    destinationMstType,
+    typeImportPath
   }
 
   /*

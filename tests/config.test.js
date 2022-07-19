@@ -94,7 +94,7 @@ test("the --header argument takes priority over the config file", () => {
 
 test("fieldOverrides outputs items with valid signature", () => {
   const fieldOverridesArgs = {
-    "--fieldOverrides": "id:uuid:identifier, id:bigint:identifierNumber"
+    "--fieldOverrides": "id:uuid:identifier, id:bigint:identifierNumber, *:Date:Date:../scalars"
   }
   const args = { ...defaultArgs, ...fieldOverridesArgs }
   const config = {
@@ -108,7 +108,8 @@ test("fieldOverrides outputs items with valid signature", () => {
 
   expect(results.fieldOverrides).toEqual([
     ["id", "uuid", "identifier"],
-    ["id", "bigint", "identifierNumber"]
+    ["id", "bigint", "identifierNumber"],
+    ["*", "Date", "Date", "../scalars"],
   ])
 })
 

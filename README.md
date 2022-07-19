@@ -421,6 +421,7 @@ The `mst-gql` command currently accepts the following arguments:
     For TS users, input types and query arguments will only be modified for fieldOverrides with a wildcard for `gqlFieldName` (`*:uuid:identifier`). An override like `*_id:uuid:identifier` will not affect input types.
 
     The primary use case for this feature is for GQL Servers that don't always do what you want. For example, Hasura does not generate GQL ID types for UUID fields, which causes issues when trying to reference associate types in MST. To overcome this, simply specify `--fieldOverrides *:UUID:identifier`
+  - `*.timestamp:*:DateScalar:../scalars` - Matches any GQL type with the field name `timestamp`, and uses the MST type `DateScalar` imported from file `../scalars`. Usually used for `graphql custom scalar` support with MST `type.custom`
 
 - `source` The last argument is the location at which to find the graphQL definitions. This can be
   - a graphql endpoint, like `http://host/graphql`
