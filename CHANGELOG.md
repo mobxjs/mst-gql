@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.17.1
+
+- Use [Pinst](https://www.npmjs.com/package/pinst) to fix `postinstall` scripts running when installing mst-gql
+
 ## 0.17.0
 
 - Passing the `--header` flag multiple times is now supported

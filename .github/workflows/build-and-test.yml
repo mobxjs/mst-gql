@@ -22,6 +22,9 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
+      - name: Check Formatting
+        run: yarn format --check
+
       - name: Build mst-gql
         run: yarn build
 
@@ -34,5 +37,5 @@ jobs:
       - name: Test Example 6 (Hasura)
         run: yarn test:example-6
 
-      - name: Test CRA (Create React App)
-        run: yarn test:cra
+#      - name: Test CRA (Create React App)
+#        run: yarn test:cra
