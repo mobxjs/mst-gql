@@ -13,7 +13,7 @@
     "format": "pretty-quick",
     "list-mismatches": "syncpack list-mismatches",
     "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
-    "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
+    "test:cra": "./tests/cra-test/test-cra.sh",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "test:example-2": "cd examples/2-scaffolding && yarn start",
     "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn start",
@@ -33,7 +33,7 @@
     "examples/4-apollo-tutorial/server",
     "examples/5-nextjs",
     "examples/6-scaffolding-ts-hasura",
-    "tests/cra-test/cra-app"
+    "tests/cra-test"
   ],
   "dependencies": {
     "ansi-colors": "^4.1.3",
