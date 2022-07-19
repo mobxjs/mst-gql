@@ -1627,7 +1627,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
   .actions(self => ({
-    queryGetUser(variables: { input?: UserInput }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
+    queryGetUser(variables: { input?: (UserInput | null) }, resultSelector: string | ((qb: UserModelSelector) => UserModelSelector) = userModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ getUser: UserModelType}>(\`query getUser($input: UserInput) { getUser(input: $input) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new UserModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
@@ -1808,6 +1808,74 @@ export const BookModel = BookModelBase
     false,
   ],
   Array [
+    "MessageModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { DateScalar } from \\"./../scalars\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * MessageBase
+ * auto generated base class for the model MessageModel.
+ */
+export const MessageModelBase = ModelBase
+  .named('Message')
+  .props({
+    __typename: types.optional(types.literal(\\"Message\\"), \\"Message\\"),
+    id: types.identifier,
+    text: types.union(types.undefined, types.string),
+    timestamp: types.union(types.undefined, DateScalar),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class MessageModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get text() { return this.__attr(\`text\`) }
+  get timestamp() { return this.__attr(\`timestamp\`) }
+}
+export function selectFromMessage() {
+  return new MessageModelSelector()
+}
+
+export const messageModelPrimitives = selectFromMessage().text.timestamp
+",
+    true,
+  ],
+  Array [
+    "MessageModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { MessageModelBase } from \\"./MessageModel.base\\"
+
+/* The TypeScript type of an instance of MessageModel */
+export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
+
+/* A graphql query fragment builders for MessageModel */
+export { selectFromMessage, messageModelPrimitives, MessageModelSelector } from \\"./MessageModel.base\\"
+
+/**
+ * MessageModel
+ */
+export const MessageModel = MessageModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
     "RootStore",
     "import { Instance } from \\"mobx-state-tree\\"
 import { RootStoreBase } from \\"./RootStore.base\\"
@@ -1837,6 +1905,8 @@ import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+import { MessageModel, MessageModelType } from \\"./MessageModel\\"
+import { messageModelPrimitives, MessageModelSelector } from \\"./MessageModel.base\\"
 
 
 
@@ -1860,7 +1930,7 @@ queryBook=\\"queryBook\\"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['User', () => UserModel], ['Book', () => BookModel]], ['User'], \\"js\\"))
+  .extend(configureStoreMixin([['User', () => UserModel], ['Book', () => BookModel], ['Message', () => MessageModel]], ['User'], \\"js\\"))
   .props({
     users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
@@ -1903,6 +1973,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 
 export * from \\"./UserModel\\"
 export * from \\"./BookModel\\"
+export * from \\"./MessageModel\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
@@ -2296,6 +2367,73 @@ export const BookModel = BookModelBase
     false,
   ],
   Array [
+    "MessageModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * MessageBase
+ * auto generated base class for the model MessageModel.
+ */
+export const MessageModelBase = ModelBase
+  .named('Message')
+  .props({
+    __typename: types.optional(types.literal(\\"Message\\"), \\"Message\\"),
+    id: types.identifier,
+    text: types.union(types.undefined, types.string),
+    timestamp: types.union(types.undefined, types.frozen()),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class MessageModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get text() { return this.__attr(\`text\`) }
+  get timestamp() { return this.__attr(\`timestamp\`) }
+}
+export function selectFromMessage() {
+  return new MessageModelSelector()
+}
+
+export const messageModelPrimitives = selectFromMessage().text.timestamp
+",
+    true,
+  ],
+  Array [
+    "MessageModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { MessageModelBase } from \\"./MessageModel.base\\"
+
+/* The TypeScript type of an instance of MessageModel */
+export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
+
+/* A graphql query fragment builders for MessageModel */
+export { selectFromMessage, messageModelPrimitives, MessageModelSelector } from \\"./MessageModel.base\\"
+
+/**
+ * MessageModel
+ */
+export const MessageModel = MessageModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
     "RootStore",
     "import { Instance } from \\"mobx-state-tree\\"
 import { RootStoreBase } from \\"./RootStore.base\\"
@@ -2325,6 +2463,8 @@ import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+import { MessageModel, MessageModelType } from \\"./MessageModel\\"
+import { messageModelPrimitives, MessageModelSelector } from \\"./MessageModel.base\\"
 
 
 
@@ -2348,7 +2488,7 @@ queryBook=\\"queryBook\\"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['User', () => UserModel], ['Book', () => BookModel]], ['User'], \\"js\\"))
+  .extend(configureStoreMixin([['User', () => UserModel], ['Book', () => BookModel], ['Message', () => MessageModel]], ['User'], \\"js\\"))
   .props({
     users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
@@ -2391,6 +2531,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 
 export * from \\"./UserModel\\"
 export * from \\"./BookModel\\"
+export * from \\"./MessageModel\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",
@@ -2540,6 +2681,73 @@ export const BookModel = BookModelBase
     false,
   ],
   Array [
+    "MessageModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * MessageBase
+ * auto generated base class for the model MessageModel.
+ */
+export const MessageModelBase = ModelBase
+  .named('Message')
+  .props({
+    __typename: types.optional(types.literal(\\"Message\\"), \\"Message\\"),
+    id: types.identifier,
+    text: types.union(types.undefined, types.string),
+    timestamp: types.union(types.undefined, types.frozen()),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+export class MessageModelSelector extends QueryBuilder {
+  get id() { return this.__attr(\`id\`) }
+  get text() { return this.__attr(\`text\`) }
+  get timestamp() { return this.__attr(\`timestamp\`) }
+}
+export function selectFromMessage() {
+  return new MessageModelSelector()
+}
+
+export const messageModelPrimitives = selectFromMessage().text.timestamp
+",
+    true,
+  ],
+  Array [
+    "MessageModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { MessageModelBase } from \\"./MessageModel.base\\"
+
+/* The TypeScript type of an instance of MessageModel */
+export interface MessageModelType extends Instance<typeof MessageModel.Type> {}
+
+/* A graphql query fragment builders for MessageModel */
+export { selectFromMessage, messageModelPrimitives, MessageModelSelector } from \\"./MessageModel.base\\"
+
+/**
+ * MessageModel
+ */
+export const MessageModel = MessageModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
     "RootStore",
     "import { Instance } from \\"mobx-state-tree\\"
 import { RootStoreBase } from \\"./RootStore.base\\"
@@ -2569,6 +2777,8 @@ import { UserModel, UserModelType } from \\"./UserModel\\"
 import { userModelPrimitives, UserModelSelector } from \\"./UserModel.base\\"
 import { BookModel, BookModelType } from \\"./BookModel\\"
 import { bookModelPrimitives, BookModelSelector } from \\"./BookModel.base\\"
+import { MessageModel, MessageModelType } from \\"./MessageModel\\"
+import { messageModelPrimitives, MessageModelSelector } from \\"./MessageModel.base\\"
 
 
 
@@ -2592,7 +2802,7 @@ queryBook=\\"queryBook\\"
 */
 export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
   .named(\\"RootStore\\")
-  .extend(configureStoreMixin([['User', () => UserModel], ['Book', () => BookModel]], ['User'], \\"js\\"))
+  .extend(configureStoreMixin([['User', () => UserModel], ['Book', () => BookModel], ['Message', () => MessageModel]], ['User'], \\"js\\"))
   .props({
     users: types.optional(types.map(types.late((): any => UserModel)), {})
   })
@@ -2635,6 +2845,7 @@ export const useQuery = createUseQueryHook(StoreContext, React)
 
 export * from \\"./UserModel\\"
 export * from \\"./BookModel\\"
+export * from \\"./MessageModel\\"
 export * from \\"./RootStore\\"
 export * from \\"./reactUtils\\"
 ",

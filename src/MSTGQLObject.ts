@@ -65,7 +65,7 @@ export const MSTGQLObject = types.model("MSTGQLObject").extend((self) => {
     },
     views: {
       __getStore<T>() {
-        return (getStore() as any) as T
+        return getStore() as any as T
       },
       hasLoaded(key: string): boolean {
         return typeof (self as any)[key] !== "undefined"

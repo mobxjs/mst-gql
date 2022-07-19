@@ -1,10 +1,12 @@
 const path = require("path")
-const fs = require("fs")
+const fs = require("node:fs/promises")
 const graphql = require("graphql")
 const camelcase = require("camelcase")
 const pluralize = require("pluralize")
 const escapeStringRegexp = require("escape-string-regexp")
 const { getIntrospectionQuery } = require("graphql")
+const { can_access_file } = require("./utilities")
+const { LOGGER } = require("./logger")
 
 const exampleAction = `  .actions(self => ({
     // This is an auto-generated example action.
@@ -95,10 +97,15 @@ export const ModelBase = MSTGQLObject
 
     if (!rootTypes.length) {
       rootTypes = autoDetectRootTypes()
-      console.warn(
-        "Warning: no root types are configured. Probably --roots should be set. Auto-detected and using the following types as root types: " +
-          rootTypes.join(", ")
+      LOGGER.warning(
+        "Warning: No root types configured. Probably --roots should be set."
       )
+      if (rootTypes.length)
+        LOGGER.warning(
+          `Auto-detected and using the following types as root types:\n${rootTypes.join(
+            ", "
+          )}`
+        )
     }
 
     rootTypes.forEach((type) => {
@@ -118,13 +125,13 @@ export const ModelBase = MSTGQLObject
     origRootTypes = [...rootTypes]
     rootTypes = rootTypes.map((t) => transformTypeName(t, namingConvention))
 
-    console.log("rootTypes", JSON.stringify(rootTypes, null, 2))
+    LOGGER.debug("rootTypes", JSON.stringify(rootTypes, null, 2))
 
     types
       .filter((type) => knownTypes.includes(type.name))
       .forEach((type) => {
         currentType = type.name
-        // console.log(`Generating type '${type.name}' (${type.kind})`)
+        LOGGER.debug(`Generating type '${type.name}' (${type.kind})`)
         try {
           switch (type.kind) {
             case "OBJECT":
@@ -324,11 +331,8 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
     const isUnion =
       interfaceOrUnionType && interfaceOrUnionType.kind === "UNION"
     const fileName = type.name + "ModelSelector"
-    const {
-      primitiveFields,
-      nonPrimitiveFields,
-      imports
-    } = resolveFieldsAndImports(type, fileName)
+    const { primitiveFields, nonPrimitiveFields, imports } =
+      resolveFieldsAndImports(type, fileName)
 
     interfaceOrUnionType &&
       interfaceOrUnionType.ofTypes.forEach((t) => {
@@ -436,31 +440,41 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
           : thing
       }
       for (let arg of fieldArgs) {
-          let argType = arg.type
-          while (['NON_NULL', 'LIST'].includes(argType.kind)) {
-              argType = argType.ofType
-          }
-          // Enums have their own generated files
-          if (argType.kind === 'ENUM') {
-              addImport(argType.name + (!argType.name.toLowerCase().endsWith('enum') ? 'Enum' : ''), argType.name)
-          }
-          // TODO: Other types are supposed to be generated in RootStore.base.ts, but I'm not sure this is true in
-          // all cases. For Hasura schemas, it works.
-          else if (argType.kind !== 'SCALAR') {
-            addImport("RootStore.base", argType.name)
-          }
+        let argType = arg.type
+        while (["NON_NULL", "LIST"].includes(argType.kind)) {
+          argType = argType.ofType
+        }
+        // Enums have their own generated files
+        if (argType.kind === "ENUM") {
+          addImport(
+            argType.name +
+              (!argType.name.toLowerCase().endsWith("enum") ? "Enum" : ""),
+            argType.name
+          )
+        }
+        // TODO: Other types are supposed to be generated in RootStore.base.ts, but I'm not sure this is true in
+        // all cases. For Hasura schemas, it works.
+        else if (argType.kind !== "SCALAR") {
+          addImport("RootStore.base", argType.name)
+        }
       }
       switch (fieldType.kind) {
         case "SCALAR":
           primitiveFields.push(fieldName)
-          const primitiveType = primitiveToMstType(
+          const [primitiveType, typeImportPath] = primitiveToMstType(
             fieldName,
             fieldType.name,
             typeOverride
           )
           const requiredTypes = ["identifier", "identifierNumber"]
           const isRequired = requiredTypes.includes(primitiveType)
-          return result(`types.${primitiveType}`, isRequired)
+          if (typeImportPath) {
+            addImport(typeImportPath, primitiveType)
+          }
+          const typeName = typeImportPath
+            ? primitiveType
+            : `types.${primitiveType}`
+          return result(typeName, isRequired)
         case "OBJECT":
           return result(
             handleObjectFieldType(fieldName, fieldType, fieldArgs, isNested)
@@ -502,7 +516,13 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
       }
     }
 
-    function handleObjectFieldType(fieldName, fieldType, fieldArgs, isNested, skipField) {
+    function handleObjectFieldType(
+      fieldName,
+      fieldType,
+      fieldArgs,
+      isNested,
+      skipField
+    ) {
       if (!skipField) {
         nonPrimitiveFields.push([fieldName, fieldType.name, fieldArgs])
       }
@@ -597,13 +617,16 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
 
           // using (args as any) casy i the map() to avoid the following error. Is there a better way?
           // TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index
-          args = "+ (args ? '('+"+
-            "[" + fieldArgs.map(({ name }) => `'${name}'`).join(", ") + "]"
-            + ".map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) )"
-            + ".filter((v) => v!=null)"
-            + ".join(', ') "
-            +"+ ')'"
-            + ": '')"
+          args =
+            "+ (args ? '('+" +
+            "[" +
+            fieldArgs.map(({ name }) => `'${name}'`).join(", ") +
+            "]" +
+            ".map((argName) => ((args as any)[argName] ? `${argName}: ${JSON.stringify((args as any)[argName])}` : null) )" +
+            ".filter((v) => v!=null)" +
+            ".join(', ') " +
+            "+ ')'" +
+            ": '')"
         }
         p += `) { return this.__child(\`${field}\`${args}, ${selector}, builder) }`
         return p
@@ -910,21 +933,21 @@ ${enumContent}
         let actualArgs = ""
         // Static args: all args are geerated into formalArgs and actualArgs
         if (!dynamicArgs) {
-          formalArgs = args.length === 0
-            ? ""
-            : "(" +
-            args
-              .map((arg) => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
-              .join(", ") +
-            ")"
+          formalArgs =
+            args.length === 0
+              ? ""
+              : "(" +
+                args
+                  .map((arg) => `\$${arg.name}: ${printGraphqlType(arg.type)}`)
+                  .join(", ") +
+                ")"
 
           actualArgs =
             args.length === 0
               ? ""
               : "(" +
-              args.map((arg) => `${arg.origName}: \$${arg.name}`).join(", ") +
-              ")"
-
+                args.map((arg) => `${arg.origName}: \$${arg.name}`).join(", ") +
+                ")"
         }
         // Dynamic args: only those args are generated, which have a corresponding variable set in variables
         else {
@@ -932,17 +955,24 @@ ${enumContent}
             args.length === 0
               ? ""
               : "`+(Object.keys(variables).length !== 0 ? '('+Object.entries({" +
-              args
-                .map((arg) => `${arg.name}: '\$${arg.name}: ${printGraphqlType(arg.type)}'`)
-                .join(", ") +
-              `}).filter(([k, v]) => (variables as any)[k]).map(([k, v]) => v).join(", ")+')' : '')+\``
+                args
+                  .map(
+                    (arg) =>
+                      `${arg.name}: '\$${arg.name}: ${printGraphqlType(
+                        arg.type
+                      )}'`
+                  )
+                  .join(", ") +
+                `}).filter(([k, v]) => (variables as any)[k]).map(([k, v]) => v).join(", ")+')' : '')+\``
 
           actualArgs =
             args.length === 0
               ? ""
               : "`+(Object.keys(variables).length !== 0 ? '('+Object.entries({" +
-              args.map((arg) => `${arg.name}: '${arg.origName}: \$${arg.name}'`).join(", ") +
-              `}).filter(([k, v]) => (variables as any)[k]).map(([k, v]) => v).join(", ")+')' : '')+\``
+                args
+                  .map((arg) => `${arg.name}: '${arg.origName}: \$${arg.name}'`)
+                  .join(", ") +
+                `}).filter(([k, v]) => (variables as any)[k]).map(([k, v]) => v).join(", ")+')' : '')+\``
         }
 
         const tsVariablesType =
@@ -1023,16 +1053,16 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
         typeValue = printTsPrimitiveType(type.name)
         break
       default:
-        console.warn(
+        LOGGER.warning(
           "Not implemented printTsType yet, PR welcome for " +
             JSON.stringify(type, null, 2)
         )
         typeValue = "any"
     }
 
-    return `${name}${
-      canBeUndefined || fromUndefineableList ? "?" : ""
-    }: ${typeValue}`
+    return `${name}${canBeUndefined || fromUndefineableList ? "?" : ""}: ${
+      canBeUndefined ? `(${typeValue} | null)` : typeValue
+    }`
   }
 
   function printTsPrimitiveType(primitiveType) {
@@ -1140,23 +1170,14 @@ ${toExport.map((f) => `export * from "./${f}${importPostFix}"`).join("\n")}
       Boolean: "boolean"
     }
     // if (!res[type]) throw new Error("Unknown primitive type: " + type)
-    return res[type] || "frozen()"
+    if (res[type]) {
+      return [res[type], undefined]
+    } else {
+      return ["frozen()", undefined]
+    }
   }
 
   return files
-}
-
-function getMstDefaultValue(type) {
-  const res = {
-    integer: "0",
-    string: `''`,
-    number: "0",
-    boolean: "false",
-    "frozen()": "undefined"
-  }
-  if (res[type] === undefined)
-    throw new Error("Type cannot be optional: " + type)
-  return res[type]
 }
 
 function resolveInterfaceAndUnionTypes(types) {
@@ -1232,10 +1253,6 @@ function optPrefix(prefix, thing) {
   return prefix + thing
 }
 
-function unique(things) {
-  return Array.from(new Set(things))
-}
-
 function toFirstLower(str) {
   return str[0].toLowerCase() + str.substr(1)
 }
@@ -1244,16 +1261,7 @@ function toFirstUpper(str) {
   return str[0].toUpperCase() + str.substr(1)
 }
 
-function wrap(thing, condition, prefix = "", postfix = "") {
-  return condition ? `${prefix}${thing}${postfix}` : thing
-}
-
-function log(thing) {
-  console.log(JSON.stringify(thing, null, 2))
-  return thing
-}
-
-function writeFiles(
+async function writeFiles(
   outDir,
   files,
   format = "ts",
@@ -1265,37 +1273,57 @@ function writeFiles(
     return `${str.charAt(0).toLowerCase()}${str.slice(1)}`
   }
 
-  files.forEach(([name, contents, force]) => {
-    const splits = name.split(".")
-    const isModelOrStore = /(Model|Store)$/.test(splits[0])
+  let skipped = 0
+  let written = 0
 
-    if (!separate || !isModelOrStore) {
-      writeFile(name, contents, force || forceAll, format, outDir, log)
-    } else {
-      const targetDir = `${outDir}/${deCapitalize(splits[0])}`
-      if (!fs.existsSync(targetDir)) {
-        fs.mkdirSync(targetDir)
+  await Promise.all(
+    files.map(async ([name, contents, force]) => {
+      const splits = name.split(".")
+      const isModelOrStore = /(Model|Store)$/.test(splits[0])
+
+      let did_write
+      if (!separate || !isModelOrStore) {
+        did_write = await writeFile(
+          name,
+          contents,
+          force || forceAll,
+          format,
+          outDir,
+          log
+        )
+      } else {
+        const targetDir = `${outDir}/${deCapitalize(splits[0])}`
+        const does_dir_exist = await can_access_file(targetDir)
+        if (!does_dir_exist) {
+          await fs.mkdir(targetDir)
+        }
+
+        did_write = await writeFile(
+          splits[1] || "index",
+          contents,
+          force || forceAll,
+          format,
+          targetDir,
+          log
+        )
       }
-
-      writeFile(
-        splits[1] || "index",
-        contents,
-        force || forceAll,
-        format,
-        targetDir,
-        log
-      )
-    }
-  })
+      did_write ? written++ : skipped++
+    })
+  )
+  LOGGER.info(`Wrote ${written} files to disk, skipped ${skipped}`)
 }
 
-function writeFile(name, contents, force, format, outDir, log) {
+async function writeFile(name, contents, force, format, outDir, log) {
   const fnName = path.resolve(outDir, name + "." + format)
-  if (!fs.existsSync(fnName) || force) {
-    log && console.log("Writing file " + fnName)
-    fs.writeFileSync(fnName, contents)
+  const does_file_exist = await can_access_file(fnName)
+
+  if (!does_file_exist || force) {
+    log && LOGGER.debug("Writing file " + fnName)
+    await fs.writeFile(fnName, contents)
+    return true
   } else {
-    log && console.log("Skipping file " + fnName)
+    log && LOGGER.debug("Skipping file " + fnName)
+    return false
   }
 }
 
@@ -1310,12 +1338,11 @@ function scaffold(
     namingConvention: "js",
     useIdentifierNumber: false,
     fieldOverrides: [],
-    dynamicArgs: false,
+    dynamicArgs: false
   }
 ) {
-
   const schema = graphql.buildSchema(definition)
-  const res = graphql.graphqlSync({schema, source: getIntrospectionQuery()})
+  const res = graphql.graphqlSync({ schema, source: getIntrospectionQuery() })
   if (!res.data)
     throw new Error("graphql parse error:\n\n" + JSON.stringify(res, null, 2))
   return generate(
@@ -1403,12 +1430,12 @@ function transformRootName(text, namingConvention) {
  * @param namingConvention
  */
 function transformTypes(types, namingConvention) {
-  //console.log(JSON.stringify(types, null, 2));
+  //LOGGER.info(JSON.stringify(types, null, 2));
   types
     .filter((type) => !type.name.startsWith("__"))
     .filter((type) => type.kind !== "SCALAR")
     .forEach((type) => transformType(type, namingConvention))
-  //console.log(JSON.stringify(types, null, 2));
+  //LOGGER.info(JSON.stringify(types, null, 2));
 }
 
 /**
@@ -1456,11 +1483,12 @@ function transformType(type, namingConvention) {
   }
 }
 
-function logUnexpectedFiles(outDir, files) {
+async function logUnexpectedFiles(outDir, files) {
   const expectedFiles = new Set(files.map(([name]) => name))
-  fs.readdirSync(outDir).forEach((file) => {
+  const unexpected_files = await fs.readdir(outDir)
+  unexpected_files.forEach((file) => {
     if (!expectedFiles.has(path.parse(file).name)) {
-      console.log(
+      LOGGER.warning(
         `Unexpected file "${file}". This could be a type that is no longer needed.`
       )
     }
@@ -1509,7 +1537,8 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
   }
 
   function parseFieldOverride(override) {
-    const [unsplitFieldName, fieldType, destinationMstType] = override
+    const [unsplitFieldName, fieldType, destinationMstType, typeImportPath] =
+      override
 
     const splitFieldName = unsplitFieldName.split(".")
     const fieldDeclaringType =
@@ -1521,7 +1550,8 @@ function buildOverrides(fieldOverrides, useIdentifierNumber) {
       fieldDeclaringType,
       fieldName,
       fieldType,
-      destinationMstType
+      destinationMstType,
+      typeImportPath
     )
   }
 }
@@ -1556,12 +1586,12 @@ function TypeOverride(currentType, overrides) {
         override &&
         override.specificity === mostSpecificIdOverride.specificity
       )
-        return override.destinationMstType
+        return [override.destinationMstType, override.typeImportPath]
 
-      return "frozen()"
+      return ["frozen()", undefined]
     }
 
-    return override && override.destinationMstType
+    return override && [override.destinationMstType, override.typeImportPath]
   }
 
   return {
@@ -1590,15 +1620,14 @@ function TypeOverride(currentType, overrides) {
       )
       .filter(isMstIdType)
 
-    const mostSpecificIdOverride = overrides.getMostSpecificOverride(
-      idOverrides
-    )
+    const mostSpecificIdOverride =
+      overrides.getMostSpecificOverride(idOverrides)
 
     const mostSpecificIdOverrideCount = idOverrides.filter(
       (override) => override.specificity === mostSpecificIdOverride.specificity
     ).length
     if (mostSpecificIdOverrideCount > 1)
-      console.warn(
+      LOGGER.warning(
         `Type: ${declaringType} has multiple matching id field overrides.\nConsider adding a more specific override.`
       )
 
@@ -1610,7 +1639,8 @@ function Override(
   fieldDeclaringType,
   fieldName,
   fieldType,
-  destinationMstType
+  destinationMstType,
+  typeImportPath
 ) {
   const specificity = computeOverrideSpecificity(
     fieldDeclaringType,
@@ -1635,7 +1665,8 @@ function Override(
   return {
     matches,
     specificity,
-    destinationMstType
+    destinationMstType,
+    typeImportPath
   }
 
   /*

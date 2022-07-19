@@ -28,7 +28,7 @@ describe("unionTypes tests", () => {
                 complete: false,
                 label: "Initially loaded todo",
                 color: "red"
-              },
+              }
             ]
           }
         ]
@@ -36,12 +36,12 @@ describe("unionTypes tests", () => {
     }
   }
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const files = scaffold(
       fs.readFileSync(__dirname + "/todos.graphql", "utf8"),
       { format: "js", roots: ["TodoList", "BasicTodo", "FancyTodo"] }
     )
-    writeFiles(__dirname + "/models", files, "js", false)
+    await writeFiles(__dirname + "/models", files, "js", false)
     models = require("./models")
   })
 

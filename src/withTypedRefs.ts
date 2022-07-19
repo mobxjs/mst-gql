@@ -13,6 +13,6 @@ type WithRefsModelType<T extends IAnyModelType, OTHERS> = T extends IModelType<
 
 export function withTypedRefs<REFS>() {
   return function <T extends IAnyModelType>(model: T) {
-    return (model as unknown) as WithRefsModelType<T, REFS>
+    return model as unknown as WithRefsModelType<T, REFS>
   }
 }

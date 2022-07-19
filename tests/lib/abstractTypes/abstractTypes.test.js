@@ -25,13 +25,13 @@ describe("Abstract types tests", () => {
   let mockClient
   let store
 
-  beforeAll(() => {
+  beforeAll(async () => {
     const files = scaffold(schemaContents, {
       format: "js",
       roots: ["SearchResult", "Repo"],
       namingConvention: "asis"
     })
-    writeFiles(__dirname + "/models", files, "js", false)
+    await writeFiles(__dirname + "/models", files, "js", false)
     models = require("./models")
   })
 

@@ -5,8 +5,7 @@
 # see if it can run all right.
 #
 #
-# Note: the generated cra-test directory should not be checked into git. Unfortunately it cannot be added to .gitignore
-# otherwise relative-deps won't work (it ignores files in .gitignore).
+# Note: the generated cra-test directory should not be checked into git.
 #
 
 rm -rf cra-test
@@ -14,19 +13,14 @@ rm -rf cra-test
 mkdir cra-test
 cd cra-test
 
-npx create-react-app cra-app --template typescript
+yarn create-react-app cra-app --template typescript
 cd cra-app
 cp ../../../examples/6-scaffolding-ts-hasura/schema.graphql .
-yarn add mobx mobx-state-tree mobx-react react react-dom mst-gql graphql-request
-yarn add graphql graphql-tag
-yarn add relative-deps
+yarn add mobx mobx-state-tree mobx-react graphql graphql-tag graphql-request
 
-# Add current ms-gql version as relative dependency
-# perl -0777 -pi.original -e 's|\}$|},\n  "relativeDependencies": {\n    "mst-gql": "../../../"\n  }|sm' package.json
-npx relative-deps add ../../../
+# Add current mst-gql version as relative dependency
+yarn add mst-gql@portal:../../../
 
-# Load mst-gql relative deps
-node_modules/.bin/relative-deps
 
 # Add some code to import the generated files
 perl -0777 -pi.original -e 's|(import.*?./App.css.*?;)|\1\nimport {RootStore} from "./model/RootStore";\nconst rootStore = RootStore.create({})|sm' src/App.tsx

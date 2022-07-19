@@ -1,4 +1,4 @@
-import { Instance } from 'mobx-state-tree'
+import { Instance } from "mobx-state-tree"
 import { DocumentNode } from "graphql"
 
 import { Query, FetchPolicy } from "./Query"
@@ -19,7 +19,9 @@ export function createStoreContext<STORE extends Instance<typeof MSTGQLStore>>(
   return React.createContext<STORE>(null as any)
 }
 
-export async function getDataFromTree<STORE extends Instance<typeof MSTGQLStore>>(
+export async function getDataFromTree<
+  STORE extends Instance<typeof MSTGQLStore>
+>(
   tree: React.ReactElement<any>,
   client: STORE,
   renderFunction: (

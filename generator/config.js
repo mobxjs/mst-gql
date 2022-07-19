@@ -1,6 +1,6 @@
-const { existsSync } = require("fs")
 const { resolve } = require("path")
 const { cosmiconfigSync } = require("cosmiconfig")
+const { LOGGER } = require("./logger")
 
 const explorer = cosmiconfigSync("mst-gql")
 
@@ -17,7 +17,9 @@ exports.defaultConfig = {
   header: undefined,
   useIdentifierNumber: false,
   fieldOverrides: [],
-  dynamicArgs: false
+  dynamicArgs: false,
+  debug: false,
+  disableLogColors: false
 }
 
 exports.getConfig = function getConfig() {
@@ -25,18 +27,29 @@ exports.getConfig = function getConfig() {
     const result = explorer.search()
     return result ? result.config : exports.defaultConfig
   } catch (e) {
-    console.error(e.message)
+    LOGGER.error(e.message)
     return exports.defaultConfig
   }
 }
 
+function parse_header_arg_string(header_arg = []) {
+  return header_arg.reduce((headers, current) => {
+    const split = current.split(":")
+    headers[split[0].trim().toLowerCase()] = split[1].trim()
+    return headers
+  }, {})
+}
+
 exports.mergeConfigs = function mergeConfigs(args, config) {
-  const headerConfigValues =
-    config && config.header
-      ? Object.keys(config.header)
-          .map((key) => `${key}:${config.header[key]}`)
-          .join(" --header=")
-      : undefined
+  // convert config headers to lowercase to ensure we don't have duplicates w/ CLI args
+  const config_headers = Object.entries(config.header || {}).map(([k, v]) => [
+    k.toLowerCase(),
+    v
+  ])
+  const headers = {
+    ...Object.fromEntries(config_headers),
+    ...parse_header_arg_string(args["--header"])
+  }
 
   return {
     format: args["--format"] || config.format,
@@ -54,13 +67,15 @@ exports.mergeConfigs = function mergeConfigs(args, config) {
     namingConvention: args["--dontRenameModels"]
       ? "asis"
       : config.namingConvention,
-    header: args["--header"] || headerConfigValues, // if multiple headers are passed in config, chain them up to pass on to apollo cli
+    header: headers,
     useIdentifierNumber:
       !!args["--useIdentifierNumber"] || config.useIdentifierNumber,
     fieldOverrides: args["--fieldOverrides"]
       ? parseFieldOverrides(args["--fieldOverrides"])
       : config.fieldOverrides,
-    dynamicArgs: !!args["--dynamicArgs"] || config.dynamicArgs
+    dynamicArgs: !!args["--dynamicArgs"] || config.dynamicArgs,
+    debug: !!args["--debug"] || config.debug,
+    disableLogColors: !!args["--disableLogColors"] || config.disableLogColors
   }
 }
 
@@ -71,7 +86,7 @@ const parseFieldOverrides = (fieldOverrides) => {
     .map((item) => {
       const override = item.split(":").map((s) => s.trim())
 
-      if (override.length !== 3)
+      if (!(override.length === 3 || override.length === 4))
         throw new Error("--fieldOverrides used with invalid override: " + item)
 
       return override

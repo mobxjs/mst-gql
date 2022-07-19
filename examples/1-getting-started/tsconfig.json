@@ -8,6 +8,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "react",
     "noEmit": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "skipLibCheck": true
   }
 }
