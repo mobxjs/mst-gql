@@ -14,7 +14,7 @@
     "mobx-react": "^7.5.0",
     "mobx-state-tree": "^5.1.5",
     "mst-gql": "portal:../../",
-    "next": "^9.0.5"
+    "next": "^12.2.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.15",
