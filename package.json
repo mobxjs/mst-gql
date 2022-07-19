@@ -22,6 +22,9 @@
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"
   },
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
   "workspaces": [
     "examples/1-getting-started",
     "examples/2-scaffolding",
