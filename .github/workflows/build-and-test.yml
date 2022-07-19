@@ -37,5 +37,5 @@ jobs:
       - name: Test Example 6 (Hasura)
         run: yarn test:example-6
 
-      - name: Test CRA (Create React App)
-        run: yarn test:cra
+#      - name: Test CRA (Create React App)
+#        run: yarn test:cra

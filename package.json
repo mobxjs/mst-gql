@@ -12,7 +12,7 @@
     "postinstall": "husky install",
     "format": "pretty-quick",
     "list-mismatches": "syncpack list-mismatches",
-    "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
+    "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn format",
     "test:cra": "./tests/cra-test/test-cra.sh",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "test:example-2": "cd examples/2-scaffolding && yarn start",
