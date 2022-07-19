@@ -10,7 +10,7 @@
     "build": "microbundle --no-compress --external mobx,mobx-react,mobx-state-tree,graphql-tag,graphql,react,react-dom,graphql-request",
     "fix-mismatches": "yarn dlx syncpack fix-mismatches --prod --dev",
     "postinstall": "husky install",
-    "format": "prettier --write '**/*'",
+    "format": "pretty-quick",
     "list-mismatches": "yarn dlx syncpack list-mismatches",
     "test": "yarn test:mst-gql && yarn test:example-2 && yarn test:example-6 && yarn test:cra && yarn format",
     "test:cra": "cd ./tests && ./test-cra.sh && rm -rf cra-test",
