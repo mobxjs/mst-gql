@@ -1043,7 +1043,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "NON_NULL":
         return printTsType(type.ofType, name, false, fromUndefineableList)
       case "LIST":
-        return `${printTsType(type.ofType, name, true, canBeUndefined)}[]`
+        return `${printTsType(type.ofType, name, true, canBeUndefined)}[]${canBeUndefined ? " | null" : ""}`
       case "OBJECT":
       case "INPUT_OBJECT":
       case "ENUM":

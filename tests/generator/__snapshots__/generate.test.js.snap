@@ -3902,7 +3902,7 @@ import { movieModelPrimitives, MovieModelSelector } from \\"./MovieModel.base\\"
 
 export type MovieInput = {
   description: string[]
-  director?: string[]
+  director?: string[] | null
 }
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -3928,7 +3928,7 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
 
   })
   .actions(self => ({
-    querySearch(variables: { text?: MovieInput[] }, resultSelector: string | ((qb: MovieModelSelector) => MovieModelSelector) = movieModelPrimitives.toString(), options: QueryOptions = {}) {
+    querySearch(variables: { text?: MovieInput[] | null }, resultSelector: string | ((qb: MovieModelSelector) => MovieModelSelector) = movieModelPrimitives.toString(), options: QueryOptions = {}) {
       return self.query<{ search: MovieModelType }>(\`query search($text: [MovieInput!]) { search(text: $text) {
         \${typeof resultSelector === \\"function\\" ? resultSelector(new MovieModelSelector()).toString() : resultSelector}
       } }\`, variables, options)
