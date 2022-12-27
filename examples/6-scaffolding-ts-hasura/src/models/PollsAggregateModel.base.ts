@@ -36,8 +36,8 @@ export const PollsAggregateModelBase = withTypedRefs<Refs>()(ModelBase
   })))
 
 export class PollsAggregateModelSelector extends QueryBuilder {
-  aggregate(builder: string | PollsAggregateFieldsModelSelector | ((selector: PollsAggregateFieldsModelSelector) => PollsAggregateFieldsModelSelector) | undefined) { return this.__child(`aggregate`, PollsAggregateFieldsModelSelector, builder) }
-  nodes(builder: string | PollsModelSelector | ((selector: PollsModelSelector) => PollsModelSelector) | undefined) { return this.__child(`nodes`, PollsModelSelector, builder) }
+  aggregate(builder: string | PollsAggregateFieldsModelSelector | ((selector: PollsAggregateFieldsModelSelector) => PollsAggregateFieldsModelSelector) | undefined = undefined) { return this.__child(`aggregate`, PollsAggregateFieldsModelSelector, builder) }
+  nodes(builder: string | PollsModelSelector | ((selector: PollsModelSelector) => PollsModelSelector) | undefined = undefined) { return this.__child(`nodes`, PollsModelSelector, builder) }
 }
 export function selectFromPollsAggregate() {
   return new PollsAggregateModelSelector()

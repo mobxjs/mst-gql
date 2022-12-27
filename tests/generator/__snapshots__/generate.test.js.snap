@@ -225,7 +225,7 @@ export class MyUserModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
   get name() { return this.__attr(\`name\`) }
   get avatar() { return this.__attr(\`avatar\`) }
-  emptyBoxes(builder?: string | PossiblyEmptyBoxModelSelector | ((selector: PossiblyEmptyBoxModelSelector) => PossiblyEmptyBoxModelSelector)) { return this.__child(\`emptyBoxes\`, PossiblyEmptyBoxModelSelector, builder) }
+  emptyBoxes(builder: string | PossiblyEmptyBoxModelSelector | ((selector: PossiblyEmptyBoxModelSelector) => PossiblyEmptyBoxModelSelector) | undefined = undefined) { return this.__child(\`emptyBoxes\`, PossiblyEmptyBoxModelSelector, builder) }
 }
 export function selectFromMyUser() {
   return new MyUserModelSelector()
@@ -362,7 +362,7 @@ export const QueryRootModelBase = withTypedRefs<Refs>()(ModelBase
   })))
 
 export class QueryRootModelSelector extends QueryBuilder {
-  me(builder?: string | MyUserModelSelector | ((selector: MyUserModelSelector) => MyUserModelSelector)) { return this.__child(\`me\`, MyUserModelSelector, builder) }
+  me(builder: string | MyUserModelSelector | ((selector: MyUserModelSelector) => MyUserModelSelector) | undefined = undefined) { return this.__child(\`me\`, MyUserModelSelector, builder) }
 }
 export function selectFromQueryRoot() {
   return new QueryRootModelSelector()
@@ -1357,7 +1357,7 @@ export const RepoModelBase = ModelBase
 
 export class RepoModelSelector extends QueryBuilder {
   get id() { return this.__attr(\`id\`) }
-  owner(builder?: string | OwnerModelSelector | ((selector: OwnerModelSelector) => OwnerModelSelector)) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
+  owner(builder: string | OwnerModelSelector | ((selector: OwnerModelSelector) => OwnerModelSelector) | undefined = undefined) { return this.__child(\`owner\`, OwnerModelSelector, builder) }
 }
 export function selectFromRepo() {
   return new RepoModelSelector()
@@ -3228,7 +3228,7 @@ export const SearchResultModelBase = ModelBase
 
 export class SearchResultModelSelector extends QueryBuilder {
   get inputQuery() { return this.__attr(\`inputQuery\`) }
-  items(builder?: string | SearchItemModelSelector | ((selector: SearchItemModelSelector) => SearchItemModelSelector)) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
+  items(builder: string | SearchItemModelSelector | ((selector: SearchItemModelSelector) => SearchItemModelSelector) | undefined = undefined) { return this.__child(\`items\`, SearchItemModelSelector, builder) }
 }
 export function selectFromSearchResult() {
   return new SearchResultModelSelector()

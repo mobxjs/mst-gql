@@ -57,16 +57,16 @@ export const PollsAggregateFieldsModelBase = ModelBase
 
 export class PollsAggregateFieldsModelSelector extends QueryBuilder {
   get count() { return this.__attr(`count`) }
-  avg(builder: string | PollsAvgFieldsModelSelector | ((selector: PollsAvgFieldsModelSelector) => PollsAvgFieldsModelSelector) | undefined) { return this.__child(`avg`, PollsAvgFieldsModelSelector, builder) }
-  max(builder: string | PollsMaxFieldsModelSelector | ((selector: PollsMaxFieldsModelSelector) => PollsMaxFieldsModelSelector) | undefined) { return this.__child(`max`, PollsMaxFieldsModelSelector, builder) }
-  min(builder: string | PollsMinFieldsModelSelector | ((selector: PollsMinFieldsModelSelector) => PollsMinFieldsModelSelector) | undefined) { return this.__child(`min`, PollsMinFieldsModelSelector, builder) }
-  stddev(builder: string | PollsStddevFieldsModelSelector | ((selector: PollsStddevFieldsModelSelector) => PollsStddevFieldsModelSelector) | undefined) { return this.__child(`stddev`, PollsStddevFieldsModelSelector, builder) }
-  stddev_pop(builder: string | PollsStddevPopFieldsModelSelector | ((selector: PollsStddevPopFieldsModelSelector) => PollsStddevPopFieldsModelSelector) | undefined) { return this.__child(`stddev_pop`, PollsStddevPopFieldsModelSelector, builder) }
-  stddev_samp(builder: string | PollsStddevSampFieldsModelSelector | ((selector: PollsStddevSampFieldsModelSelector) => PollsStddevSampFieldsModelSelector) | undefined) { return this.__child(`stddev_samp`, PollsStddevSampFieldsModelSelector, builder) }
-  sum(builder: string | PollsSumFieldsModelSelector | ((selector: PollsSumFieldsModelSelector) => PollsSumFieldsModelSelector) | undefined) { return this.__child(`sum`, PollsSumFieldsModelSelector, builder) }
-  var_pop(builder: string | PollsVarPopFieldsModelSelector | ((selector: PollsVarPopFieldsModelSelector) => PollsVarPopFieldsModelSelector) | undefined) { return this.__child(`var_pop`, PollsVarPopFieldsModelSelector, builder) }
-  var_samp(builder: string | PollsVarSampFieldsModelSelector | ((selector: PollsVarSampFieldsModelSelector) => PollsVarSampFieldsModelSelector) | undefined) { return this.__child(`var_samp`, PollsVarSampFieldsModelSelector, builder) }
-  variance(builder: string | PollsVarianceFieldsModelSelector | ((selector: PollsVarianceFieldsModelSelector) => PollsVarianceFieldsModelSelector) | undefined) { return this.__child(`variance`, PollsVarianceFieldsModelSelector, builder) }
+  avg(builder: string | PollsAvgFieldsModelSelector | ((selector: PollsAvgFieldsModelSelector) => PollsAvgFieldsModelSelector) | undefined = undefined) { return this.__child(`avg`, PollsAvgFieldsModelSelector, builder) }
+  max(builder: string | PollsMaxFieldsModelSelector | ((selector: PollsMaxFieldsModelSelector) => PollsMaxFieldsModelSelector) | undefined = undefined) { return this.__child(`max`, PollsMaxFieldsModelSelector, builder) }
+  min(builder: string | PollsMinFieldsModelSelector | ((selector: PollsMinFieldsModelSelector) => PollsMinFieldsModelSelector) | undefined = undefined) { return this.__child(`min`, PollsMinFieldsModelSelector, builder) }
+  stddev(builder: string | PollsStddevFieldsModelSelector | ((selector: PollsStddevFieldsModelSelector) => PollsStddevFieldsModelSelector) | undefined = undefined) { return this.__child(`stddev`, PollsStddevFieldsModelSelector, builder) }
+  stddev_pop(builder: string | PollsStddevPopFieldsModelSelector | ((selector: PollsStddevPopFieldsModelSelector) => PollsStddevPopFieldsModelSelector) | undefined = undefined) { return this.__child(`stddev_pop`, PollsStddevPopFieldsModelSelector, builder) }
+  stddev_samp(builder: string | PollsStddevSampFieldsModelSelector | ((selector: PollsStddevSampFieldsModelSelector) => PollsStddevSampFieldsModelSelector) | undefined = undefined) { return this.__child(`stddev_samp`, PollsStddevSampFieldsModelSelector, builder) }
+  sum(builder: string | PollsSumFieldsModelSelector | ((selector: PollsSumFieldsModelSelector) => PollsSumFieldsModelSelector) | undefined = undefined) { return this.__child(`sum`, PollsSumFieldsModelSelector, builder) }
+  var_pop(builder: string | PollsVarPopFieldsModelSelector | ((selector: PollsVarPopFieldsModelSelector) => PollsVarPopFieldsModelSelector) | undefined = undefined) { return this.__child(`var_pop`, PollsVarPopFieldsModelSelector, builder) }
+  var_samp(builder: string | PollsVarSampFieldsModelSelector | ((selector: PollsVarSampFieldsModelSelector) => PollsVarSampFieldsModelSelector) | undefined = undefined) { return this.__child(`var_samp`, PollsVarSampFieldsModelSelector, builder) }
+  variance(builder: string | PollsVarianceFieldsModelSelector | ((selector: PollsVarianceFieldsModelSelector) => PollsVarianceFieldsModelSelector) | undefined = undefined) { return this.__child(`variance`, PollsVarianceFieldsModelSelector, builder) }
 }
 export function selectFromPollsAggregateFields() {
   return new PollsAggregateFieldsModelSelector()

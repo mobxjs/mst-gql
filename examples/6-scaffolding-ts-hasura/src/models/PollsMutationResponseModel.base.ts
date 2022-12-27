@@ -35,7 +35,7 @@ export const PollsMutationResponseModelBase = withTypedRefs<Refs>()(ModelBase
 
 export class PollsMutationResponseModelSelector extends QueryBuilder {
   get affected_rows() { return this.__attr(`affected_rows`) }
-  returning(builder: string | PollsModelSelector | ((selector: PollsModelSelector) => PollsModelSelector) | undefined) { return this.__child(`returning`, PollsModelSelector, builder) }
+  returning(builder: string | PollsModelSelector | ((selector: PollsModelSelector) => PollsModelSelector) | undefined = undefined) { return this.__child(`returning`, PollsModelSelector, builder) }
 }
 export function selectFromPollsMutationResponse() {
   return new PollsMutationResponseModelSelector()

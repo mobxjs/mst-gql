@@ -35,7 +35,7 @@ export const ChoicesMutationResponseModelBase = withTypedRefs<Refs>()(ModelBase
 
 export class ChoicesMutationResponseModelSelector extends QueryBuilder {
   get affected_rows() { return this.__attr(`affected_rows`) }
-  returning(builder: string | ChoicesModelSelector | ((selector: ChoicesModelSelector) => ChoicesModelSelector) | undefined) { return this.__child(`returning`, ChoicesModelSelector, builder) }
+  returning(builder: string | ChoicesModelSelector | ((selector: ChoicesModelSelector) => ChoicesModelSelector) | undefined = undefined) { return this.__child(`returning`, ChoicesModelSelector, builder) }
 }
 export function selectFromChoicesMutationResponse() {
   return new ChoicesMutationResponseModelSelector()
