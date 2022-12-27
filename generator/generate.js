@@ -590,7 +590,7 @@ ${generateFragments(name, primitiveFields, nonPrimitiveFields)}
         const selector = `${fieldName}ModelSelector`
         let p = `  ${field}(builder`
         p += ifTS(
-          `: string | ${selector} | ((selector: ${selector}) => ${selector}) | undefined`
+          `: string | ${selector} | ((selector: ${selector}) => ${selector}) | undefined = undefined`
         )
         if (fieldArgs && fieldArgs.length) {
           const required = fieldArgs.find(

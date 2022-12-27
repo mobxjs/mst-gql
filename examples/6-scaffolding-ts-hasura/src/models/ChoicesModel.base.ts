@@ -38,7 +38,7 @@ export class ChoicesModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get poll_id() { return this.__attr(`poll_id`) }
   get text() { return this.__attr(`text`) }
-  poll(builder: string | PollsModelSelector | ((selector: PollsModelSelector) => PollsModelSelector) | undefined) { return this.__child(`poll`, PollsModelSelector, builder) }
+  poll(builder: string | PollsModelSelector | ((selector: PollsModelSelector) => PollsModelSelector) | undefined = undefined) { return this.__child(`poll`, PollsModelSelector, builder) }
 }
 export function selectFromChoices() {
   return new ChoicesModelSelector()

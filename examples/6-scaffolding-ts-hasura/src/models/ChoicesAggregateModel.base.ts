@@ -36,8 +36,8 @@ export const ChoicesAggregateModelBase = withTypedRefs<Refs>()(ModelBase
   })))
 
 export class ChoicesAggregateModelSelector extends QueryBuilder {
-  aggregate(builder: string | ChoicesAggregateFieldsModelSelector | ((selector: ChoicesAggregateFieldsModelSelector) => ChoicesAggregateFieldsModelSelector) | undefined) { return this.__child(`aggregate`, ChoicesAggregateFieldsModelSelector, builder) }
-  nodes(builder: string | ChoicesModelSelector | ((selector: ChoicesModelSelector) => ChoicesModelSelector) | undefined) { return this.__child(`nodes`, ChoicesModelSelector, builder) }
+  aggregate(builder: string | ChoicesAggregateFieldsModelSelector | ((selector: ChoicesAggregateFieldsModelSelector) => ChoicesAggregateFieldsModelSelector) | undefined = undefined) { return this.__child(`aggregate`, ChoicesAggregateFieldsModelSelector, builder) }
+  nodes(builder: string | ChoicesModelSelector | ((selector: ChoicesModelSelector) => ChoicesModelSelector) | undefined = undefined) { return this.__child(`nodes`, ChoicesModelSelector, builder) }
 }
 export function selectFromChoicesAggregate() {
   return new ChoicesAggregateModelSelector()
