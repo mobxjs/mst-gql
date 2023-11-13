@@ -226,7 +226,7 @@ export const MSTGQLStore = types
       setHttpClient,
       setWsClient,
       setGraphqlWsClient,
-      __pushPromise(promise: Promise<{}>, queryKey: string) {
+      __pushPromise(promise: Promise<unknown>, queryKey: string) {
         self.__promises.set(queryKey, promise)
         const onSettled = () => self.__promises.delete(queryKey)
         promise.then(onSettled, onSettled)

@@ -19,10 +19,12 @@
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
+    "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
     "jest-dom": "^3.0.0",
-    "mobx": "^6.6.0",
+    "mobx": "^6.10.2",
     "mobx-react": "^7.5.0",
-    "mobx-state-tree": "^5.1.5",
+    "mobx-state-tree": "^5.3.0",
     "react-testing-library": "^5.4.4",
     "wait-port": "^0.2.9"
   },
