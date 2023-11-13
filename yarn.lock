@@ -8634,12 +8634,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dns-packet@npm:^5.2.2":
-  version: 5.3.1
-  resolution: "dns-packet@npm:5.3.1"
+"dns-packet@npm:5.4.0, dns-packet@npm:^5.2.2":
+  version: 5.4.0
+  resolution: "dns-packet@npm:5.4.0"
   dependencies:
     "@leichtgewicht/ip-codec": ^2.0.1
-  checksum: 196ff74a0669126cf5fc901a5849b72f625bd7a4cb163b3f4d41fbe19ed0b017cf7674daef5b0acbd448c094fcd795e501d7066f301be428e4acecfcf3c5f336
+  checksum: a169963848e8539dfd8a19058562f9e1c15c0f82cbf76fa98942f11c46f3c74e7e7c82e3a8a5182d4c9e6ff19e21be738dbd098a876dde755d3aedd2cc730880
   languageName: node
   linkType: hard
 
@@ -14190,6 +14190,7 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14212,6 +14213,7 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14234,6 +14236,7 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14256,6 +14259,7 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14278,6 +14282,7 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14300,6 +14305,7 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
