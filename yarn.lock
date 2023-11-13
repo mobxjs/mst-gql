@@ -13107,7 +13107,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:1.0.2, json5@npm:^1.0.1":
+"json5@npm:^1.0.1":
   version: 1.0.2
   resolution: "json5@npm:1.0.2"
   dependencies:
@@ -14333,12 +14333,11 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
-    json5: 1.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
-    semver: 5.7.2
     throttle-debounce: ^5.0.0
+    word-wrap: 1.2.5
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14357,12 +14356,11 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
-    json5: 1.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
-    semver: 5.7.2
     throttle-debounce: ^5.0.0
+    word-wrap: 1.2.5
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14381,12 +14379,11 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
-    json5: 1.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
-    semver: 5.7.2
     throttle-debounce: ^5.0.0
+    word-wrap: 1.2.5
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14405,12 +14402,11 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
-    json5: 1.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
-    semver: 5.7.2
     throttle-debounce: ^5.0.0
+    word-wrap: 1.2.5
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14429,12 +14425,11 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
-    json5: 1.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
-    semver: 5.7.2
     throttle-debounce: ^5.0.0
+    word-wrap: 1.2.5
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14453,12 +14448,11 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
-    json5: 1.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
-    semver: 5.7.2
     throttle-debounce: ^5.0.0
+    word-wrap: 1.2.5
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -18170,7 +18164,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:2 || 3 || 4 || 5, semver@npm:5.7.2, semver@npm:^5.0.3, semver@npm:^5.1.0, semver@npm:^5.3.0, semver@npm:^5.5.0, semver@npm:^5.6.0, semver@npm:^5.7.0, semver@npm:^5.7.1":
+"semver@npm:2 || 3 || 4 || 5, semver@npm:^5.0.3, semver@npm:^5.1.0, semver@npm:^5.3.0, semver@npm:^5.5.0, semver@npm:^5.6.0, semver@npm:^5.7.0, semver@npm:^5.7.1":
   version: 5.7.2
   resolution: "semver@npm:5.7.2"
   bin:
@@ -20813,10 +20807,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"word-wrap@npm:^1.2.3, word-wrap@npm:~1.2.3":
-  version: 1.2.3
-  resolution: "word-wrap@npm:1.2.3"
-  checksum: 30b48f91fcf12106ed3186ae4fa86a6a1842416df425be7b60485de14bec665a54a68e4b5156647dec3a70f25e84d270ca8bc8cd23182ed095f5c7206a938c1f
+"word-wrap@npm:1.2.5, word-wrap@npm:^1.2.3, word-wrap@npm:~1.2.3":
+  version: 1.2.5
+  resolution: "word-wrap@npm:1.2.5"
+  checksum: f93ba3586fc181f94afdaff3a6fef27920b4b6d9eaefed0f428f8e07adea2a7f54a5f2830ce59406c8416f033f86902b91eb824072354645eea687dff3691ccb
   languageName: node
   linkType: hard
 
