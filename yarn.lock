@@ -5946,7 +5946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-server-core@npm:2.26.2, apollo-server-core@npm:^2.25.4":
+"apollo-server-core@npm:^2.25.4":
   version: 2.26.2
   resolution: "apollo-server-core@npm:2.26.2"
   dependencies:
@@ -8975,10 +8975,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dottie@npm:^2.0.2":
-  version: 2.0.3
-  resolution: "dottie@npm:2.0.3"
-  checksum: 4f5300f7f349b6d5f0be1b39d244e5bbc94f97b480ba746a7d9626ca946bf8fc6a1db2eee7af71be0024d3d5f0b6b805e14a893b893c384c6b37831e8ed94ab1
+"dottie@npm:2.0.6, dottie@npm:^2.0.2":
+  version: 2.0.6
+  resolution: "dottie@npm:2.0.6"
+  checksum: 4c778df9dc631a1108a32ef390916836814999a7411d10883f4151bd49c9c6934dc329b3f50fc7692849aa75ba87dba880fd54be501a3b39a6b9c23d6f772a09
   languageName: node
   linkType: hard
 
@@ -11318,7 +11318,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-cache-semantics@npm:4.1.1, http-cache-semantics@npm:^4.0.0, http-cache-semantics@npm:^4.1.0":
+"http-cache-semantics@npm:^4.0.0, http-cache-semantics@npm:^4.1.0":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
   checksum: 83ac0bc60b17a3a36f9953e7be55e5c8f41acc61b22583060e8dedc9dd5e3607c823a88d0926f9150e571f90946835c7fe150732801010845c72cd8bbff1a236
@@ -14352,17 +14352,15 @@ __metadata:
   resolution: "mst-gql@portal:../../../::locator=client%40workspace%3Aexamples%2F4-apollo-tutorial%2Fclient"
   dependencies:
     ansi-colors: ^4.1.3
-    apollo-server-core: 2.26.2
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
-    http-cache-semantics: 4.1.1
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
-    tough-cookie: 4.1.3
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14377,17 +14375,15 @@ __metadata:
   resolution: "mst-gql@portal:../../::locator=%40mst-gql%2Fgetting-started%40workspace%3Aexamples%2F1-getting-started"
   dependencies:
     ansi-colors: ^4.1.3
-    apollo-server-core: 2.26.2
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
-    http-cache-semantics: 4.1.1
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
-    tough-cookie: 4.1.3
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14402,17 +14398,15 @@ __metadata:
   resolution: "mst-gql@portal:../../::locator=%40mst-gql%2Fscaffold-test-2%40workspace%3Aexamples%2F2-scaffolding"
   dependencies:
     ansi-colors: ^4.1.3
-    apollo-server-core: 2.26.2
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
-    http-cache-semantics: 4.1.1
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
-    tough-cookie: 4.1.3
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14427,17 +14421,15 @@ __metadata:
   resolution: "mst-gql@portal:../../::locator=%40mst-gql%2Fscaffold-test-hasura%40workspace%3Aexamples%2F6-scaffolding-ts-hasura"
   dependencies:
     ansi-colors: ^4.1.3
-    apollo-server-core: 2.26.2
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
-    http-cache-semantics: 4.1.1
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
-    tough-cookie: 4.1.3
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14452,17 +14444,15 @@ __metadata:
   resolution: "mst-gql@portal:../../::locator=%40mst-gql%2Ftwitter-clone%40workspace%3Aexamples%2F3-twitter-clone"
   dependencies:
     ansi-colors: ^4.1.3
-    apollo-server-core: 2.26.2
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
-    http-cache-semantics: 4.1.1
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
-    tough-cookie: 4.1.3
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14477,17 +14467,15 @@ __metadata:
   resolution: "mst-gql@portal:../../::locator=ssr-example%40workspace%3Aexamples%2F5-nextjs"
   dependencies:
     ansi-colors: ^4.1.3
-    apollo-server-core: 2.26.2
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
+    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
-    http-cache-semantics: 4.1.1
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
-    tough-cookie: 4.1.3
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -19755,7 +19743,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tough-cookie@npm:4.1.3, tough-cookie@npm:^4.0.0":
+"tough-cookie@npm:^4.0.0":
   version: 4.1.3
   resolution: "tough-cookie@npm:4.1.3"
   dependencies:
