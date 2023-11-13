@@ -13456,14 +13456,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loader-utils@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "loader-utils@npm:2.0.2"
+"loader-utils@npm:2.0.4, loader-utils@npm:^2.0.0":
+  version: 2.0.4
+  resolution: "loader-utils@npm:2.0.4"
   dependencies:
     big.js: ^5.2.2
     emojis-list: ^3.0.0
     json5: ^2.1.2
-  checksum: 9078d1ed47cadc57f4c6ddbdb2add324ee7da544cea41de3b7f1128e8108fcd41cd3443a85b7ee8d7d8ac439148aa221922774efe4cf87506d4fb054d5889303
+  checksum: a5281f5fff1eaa310ad5e1164095689443630f3411e927f95031ab4fb83b4a98f388185bb1fe949e8ab8d4247004336a625e9255c22122b815bb9a4c5d8fc3b7
   languageName: node
   linkType: hard
 
@@ -14333,6 +14333,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    loader-utils: 2.0.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14357,6 +14358,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    loader-utils: 2.0.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14381,6 +14383,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    loader-utils: 2.0.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14405,6 +14408,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    loader-utils: 2.0.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14429,6 +14433,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    loader-utils: 2.0.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14453,6 +14458,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    loader-utils: 2.0.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
