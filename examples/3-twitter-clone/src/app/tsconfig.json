@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "rootDir": "./src/app",
-    "baseUrl": "./src/app",
+    "target": "es6",
+    "rootDir": "./",
+    //    "baseUrl": "./src/app",
     "strict": false,
     "lib": ["dom", "es2018", "esnext.asynciterable", "esnext.array"],
     "jsx": "react",
