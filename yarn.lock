@@ -8634,7 +8634,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dns-packet@npm:5.4.0, dns-packet@npm:^5.2.2":
+"dns-packet@npm:^5.2.2":
   version: 5.4.0
   resolution: "dns-packet@npm:5.4.0"
   dependencies:
@@ -10369,10 +10369,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-func-name@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "get-func-name@npm:2.0.0"
-  checksum: 8d82e69f3e7fab9e27c547945dfe5cc0c57fc0adf08ce135dddb01081d75684a03e7a0487466f478872b341d52ac763ae49e660d01ab83741f74932085f693c3
+"get-func-name@npm:2.0.2, get-func-name@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "get-func-name@npm:2.0.2"
+  checksum: 3f62f4c23647de9d46e6f76d2b3eafe58933a9b3830c60669e4180d6c601ce1b4aa310ba8366143f55e52b139f992087a9f0647274e8745621fa2af7e0acf13b
   languageName: node
   linkType: hard
 
@@ -14190,8 +14190,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
+    get-func-name: 2.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14213,8 +14213,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
+    get-func-name: 2.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14236,8 +14236,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
+    get-func-name: 2.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14259,8 +14259,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
+    get-func-name: 2.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14282,8 +14282,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
+    get-func-name: 2.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14305,8 +14305,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dns-packet: 5.4.0
     fast-json-stable-stringify: ^2.1.0
+    get-func-name: 2.0.2
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
