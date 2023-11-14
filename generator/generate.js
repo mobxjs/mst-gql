@@ -905,14 +905,14 @@ ${enumContent}
 
         let { name, origName, args, type, description } = field
 
-        const isScalar =
-          type.kind === "SCALAR" ||
-          (type.ofType && type.ofType.kind === "SCALAR")
-
         if (type.kind === "NON_NULL") type = type.ofType
         const returnsList = type.kind === "LIST"
         let returnType = returnsList ? type.ofType : type
         if (returnType.kind === "NON_NULL") returnType = returnType.ofType
+
+        const isScalar =
+          returnType.kind === "SCALAR" ||
+          (returnType.ofType && returnType.ofType.kind === "SCALAR")
 
         /** 4) Add the return type of the query if TS */
         const tsType =
@@ -920,14 +920,14 @@ ${enumContent}
             ? ""
             : `<{ ${name}: ${
                 isScalar
-                  ? `${printTsPrimitiveType(type.name)} `
+                  ? `${printTsPrimitiveType(returnType.name)}`
                   : `${returnType.name}${
                       returnType.kind === "UNION" ||
                       returnType.kind === "INTERFACE"
                         ? "Union"
                         : modelTypePostfix
-                    }${returnsList ? "[]" : ""}`
-              }}>`
+                    }`
+              }${returnsList ? "[]" : ""} }>`
 
         let formalArgs = ""
         let actualArgs = ""
@@ -1043,7 +1043,7 @@ ${optPrefix("\n    // ", sanitizeComment(description))}
       case "NON_NULL":
         return printTsType(type.ofType, name, false, fromUndefineableList)
       case "LIST":
-        return `${printTsType(type.ofType, name, true, canBeUndefined)}[]`
+        return `${printTsType(type.ofType, name, true, canBeUndefined)}[]${canBeUndefined ? " | null" : ""}`
       case "OBJECT":
       case "INPUT_OBJECT":
       case "ENUM":

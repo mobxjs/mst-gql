@@ -6,7 +6,14 @@ import { MessageModelType } from "../models/"
 import { Replies } from "./Replies"
 
 // @ts-ignore
-import images from "../avatars/*.jpg"
+import chuck from "../avatars/chuck.jpg"
+// @ts-ignore
+import michel from "../avatars/michel.jpg"
+
+const images = {
+  michel,
+  chuck
+}
 
 export const Message = observer(
   ({ message, asChild }: { message: MessageModelType; asChild?: boolean }) => {

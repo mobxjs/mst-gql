@@ -216,7 +216,7 @@ type Query {
   expect(
     hasFileContent(
       searchResultBase,
-      "querySearch(variables: { text?: MovieInput[] },"
+      "querySearch(variables: { text?: MovieInput[] | null },"
     )
   ).toBeTruthy()
 
