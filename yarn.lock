@@ -8975,7 +8975,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dottie@npm:2.0.6, dottie@npm:^2.0.2":
+"dottie@npm:^2.0.2":
   version: 2.0.6
   resolution: "dottie@npm:2.0.6"
   checksum: 4c778df9dc631a1108a32ef390916836814999a7411d10883f4151bd49c9c6934dc329b3f50fc7692849aa75ba87dba880fd54be501a3b39a6b9c23d6f772a09
@@ -10165,13 +10165,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0":
-  version: 1.15.1
-  resolution: "follow-redirects@npm:1.15.1"
+"follow-redirects@npm:1.15.4, follow-redirects@npm:^1.0.0":
+  version: 1.15.4
+  resolution: "follow-redirects@npm:1.15.4"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: 6aa4e3e3cdfa3b9314801a1cd192ba756a53479d9d8cca65bf4db3a3e8834e62139245cd2f9566147c8dfe2efff1700d3e6aefd103de4004a7b99985e71dd533
+  checksum: e178d1deff8b23d5d24ec3f7a94cde6e47d74d0dc649c35fc9857041267c12ec5d44650a0c5597ef83056ada9ea6ca0c30e7c4f97dbf07d035086be9e6a5b7b6
   languageName: node
   linkType: hard
 
@@ -14355,8 +14355,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14378,8 +14378,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14401,8 +14401,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14424,8 +14424,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14447,8 +14447,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14470,8 +14470,8 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.4
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
