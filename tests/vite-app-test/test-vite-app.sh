@@ -69,8 +69,8 @@ do
   failed=`egrep 'Failed|ERROR|npm ERR' out`
   if [[ ! -z ${failed} ]]; then
     echo
-    echo "App failed to compile"
-    pid=`ps -ef | grep tests/vite-test/vite-tmp/vite-app | grep -v grep | awk '{print $2}' -`
+    echo "App failed to compile. Sopping."
+    pid=$(ps -ef | grep vite-tmp/vite-app/ | grep -v grep | awk '{print $2}' | tr '\n' ' ')
     kill -9 $pid > /dev/null 2>&1
     exit
   fi
@@ -80,7 +80,7 @@ do
   sleep 1
 done
 
-echo "App ran successfully!"
-pid=`ps -ef | grep tests/vite-test/vite-tmp/vite-app | grep -v grep | awk '{print $2}' -`
+echo "App ran successfully! Stopping."
+pid=$(ps -ef | grep vite-tmp/vite-app/ | grep -v grep | awk '{print $2}' | tr '\n' ' ')
 kill -9 $pid > /dev/null 2>&1
 exit
