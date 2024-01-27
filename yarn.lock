@@ -8975,7 +8975,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dottie@npm:2.0.6, dottie@npm:^2.0.2":
+"dottie@npm:^2.0.2":
   version: 2.0.6
   resolution: "dottie@npm:2.0.6"
   checksum: 4c778df9dc631a1108a32ef390916836814999a7411d10883f4151bd49c9c6934dc329b3f50fc7692849aa75ba87dba880fd54be501a3b39a6b9c23d6f772a09
@@ -14355,7 +14355,6 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14378,7 +14377,6 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14401,7 +14399,6 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14424,7 +14421,6 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14447,7 +14443,6 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
@@ -14470,7 +14465,6 @@ __metadata:
     arg: ^5.0.2
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
-    dottie: 2.0.6
     fast-json-stable-stringify: ^2.1.0
     lodash: ^4.17.21
     node-fetch: ^2.2.1
