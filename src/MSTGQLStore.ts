@@ -15,6 +15,7 @@ import { deflateHelper } from "./deflateHelper"
 import { mergeHelper } from "./mergeHelper"
 import { Query, QueryHttpClientOptions, QueryOptions } from "./Query"
 import { getFirstValue } from "./utils"
+import { print } from "graphql/language/printer"
 
 type RequestOptions = {
   document: string
@@ -154,7 +155,11 @@ export const MSTGQLStore = types
       if (self.graphqlWsClient) {
         cleanup = self.graphqlWsClient.subscribe(
           {
-            query: query ? query.toString() : "",
+            query: query
+              ? typeof query === "string"
+                ? query
+                : print(query)
+              : "",
             variables: variables
           },
           {
@@ -181,7 +186,11 @@ export const MSTGQLStore = types
         if (!self.gqlWsClient) throw new Error("No WS client available")
         const sub = self.gqlWsClient
           .request({
-            query: query ? query.toString() : "",
+            query: query
+              ? typeof query === "string"
+                ? query
+                : print(query) // Here we could actually pass query as is, gqlWsClient can work with DocumentNode
+              : "",
             variables
           })
           .subscribe({
@@ -226,7 +235,7 @@ export const MSTGQLStore = types
       setHttpClient,
       setWsClient,
       setGraphqlWsClient,
-      __pushPromise(promise: Promise<{}>, queryKey: string) {
+      __pushPromise(promise: Promise<unknown>, queryKey: string) {
         self.__promises.set(queryKey, promise)
         const onSettled = () => self.__promises.delete(queryKey)
         promise.then(onSettled, onSettled)

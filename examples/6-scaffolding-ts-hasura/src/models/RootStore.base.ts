@@ -82,12 +82,12 @@ export type BigintComparisonExp = {
   _eq?: (any | null)
   _gt?: (any | null)
   _gte?: (any | null)
-  _in?: any[]
+  _in?: any[] | null
   _is_null?: (boolean | null)
   _lt?: (any | null)
   _lte?: (any | null)
   _neq?: (any | null)
-  _nin?: any[]
+  _nin?: any[] | null
 }
 export type ChoicesAggregateOrderBy = {
   avg?: (ChoicesAvgOrderBy | null)
@@ -111,9 +111,9 @@ export type ChoicesAvgOrderBy = {
   poll_id?: (OrderBy | null)
 }
 export type ChoicesBoolExp = {
-  _and?: (ChoicesBoolExp | null)[]
+  _and?: (ChoicesBoolExp | null)[] | null
   _not?: (ChoicesBoolExp | null)
-  _or?: (ChoicesBoolExp | null)[]
+  _or?: (ChoicesBoolExp | null)[] | null
   id?: (BigintComparisonExp | null)
   poll?: (PollsBoolExp | null)
   poll_id?: (BigintComparisonExp | null)
@@ -209,9 +209,9 @@ export type PollsAvgOrderBy = {
   updated_by?: (OrderBy | null)
 }
 export type PollsBoolExp = {
-  _and?: (PollsBoolExp | null)[]
+  _and?: (PollsBoolExp | null)[] | null
   _not?: (PollsBoolExp | null)
-  _or?: (PollsBoolExp | null)[]
+  _or?: (PollsBoolExp | null)[] | null
   choices?: (ChoicesBoolExp | null)
   created_at?: (TimestampComparisonExp | null)
   created_by?: (BigintComparisonExp | null)
@@ -327,14 +327,14 @@ export type StringComparisonExp = {
   _gt?: (string | null)
   _gte?: (string | null)
   _ilike?: (string | null)
-  _in?: string[]
+  _in?: string[] | null
   _is_null?: (boolean | null)
   _like?: (string | null)
   _lt?: (string | null)
   _lte?: (string | null)
   _neq?: (string | null)
   _nilike?: (string | null)
-  _nin?: string[]
+  _nin?: string[] | null
   _nlike?: (string | null)
   _nsimilar?: (string | null)
   _similar?: (string | null)
@@ -343,12 +343,12 @@ export type TimestampComparisonExp = {
   _eq?: (any | null)
   _gt?: (any | null)
   _gte?: (any | null)
-  _in?: any[]
+  _in?: any[] | null
   _is_null?: (boolean | null)
   _lt?: (any | null)
   _lte?: (any | null)
   _neq?: (any | null)
-  _nin?: any[]
+  _nin?: any[] | null
 }
 /* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
 type Refs = {
@@ -374,93 +374,93 @@ export const RootStoreBase = withTypedRefs<Refs>()(MSTGQLStore
     polls: types.optional(types.map(types.late((): any => PollsModel)), {})
   })
   .actions(self => ({
-    queryChoices(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ choices: ChoicesModelType[]}>(`query choices($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    queryChoices(variables: { distinctOn?: ChoicesSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[] | null, where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ choices: ChoicesModelType[] }>(`query choices($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ choices_aggregate: ChoicesAggregateModelType}>(`query choices_aggregate($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    queryChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[] | null, where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ choices_aggregate: ChoicesAggregateModelType }>(`query choices_aggregate($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryChoices_by_pk(variables: { id: any }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ choices_by_pk: ChoicesModelType}>(`query choices_by_pk($id: bigint!) { choices_by_pk(id: $id) {
+      return self.query<{ choices_by_pk: ChoicesModelType }>(`query choices_by_pk($id: bigint!) { choices_by_pk(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryPolls(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ polls: PollsModelType[]}>(`query polls($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    queryPolls(variables: { distinctOn?: PollsSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[] | null, where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ polls: PollsModelType[] }>(`query polls($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
-    queryPolls_aggregate(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ polls_aggregate: PollsAggregateModelType}>(`query polls_aggregate($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    queryPolls_aggregate(variables: { distinctOn?: PollsSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[] | null, where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), options: QueryOptions = {}) {
+      return self.query<{ polls_aggregate: PollsAggregateModelType }>(`query polls_aggregate($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     queryPolls_by_pk(variables: { id: any }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), options: QueryOptions = {}) {
-      return self.query<{ polls_by_pk: PollsModelType}>(`query polls_by_pk($id: bigint!) { polls_by_pk(id: $id) {
+      return self.query<{ polls_by_pk: PollsModelType }>(`query polls_by_pk($id: bigint!) { polls_by_pk(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsModelSelector()).toString() : resultSelector}
       } }`, variables, options)
     },
     mutateDelete_choices(variables: { where: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ delete_choices: ChoicesMutationResponseModelType}>(`mutation delete_choices($where: choices_bool_exp!) { delete_choices(where: $where) {
+      return self.mutate<{ delete_choices: ChoicesMutationResponseModelType }>(`mutation delete_choices($where: choices_bool_exp!) { delete_choices(where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateDelete_polls(variables: { where: PollsBoolExp }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ delete_polls: PollsMutationResponseModelType}>(`mutation delete_polls($where: polls_bool_exp!) { delete_polls(where: $where) {
+      return self.mutate<{ delete_polls: PollsMutationResponseModelType }>(`mutation delete_polls($where: polls_bool_exp!) { delete_polls(where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateInsert_choices(variables: { objects: ChoicesInsertInput[], onConflict?: (ChoicesOnConflict | null) }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ insert_choices: ChoicesMutationResponseModelType}>(`mutation insert_choices($objects: [choices_insert_input!]!, $onConflict: choices_on_conflict) { insert_choices(objects: $objects, on_conflict: $onConflict) {
+      return self.mutate<{ insert_choices: ChoicesMutationResponseModelType }>(`mutation insert_choices($objects: [choices_insert_input!]!, $onConflict: choices_on_conflict) { insert_choices(objects: $objects, on_conflict: $onConflict) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateInsert_polls(variables: { objects: PollsInsertInput[], onConflict?: (PollsOnConflict | null) }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ insert_polls: PollsMutationResponseModelType}>(`mutation insert_polls($objects: [polls_insert_input!]!, $onConflict: polls_on_conflict) { insert_polls(objects: $objects, on_conflict: $onConflict) {
+      return self.mutate<{ insert_polls: PollsMutationResponseModelType }>(`mutation insert_polls($objects: [polls_insert_input!]!, $onConflict: polls_on_conflict) { insert_polls(objects: $objects, on_conflict: $onConflict) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateUpdate_choices(variables: { inc?: (ChoicesIncInput | null), set?: (ChoicesSetInput | null), where: ChoicesBoolExp }, resultSelector: string | ((qb: ChoicesMutationResponseModelSelector) => ChoicesMutationResponseModelSelector) = choicesMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ update_choices: ChoicesMutationResponseModelType}>(`mutation update_choices($inc: choices_inc_input, $set: choices_set_input, $where: choices_bool_exp!) { update_choices(_inc: $inc, _set: $set, where: $where) {
+      return self.mutate<{ update_choices: ChoicesMutationResponseModelType }>(`mutation update_choices($inc: choices_inc_input, $set: choices_set_input, $where: choices_bool_exp!) { update_choices(_inc: $inc, _set: $set, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
     mutateUpdate_polls(variables: { inc?: (PollsIncInput | null), set?: (PollsSetInput | null), where: PollsBoolExp }, resultSelector: string | ((qb: PollsMutationResponseModelSelector) => PollsMutationResponseModelSelector) = pollsMutationResponseModelPrimitives.toString(), optimisticUpdate?: () => void) {
-      return self.mutate<{ update_polls: PollsMutationResponseModelType}>(`mutation update_polls($inc: polls_inc_input, $set: polls_set_input, $where: polls_bool_exp!) { update_polls(_inc: $inc, _set: $set, where: $where) {
+      return self.mutate<{ update_polls: PollsMutationResponseModelType }>(`mutation update_polls($inc: polls_inc_input, $set: polls_set_input, $where: polls_bool_exp!) { update_polls(_inc: $inc, _set: $set, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsMutationResponseModelSelector()).toString() : resultSelector}
       } }`, variables, optimisticUpdate)
     },
-    subscribeChoices(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
-      return self.subscribe<{ choices: ChoicesModelType[]}>(`subscription choices($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    subscribeChoices(variables: { distinctOn?: ChoicesSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[] | null, where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+      return self.subscribe<{ choices: ChoicesModelType[] }>(`subscription choices($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
-    subscribeChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[], where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
-      return self.subscribe<{ choices_aggregate: ChoicesAggregateModelType}>(`subscription choices_aggregate($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    subscribeChoices_aggregate(variables: { distinctOn?: ChoicesSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: ChoicesOrderBy[] | null, where?: (ChoicesBoolExp | null) }, resultSelector: string | ((qb: ChoicesAggregateModelSelector) => ChoicesAggregateModelSelector) = choicesAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+      return self.subscribe<{ choices_aggregate: ChoicesAggregateModelType }>(`subscription choices_aggregate($distinctOn: [choices_select_column!], $limit: Int, $offset: Int, $orderBy: [choices_order_by!], $where: choices_bool_exp) { choices_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
     subscribeChoices_by_pk(variables: { id: any }, resultSelector: string | ((qb: ChoicesModelSelector) => ChoicesModelSelector) = choicesModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
-      return self.subscribe<{ choices_by_pk: ChoicesModelType}>(`subscription choices_by_pk($id: bigint!) { choices_by_pk(id: $id) {
+      return self.subscribe<{ choices_by_pk: ChoicesModelType }>(`subscription choices_by_pk($id: bigint!) { choices_by_pk(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new ChoicesModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
-    subscribePolls(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
-      return self.subscribe<{ polls: PollsModelType[]}>(`subscription polls($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    subscribePolls(variables: { distinctOn?: PollsSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[] | null, where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+      return self.subscribe<{ polls: PollsModelType[] }>(`subscription polls($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
-    subscribePolls_aggregate(variables: { distinctOn?: PollsSelectColumn[], limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[], where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
-      return self.subscribe<{ polls_aggregate: PollsAggregateModelType}>(`subscription polls_aggregate($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    subscribePolls_aggregate(variables: { distinctOn?: PollsSelectColumn[] | null, limit?: (number | null), offset?: (number | null), orderBy?: PollsOrderBy[] | null, where?: (PollsBoolExp | null) }, resultSelector: string | ((qb: PollsAggregateModelSelector) => PollsAggregateModelSelector) = pollsAggregateModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
+      return self.subscribe<{ polls_aggregate: PollsAggregateModelType }>(`subscription polls_aggregate($distinctOn: [polls_select_column!], $limit: Int, $offset: Int, $orderBy: [polls_order_by!], $where: polls_bool_exp) { polls_aggregate(distinct_on: $distinctOn, limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsAggregateModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },
     subscribePolls_by_pk(variables: { id: any }, resultSelector: string | ((qb: PollsModelSelector) => PollsModelSelector) = pollsModelPrimitives.toString(), onData?: (item: any) => void, onError?: (error: Error) => void) {
-      return self.subscribe<{ polls_by_pk: PollsModelType}>(`subscription polls_by_pk($id: bigint!) { polls_by_pk(id: $id) {
+      return self.subscribe<{ polls_by_pk: PollsModelType }>(`subscription polls_by_pk($id: bigint!) { polls_by_pk(id: $id) {
         ${typeof resultSelector === "function" ? resultSelector(new PollsModelSelector()).toString() : resultSelector}
       } }`, variables, onData, onError)
     },

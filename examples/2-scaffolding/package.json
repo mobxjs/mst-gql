@@ -7,9 +7,10 @@
     "start": "yarn scaffold && yarn build"
   },
   "dependencies": {
+    "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
-    "mobx": "^6.6.0",
-    "mobx-state-tree": "^5.1.5",
+    "mobx": "^6.10.2",
+    "mobx-state-tree": "^5.3.0",
     "mst-gql": "portal:../../"
   },
   "devDependencies": {

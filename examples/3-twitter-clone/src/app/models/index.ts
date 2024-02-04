@@ -2,8 +2,8 @@
 /* eslint-disable */
 /* tslint:disable */
 
-export * from "./SearchResultModelSelector"
 export * from "./UserModel"
 export * from "./MessageModel"
+export * from "./SearchResultModelSelector"
 export * from "./RootStore"
 export * from "./reactUtils"

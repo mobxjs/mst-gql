@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.17.2
+
+- Fix tests, upgrade minor versions of mobx, mobx-state-tree
+
 ## 0.17.1
 
 - Use [Pinst](https://www.npmjs.com/package/pinst) to fix `postinstall` scripts running when installing mst-gql

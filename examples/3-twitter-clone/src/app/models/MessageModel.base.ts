@@ -44,9 +44,9 @@ export class MessageModelSelector extends QueryBuilder {
   get id() { return this.__attr(`id`) }
   get timestamp() { return this.__attr(`timestamp`) }
   get text() { return this.__attr(`text`) }
-  user(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__child(`user`, UserModelSelector, builder) }
-  likes(builder?: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector)) { return this.__child(`likes`, UserModelSelector, builder) }
-  replyTo(builder?: string | MessageModelSelector | ((selector: MessageModelSelector) => MessageModelSelector)) { return this.__child(`replyTo`, MessageModelSelector, builder) }
+  user(builder: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector) | undefined) { return this.__child(`user`, UserModelSelector, builder) }
+  likes(builder: string | UserModelSelector | ((selector: UserModelSelector) => UserModelSelector) | undefined) { return this.__child(`likes`, UserModelSelector, builder) }
+  replyTo(builder: string | MessageModelSelector | ((selector: MessageModelSelector) => MessageModelSelector) | undefined) { return this.__child(`replyTo`, MessageModelSelector, builder) }
 }
 export function selectFromMessage() {
   return new MessageModelSelector()
