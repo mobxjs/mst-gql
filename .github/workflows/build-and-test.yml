@@ -17,7 +17,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'
           cache: 'yarn'
 
       - name: Install Dependencies
@@ -38,5 +38,5 @@ jobs:
       - name: Test Example 6 (Hasura)
         run: yarn test:example-6
 
-#      - name: Test CRA (Create React App)
-#        run: yarn test:cra
+#      - name: Test e2e vite app
+#        run: yarn test:vite
