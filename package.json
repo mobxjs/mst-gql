@@ -2,7 +2,7 @@
   "name": "mst-gql",
   "description": "Bindings for mobx-state-tree and GraphQL",
   "license": "MIT",
-  "version": "0.17.2",
+  "version": "0.17.3",
   "author": "Michel Weststrate",
   "maintainers": [
     {
@@ -25,6 +25,7 @@
     "test:example-2": "cd examples/2-scaffolding && yarn start",
     "test:example-6": "cd examples/6-scaffolding-ts-hasura && yarn start",
     "test:mst-gql": "jest test",
+    "test:update-snapshot": "jest --updateSnapshot",
     "watch": "jest test --watch",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"
