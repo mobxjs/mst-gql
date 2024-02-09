@@ -107,6 +107,56 @@ type query_root {
   ).toBeTruthy()
 })
 
+test("scaffolding with model generation only to work", () => {
+  const output = scaffold(
+    `
+    
+schema {
+  query: query_root
+}
+    
+type my_user {
+  id: ID
+  name: String!
+  avatar: String!
+  emptyBoxes: [possibly_empty_box]!
+}
+
+type possibly_empty_box {
+  id: ID
+  label: String!
+  isEmpty: Boolean!
+}
+
+type query_root {
+  me: my_user
+}
+`,
+    {
+      roots: ["my_user", "possibly_empty_box"],
+      modelsOnly: true
+    }
+  )
+
+  expect(output).toMatchSnapshot()
+
+  // Should still have model props
+  expect(
+    hasFileContent(
+      findFile(output, "RootStore.base"),
+      "possiblyEmptyBoxes: types.optional(types.map(types.late((): any => PossiblyEmptyBoxModel)), {})"
+    )
+  ).toBeTruthy()
+
+  // Should not have queryMe() action this time
+  expect(
+    !hasFileContent(
+      findFile(output, "RootStore.base"),
+      "queryMe(variables?: {  }, resultSelector: string | ((qb: MyUserModelSelector) => MyUserModelSelector) = myUserModelPrimitives.toString(), options: QueryOptions = {}) {"
+    )
+  ).toBeTruthy()
+})
+
 test("interface field type to work", () => {
   const output = scaffold(
     `
@@ -176,7 +226,6 @@ type Query {
       namingConvention: "asis"
     }
   )
-  console.log("+++ output", output)
   expect(output).toMatchSnapshot()
 
   expect(findFile(output, "SearchItemModelSelector")).toBeTruthy()

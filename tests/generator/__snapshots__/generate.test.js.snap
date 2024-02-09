@@ -2854,6 +2854,275 @@ export * from \\"./reactUtils\\"
 ]
 `;
 
+exports[`scaffolding with model generation only to work 1`] = `
+Array [
+  Array [
+    "ModelBase",
+    "import { MSTGQLObject } from \\"mst-gql\\"
+
+export const ModelBase = MSTGQLObject
+",
+    false,
+  ],
+  Array [
+    "MyUserModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { IObservableArray } from \\"mobx\\"
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLRef, QueryBuilder, withTypedRefs } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEmptyBoxModel\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  emptyBoxes: IObservableArray<PossiblyEmptyBoxModelType>;
+}
+
+/**
+ * MyUserBase
+ * auto generated base class for the model MyUserModel.
+ */
+export const MyUserModelBase = withTypedRefs<Refs>()(ModelBase
+  .named('MyUser')
+  .props({
+    __typename: types.optional(types.literal(\\"my_user\\"), \\"my_user\\"),
+    id: types.identifier,
+    name: types.union(types.undefined, types.string),
+    avatar: types.union(types.undefined, types.string),
+    emptyBoxes: types.union(types.undefined, types.array(types.union(types.null, MSTGQLRef(types.late((): any => PossiblyEmptyBoxModel))))),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  })))
+
+
+",
+    true,
+  ],
+  Array [
+    "MyUserModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { MyUserModelBase } from \\"./MyUserModel.base\\"
+
+/* The TypeScript type of an instance of MyUserModel */
+export interface MyUserModelType extends Instance<typeof MyUserModel.Type> {}
+
+
+
+/**
+ * MyUserModel
+ */
+export const MyUserModel = MyUserModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "PossiblyEmptyBoxModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { QueryBuilder } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/**
+ * PossiblyEmptyBoxBase
+ * auto generated base class for the model PossiblyEmptyBoxModel.
+ */
+export const PossiblyEmptyBoxModelBase = ModelBase
+  .named('PossiblyEmptyBox')
+  .props({
+    __typename: types.optional(types.literal(\\"possibly_empty_box\\"), \\"possibly_empty_box\\"),
+    id: types.identifier,
+    label: types.union(types.undefined, types.string),
+    isEmpty: types.union(types.undefined, types.boolean),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  }))
+
+
+",
+    true,
+  ],
+  Array [
+    "PossiblyEmptyBoxModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { PossiblyEmptyBoxModelBase } from \\"./PossiblyEmptyBoxModel.base\\"
+
+/* The TypeScript type of an instance of PossiblyEmptyBoxModel */
+export interface PossiblyEmptyBoxModelType extends Instance<typeof PossiblyEmptyBoxModel.Type> {}
+
+
+
+/**
+ * PossiblyEmptyBoxModel
+ */
+export const PossiblyEmptyBoxModel = PossiblyEmptyBoxModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "QueryRootModel.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLRef, QueryBuilder, withTypedRefs } from \\"mst-gql\\"
+import { ModelBase } from \\"./ModelBase\\"
+import { MyUserModel, MyUserModelType } from \\"./MyUserModel\\"
+import { RootStoreType } from \\"./index\\"
+
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  me: MyUserModelType;
+}
+
+/**
+ * QueryRootBase
+ * auto generated base class for the model QueryRootModel.
+ */
+export const QueryRootModelBase = withTypedRefs<Refs>()(ModelBase
+  .named('QueryRoot')
+  .props({
+    __typename: types.optional(types.literal(\\"query_root\\"), \\"query_root\\"),
+    me: types.union(types.undefined, types.null, MSTGQLRef(types.late((): any => MyUserModel))),
+  })
+  .views(self => ({
+    get store() {
+      return self.__getStore<RootStoreType>()
+    }
+  })))
+
+
+",
+    true,
+  ],
+  Array [
+    "QueryRootModel",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { QueryRootModelBase } from \\"./QueryRootModel.base\\"
+
+/* The TypeScript type of an instance of QueryRootModel */
+export interface QueryRootModelType extends Instance<typeof QueryRootModel.Type> {}
+
+
+
+/**
+ * QueryRootModel
+ */
+export const QueryRootModel = QueryRootModelBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore",
+    "import { Instance } from \\"mobx-state-tree\\"
+import { RootStoreBase } from \\"./RootStore.base\\"
+
+export interface RootStoreType extends Instance<typeof RootStore.Type> {}
+
+export const RootStore = RootStoreBase
+  .actions(self => ({
+    // This is an auto-generated example action.
+    log() {
+      console.log(JSON.stringify(self))
+    }
+  }))
+",
+    false,
+  ],
+  Array [
+    "RootStore.base",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+import { ObservableMap } from \\"mobx\\"
+import { types } from \\"mobx-state-tree\\"
+import { MSTGQLStore, configureStoreMixin, QueryOptions, withTypedRefs } from \\"mst-gql\\"
+
+import { MyUserModel, MyUserModelType } from \\"./MyUserModel\\"
+import { PossiblyEmptyBoxModel, PossiblyEmptyBoxModelType } from \\"./PossiblyEmptyBoxModel\\"
+import { QueryRootModel, QueryRootModelType } from \\"./QueryRootModel\\"
+
+
+
+/* The TypeScript type that explicits the refs to other models in order to prevent a circular refs issue */
+type Refs = {
+  myUsers: ObservableMap<string, MyUserModelType>,
+  possiblyEmptyBoxes: ObservableMap<string, PossiblyEmptyBoxModelType>
+}
+
+
+/**
+* Enums for the names of base graphql actions
+*/
+
+
+
+/**
+* Store, managing, among others, all the objects received through graphQL
+*/
+export const RootStoreBase = withTypedRefs<Refs>()(types.model()
+  .named(\\"RootStore\\")
+  .extend(configureStoreMixin([['my_user', () => MyUserModel], ['possibly_empty_box', () => PossiblyEmptyBoxModel], ['query_root', () => QueryRootModel]], ['my_user', 'possibly_empty_box'], \\"js\\"))
+  .props({
+    myUsers: types.optional(types.map(types.late((): any => MyUserModel)), {}),
+    possiblyEmptyBoxes: types.optional(types.map(types.late((): any => PossiblyEmptyBoxModel)), {})
+  })
+  .actions(self => ({
+  })))
+",
+    true,
+  ],
+  Array [
+    "index",
+    "/* This is a mst-gql generated file, don't modify it manually */
+/* eslint-disable */
+/* tslint:disable */
+
+export * from \\"./MyUserModel\\"
+export * from \\"./PossiblyEmptyBoxModel\\"
+export * from \\"./QueryRootModel\\"
+export * from \\"./RootStore\\"
+",
+    true,
+  ],
+]
+`;
+
 exports[`scaffolding with scalar type 1`] = `
 Array [
   Array [
