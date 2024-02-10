@@ -44,7 +44,9 @@ export function MSTGQLRef<T extends IAnyModelType>(
       return node
     },
     set(value: any) {
-      return [label, MSTGQL_ID_DELIM, value.id].join("")
+      const typeDef = value.store.getTypeDef(value.__typename)
+      const id = value[typeDef.identifierAttribute ?? 'id']
+      return [label, MSTGQL_ID_DELIM, id].join("")
     }
   })
 }
