@@ -14360,6 +14360,7 @@ __metadata:
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
+    webpack-dev-middleware: 5.3.4
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14382,6 +14383,7 @@ __metadata:
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
+    webpack-dev-middleware: 5.3.4
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14404,6 +14406,7 @@ __metadata:
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
+    webpack-dev-middleware: 5.3.4
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14426,6 +14429,7 @@ __metadata:
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
+    webpack-dev-middleware: 5.3.4
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14448,6 +14452,7 @@ __metadata:
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
+    webpack-dev-middleware: 5.3.4
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -14470,6 +14475,7 @@ __metadata:
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
     throttle-debounce: ^5.0.0
+    webpack-dev-middleware: 5.3.4
   peerDependencies:
     graphql: 14 - 16
     mobx: 6
@@ -20570,9 +20576,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-dev-middleware@npm:^5.3.1":
-  version: 5.3.3
-  resolution: "webpack-dev-middleware@npm:5.3.3"
+"webpack-dev-middleware@npm:5.3.4, webpack-dev-middleware@npm:^5.3.1":
+  version: 5.3.4
+  resolution: "webpack-dev-middleware@npm:5.3.4"
   dependencies:
     colorette: ^2.0.10
     memfs: ^3.4.3
@@ -20581,7 +20587,7 @@ __metadata:
     schema-utils: ^4.0.0
   peerDependencies:
     webpack: ^4.0.0 || ^5.0.0
-  checksum: dd332cc6da61222c43d25e5a2155e23147b777ff32fdf1f1a0a8777020c072fbcef7756360ce2a13939c3f534c06b4992a4d659318c4a7fe2c0530b52a8a6621
+  checksum: 90cf3e27d0714c1a745454a1794f491b7076434939340605b9ee8718ba2b85385b120939754e9fdbd6569811e749dee53eec319e0d600e70e0b0baffd8e3fb13
   languageName: node
   linkType: hard
 
