@@ -10165,13 +10165,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0":
-  version: 1.15.1
-  resolution: "follow-redirects@npm:1.15.1"
+"follow-redirects@npm:1.15.6, follow-redirects@npm:^1.0.0":
+  version: 1.15.6
+  resolution: "follow-redirects@npm:1.15.6"
   peerDependenciesMeta:
     debug:
       optional: true
-  checksum: 6aa4e3e3cdfa3b9314801a1cd192ba756a53479d9d8cca65bf4db3a3e8834e62139245cd2f9566147c8dfe2efff1700d3e6aefd103de4004a7b99985e71dd533
+  checksum: a62c378dfc8c00f60b9c80cab158ba54e99ba0239a5dd7c81245e5a5b39d10f0c35e249c3379eae719ff0285fff88c365dd446fab19dee771f1d76252df1bbf5
   languageName: node
   linkType: hard
 
@@ -14356,6 +14356,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.6
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14378,6 +14379,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.6
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14400,6 +14402,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.6
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14422,6 +14425,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.6
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14444,6 +14448,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.6
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
@@ -14466,6 +14471,7 @@ __metadata:
     camelcase: ^6.2.0
     cosmiconfig: ^7.0.1
     fast-json-stable-stringify: ^2.1.0
+    follow-redirects: 1.15.6
     lodash: ^4.17.21
     node-fetch: ^2.2.1
     pluralize: ^8.0.0
