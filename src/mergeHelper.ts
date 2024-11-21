@@ -6,7 +6,7 @@ export function mergeHelper(store: any, data: any) {
     if (!data || typeof data !== "object") return data
     if (Array.isArray(data)) return data.map(merge)
 
-    const { __typename, id } = data
+    const { __typename } = data
 
     // convert values deeply first to MST objects as much as possible
     const snapshot: any = {}
@@ -18,6 +18,9 @@ export function mergeHelper(store: any, data: any) {
     if (__typename && store.isKnownType(__typename)) {
       // GQL object with known type, instantiate or recycle MST object
       const typeDef = store.getTypeDef(__typename)
+
+      const id = data[typeDef.identifierAttribute ?? 'id']
+
       // Try to reuse instance, even if it is not a root type
       let instance = id !== undefined && resolveIdentifier(typeDef, store, id)
       if (instance) {
